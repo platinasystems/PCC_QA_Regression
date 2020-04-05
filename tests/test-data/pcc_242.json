@@ -1,0 +1,249 @@
+{
+    "pcc_server": 
+    {
+        "pcc_url": "https://172.17.2.242:9999",
+        "pcc_host_ip": "172.17.2.242",
+        "pcc_linux_password": "cals0ft",
+        "pcc_username":"admin",
+        "pcc_password":"admin",
+        "tenant_user_username":"Abinash.Patnaik@calsoftinc.com",
+        "tenant_user_password":"calsoft@123"
+    },
+    "clusterhead_1": 
+    {
+        "cluster_id": 0,
+        "host": "172.17.10.10",
+        "model":"",
+        "name": "qa-clusterhead-10",
+        "sn": "",
+        "site_id": 0,
+        "admin_user": "ADMIN",
+        "bmc": "172.17.11.10",
+        "bmc_password": "ADMIN",
+        "bmc_user": "ADMIN",
+        "bmc_users": ["ADMIN"],
+        "console": "ttyS1",
+
+        "managed": true,
+        "owner": 1,
+        "roles": [],
+        "ssh_keys": [2],
+        "standby": false,
+        "tags": [],
+        "interfaces":[
+            {"interface": {
+                "admin_status": "UP",
+                "admin_status_desired":"",
+                "autoneg": true,
+                "autoneg_desired": "",
+                "carrier_status": "DOWN",
+                "fec_type": "none",
+                "fec_type_desired": "",
+                "gateway": "172.17.10.1",
+                "gateway_desired": "",
+                "intf_state": "ready",
+                "ipv4_adresses": ["2.2.2.2/31"],
+                "ipv4_adresses_desired": [],
+                "is_management": false,
+                "is_management_desired": "",
+                "mac_address": "50:18:4c:00:24:31",
+                "managed_by_pcc": true,
+                "managed_by_pcc_desired": true,
+            "management": "true",
+                "media_type": "copper",
+                "media_type_desired": "copper",
+                "mtu": 1500,
+                "mtu_desired": "",
+                "speed": "undiscovered",
+                "speed_desired": "NaN"
+            },
+            "remote_links_details": []
+        }
+        ]
+    },
+    "clusterhead_2": 
+    {
+        "cluster_id": 0,
+        "host": "172.17.10.11",
+        "model":"",
+        "name": "qa-clusterhead-11",
+        "sn": "",
+        "site_id": 0,
+        "admin_user": "ADMIN",
+        "bmc": "172.17.11.11",
+        "bmc_password": "ADMIN",
+        "bmc_user": "ADMIN",
+        "bmc_users": ["ADMIN"],
+        "console": "ttyS1",
+
+        "managed": true,
+        "owner": 1,
+        "roles": [],
+        "ssh_keys": [2],
+        "standby": false,
+        "tags": [],
+        "interfaces":[
+            {"interface": {
+                "admin_status": "UP",
+                "admin_status_desired":"",
+                "autoneg": true,
+                "autoneg_desired": "",
+                "carrier_status": "DOWN",
+                "fec_type": "none",
+                "fec_type_desired": "",
+                "gateway": "2.2.2.0",
+                "gateway_desired": "",
+                "intf_state": "ready",
+
+                "ipv4_adresses": ["2.2.2.2/31"],
+                "ipv4_adresses_desired": [],
+                "is_management": false,
+                "is_management_desired": "",
+                "mac_address": "50:18:4c:00:24:31",
+                "managed_by_pcc": true,
+                "managed_by_pcc_desired": true,
+            "management": "true",
+                "media_type": "copper",
+                "media_type_desired": "copper",
+                "mtu": 1500,
+                "mtu_desired": "",
+                "node_id": 43,
+                "speed": "undiscovered",
+                "speed_desired": "NaN"
+            },
+            "remote_links_details": []
+        }
+        ]
+    },
+    "server_1": 
+    {
+        "host_ip": "172.17.10.100",
+        "name": "qa-server-100",
+        "bmc": "172.17.11.20",
+        "bmc_password": "ADMIN",
+        "bmc_user": "ADMIN",
+        "console": "ttyS1",
+        "interfaces":[
+            {
+                "name": "eth0",
+                "mac": "00:25:90:f5:2s:06",
+                "carrier_status": "DOWN",
+                "managed_by_pcc": false,
+                "managed_by_pcc_desired": false
+            },
+            {
+                "name": "eth1",
+                "mac": "00:25:90:f5:2d:07",
+                "carrier_status": "DOWN",
+                "managed_by_pcc": false,
+                "managed_by_pcc_desired": false
+            },
+            {
+                "name": "eth2",
+                "mac": "00:25:90:f5:2d:08",
+                "carrier_status": "DOWN",
+                "managed_by_pcc": false,
+                "managed_by_pcc_desired": false
+            },
+            {
+                "name": "eth3",
+                "mac": "00:25:90:f5:2d:09",
+                "carrier_status": "DOWN",
+                "managed_by_pcc": false,
+                "managed_by_pcc_desired": false
+            },
+            {
+                "name": "eth4",
+                "mac": "e4:1d:2d:08:7a:20",
+                "carrier_status": "UP",
+                "managed_by_pcc": false,
+                "managed_by_pcc_desired": false
+            },
+            {
+                "name": "eth5",
+                "mac": "e4:1d:2d:08:7a:21",
+                "carrier_status": "UP",
+                "managed_by_pcc": false,
+                "managed_by_pcc_desired": false
+            }
+        ]
+    },
+    
+    "qa-server-100":
+        {
+            "server2_name":"qa-server-100",
+            "pcc_url": "https://172.17.10.100:9999",
+            "pcc_host_ip": "172.17.10.100",
+            "pcc_linux_password": "cals0ft",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft",
+            "bmc": "172.17.10.101",
+            "bmc_user": "ADMIN",
+            "bmc_pwd": "ADMIN",
+            "console": "ttyS1",
+            "managed_by_pcc": "true",
+            "ssh_keys": "pcc"
+        },
+
+    "container-registry":
+        {
+            "name": "calsoft1",
+            "invalid_name" : "#^cal$%",
+            "fullyQualifiedDomainName": "i124.test.com",
+            "invalid_FQDN":"!%SAd",
+            "password": "fJdSr7QrWo4C",
+            "invalid_password":"a21$%^638daad",
+            "modified_password":"calsoftfJdSr",
+            "secretKeyBase": "q5LnSKz4TY5M",
+            "modified_secretKeyBase":"calsoftq5LnSKz4",
+            "databaseName": "portus_production",
+            "databasePassword": "fJdSr7QrWo4C",
+            "port": 3000,
+            "registryPort": 5000,
+            "adminState": "Enabled",
+            "image_name": "hello-world",
+            "custom_image_name": "hello-world123",
+            "portus_uname": "Portus",
+            "invalid_portus_uname":"sadad$#%^&ad",
+            "modified_name": "calsoft123",
+            "modified_fullyQualifiedDomainName":"abc.def.com",
+            "tenant_user":"Tenant_6"
+        },
+        
+    "auth-profile":
+        { 
+            "name":"Spike",
+            "invalid_name":"Cal*&^#softSpike",
+            "login_uname":"spike",
+            "invalid_login_uname":"ca*&^#lsoftspike",
+            "type_auth":"LDAP",
+            "domain":"ldap1.lab.platinasystems.com",
+            "invalid_domain":"ads^a$#",
+            "port":636,
+            "invalid_port":21321,
+            "userIDAttribute":"cn",
+            "userBaseDN":"ou=QA Users,ou=QA,dc=platinasystems,dc=com",
+            "invalid_userBaseDN":"ca#^&lsoftou=QA",
+            "groupBaseDN":"ou=QA Groups,ou=QA,dc=platinasystems,dc=com",
+            "invalid_groupBaseDN":"cal&^&!^softou=QA",
+            "anonymousBind":0,
+            "bindDN":"cn=Spike,ou=My Little Pony,ou=QA Users,ou=QA,dc=platinasystems,dc=com",
+            "invalid_bindDN":"cals%^!&oft=Spike",
+            "bindPassword":"pony123",
+            "invalid_bindPassword":"Calso&*#^ftpony123",
+            "encryptionPolicy":"simple_tls"
+            
+            
+        },
+    "tunneling":
+        {
+            "invader_host":"172.17.10.10"
+        },
+        
+    "certificate":
+        {
+            "Alias":"dummy_certificate",
+            "Filename":"Certificate_to_be_uploaded.pem",
+            "Description":"Added dummy certificate for testing"
+        }
+}

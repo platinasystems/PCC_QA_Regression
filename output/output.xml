@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 3.1.2 (Python 3.6.9 on linux)" generated="20200405 07:56:34.062" rpa="false">
+<suite id="s1" name="Tests" source="/home/msuman/aa/tests">
+<suite id="s1-s1" name="System" source="/home/msuman/aa/tests/system">
+<suite id="s1-s1-s1" name="Pcc" source="/home/msuman/aa/tests/system/pcc">
+<suite id="s1-s1-s1-s1" name="Infrastructure" source="/home/msuman/aa/tests/system/pcc/infrastructure">
+<suite id="s1-s1-s1-s1-s1" name="Node-Groups" source="/home/msuman/aa/tests/system/pcc/infrastructure/node-groups">
+<suite id="s1-s1-s1-s1-s1-s1" name="Node-Groups-Keyword-Test" source="/home/msuman/aa/tests/system/pcc/infrastructure/node-groups/node-groups-keyword-test.robot">
+<test id="s1-s1-s1-s1-s1-s1-t1" name="Node Groups Keyword Test">
+<kw name="Login To PCC" library="pcc_resources">
+<doc>*Login to PCC* - obtain token</doc>
+<arguments>
+<arg>testdata_key=${testdata_key}</arg>
+</arguments>
+<kw name="Log To Console" library="BuiltIn">
+<doc>Logs the given message to the console.</doc>
+<arguments>
+<arg>**** Login To PCC ****</arg>
+</arguments>
+<status status="PASS" starttime="20200405 07:56:34.211" endtime="20200405 07:56:34.212"></status>
+</kw>
+<kw name="Load PCC Test Data" library="pcc_resources">
+<doc>*Load PCC Test Data*</doc>
+<arguments>
+<arg>${testdata_key}</arg>
+</arguments>
+<kw name="Log To Console" library="BuiltIn">
+<doc>Logs the given message to the console.</doc>
+<arguments>
+<arg>**** Load PCC Test Data ****</arg>
+</arguments>
+<status status="PASS" starttime="20200405 07:56:34.212" endtime="20200405 07:56:34.213"></status>
+</kw>
+<kw name="TESTDATA.Get" library="aa.common.TestData">
+<arguments>
+<arg>${testdata_key}.json</arg>
+<arg>pcc_server</arg>
+</arguments>
+<assign>
+<var>${pcc_server_dict}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.213" level="INFO">${pcc_server_dict} = {'pcc_url': 'https://172.17.2.242:9999', 'pcc_host_ip': '172.17.2.242', 'pcc_linux_password': 'cals0ft', 'pcc_username': 'admin', 'pcc_password': 'admin', 'tenant_user_username': 'Abinash.Patnaik@cals...</msg>
+<status status="PASS" starttime="20200405 07:56:34.213" endtime="20200405 07:56:34.213"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("pcc_url", None)</arg>
+</arguments>
+<assign>
+<var>${PCC_URL}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.219" level="INFO">${PCC_URL} = https://172.17.2.242:9999</msg>
+<status status="PASS" starttime="20200405 07:56:34.214" endtime="20200405 07:56:34.219"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_URL}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.219" level="INFO">${PCC_URL} = https://172.17.2.242:9999</msg>
+<status status="PASS" starttime="20200405 07:56:34.219" endtime="20200405 07:56:34.219"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("pcc_host_ip", None)</arg>
+</arguments>
+<assign>
+<var>${PCC_HOST_IP}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.220" level="INFO">${PCC_HOST_IP} = 172.17.2.242</msg>
+<status status="PASS" starttime="20200405 07:56:34.220" endtime="20200405 07:56:34.220"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_HOST_IP}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.221" level="INFO">${PCC_HOST_IP} = 172.17.2.242</msg>
+<status status="PASS" starttime="20200405 07:56:34.220" endtime="20200405 07:56:34.221"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("pcc_linux_password", None)</arg>
+</arguments>
+<assign>
+<var>${PCC_LINUX_PASSWORD}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.222" level="INFO">${PCC_LINUX_PASSWORD} = cals0ft</msg>
+<status status="PASS" starttime="20200405 07:56:34.221" endtime="20200405 07:56:34.222"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_LINUX_PASSWORD}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.222" level="INFO">${PCC_LINUX_PASSWORD} = cals0ft</msg>
+<status status="PASS" starttime="20200405 07:56:34.222" endtime="20200405 07:56:34.222"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("pcc_linux_user", None)</arg>
+</arguments>
+<assign>
+<var>${PCC_LINUX_USER}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.223" level="INFO">${PCC_LINUX_USER} = None</msg>
+<status status="PASS" starttime="20200405 07:56:34.222" endtime="20200405 07:56:34.223"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_LINUX_USER}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.224" level="INFO">${PCC_LINUX_USER} = None</msg>
+<status status="PASS" starttime="20200405 07:56:34.223" endtime="20200405 07:56:34.224"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("pcc_username", None)</arg>
+</arguments>
+<assign>
+<var>${PCC_USERNAME}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.225" level="INFO">${PCC_USERNAME} = admin</msg>
+<status status="PASS" starttime="20200405 07:56:34.224" endtime="20200405 07:56:34.225"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_USERNAME}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.225" level="INFO">${PCC_USERNAME} = admin</msg>
+<status status="PASS" starttime="20200405 07:56:34.225" endtime="20200405 07:56:34.225"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("pcc_password", None)</arg>
+</arguments>
+<assign>
+<var>${PCC_PASSWORD}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.226" level="INFO">${PCC_PASSWORD} = admin</msg>
+<status status="PASS" starttime="20200405 07:56:34.225" endtime="20200405 07:56:34.226"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_PASSWORD}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.226" level="INFO">${PCC_PASSWORD} = admin</msg>
+<status status="PASS" starttime="20200405 07:56:34.226" endtime="20200405 07:56:34.226"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("tenant_user_username", None)</arg>
+</arguments>
+<assign>
+<var>${TENANT_USER_PCC_USERNAME}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.227" level="INFO">${TENANT_USER_PCC_USERNAME} = Abinash.Patnaik@calsoftinc.com</msg>
+<status status="PASS" starttime="20200405 07:56:34.227" endtime="20200405 07:56:34.227"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${TENANT_USER_PCC_USERNAME}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.228" level="INFO">${TENANT_USER_PCC_USERNAME} = Abinash.Patnaik@calsoftinc.com</msg>
+<status status="PASS" starttime="20200405 07:56:34.227" endtime="20200405 07:56:34.228"></status>
+</kw>
+<kw name="Evaluate" library="BuiltIn">
+<doc>Evaluates the given expression in Python and returns the results.</doc>
+<arguments>
+<arg>$pcc_server_dict.get("tenant_user_password", None)</arg>
+</arguments>
+<assign>
+<var>${TENANT_USER_PCC_PWD}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.229" level="INFO">${TENANT_USER_PCC_PWD} = calsoft@123</msg>
+<status status="PASS" starttime="20200405 07:56:34.228" endtime="20200405 07:56:34.229"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${TENANT_USER_PCC_PWD}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.229" level="INFO">${TENANT_USER_PCC_PWD} = calsoft@123</msg>
+<status status="PASS" starttime="20200405 07:56:34.229" endtime="20200405 07:56:34.229"></status>
+</kw>
+<status status="PASS" starttime="20200405 07:56:34.212" endtime="20200405 07:56:34.230"></status>
+</kw>
+<kw name="PCC.Login" library="aa.pcc.Login">
+<arguments>
+<arg>url=${PCC_URL}</arg>
+<arg>username=${PCC_USERNAME}</arg>
+<arg>password=${PCC_PASSWORD}</arg>
+</arguments>
+<assign>
+<var>${PCC_CONN}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.656" level="INFO">/usr/local/lib/python3.6/dist-packages/urllib3/connectionpool.py:1004: InsecureRequestWarning: Unverified HTTPS request is being made to host '172.17.2.242'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,</msg>
+<msg timestamp="20200405 07:56:34.658" level="INFO">${PCC_CONN} = {'session': &lt;requests.sessions.Session object at 0x7f85ea30a7b8&gt;, 'token': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU4NjY3ODE5NCwiaWF0IjoxNTg2MDczMzk0fQ.w7JEoKeqIHzpD7PEy2f9QqwNBWhADOkDth43...</msg>
+<status status="PASS" starttime="20200405 07:56:34.230" endtime="20200405 07:56:34.658"></status>
+</kw>
+<kw name="Set Suite Variable" library="BuiltIn">
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<arguments>
+<arg>${PCC_CONN}</arg>
+</arguments>
+<msg timestamp="20200405 07:56:34.661" level="INFO">${PCC_CONN} = {'session': &lt;requests.sessions.Session object at 0x7f85ea30a7b8&gt;, 'token': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU4NjY3ODE5NCwiaWF0IjoxNTg2MDczMzk0fQ.w7JEoKeqIHzpD7PEy2f9QqwNBWhADOkDth43...</msg>
+<status status="PASS" starttime="20200405 07:56:34.659" endtime="20200405 07:56:34.661"></status>
+</kw>
+<kw name="Set Variable If" library="BuiltIn">
+<doc>Sets variable based on the given condition.</doc>
+<arguments>
+<arg>"${PCC_CONN}" == "None"</arg>
+<arg>ERROR</arg>
+<arg>OK</arg>
+</arguments>
+<assign>
+<var>${login_success}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.662" level="INFO">${login_success} = OK</msg>
+<status status="PASS" starttime="20200405 07:56:34.661" endtime="20200405 07:56:34.662"></status>
+</kw>
+<status status="PASS" starttime="20200405 07:56:34.211" endtime="20200405 07:56:34.662"></status>
+</kw>
+<kw name="PCC.Get Node Group Id" library="aa.pcc.NodeGroups">
+<doc>Get Node Group Id
+[Args]
+    (str) Name
+[Returns]
+    (int) Id: Node Group Id if there is one, 
+        None: If not found</doc>
+<arguments>
+<arg>Name=${dummy_node_group}</arg>
+</arguments>
+<assign>
+<var>${Id}</var>
+</assign>
+<msg timestamp="20200405 07:56:34.875" level="INFO">/usr/local/lib/python3.6/dist-packages/urllib3/connectionpool.py:1004: InsecureRequestWarning: Unverified HTTPS request is being made to host '172.17.2.242'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,</msg>
+<msg timestamp="20200405 07:56:34.876" level="INFO">${Id} = 44</msg>
+<status status="PASS" starttime="20200405 07:56:34.663" endtime="20200405 07:56:34.876"></status>
+</kw>
+<kw name="PCC.Delete Node Group" library="aa.pcc.NodeGroups">
+<doc>Delete Node Group for matching Id
+[Args]
+    (int) Id
+[Returns]
+    (dict) Delete Node Group Response</doc>
+<arguments>
+<arg>Id=${Id}</arg>
+</arguments>
+<assign>
+<var>${response}</var>
+</assign>
+<msg timestamp="20200405 07:56:35.068" level="INFO">/usr/local/lib/python3.6/dist-packages/urllib3/connectionpool.py:1004: InsecureRequestWarning: Unverified HTTPS request is being made to host '172.17.2.242'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,</msg>
+<msg timestamp="20200405 07:56:35.068" level="INFO">${response} = {'Result': {'path': '/cluster/44', 'location': '', 'status': 200, 'message': '', 'error': ''}, 'StatusCode': 200, 'ExecutionTime': '0.000'}</msg>
+<status status="PASS" starttime="20200405 07:56:34.876" endtime="20200405 07:56:35.069"></status>
+</kw>
+<kw name="PCC.Get Tenant Id" library="aa.pcc.Tenants">
+<doc>Get Id of tenant with matching Name from PCC
+[Args]
+    Name
+[Returns]
+    (int) Id: Id of the matchining tenant, or
+        None: if no match found, or
+    (dict) Error response: If Exception occured</doc>
+<arguments>
+<arg>Name=ROOT</arg>
+</arguments>
+<assign>
+<var>${owner}</var>
+</assign>
+<msg timestamp="20200405 07:56:35.347" level="INFO">/usr/local/lib/python3.6/dist-packages/urllib3/connectionpool.py:1004: InsecureRequestWarning: Unverified HTTPS request is being made to host '172.17.2.242'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,</msg>
+<msg timestamp="20200405 07:56:35.348" level="INFO">${owner} = 1</msg>
+<status status="PASS" starttime="20200405 07:56:35.069" endtime="20200405 07:56:35.348"></status>
+</kw>
+<kw name="PCC.Add Node Group" library="aa.pcc.NodeGroups">
+<doc>Add Node Group to PCC
+[Args]
+    (str) Name: Name of the group
+    (int) owner: Tenant Id for the new group
+    (str) Description: Description of the group
+[Returns]
+    (dict) Response: Add Node Group response (includes any errors)</doc>
+<arguments>
+<arg>Name=${dummy_node_group}</arg>
+<arg>owner=${owner}</arg>
+<arg>Description=${dummy_node_group_desc}</arg>
+</arguments>
+<assign>
+<var>${response}</var>
+</assign>
+<msg timestamp="20200405 07:56:35.531" level="INFO">/usr/local/lib/python3.6/dist-packages/urllib3/connectionpool.py:1004: InsecureRequestWarning: Unverified HTTPS request is being made to host '172.17.2.242'. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning,</msg>
+<msg timestamp="20200405 07:56:35.532" level="INFO">${response} = {'Result': {'path': '/cluster/add', 'location': '/cluster/add/45', 'status': 200, 'message': '', 'error': '', 'Data': {'Id': 45, 'CreatedAt': 0, 'ModifiedAt': 0, 'Name': 'Dummy Node Group', 'Descripti...</msg>
+<status status="PASS" starttime="20200405 07:56:35.349" endtime="20200405 07:56:35.532"></status>
+</kw>
+<kw name="Get Response Status Code" library="aa.common.Result">
+<arguments>
+<arg>${response}</arg>
+</arguments>
+<assign>
+<var>${status}</var>
+</assign>
+<msg timestamp="20200405 07:56:35.533" level="INFO">${status} = 200</msg>
+<status status="PASS" starttime="20200405 07:56:35.533" endtime="20200405 07:56:35.533"></status>
+</kw>
+<kw name="Should Be Equal As Numbers" library="BuiltIn">
+<doc>Fails if objects are unequal after converting them to real numbers.</doc>
+<arguments>
+<arg>${status}</arg>
+<arg>200</arg>
+</arguments>
+<msg timestamp="20200405 07:56:35.534" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;type 'unicode'&gt;</msg>
+<status status="PASS" starttime="20200405 07:56:35.534" endtime="20200405 07:56:35.535"></status>
+</kw>
+<doc>*Node Group Keyword* test
+Keywords:
+PCC.Get Node Group Id
+PCC.Delete Node Group
+PCC.Add Node Group</doc>
+<status status="PASS" starttime="20200405 07:56:34.210" endtime="20200405 07:56:35.535" critical="yes"></status>
+</test>
+<status status="PASS" starttime="20200405 07:56:34.104" endtime="20200405 07:56:35.536"></status>
+</suite>
+<status status="PASS" starttime="20200405 07:56:34.102" endtime="20200405 07:56:35.539"></status>
+</suite>
+<status status="PASS" starttime="20200405 07:56:34.100" endtime="20200405 07:56:35.542"></status>
+</suite>
+<status status="PASS" starttime="20200405 07:56:34.098" endtime="20200405 07:56:35.544"></status>
+</suite>
+<status status="PASS" starttime="20200405 07:56:34.094" endtime="20200405 07:56:35.546"></status>
+</suite>
+<status status="PASS" starttime="20200405 07:56:34.063" endtime="20200405 07:56:35.547"></status>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0">Critical Tests</stat>
+<stat pass="1" fail="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" id="s1" name="Tests">Tests</stat>
+<stat pass="1" fail="0" id="s1-s1" name="System">Tests.System</stat>
+<stat pass="1" fail="0" id="s1-s1-s1" name="Pcc">Tests.System.Pcc</stat>
+<stat pass="1" fail="0" id="s1-s1-s1-s1" name="Infrastructure">Tests.System.Pcc.Infrastructure</stat>
+<stat pass="1" fail="0" id="s1-s1-s1-s1-s1" name="Node-Groups">Tests.System.Pcc.Infrastructure.Node-Groups</stat>
+<stat pass="1" fail="0" id="s1-s1-s1-s1-s1-s1" name="Node-Groups-Keyword-Test">Tests.System.Pcc.Infrastructure.Node-Groups.Node-Groups-Keyword-Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

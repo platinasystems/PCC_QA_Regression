@@ -6,11 +6,11 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from platina_sdk import pcc_easy_api as easy
 
-from maruti.common.Utils import banner, trace, pretty_print
-from maruti.common.Result import get_response_data
-from maruti.common.MarutiBase import MarutiBase
+from aa.common.Utils import banner, trace, pretty_print
+from aa.common.Result import get_response_data
+from aa.common.AaBase import AaBase
 
-class NodeGroups(MarutiBase):
+class NodeGroups(AaBase):
     """ 
     NodeGroups
     """
@@ -96,6 +96,7 @@ class NodeGroups(MarutiBase):
         banner("PCC.Get Node Group Id [Name=%s]" % self.Name)
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        banner(conn)
         return easy.get_node_group_id_by_name(conn, self.Name)
 
     ###########################################################################

@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 from os.path import abspath, dirname, join
 
-PROJECT_NAME = "maruti"
+PROJECT_NAME = "aa"
 LICENSE = 'MIT'
 SOURCE_DIR = join("src", PROJECT_NAME)
 PROJECT_GIT_URL = "https://github.com/platinasystems/" + PROJECT_NAME
@@ -39,8 +39,8 @@ setup(
     package_dir={'': 'src'},
     packages= find_namespace_packages(where="src"),
     scripts=[ 
-        join(SOURCE_DIR, 'scripts', 'run-maruti.sh'), 
-        join(SOURCE_DIR, 'scripts', 'build-maruti.sh')
+        join(SOURCE_DIR, 'scripts', 'run-aa.sh'), 
+        join(SOURCE_DIR, 'scripts', 'build-aa.sh')
         ],
     version = VERSION,
     license = LICENSE,
@@ -51,5 +51,8 @@ setup(
     download_url = DOWNLOAD_URL,
     keywords = KEYWORDS,
     install_requires = REQUIREMENTS,
-    classifiers = CLASSIFIERS
+    classifiers = CLASSIFIERS,
+    data_files=[
+        ('robot', ['src/' + PROJECT_NAME + "/robot/pcc_resources.robot"])
+    ]
 )

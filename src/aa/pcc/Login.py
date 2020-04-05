@@ -7,10 +7,10 @@ import distro
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from platina_sdk import pcc_api as pcc
-from maruti.common.Utils import banner, trace, pretty_print
-from maruti.common.MarutiBase import MarutiBase
+from aa.common.Utils import banner, trace, pretty_print
+from aa.common.AaBase import AaBase
 
-class Login(MarutiBase):
+class Login(AaBase):
     """ 
     Login
     """

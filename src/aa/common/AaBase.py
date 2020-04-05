@@ -4,11 +4,11 @@ import urllib3
 import json
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
-from maruti.common.Utils import banner, trace, debug, pretty_print
+from aa.common.Utils import banner, trace, debug, pretty_print
 
-class MarutiBase():
+class AaBase():
     """ 
-    MarutiBase
+    AaBase
     """
 
     def __init__(self):

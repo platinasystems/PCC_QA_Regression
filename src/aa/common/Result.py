@@ -2,7 +2,7 @@ import os
 import re
 import sys
 from robot.api.deco import keyword
-from maruti.common.Utils import banner, trace
+from aa.common.Utils import banner, trace
 
 ###########################################################################
 @keyword(name="Get Result")
