@@ -96,7 +96,6 @@ class NodeGroups(AaBase):
         banner("PCC.Get Node Group Id [Name=%s]" % self.Name)
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        banner(conn)
         return easy.get_node_group_id_by_name(conn, self.Name)
 
     ###########################################################################

@@ -54,4 +54,4 @@ class Tenants(AaBase):
         banner("PCC.Get Tenant Id [name=%s]" % self.Name)
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.get_tenant_id(conn, self.Name)
+        return easy.get_tenant_id_by_name(conn, self.Name)

@@ -39,8 +39,7 @@ setup(
     package_dir={'': 'src'},
     packages= find_namespace_packages(where="src"),
     scripts=[ 
-        join(SOURCE_DIR, 'scripts', 'run-aa.sh'), 
-        join(SOURCE_DIR, 'scripts', 'build-aa.sh')
+        join(SOURCE_DIR, 'scripts', 'run-aa.sh')
         ],
     version = VERSION,
     license = LICENSE,
