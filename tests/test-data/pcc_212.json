@@ -1,0 +1,87 @@
+{
+    "pcc_server":
+    {
+        "pcc_url": "https://172.17.2.212:9999",
+        "pcc_host_ip": "172.17.2.212",
+        "pcc_linux_user":"pcc",
+        "pcc_linux_password": "cals0ft",
+        "pcc_username": "admin",
+        "pcc_password": "admin"
+    },
+    "i43":
+    {
+        "pcc_url": "https://172.17.2.212:9999",
+        "pcc_host_ip": "172.17.2.43",
+        "pcc_linux_password": "cals0ft",
+        "pcc_username": "pcc",
+        "pcc_password": "cals0ft"
+    },
+
+    "sv-124":
+    {
+        "pcc_url": "https://172.17.2.212:9999",
+        "pcc_host_ip": "172.17.2.124",
+        "pcc_linux_password": "cals0ft",
+        "pcc_username": "pcc",
+        "pcc_password": "cals0ft",
+        "bmc": "172.17.3.124",
+        "bmc_user": "ADMIN",
+        "bmc_pwd": "ADMIN",
+        "console": "ttyS1",
+        "managed_by_pcc": "true",
+        "ssh_keys": "pcc"
+    },
+
+    "sv-125":
+    {
+        "pcc_url": "https://172.17.2.212:9999",
+        "pcc_host_ip": "172.17.2.125",
+        "pcc_linux_password": "cals0ft",
+        "pcc_username": "pcc",
+        "pcc_password": "cals0ft",
+        "bmc": "172.17.3.125",
+        "bmc_user": "ADMIN",
+        "bmc_pwd": "ADMIN",
+        "console": "ttyS1",
+        "managed_by_pcc": "true",
+        "ssh_keys": "pcc"
+    },
+
+    "ceph_cluster":
+    {
+        "name":"ceph-pvt",
+        "nodes":["sv125","sv124","i43"],
+        "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
+        "tags":["ROTATIONAL","SOLID_STATE"],
+        "config":{"cluster_network":"192.168.33.0/27","public_network":"192.168.32.0/27"},
+        "controlCIDR":"",
+        "igwPolicy":"default"
+    },
+  
+    "ceph_pool":
+    {
+        "name":"pool-pvt",
+        "size":3,
+        "tags":[],
+        "pool_type":"replicated",
+        "quota":1,
+        "quota_unit":"TiB"
+    },
+
+    "ceph_rbd":
+    {
+        "name":"rbd-pvt",
+        "image_feature":"layering",
+        "size":3,
+        "tags":[],
+        "size_units":"MiB"
+    },
+ 
+    "ceph_fs":
+    {
+        "name":"fs-pvt",            
+        "meta_pool":"Pool1",       
+        "data_pool":"Pool2",       
+        "default_pool":"Pool3" 
+    }
+}

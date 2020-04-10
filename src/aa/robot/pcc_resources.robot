@@ -6,7 +6,8 @@ Library                         aa.common.TestData
 Library                         aa.pcc.Login
 Library                         aa.pcc.NodeGroups
 Library                         aa.pcc.Tenants
-#Library                         motorframework.pcc_keywords.Nodes
+Library                         aa.pcc.Nodes
+
 #Library                         motorframework.pcc_keywords.NodeRoles
 #Library                         motorframework.pcc_keywords.OpenSSHKeys
 #Library                         motorframework.pcc_keywords.Roles
