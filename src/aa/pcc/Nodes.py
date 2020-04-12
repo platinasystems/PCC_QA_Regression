@@ -205,3 +205,52 @@ class Nodes(AaBase):
         banner("PCC.Wait Until Node Ready")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return easy.wait_until_node_ready(conn, self.Name)
+    ###########################################################################
+    @keyword(name="PCC.Update Node")
+    ###########################################################################
+    def update_node(self, *args, **kwargs):
+        """
+        Update Node 
+        [Args]
+            (str) Name: Name of the Node
+            ...
+        [Returns]
+            (dict) Response: Update Node response (includes any errors)
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Update Node [Name=%s]" % self.Name)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        payload = {
+            "Id": self.Id,
+            "Name": self.Name,
+            "ClusterId": self.ClusterId,
+            "Host": self.Host,  
+            "Model": self.Model,
+            "SN": self.SN,
+            "Site_Id": self.Site_Id,
+            "Type_Id": self.Type_Id,
+            "Vendor": self.Vendor,
+            "adminUser": self.adminUser,
+            "bmc": self.bmc,
+            "bmcKey": self.bmcKey,
+            "bmcPassword": self.bmcPassword,
+            "bmcUser": self.bmcUser,
+            "bmcUsers": [self.bmcUser, "platina"],
+            "console": self.console,
+            "hardwareInventoryId": self.hardwareInventoryId,
+            "hwAddr": self.hwAddr,
+            "managed": self.managed,
+            "owner": self.owner,
+            "provisionStatus": self.provisionStatus,
+            "ready": self.ready,
+            "reimage": self.reimage,
+            "roles": self.roles,
+            "sshKeys": self.sshKeys,
+            "standby": self.standby,
+            "status": self.status,
+            "tags": self.tags,
+            "tenants": self.tenants,
+            "interfaces": self.interfaces
+        }
+        return pcc.modify_node(conn, payload)
