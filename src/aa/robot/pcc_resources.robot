@@ -7,6 +7,10 @@ Library                         aa.pcc.Login
 Library                         aa.pcc.NodeGroups
 Library                         aa.pcc.Tenants
 Library                         aa.pcc.Nodes
+Library                         aa.pcc.CephCluster
+Library                         aa.pcc.CephPool
+Library                         aa.pcc.CephRbd
+Library                         aa.pcc.CephFs
 
 #Library                         motorframework.pcc_keywords.NodeRoles
 #Library                         motorframework.pcc_keywords.OpenSSHKeys
