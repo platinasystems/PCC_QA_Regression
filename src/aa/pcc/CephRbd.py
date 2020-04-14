@@ -62,7 +62,7 @@ class CephRbd(AaBase):
 
         response = pcc.get_ceph_rbds(conn)
         for data in get_response_data(response):
-            response=self.delete_rbd(id=data['id'])
+            response=self.delete_ceph_rbd_by_id(id=data['id'])
             status=self.wait_until_rbd_deleted(id=data['id'])
             if status!="OK":
                 print("{} deletion failed".format(data['name']))
