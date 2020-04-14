@@ -2,11 +2,16 @@
 Library                         aa.common.Utils
 Library                         aa.common.Result
 Library                         aa.common.TestData
+Library                         aa.common.LinuxUtils
+Library                         aa.common.DockerUtils
+Library                         aa.common.AaBase
 
 Library                         aa.pcc.Login
 Library                         aa.pcc.NodeGroups
 Library                         aa.pcc.Tenants
 Library                         aa.pcc.Nodes
+Library                         aa.pcc.ContainerRegistry
+Library                         aa.pcc.Auth_Profile
 Library                         aa.pcc.CephCluster
 Library                         aa.pcc.CephPool
 Library                         aa.pcc.CephRbd
@@ -349,17 +354,27 @@ Load Container Registry Data
         ${CR_NAME}                  Evaluate    $pcc_server_dict.get("name", None)
                                     Set Suite Variable    ${CR_NAME}
         
+        ${STATIC_MODE_CR_NAME}      Evaluate    $pcc_server_dict.get("static_mode_name", None)
+                                    Set Suite Variable    ${STATIC_MODE_CR_NAME}
+        
         ${INVALID_CR_NAME}          Evaluate    $pcc_server_dict.get("invalid_name", None)
                                     Set Suite Variable    ${INVALID_CR_NAME}
 
         ${CR_FQDN}                  Evaluate    $pcc_server_dict.get("fullyQualifiedDomainName", None)
                                     Set Suite Variable    ${CR_FQDN}
                                     
+        ${STATIC_MODE_CR_FQDN}      Evaluate    $pcc_server_dict.get("static_mode_fullyQualifiedDomainName", None)
+                                    Set Suite Variable    ${STATIC_MODE_CR_FQDN}
+
+                                    
         ${CR_INVALID_FQDN}          Evaluate    $pcc_server_dict.get("invalid_FQDN", None)
                                     Set Suite Variable    ${CR_INVALID_FQDN}
 
         ${CR_PASSWORD}              Evaluate    $pcc_server_dict.get("password", None)
                                     Set Suite Variable    ${CR_PASSWORD}
+                                    
+        ${STATIC_MODE_CR_PASSWORD}    Evaluate    $pcc_server_dict.get("static_mode_password", None)
+                                    Set Suite Variable    ${STATIC_MODE_CR_PASSWORD}
                                     
         ${CR_INVALID_PASSWORD}      Evaluate    $pcc_server_dict.get("invalid_password", None)
                                     Set Suite Variable    ${CR_INVALID_PASSWORD}
@@ -410,13 +425,13 @@ Load Container Registry Data
                                     Set Suite Variable    ${CR_TENANT_USER}
                                     
 ###################################################################################################################################
-Load Invader Details
+Load Invader1 Details
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
-    [Documentation]                 *Load Invader details*
+    [Documentation]                 *Load Invader1 details*
 
                                     Log To Console      **** Load Invader Data ****
-        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json   invader-36
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    qa-clusterhead-11
 
                                     # Container_Registry
         ${INVADER_1_NAME}            Evaluate    $pcc_server_dict.get("invader_name", None)
@@ -485,11 +500,13 @@ Load Server1 Details
         ${SERVER_1_SSHKEYS}        Evaluate    $pcc_server_dict.get("ssh_keys", None)
                                     Set Suite Variable    ${SERVER_1_SSHKEYS}
                                     
+
+                                    
 ###################################################################################################################################
 Load Server2 Details
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
-    [Documentation]                 *Load Server details*
+    [Documentation]                 *Load Server2 details*
 
                                     Log To Console      **** Load Invader Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    qa-server-100
@@ -636,28 +653,33 @@ Load Tunneling Data
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Tunneling Data*
 
-                                    Log To Console      **** Load Auth Profile Data ****
-        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    tunneling
-
-                                    # Tunneling
-        ${INVADER_HOST}             Evaluate    $pcc_server_dict.get("invader_host", None)
-                                    Set Suite Variable    ${INVADER_HOST}
-                                    
-###################################################################################################################################
-Load Certificate Data
-###################################################################################################################################
-    [Arguments]                     ${testdata_filename}
-    [Documentation]                 *Load Certificate Data*
-
-                                    Log To Console      **** Load Certificate Data ****
+                                    Log To Console      **** Load Tunneling Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    certificate
 
                                     # Certificate
-        ${ALIAS}                    Evaluate    $pcc_server_dict.get("Alias", None)
-                                    Set Suite Variable    ${ALIAS}
+        ${INVADER_1_IP}             Evaluate    $pcc_server_dict.get("invader1_ip", None)
+                                    Set Suite Variable    ${INVADER_1_IP}
                                     
-        ${FILENAME}                 Evaluate    $pcc_server_dict.get("Filename", None)
-                                    Set Suite Variable    ${FILENAME}
+        ${INVADER_1_NAME}           Evaluate    $pcc_server_dict.get("invader1_name", None)
+                                    Set Suite Variable    ${INVADER_1_NAME}
                                     
-        ${DESCRIPTION}              Evaluate    $pcc_server_dict.get("Description", None)
-                                    Set Suite Variable    ${DESCRIPTION}
+        ${INVADER_2_IP}             Evaluate    $pcc_server_dict.get("invader2_ip", None)
+                                    Set Suite Variable    ${INVADER_2_IP}
+                                    
+        ${INVADER_2_NAME}           Evaluate    $pcc_server_dict.get("invader2_name", None)
+                                    Set Suite Variable    ${INVADER_2_NAME}  
+                                    
+        ${SERVER_1_IP}              Evaluate    $pcc_server_dict.get("server1_ip", None)
+                                    Set Suite Variable    ${SERVER_1_IP}
+                                    
+        ${SERVER_1_NAME}            Evaluate    $pcc_server_dict.get("server1_name", None)
+                                    Set Suite Variable    ${SERVER_1_NAME} 
+                                    
+        ${SETUP_IP}                 Evaluate    $pcc_server_dict.get("setup_ip", None)
+                                    Set Suite Variable    ${SETUP_IP}
+                                    
+        ${CIDR_VAL}                 Evaluate    $pcc_server_dict.get("cidr", None)
+                                    Set Suite Variable    ${CIDR_VAL}
+                                    
+        ${SETUP_PWD}                Evaluate    $pcc_server_dict.get("setup_password", None)
+                                    Set Suite Variable    ${SETUP_PWD}

@@ -169,6 +169,22 @@
         ]
     },
     
+    "qa-clusterhead-11":
+        {
+            "invader_name":"qa-clusterhead-11",
+            "pcc_url": "https://172.17.10.11:9999",
+            "pcc_host_ip": "172.17.10.11",
+            "pcc_linux_password": "cals0ft",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft",
+            "bmc": "172.17.11.11",
+            "bmc_user": "ADMIN",
+            "bmc_pwd": "ADMIN",
+            "console": "ttyS1",
+            "managed_by_pcc": "true",
+            "ssh_keys": "pcc"
+        },
+    
     "qa-server-100":
         {
             "server2_name":"qa-server-100",
@@ -188,16 +204,19 @@
     "container-registry":
         {
             "name": "calsoft1",
+            "static_mode_name":"static_mode_CR",
             "invalid_name" : "#^cal$%",
             "fullyQualifiedDomainName": "i124.test.com",
+            "static_mode_fullyQualifiedDomainName":"static.fqdn.com",
             "invalid_FQDN":"!%SAd",
             "password": "fJdSr7QrWo4C",
+            "static_mode_password": "static123mode",
             "invalid_password":"a21$%^638daad",
             "modified_password":"calsoftfJdSr",
-            "secretKeyBase": "q5LnSKz4TY5M",
+            "secretKeyBase": "UzUUHwNZ5jlZ",
             "modified_secretKeyBase":"calsoftq5LnSKz4",
             "databaseName": "portus_production",
-            "databasePassword": "fJdSr7QrWo4C",
+            "databasePassword": "wjuy0i7ayLN3",
             "port": 3000,
             "registryPort": 5000,
             "adminState": "Enabled",
@@ -237,7 +256,16 @@
         },
     "tunneling":
         {
-            "invader_host":"172.17.10.10"
+            "invader1_ip":"172.17.10.11",
+            "invader1_name":"qa-clusterhead-11",
+            "invader2_ip":"172.17.10.10",
+            "invader2_name":"qa-clusterhead-10",
+            "server1_ip":"172.17.10.100",
+            "server1_name":"qa-server-100",
+            "setup_ip":"172.17.2.242",
+            "cidr":"10.99.0.0/16",
+            "setup_password":"1m1pAscj0O3IaKRN"
+           
         },
         
     "certificate":
