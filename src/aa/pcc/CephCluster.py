@@ -87,12 +87,33 @@ class CephCluster(AaBase):
         self._load_kwargs(kwargs)
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
         tmp_node=[]
+        payload_nodes=[]
+
         for node_name in eval(str(self.nodes)):
             node_id=easy.get_node_id_by_name(conn,node_name)
-            tmp_node.append({"id":node_id})
-        self.nodes=tmp_node
+            tmp_node.append(node_id)
 
+        self.nodes=[]
+        response = pcc.get_ceph_clusters(conn)
+        for data in get_response_data(response):
+            if str(data['name']).lower() == str(self.name).lower():
+                payload_nodes=eval(str(data['nodes']))
+                self.controlCIDR=data['controlCIDR']
+                self.tags=data['tags']
+                self.igwPolicy=data['igwPolicy']
+                self.name=data['name']
+
+        for id in tmp_node:
+            count=0
+            for data in payload_nodes:
+                if int(data['id'])==int(id):
+                    self.nodes.append(data)
+                    count=1
+            if count==0:
+                self.nodes.append({"id":int(id)}) 
+       
         try:
             payload = {
             "id":self.id,
@@ -111,7 +132,7 @@ class CephCluster(AaBase):
             raise Exception(e)
 
         return pcc.modify_ceph_clusters(conn, payload)
-
+    
     ###########################################################################
     @keyword(name="PCC.Ceph Delete Cluster")
     ###########################################################################
