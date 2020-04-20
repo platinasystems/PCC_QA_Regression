@@ -6,7 +6,7 @@ pipeline {
     }
     
     environment {
-        SDK_HOME = "/home/jenkins/aa"
+        SDK_HOME = "/home/jenkins/platina-sdk"
     }
 
     stages {
@@ -17,8 +17,8 @@ pipeline {
         }
         stage('Build SDK') {
             steps {
-                sh "sudo rm -rf $SDK_HOME/dist"
-                sh "$SDK_HOME/build-aa.sh"
+                sh "sudo rm -rf $SDK_HOME/python/dist"
+                sh "cd $SDK_HOME/python; $SDK_HOME/python/build-sdk.sh"
             }
         }     
     }
