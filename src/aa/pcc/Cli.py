@@ -19,6 +19,8 @@ class Cli(AaBase):
         self.host_ip = None
         self.linux_password = None
         self.linux_user = None
+        self.remote_source = None
+        self.local_destination = None
         super().__init__()
 
     ###########################################################################
@@ -38,3 +40,45 @@ class Cli(AaBase):
         self._load_kwargs(kwargs)
         banner("CLI.Run ip=%s [cmd=%s]" % (self.host_ip, self.cmd))
         return easy.cli_run(self.host_ip, self.linux_user, self.linux_password, self.cmd)
+
+    ###########################################################################
+    @keyword(name="CLI.Truncate PCC Logs")
+    ###########################################################################
+    def cli_truncate_pcc_logs(self, *args, **kwargs):
+        """
+        CLI Truncate PCC Logs
+        [Args]
+            (str) host_ip:
+            (str) linux_password:
+            (str) linux_user:
+        [Returns]
+            (str) OK if command successful, stderr output if there's an error
+        """
+        self._load_kwargs(kwargs)
+        banner("CLI.Truncate PCC Logs ip=%s" % self.host_ip)
+        ret = easy.cli_truncate_pcc_logs(self.host_ip, self.linux_user, self.linux_password)
+        if ret.stderr == "":
+            return "OK"
+        else:
+            return ret.stderr
+
+
+    ###########################################################################
+    @keyword(name="CLI.Copy PCC Logs")
+    ###########################################################################
+    def cli_copy_pcc_logs(self, *args, **kwargs):
+        """
+        CLI Copy+ PCC Logs
+        [Args]
+            (str) host_ip:
+            (str) linux_password:
+            (str) linux_user:
+            (str) remote_source
+            (str) local_destination
+
+        [Returns]
+            (str) OK if command successful, stderr output if there's an error
+        """
+        self._load_kwargs(kwargs)
+        banner("CLI.Copy PCC Logs ip=%s" % self.host_ip)
+        return easy.cli_copy_pcc_logs(self.host_ip, self.linux_user, self.linux_password)

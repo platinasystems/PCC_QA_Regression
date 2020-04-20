@@ -4,8 +4,6 @@ Library                         aa.common.Result
 Library                         aa.common.TestData
 Library                         aa.common.LinuxUtils
 Library                         aa.common.DockerUtils
-Library                         aa.common.AaBase
-
 Library                         aa.pcc.Login
 Library                         aa.pcc.NodeGroups
 Library                         aa.pcc.Tenants
@@ -16,6 +14,7 @@ Library                         aa.pcc.CephCluster
 Library                         aa.pcc.CephPool
 Library                         aa.pcc.CephRbd
 Library                         aa.pcc.CephFs
+Library                         aa.pcc.Cli
 
 #Library                         motorframework.pcc_keywords.NodeRoles
 #Library                         motorframework.pcc_keywords.OpenSSHKeys
@@ -23,20 +22,11 @@ Library                         aa.pcc.CephFs
 #Library                         motorframework.pcc_keywords.Sites
 #Library                         motorframework.pcc_keywords.Applications
 #Library                         motorframework.pcc_keywords.Kubernetes
-#Library                         motorframework.pcc_keywords.Cli
-#Library                         motorframework.pcc_keywords.ContainerRegistry
 #Library                         motorframework.pcc_keywords.Ceph
-#Library                         motorframework.pcc_keywords.CephPool
-#Library                         motorframework.pcc_keywords.CephRbd
-#Library                         motorframework.pcc_keywords.CephFs
 #Library                         motorframework.pcc_keywords.Certificate
 
-
-#Library                         motorframework.common.DockerUtils
 #Library                         motorframework.common.FabricBase
-#Library                         motorframework.pcc_keywords.Auth_profile
 #Library                         motorframework.pcc_keywords.Tunneling
-#Library                         motorframework.common.LinuxUtils
 
 Library                         Collections
 
