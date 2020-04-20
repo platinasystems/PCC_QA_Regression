@@ -20,8 +20,8 @@ pipeline {
         }
         stage('Clean Test Results') {
             steps {
-                sh "rm -rf output"
-                sh "rm -f robot_output.zip"
+                sh "sudo rm -rf output"
+                sh "sudo rm -f robot_output.zip"
                 sh "mkdir output"
             }
         }
