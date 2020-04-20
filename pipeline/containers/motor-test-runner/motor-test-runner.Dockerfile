@@ -1,5 +1,6 @@
 FROM mplatina/motor-test-base:1.0.0
 COPY tests /motor/tests
+COPY pipeline /motor/pipeline
 COPY src /motor/src
 WORKDIR /motor
 COPY setup.py /motor/setup.py
