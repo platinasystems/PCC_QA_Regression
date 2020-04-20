@@ -21,5 +21,10 @@ pipeline {
                 sh "cd $SDK_HOME/python; $SDK_HOME/python/build-sdk.sh"
             }
         }     
+        stage('Push SDK binary') {
+            steps {
+                sh "sudo cp $SDK_HOME/python/dist/*.gz /var/www/html"
+            }
+        }     
     }
 }
