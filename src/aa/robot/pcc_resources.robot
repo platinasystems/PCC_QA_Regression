@@ -15,6 +15,7 @@ Library                         aa.pcc.CephPool
 Library                         aa.pcc.CephRbd
 Library                         aa.pcc.CephFs
 Library                         aa.pcc.Cli
+Library                         aa.pcc.Kubernetes
 
 #Library                         motorframework.pcc_keywords.NodeRoles
 #Library                         motorframework.pcc_keywords.OpenSSHKeys
@@ -673,3 +674,48 @@ Load Tunneling Data
                                     
         ${SETUP_PWD}                Evaluate    $pcc_server_dict.get("setup_password", None)
                                     Set Suite Variable    ${SETUP_PWD}
+
+###################################################################################################################################
+Load K8s Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load K8s Data*
+
+                                    Log To Console      **** Load Ceph Rbd Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json   k8s
+
+        ${K8S_ID}                   Evaluate    $pcc_server_dict.get("id", None)
+                                    Set Suite Variable    ${K8S_ID}
+                                    
+        ${K8S_VERSION}              Evaluate    $pcc_server_dict.get("k8sVersion", None)
+                                    Set Suite Variable    ${K8S_VERSION}
+                                    
+        ${K8S_NAME}                 Evaluate    $pcc_server_dict.get("name", None)
+                                    Set Suite Variable    ${K8S_NAME}
+
+        ${K8S_CNIPLUGIN}            Evaluate    $pcc_server_dict.get("cniPlugin", None)
+                                    Set Suite Variable    ${K8S_CNIPLUGIN}
+    
+        ${K8S_NODES}                Evaluate    $pcc_server_dict.get("nodes", None)
+                                    Set Suite Variable    ${K8S_NODES}
+                                    
+        ${K8S_POOL}                 Evaluate    $pcc_server_dict.get("pools", None)
+                                    Set Suite Variable    ${K8S_POOL}
+                                    
+        ${K8S_APPNAME}              Evaluate    $pcc_server_dict.get("appName", None)
+                                    Set Suite Variable    ${K8S_APPNAME}
+
+        ${K8S_APPNAMESPACE}         Evaluate    $pcc_server_dict.get("appNamespace", None)
+                                    Set Suite Variable    ${K8S_APPNAMESPACE}
+
+        ${K8S_GITURL}               Evaluate    $pcc_server_dict.get("gitUrl", None)
+                                    Set Suite Variable    ${K8S_GITURL}
+
+        ${K8S_GITREPOPATH}          Evaluate    $pcc_server_dict.get("gitRepoPath", None)
+                                    Set Suite Variable    ${K8S_GITREPOPATH}
+                                    
+        ${K8S_GITBRANCH}            Evaluate    $pcc_server_dict.get("gitBranch", None)
+                                    Set Suite Variable    ${K8S_GITBRANCH}
+
+        ${K8S_LABEL}                Evaluate    $pcc_server_dict.get("label", None)
+                                    Set Suite Variable    ${K8S_LABEL}                                   

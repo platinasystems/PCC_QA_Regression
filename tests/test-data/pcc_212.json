@@ -83,5 +83,21 @@
         "meta_pool":"Pool1",       
         "data_pool":"Pool2",       
         "default_pool":"Pool3" 
-    }
+    },
+
+    "k8s":
+    {
+        "id":0,
+        "k8sVersion":"v1.14.3",
+        "name":"k8s-pvt",
+        "cniPlugin":"kube-router",
+        "nodes":["i43","sv124","sv125"],
+        "pools":[],
+        "appName":"nginxapp",
+        "appNamespace":"nginxapp",
+        "gitUrl":"https://github.com/platinasystems/devops",
+        "gitRepoPath":"helm-charts",
+        "gitBranch":"master",
+        "label":"nginxapp"
+     }
 }
