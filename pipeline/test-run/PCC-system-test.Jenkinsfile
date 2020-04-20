@@ -28,7 +28,7 @@ pipeline {
         stage('Truncate PCC Logs') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
-                    sh "docker run -v ${WORKSPACE}:/motor ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} '/motor/pipeline/test-run/cli-truncate-pcc-logs.robot --variable testdata_key:${PCC_KEY}'"
+                    sh "docker run -v ${WORKSPACE}:/motor ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} /motor/pipeline/test-run/cli-truncate-pcc-logs.robot"
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
         stage('Copy PCC Logs from PCC to motor-test-runner container') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
-                    sh "docker run -v ${WORKSPACE}:/motor ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} '/motor/pipeline/test-run/cli-copy-pcc-logs.robot --variable testdata_key:${PCC_KEY}'"
+                    sh "docker run -v ${WORKSPACE}:/motor ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} /motor/pipeline/test-run/cli-copy-pcc-logs.robot"
                 }
             }
         }
