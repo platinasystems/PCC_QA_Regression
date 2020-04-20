@@ -37,7 +37,7 @@ pipeline {
       }
         stage('Run Tests') {
             steps {
-                sh "docker run -v ${WORKSPACE}:/motor mplatina/motor-test-base:1.0.0 robot -x /motor/output/robot.xml --outputdir /motor/output /motor/tests/smoke/motor-test-base.robot"
+                sh "docker run -v ${WORKSPACE}:/motor mplatina/motor-test-base:1.0.0 robot -x /motor/output/robot.xml --outputdir /motor/output /motor/pipeline/containers/motor-test-base/motor-test-base.robot"
             }
         }
         stage('Publish Test Results') {
