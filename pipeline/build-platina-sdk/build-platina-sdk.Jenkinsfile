@@ -18,7 +18,7 @@ pipeline {
         stage('Build SDK') {
             steps {
                 sh "sudo rm -rf $SDK_HOME/dist"
-                sh "cd $SDK_HOME/build-aa.sh"
+                sh "$SDK_HOME/build-aa.sh"
             }
         }     
     }
