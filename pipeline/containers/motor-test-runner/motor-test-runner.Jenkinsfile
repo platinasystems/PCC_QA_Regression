@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                sh "docker run -v ${WORKSPACE}:/motor ${MOTOR_TEST_RUNNER} robot -x /motor/output/robot.xml --outputdir /motor/output /motor/tests/smoke/motor-test-runner.robot"
+                sh "docker run -v ${WORKSPACE}:/motor ${MOTOR_TEST_RUNNER} robot -x /motor/output/robot.xml --outputdir /motor/output /motor/containers/motor-test-base/motor-test-base.robot"
             }
         }
         stage('Publish Test Results') {
