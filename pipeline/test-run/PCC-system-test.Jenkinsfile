@@ -9,7 +9,7 @@ pipeline {
         VERSION = '1.0.0'
         MOTOR_TEST_RUNNER = "mplatina/motor-test-runner:${VERSION}"
         RUN_MOTOR = "/motor/src/motorframework/scripts/run-motor.sh"
-        PCC_KEY = pcc_242
+        PCC_KEY = "pcc_242"
     }
 
     stages {
