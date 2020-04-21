@@ -21,8 +21,8 @@ Library                         aa.pcc.Cli
 Library                         aa.pcc.Kubernetes
 Library                         aa.pcc.OpenSSHKeys
 Library                         aa.pcc.Roles
-#Library                         motorframework.pcc_keywords.Sites
-#Library                         motorframework.pcc_keywords.Tunneling
+Library                         aa.pcc.Sites
+#Library                        motorframework.pcc_keywords.Tunneling
 
 Library                         Collections
 
