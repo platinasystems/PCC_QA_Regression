@@ -63,7 +63,7 @@ pipeline {
         }     
         stage('Zip the output') {
             steps {
-                sh "zip -r robot_output.zip output"
+                sh "zip -r robot_output.zip output -x *logs*"
             }
         }     
         stage('Copy PCC Logs from PCC to motor-test-runner container') {
