@@ -107,7 +107,7 @@ pipeline {
                     """,
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
                     from: "anup.gupta@calsoftinc.com",
-                    attachmentsPattern: "robot_output.zip","robot_logs.zip"
+                    attachmentsPattern: "robot_output.zip, robot_logs.zip"
                 )
             }
         }        
