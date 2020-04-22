@@ -72,7 +72,7 @@ pipeline {
                 }
             }
         }
-        stage('Publish Test Results') {
+        stage('Publish Logs') {
             steps {
                 step([$class: 'RobotPublisher',
                     outputPath: 'output',
@@ -93,7 +93,7 @@ pipeline {
                 }
             }
         }
-        stage('Zip the output') {
+        stage('Zip the logs') {
             steps {
                 sh "zip -r robot_logs.zip output"
             }
