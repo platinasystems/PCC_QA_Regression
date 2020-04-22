@@ -42,25 +42,14 @@ class AaBase():
                 'ExecutionTime':"%.3f" % round(self._execution_time, 3)
                 }
         try:
-            res = {
-                # convert Json response.text to Python dict
-                'Result': json.loads(response.text),
-                'StatusCode': response.status_code,
+            trace("Command successful")
+            return {
+                # return stdout
+                'Result': {'stdout': response.stdout, 'stderr': response.stderr},
+                'StatusCode': response.return_code,
                 'ExecutionTime':"%.3f" % round(self._execution_time, 3)
                 }
-            debug("Status Code: %s" % res["StatusCode"])
-            debug(res["Result"])
-            return res
-        except json.JSONDecodeError:
-            try:
-                res = {
-                    'Result': None,
-                    'StatusCode': response.status_code,
-                    'ExecutionTime':"%.3f" % round(self._execution_time, 3)
-                }
-                debug("Status Code: %s" % res["StatusCode"])
-                return res
-            except Exception as e:
-                trace("[RestBase._serialize_response] Exception: %s" % e)
-                return {'Error': str(e)}
+        except Exception as e:
+            trace("Exception: %s" % e)
+            return {'Error': str(e)}
 
