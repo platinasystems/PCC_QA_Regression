@@ -42,6 +42,7 @@ class DockerUtils(AaBase):
     
     def is_docker_up(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        print("kwargs are: {}".format(kwargs))
         try:
             process_up_status = easy.cli_run(cmd='docker ps|grep -Ew "{}"|grep -v grep | wc -l'.format(self.container_name), host_ip=self.hostip,linux_user=self.username, linux_password=self.password)
             
@@ -65,6 +66,7 @@ class DockerUtils(AaBase):
     
     def restart_container(self,*args,**kwargs):
         self._load_kwargs(kwargs)
+        print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker restart {}".format(self.container_name)
             container_restart_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
@@ -93,6 +95,7 @@ class DockerUtils(AaBase):
         
         self._load_kwargs(kwargs)
         banner("Inside check_image_in_repo function")
+        print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker images|grep -w {}".format(self.image_name)
             check_image_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
@@ -120,6 +123,7 @@ class DockerUtils(AaBase):
     def delete_image_if_exists(self,**kwargs):
         banner("Delete image from local repo, if exists")
         self._load_kwargs(kwargs)
+        print("kwargs are: {}".format(kwargs))
         try:
 
             print("Image exists in repository ")
@@ -148,6 +152,7 @@ class DockerUtils(AaBase):
     
     def pull_from_docker_registry(self, *args, **kwargs):
         self._load_kwargs(kwargs)        
+        print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker pull {}".format(self.image_name)
             pull_command_execution = easy.cli_run(cmd=self.cmd,host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
@@ -175,7 +180,7 @@ class DockerUtils(AaBase):
     
     def pull_from_registry(self, *args, **kwargs):
         self._load_kwargs(kwargs)
-                
+        print("kwargs are: {}".format(kwargs))        
         try:
             self.cmd = "docker pull {}:{}/{}".format(self.registry_url,self.registryPort,self.image_name)
             time.sleep(5)
@@ -207,6 +212,7 @@ class DockerUtils(AaBase):
     
     def push_to_registry(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker push {}:{}/{}".format(str(self.registry_url), str(self.port), str(self.custom_name))
             push_to_registry_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
@@ -235,6 +241,7 @@ class DockerUtils(AaBase):
     
     def tag_image(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker tag {} {}:{}/{}".format(self.image_name, self.registry_url, str(self.port),self.custom_name)
             tag_cmd_execution = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
@@ -262,6 +269,7 @@ class DockerUtils(AaBase):
     
     def CR_login(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker login {}:{} --password='{}' --username='{}'".format(self.fullyQualifiedDomainName,self.registryPort,self.portus_password,self.portus_uname)
             CR_login_cmd_execution = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
