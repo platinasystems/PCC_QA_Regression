@@ -22,6 +22,7 @@ pipeline {
             steps {
                 sh "sudo rm -rf output"
                 sh "sudo rm -f robot_output.zip"
+                sh "sudo rm -f robot_logs.zip"
                 sh "mkdir output"
             }
         }
