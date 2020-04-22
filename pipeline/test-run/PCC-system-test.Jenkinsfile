@@ -106,7 +106,7 @@ pipeline {
                     Check console output at ${env.BUILD_URL}
                     """,
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
-                    from: "anup.gupta@calsoftinc.com",
+                    from: "msuman@platinasystems.com",
                     attachmentsPattern: "robot_output.zip, robot_logs.zip"
                 )
             }
