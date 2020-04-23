@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_242
+${pcc_setup}    pcc_215
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -19,18 +19,21 @@ Login to PCC
                          
                          
                          
-                         Load Server2 Details    ${pcc_setup}
+                         Load Clusterhead 1 Test Data    ${pcc_setup}
+                         Load Clusterhead 2 Test Data    ${pcc_setup}
+                         Load Server 1 Test Data    ${pcc_setup}
+                         Load Server 2 Test Data    ${pcc_setup}
+                         
                          Load Container Registry Data    ${pcc_setup}
-                         Load Invader1 Details    ${pcc_setup}
                          
-        ${invader1_id}    PCC.Get Node Id    Name=${INVADER_1_NAME}
-                         Log To Console    ${invader1_id}
-                         Set Global Variable    ${invader1_id}
                          
-
         ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
                          Log To Console    ${server2_id}
                          Set Global Variable    ${server2_id}
+                         
+        ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
+                         Log To Console    ${invader1_id}
+                         Set Global Variable    ${invader1_id}
                          
         ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
                          Log To Console    ${server_id}
