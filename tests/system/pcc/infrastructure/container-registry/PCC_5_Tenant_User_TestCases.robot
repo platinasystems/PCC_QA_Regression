@@ -459,7 +459,11 @@ Login to PCC using Admin User
                          Should Be Equal    ${status}  OK
                          
                          
-                         Load Server2 Details    ${pcc_setup}
+                         Load Clusterhead 1 Test Data    ${pcc_setup}
+                         Load Clusterhead 2 Test Data    ${pcc_setup}
+                         Load Server 1 Test Data    ${pcc_setup}
+                         Load Server 2 Test Data    ${pcc_setup}
+                         
                          Load Container Registry Data    ${pcc_setup}
                          
 
