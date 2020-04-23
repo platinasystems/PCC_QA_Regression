@@ -1,0 +1,65 @@
+{
+    "pcc_server": 
+    {
+        "pcc_url": "https://172.17.2.215:9999",
+        "pcc_host_ip": "172.17.2.215",
+        "pcc_linux_password": "cals0ft",
+        "pcc_username":"admin",
+        "pcc_password":"admin"
+    },
+
+    "ceph_cluster":
+    {
+        "name":"ceph-pvt",
+        "nodes":["sv27","sv16","i-61"],
+        "nodes_ip":["172.17.2.127","172.17.2.116","172.17.2.61"],
+        "tags":["All"],
+        "config":{"cluster_network":"192.168.23.0/27","public_network":"192.168.22.0/27"},
+        "controlCIDR":"",
+        "igwPolicy":"default"
+    },
+
+    "ceph_pool":
+    {
+        "name":"pool-pvt",
+        "size":3,
+        "tags":[],
+        "pool_type":"replicated",
+        "quota":1,
+        "quota_unit":"TiB"
+    },
+
+    "ceph_rbd":
+    {
+        "name":"rbd-pvt",
+        "image_feature":"layering",
+        "size":3,
+        "tags":[],
+        "size_units":"MiB"
+    },
+
+    "ceph_fs":
+    {
+        "name":"fs-pvt",
+        "meta_pool":"Pool1",
+        "data_pool":"Pool2",
+        "default_pool":"Pool3"
+    },
+    
+    "k8s":
+    {
+        "id":0,
+        "k8sVersion":"v1.14.3",
+        "name":"k8s-pvt",
+        "cniPlugin":"kube-router",
+        "nodes":["sv27","sv16","i-61"],
+        "pools":[],
+        "appName":"nginxapp",
+        "appNamespace":"nginxapp",
+        "gitUrl":"https://github.com/platinasystems/devops",
+        "gitRepoPath":"helm-charts",
+        "gitBranch":"master",
+        "label":"nginxapp"
+     }
+
+}
