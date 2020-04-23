@@ -149,10 +149,10 @@
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["sv125","sv124","i43"],
-            "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
-            "tags":["ROTATIONAL","SOLID_STATE"],
-            "config":{"cluster_network":"192.0.2.96/27","public_network":"192.0.2.96/27"},
+            "nodes":["sv27","sv16","i-61"],
+            "nodes_ip":["172.17.2.127","172.17.2.116","172.17.2.61"],
+            "tags":["All"],
+            "config":{"cluster_network":"192.168.23.0/27","public_network":"192.168.22.0/27"},
             "controlCIDR":"",
             "igwPolicy":"default"
         },
@@ -190,7 +190,7 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["i61","sv16","sv18"],
+            "nodes":["sv27","sv16","i-61"],
             "pools":[],
             "appName":"nginxapp",
             "appNamespace":"nginxapp",
@@ -210,6 +210,4 @@
             "admin_user":"RasikB",
             "ssh_keys":"RasikB"
         }
-        
-       
 }
