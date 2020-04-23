@@ -16,16 +16,21 @@ Login to PCC.
                          Should Be Equal    ${status}  OK
                          
                          
-                         Load Server2 Details    ${pcc_setup}
+                         Load Clusterhead 1 Test Data    ${pcc_setup}
+                         Load Clusterhead 2 Test Data    ${pcc_setup}
+                         Load Server 1 Test Data    ${pcc_setup}
+                         Load Server 2 Test Data    ${pcc_setup}
+                         
                          Load Container Registry Data    ${pcc_setup}
                          Load Auth Profile Data    ${pcc_setup}
                          
-                         
-                         
-
         ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
                          Log To Console    ${server2_id}
                          Set Global Variable    ${server2_id}
+                         
+        ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
+                         Log To Console    ${invader1_id}
+                         Set Global Variable    ${invader1_id}
                          
         ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
                          Log To Console    ${server_id}
