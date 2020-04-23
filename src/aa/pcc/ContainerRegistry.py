@@ -37,6 +37,7 @@ class ContainerRegistry(AaBase):
         self.CR_ID = None
         self.portus_uname = None
         self.authenticationProfileId = None
+        self.storageLocation = None
         
         super().__init__()
 
@@ -302,6 +303,7 @@ class ContainerRegistry(AaBase):
         self.CR_ID= self.get_CR_id(**kwargs)
         payload = {
                 "id":self.CR_ID,
+                "storageLocation":self.storageLocation,
                 "nodeID": self.get_CR_server_id(**kwargs),
                 "name": str(self.Name),
                 "fullyQualifiedDomainName": str(self.fullyQualifiedDomainName),
