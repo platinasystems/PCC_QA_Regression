@@ -444,7 +444,60 @@ Verify image pulled to server : TCP-837
                      
                      Log to Console    ${result}
                      Should Be Equal As Strings    ${result}    OK
+
+###################################################################################################################################
+Passing wrong FQDN while Tagging image, Pushing Image and Pulling image, TCP: 602 (Negative)
+###################################################################################################################################
+       
+       [Documentation]    *Verify image pulled to server* test
+                           ...  keywords:
+                           ...  Check if image exists in local repo
+                           
+                           
+                           
+       ${result}    Tag Image
+                     ...    image_name=${CR_IMAGE_NAME}
+                     ...    registry_url=${CR_INVALID_FQDN}
+                     ...    port=${CR_REGISTRYPORT}
+                     ...    custom_name=${CR_CUSTOM_IMAGE_NAME}
+                     ...    hostip=${host_ip}
                      
+                     Log to Console    ${result}
+                     Should Not Be Equal As Strings    ${result}    OK
+                     
+                                         
+       ${result}    PCC.CR login using docker
+                             
+                     ...    registryPort=${CR_REGISTRYPORT}
+                     ...    portus_password=${AUTH_PROFILE_BIND_PWD}  
+                     ...    fullyQualifiedDomainName=${CR_INVALID_FQDN}
+                     ...    portus_uname=${AUTH_PROFILE_UNAME}
+                     ...    hostip=${host_ip}
+                                     
+                     Log To Console    ${result}
+                     Should Not Be Equal As Strings    ${result}    OK 
+                     
+       ${result}    Push To Registry
+                     
+                     ...    registry_url=${CR_INVALID_FQDN}
+                     ...    port=${CR_REGISTRYPORT}
+                     ...    custom_name=${CR_CUSTOM_IMAGE_NAME}
+                     ...    hostip=${host_ip}
+                     
+                     
+                     Log to Console    ${result}
+                     Should Not Be Equal As Strings    ${result}    OK             
+                     
+       ${result}    Pull From Registry
+                     
+                     ...    image_name=${CR_CUSTOM_IMAGE_NAME}
+                     ...    registry_url=${CR_INVALID_FQDN}
+                     ...    registryPort=${CR_REGISTRYPORT}
+                     ...    hostip=${host_ip}
+                     
+                     Log to Console    ${result}
+                     Should Not Be Equal As Strings    ${result}    OK 
+
 ####################################################################################################################################
 Login to PCC using Admin User
 ####################################################################################################################################
@@ -579,5 +632,43 @@ Cleanup Container Registry after login as Tenant user
                      Log to Console    ${result}
                      Should Be Equal As Strings    ${result}    OK
                      
+###################################################################################################################################
+User should not be able to access Portus URL and images : TCP- 591 (Negative)
+###################################################################################################################################
+
+        [Documentation]    *User should not be able to access Portus URL and images* test
+                           ...  keywords:
+                           ...  Check if image exists in local repo
+                           ...  Delete image from local repo, if exists
+                           ...  aa.common.LinuxUtils.Is FQDN reachable
+                           ...
+                            
+        
+        ${check_image_status}    Check if image exists in local repo    
+                                 ...    image_name=${CR_CUSTOM_IMAGE_NAME}
+                                 ...    hostip=${host_ip}
+                                 
+        ${return} =    Run Keyword If    "${check_image_status}" == "OK"
+                       ...    Delete image from local repo, if exists    image_name=${CR_FQDN}:${CR_REGISTRYPORT}/${CR_CUSTOM_IMAGE_NAME}    hostip=${host_ip}
+                       
+                       Log to Console    ${return}
+                       Should Be Equal As Strings    ${return}    OK
+                       
+        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+                             ...    FQDN_name=${CR_FQDN}
+                             ...    hostip=${host_ip}
+                             
+                             Log to Console    ${FQDN_reachability_result}
+                             Should Not Be Equal As Strings    ${FQDN_reachability_result}    OK
+                             
+        ${result}    Pull From Registry
+                     
+                     ...    image_name=${CR_CUSTOM_IMAGE_NAME}
+                     ...    registry_url=${CR_FQDN}
+                     ...    registryPort=${CR_REGISTRYPORT}
+                     ...    hostip=${host_ip}
+                     
+                     Log to Console    ${result}
+                     Should Not Be Equal As Strings    ${result}    OK                     
 
                      
