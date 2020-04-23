@@ -214,6 +214,36 @@ Secret key Base validation on CR where Secret key Base is null : TCP-831
                        Should Not Be Equal    "${status}"    "200"
                        
 ###################################################################################################################################
+StorageLocation validation on CR where Storage Location is invalid
+###################################################################################################################################
+        
+        [Documentation]         *StorageLocation validation* test
+                                ...  keywords:
+                                ...  PCC.Create Container Registry
+
+        ${response}    PCC.Update Container Registry 
+                       
+                       ...    nodeID=${server2_id}
+                       ...    storageLocation=${CR_INVALID_STORAGE_LOCATION}
+                       ...    Name=${CR_NAME}
+                       ...    fullyQualifiedDomainName=${CR_FQDN}
+                       ...    password=${CR_PASSWORD}
+                       ...    secretKeyBase=""
+                       ...    databaseName=${CR_DATABASENAME}
+                       ...    databasePassword=${CR_DB_PWD}
+                       ...    port=${CR_PORT}
+                       ...    registryPort=${CR_REGISTRYPORT}
+                       ...    adminState=${CR_ADMIN_STATE}
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal    "${status}"    "200"
+
+
+###################################################################################################################################
 Creating two Container Registry on same server should be rejected
 ###################################################################################################################################
         
