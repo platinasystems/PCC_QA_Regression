@@ -36,7 +36,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
-                    sh "docker run -v ${WORKSPACE}: ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} /aa/${MOTOR_TEST_NAME}"
+                    sh "docker run -v ${WORKSPACE}:/aa ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} ${MOTOR_TEST_NAME}"
                 }
             }
         }  
