@@ -679,13 +679,13 @@ Load OS-Deployment Data
 
                                     # OS-Deployment
                                     
-        ${IMAGE_1_NAME}             Evaluate    $pcc_server_dict.get("centos76", None)
+        ${IMAGE_1_NAME}             Evaluate    $pcc_server_dict.get("image1_name", None)
                                     Set Suite Variable    ${IMAGE_1_NAME}
                                     
-        ${IMAGE_2_NAME}             Evaluate    $pcc_server_dict.get("ubuntu-disco", None)
+        ${IMAGE_2_NAME}             Evaluate    $pcc_server_dict.get("image2_name", None)
                                     Set Suite Variable    ${IMAGE_2_NAME}
                                     
-        ${IMAGE_3_NAME}             Evaluate    $pcc_server_dict.get("ubuntu-bionic", None)
+        ${IMAGE_3_NAME}             Evaluate    $pcc_server_dict.get("image3_name", None)
                                     Set Suite Variable    ${IMAGE_3_NAME}
                                     
         ${LOCALE}                   Evaluate    $pcc_server_dict.get("locale", None)
