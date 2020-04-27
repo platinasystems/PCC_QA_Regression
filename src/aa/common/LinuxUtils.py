@@ -101,7 +101,7 @@ class LinuxUtils(AaBase):
             
             self.cmd_output = str(serialised_FQDN_status['Result']['stdout']).replace('\n', '').strip()
             
-            if "0% packet loss" in self.cmd_output:
+            if ", 0% packet loss" in self.cmd_output:
                 return "OK"
             else:
                 return "Error"
@@ -160,7 +160,7 @@ class LinuxUtils(AaBase):
             
             self.cmd_output = str(serialised_restart_up_status['Result']['stdout']).replace('\n', '').strip()
             
-            if "0% packet loss" in self.cmd_output:
+            if ", 0% packet loss" in self.cmd_output:
                 return "OK"
             else:
                 return "Error"
