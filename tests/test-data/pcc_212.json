@@ -3,6 +3,7 @@
         {
             "pcc_url": "https://172.17.2.212:9999",
             "pcc_host_ip": "172.17.2.212",
+            "pcc_linux_user":"pcc",
             "pcc_linux_password": "cals0ft",
             "pcc_username":"admin",
             "pcc_password":"admin",
