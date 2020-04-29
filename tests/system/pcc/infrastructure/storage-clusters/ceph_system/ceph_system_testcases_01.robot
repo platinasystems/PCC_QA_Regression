@@ -12,6 +12,10 @@ Login
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
+                                    Load Clusterhead 1 Test Data    ${pcc_setup}
+                                    Load Clusterhead 2 Test Data    ${pcc_setup}
+                                    Load Server 1 Test Data    ${pcc_setup}
+                                    Load Server 2 Test Data    ${pcc_setup}                                    
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
@@ -62,7 +66,7 @@ Ceph Cluster Creation with 2 nodes (Negative)
     
         ${response}                      PCC.Ceph Create Cluster
                                     ...  name=${CEPH_CLUSTER_NAME}
-                                    ...  nodes=["sv125","sv124"]
+                                    ...  nodes=["${SERVER_1_NAME}", "${SERVER_2_NAME}"]
                                     ...  tags=["ALL"]
                                     ...  config=${CEPH_CLUSTER_CONFIG}
                                     ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -155,16 +159,16 @@ Ceph Cluster Creation with same public and cluster CIDR (Negative)
                                     ...  keywords:
                                     ...  PCC.Ceph Create Cluster
                                     
-        ${response}                       PCC.Ceph Create Cluster
-                                     ...  name=${CEPH_CLUSTER_NAME}
-                                     ...  nodes=${CEPH_CLUSTER_NODES}
-                                     ...  tags=["ALL"]
-                                     ...  config={"cluster_network":"192.168.32.0/27","public_network":"192.168.32.0/27"}
-                                     ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
-                                     ...  igwPolicy=${CEPH_CLUSTER_IGWPOLICY}
+        ${response}                      PCC.Ceph Create Cluster
+                                    ...  name=${CEPH_CLUSTER_NAME}
+                                    ...  nodes=${CEPH_CLUSTER_NODES}
+                                    ...  tags=["ALL"]
+                                    ...  config={"cluster_network":"192.168.32.0/27","public_network":"192.168.32.0/27"}
+                                    ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
+                                    ...  igwPolicy=${CEPH_CLUSTER_IGWPOLICY}
 
-        ${status_code}                    Get Response Status Code  ${response}
-                                          Should Not Be Equal As Strings  ${status_code}  200
+        ${status_code}                   Get Response Status Code  ${response}
+                                         Should Not Be Equal As Strings  ${status_code}  200
 
 ###################################################################################################################################
 Ceph Cluster Creation without selecting any nodes (Negative)

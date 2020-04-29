@@ -9,11 +9,11 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from platina_sdk import pcc_easy_api as easy
 
-from aa.common.Utils import banner, trace, pretty_print
+from aa.common.Utils import banner, trace, pretty_print, cmp_json
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 
-PCCSERVER_TIMEOUT = 60*20
+PCCSERVER_TIMEOUT = 60*40
 
 class CephCluster(AaBase):
 
@@ -35,6 +35,8 @@ class CephCluster(AaBase):
         self.nodes_ip=[]
         self.user=""
         self.password=""
+        self.data1=None
+        self.data2=None
         super().__init__()
 
     ###########################################################################
@@ -53,6 +55,15 @@ class CephCluster(AaBase):
         return cluster_id
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Compare Data")
+    ###########################################################################
+    def ceph_compare_data(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Compare Data")
+
+        return cmp_json(self.data1,self.data2)
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Create Cluster")
     ###########################################################################
     def add_ceph_cluster(self, *args, **kwargs):
@@ -67,6 +78,11 @@ class CephCluster(AaBase):
             print(" Node Id retrieved -"+str(node_id))
             tmp_node.append({"id":node_id})
         self.nodes=tmp_node
+        
+        if self.tags:
+            self.tags=eval(str(self.tags))
+        if self.config:
+            self.config=eval(str(self.config))
 
         payload = {
             "name": self.name,
@@ -77,7 +93,7 @@ class CephCluster(AaBase):
             "igwPolicy":self.igwPolicy
         }
 
-        print(payload)
+        print("Payload:-"+str(payload))
         return pcc.add_ceph_cluster(conn, payload)
 
     ###########################################################################
@@ -100,10 +116,14 @@ class CephCluster(AaBase):
         for data in get_response_data(response):
             if str(data['name']).lower() == str(self.name).lower():
                 payload_nodes=eval(str(data['nodes']))
-                self.controlCIDR=data['controlCIDR']
-                self.tags=data['tags']
-                self.igwPolicy=data['igwPolicy']
-                self.name=data['name']
+                if not self.controlCIDR: 
+                    self.controlCIDR=data['controlCIDR']
+                if not self.tags:
+                    self.tags=data['tags']
+                if not self.igwPolicy:
+                    self.igwPolicy=data['igwPolicy']
+                if not self.name:
+                    self.name=data['name']
 
         for id in tmp_node:
             count=0
@@ -113,6 +133,11 @@ class CephCluster(AaBase):
                     count=1
             if count==0:
                 self.nodes.append({"id":int(id)}) 
+        
+        if self.tags:
+            self.tags=eval(str(self.tags))
+        if self.config:
+            self.config=eval(str(self.config))
        
         try:
             payload = {
@@ -125,7 +150,7 @@ class CephCluster(AaBase):
             "igwPolicy":self.igwPolicy
              }
 
-            print(str(payload))
+            print("Payload:-"+str(payload))
 
         except Exception as e:
             trace("[update_cluster] EXCEPTION: %s" % str(e))

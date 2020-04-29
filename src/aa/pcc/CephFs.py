@@ -47,6 +47,22 @@ class CephFs(AaBase):
 
         fs_id = easy.get_ceph_fs_id_by_name(conn,self.name)
         return fs_id
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get All Fs Data")
+    ###########################################################################
+    def get_ceph_all_fs_data(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        pool_id= None
+        banner("PCC.Ceph Get All Fs Data")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        response = get_response_data(pcc.get_ceph_fs(conn))
+        return response
 
     ###########################################################################
     @keyword(name="PCC.Ceph Create Fs")
@@ -55,7 +71,7 @@ class CephFs(AaBase):
         banner("PCC.Ceph Create Fs")
         self._load_kwargs(kwargs)
 
-        if re.search("^\[",str(self.data_pool))!=None:
+        if re.search("^\[",str(self.data_pool))!=None and type(self.data_pool)!=list:
             self.data_pool=eval(self.data_pool)
 
         payload = {

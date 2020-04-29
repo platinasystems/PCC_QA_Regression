@@ -63,4 +63,11 @@ def banner(msg):
 
 def format_message(msg, level):
     return level + ": " + str(msg)
-    
+
+def cmp_json(data1,data2):
+    data1, data2 = json.dumps(data1, sort_keys=True), json.dumps(data2, sort_keys=True)
+    print("data1:"+str(data1))
+    print("data2:"+str(data2))
+    if data1 == data2: # a normal string comparison
+        return "Ok"
+ 

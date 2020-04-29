@@ -14,7 +14,7 @@ from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 
-PCCSERVER_TIMEOUT = 60*3
+PCCSERVER_TIMEOUT = 60*6
 
 class CephRbd(AaBase):
 
@@ -47,6 +47,22 @@ class CephRbd(AaBase):
 
         rbd_id = easy.get_ceph_rbd_id_by_name(conn,self.name)
         return rbd_id
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get All Rbds Data")
+    ###########################################################################
+    def get_ceph_all_rbds_data(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        pool_id= None
+        banner("PCC.Ceph Get All Rbds Data")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        response = get_response_data(pcc.get_ceph_rbds(conn))
+        return response
 
     ###########################################################################
     @keyword(name="PCC.Ceph Delete All Rbds")

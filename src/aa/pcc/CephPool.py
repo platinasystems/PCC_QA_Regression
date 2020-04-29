@@ -52,6 +52,22 @@ class CephPool(AaBase):
         return pool_id
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Get All Pools Data")
+    ###########################################################################
+    def get_ceph_all_pools_data(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        pool_id= None
+        banner("PCC.Ceph Get All Pool Data")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        response = get_response_data(pcc.get_ceph_pools(conn))
+        return response
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Delete All Pools")
     ###########################################################################
     def delete_all_pools(self,*args,**kwargs):
@@ -98,6 +114,37 @@ class CephPool(AaBase):
                 temp["quota"] = data["quota"]
                 temp["quota_unit"] =  data["quota_unit"]
         return temp
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get Multiple Pool Details For FS")
+    ###########################################################################
+    def get_multiple_pool_details_for_fs(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Pool Details For FS")
+
+        temp=dict()
+        temp_list=[]        
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        
+        response = pcc.get_ceph_pools(conn)['Result']['Data']    
+        for val in eval(str(self.name)):
+            for data in response:
+                if str(data['name']) == str(val):
+                    temp["id"] = data["id"]
+                    temp["name"]= data["name"]
+                    temp["size"] = data["size"]
+                    temp["tags"] = ["tags"]
+                    temp["ceph_cluster_id"] = data["ceph_cluster_id"]
+                    temp["pool_type"] = data["pool_type"]
+                    temp["quota"] = data["quota"]
+                    temp["quota_unit"] =  data["quota_unit"]
+            if len(temp)!=0:        
+                temp_list.append(temp)
+        return temp_list
 
     ###########################################################################
     @keyword(name="PCC.Ceph Create Pool")
@@ -162,8 +209,9 @@ class CephPool(AaBase):
         if self.count:
             self.count=int(self.count)
 
+        name_bkup = self.name
         for i in range(1,self.count+1):
-            name=str(self.name)+"-"+str(i)
+            name=str(name_bkup)+"-"+str(i)
             payload = {
                 "name":name,
                 "size":self.size,
@@ -180,6 +228,8 @@ class CephPool(AaBase):
             else:
                 response=pcc.add_ceph_pool(conn, payload)
                 print(response)
+                self.name=name
+                status=self.wait_until_pool_ready()
             time.sleep(10)
 
     ###########################################################################

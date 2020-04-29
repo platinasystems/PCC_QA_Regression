@@ -58,6 +58,12 @@ class Kubernetes(AaBase):
             tmp_node.append({"id":node_id})
         self.nodes=tmp_node
 
+        tmp_pool=[]
+        if self.pools:
+            for pool in eval(str(self.pools)):
+                 tmp_pool.append(easy.get_ceph_pool_id_by_name(conn,pool))
+                 
+        self.pools=tmp_pool
         payload = {
             "id": int(self.id),
             "k8sVersion": self.k8sVersion,
@@ -126,7 +132,7 @@ class Kubernetes(AaBase):
         cluster_ready = False
         timeout = time.time() + PCCSERVER_TIMEOUT
 
-        time.sleep(30)
+        time.sleep(60)
         while cluster_ready == False:
             response = pcc.get_kubernetes(conn)
             print("Response:-"+str(response))
@@ -184,6 +190,14 @@ class Kubernetes(AaBase):
         banner("PCC.K8s Upgrade Cluster")
         self._load_kwargs(kwargs)
         
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        tmp_pool=[]
+        if self.pools:
+            for pool in eval(str(self.pools)):
+                 tmp_pool.append(easy.get_ceph_pool_id_by_name(conn,pool))
+        self.pools=tmp_pool
+                         
         payload = {
             "k8sVersion": self.k8sVersion,
             "pools": self.pools
@@ -192,7 +206,6 @@ class Kubernetes(AaBase):
         if self.cluster_id == None:
             raise Exception("[PCC.Upgrade Cluster]: cluster id is not specified.")
         else:
-            conn = BuiltIn().get_variable_value("${PCC_CONN}")
             return pcc.upgrade_kubernetes_by_id(conn,str(self.cluster_id),payload)
 
 

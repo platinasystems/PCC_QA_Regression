@@ -13,6 +13,10 @@ Login
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
                                     Load Ceph Fs Data    ${pcc_setup}
+                                    Load Clusterhead 1 Test Data    ${pcc_setup}
+                                    Load Clusterhead 2 Test Data    ${pcc_setup}
+                                    Load Server 1 Test Data    ${pcc_setup}
+                                    Load Server 2 Test Data    ${pcc_setup}                                    
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
@@ -27,7 +31,7 @@ Ceph Cluster with one node (Negative)
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv125"]
+                               ...  nodes=[${SERVER_1_NAME}]
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config=${CEPH_CLUSTER_CONFIG}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -46,7 +50,7 @@ Ceph Cluster with two node (Negative)
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv124","i43"]
+                               ...  nodes=["${SERVER_2_NAME}", "${CLUSTERHEAD_1_NAME}"]
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config=${CEPH_CLUSTER_CONFIG}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -65,7 +69,7 @@ Ceph Cluster with alpbhabet/special-chars in CIDRs (192.168.xx.0/xx) (Negative)
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv124","i43"]
+                               ...  nodes=${CEPH_CLUSTER_NODES}
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config={"cluster_network":"192.168.xx.0/xx","public_network":"192.168.75.0/27"}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -84,7 +88,7 @@ Ceph Cluster with Invalid IP subnet range in CIDRs (192.168.75.0/35)(Negative)
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv124","i43"]
+                               ...  nodes=${CEPH_CLUSTER_NODES}
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config={"cluster_network":"192.168.76.0/27","public_network":"192.168.75.0/27"}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -103,7 +107,7 @@ Ceph Cluster with Invalid IP address range in CIDRs (555.5555.555.555/29)(Negati
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv124","i43"]
+                               ...  nodes=${CEPH_CLUSTER_NODES}
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config={"cluster_network":"555.5555.555.555/29","public_network":"192.168.75.0/27"}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -122,7 +126,7 @@ Ceph Cluster provide different network than that of provisioned on nodes(Negativ
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv124","i43"]
+                               ...  nodes=${CEPH_CLUSTER_NODES}
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config={"cluster_network":"192.168.32.0/27","public_network":"192.168.75.0/27"}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
@@ -141,7 +145,7 @@ Ceph Cluster with smaller subnet covered with larger subnet(Negative)
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["sv124","i43"]
+                               ...  nodes=${CEPH_CLUSTER_NODES}
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config={"cluster_network":"192.168.32.0/27","public_network":"192.168.33.0/31"}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
