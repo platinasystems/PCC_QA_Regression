@@ -144,6 +144,8 @@ class Kubernetes(AaBase):
                             cluster_ready = True
                     elif str(data['deployStatus']).lower() == 'installed' or str(data['deployStatus']).lower() == 'update completed':
                         cluster_ready = True
+                    elif re.search("failed",str(data['deployStatus'])):
+                        return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Wait Until Cluster is Ready] Timeout")
             trace("  Waiting until cluster: %s is Ready, currently:     %s" % (data['ID'], data['deployStatus']))
@@ -175,6 +177,8 @@ class Kubernetes(AaBase):
             for data in get_response_data(response):
                 if str(data['ID']) == str(self.cluster_id):
                     Id_found_in_list_of_clusters = True
+                elif re.search("failed",str(data['deployStatus'])):
+                    return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.K8s Wait Until Cluster Deleted] Timeout")
             if Id_found_in_list_of_clusters:

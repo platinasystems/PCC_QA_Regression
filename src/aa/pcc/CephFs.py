@@ -110,6 +110,8 @@ class CephFs(AaBase):
                 if str(data['name']).lower() == str(self.name).lower():
                     if str(data['deploy_status']) == "completed":
                         fs_ready = True
+                    elif re.search("failed",str(data['deploy_status'])):
+                        return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Fs Ready] Timeout")
             trace("  Waiting until Fs : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
@@ -156,6 +158,8 @@ class CephFs(AaBase):
                 print(data)
                 if str(data['id']) == str(self.id):
                     Id_found_in_list_of_Fs = True
+                elif re.search("failed",str(data['deploy_status'])):
+                    return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Fs Deleted] Timeout")
             if Id_found_in_list_of_Fs:

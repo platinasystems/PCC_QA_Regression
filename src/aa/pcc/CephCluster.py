@@ -25,11 +25,11 @@ class CephCluster(AaBase):
 
         # Robot arguments definitions
 
-        self.id = None
-        self.name = None
-        self.nodes = []
-        self.tags =  []
-        self.config = dict()
+        self.id=None
+        self.name=None
+        self.nodes=[]
+        self.tags=[]
+        self.config=dict()
         self.controlCIDR=None
         self.igwPolicy=""
         self.nodes_ip=[]
@@ -196,8 +196,11 @@ class CephCluster(AaBase):
             response = pcc.get_ceph_clusters(conn)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
+                    print("Response To Look :-"+str(data))
                     if data['progressPercentage'] == 100:
                         cluster_ready = True
+                    elif re.search("failed",str(data['deploy_status'])):
+                        return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Cluster Ready] Timeout")
             trace("  Waiting until cluster: %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
@@ -229,6 +232,8 @@ class CephCluster(AaBase):
             for data in get_response_data(response):
                 if str(data['id']) == str(self.id):
                     Id_found_in_list_of_clusters = True
+                elif re.search("failed",str(data['deploy_status'])):
+                    return "Error"            
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Cluster Deleted] Timeout")
             if Id_found_in_list_of_clusters:
