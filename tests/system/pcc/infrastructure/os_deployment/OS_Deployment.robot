@@ -42,7 +42,7 @@ Login to PCC.
 Verify Provision Ready Status and update node, if not ready (TC-1)
 ###################################################################################################################################
 
-    [Documentation]    *Verify Provision Ready Status* test  
+    [Documentation]    *Verify Provision Ready Status and update node, if not ready* test  
     [Tags]    OS
         
                  
@@ -70,7 +70,7 @@ Verify Provision Ready Status and update node, if not ready (TC-1)
 Update OS details (centos76) - Brownfield
 ###################################################################################################################################
 
-    [Documentation]    *Verify Provision Ready Status* test                           
+    [Documentation]    *Update OS details (centos76) - Brownfield* test                           
     [Tags]    OS               
                           
     ${response}           PCC.Update OS details 
@@ -126,7 +126,7 @@ Verify OS details from PCC (centos76) - Brownfield
 Verify Provision Ready Status and update node, if not ready (TC-2)
 ###################################################################################################################################
 
-    [Documentation]    *Verify Provision Ready Status* test  
+    [Documentation]    *Verify Provision Ready Status and update node, if not ready* test  
     [Tags]    OS
         
                  
@@ -154,7 +154,7 @@ Verify Provision Ready Status and update node, if not ready (TC-2)
 Update OS details (ubuntu-bionic) - Brownfield
 ###################################################################################################################################
 
-    [Documentation]    *Verify Provision Ready Status* test                           
+    [Documentation]    *Update OS details (ubuntu-bionic) - Brownfield* test                           
     [Tags]    OS               
                           
     ${response}           PCC.Update OS details 
@@ -181,7 +181,7 @@ Update OS details (ubuntu-bionic) - Brownfield
 Wait Until Node Ready (ubuntu-bionic) - Brownfield
 ###################################################################################################################################
 
-    [Documentation]    *Wait Until Node Ready (centos76) - Brownfield* test                           
+    [Documentation]    *Wait Until Node Ready (ubuntu-bionic) - Brownfield* test                           
     [Tags]    OS
 
                           
@@ -196,7 +196,7 @@ Wait Until Node Ready (ubuntu-bionic) - Brownfield
 Verify OS details from PCC (ubuntu-bionic) - Brownfield
 ###################################################################################################################################
 
-    [Documentation]    *Verify OS details from PCC* test 
+    [Documentation]    *Verify OS details from PCC (ubuntu-bionic)* test 
     
     [Tags]    OS_Verify
     ${status}    PCC.Verify OS details from PCC
