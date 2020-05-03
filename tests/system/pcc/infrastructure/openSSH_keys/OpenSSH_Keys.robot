@@ -16,18 +16,7 @@ Login to PCC
         
         ${status}        Login To PCC    ${pcc_setup}
                          
-                         Load Server2 Details    ${pcc_setup}
-                         Load Container Registry Data    ${pcc_setup}
-                         Load Invader1 Details    ${pcc_setup}
-                         Load Certificate Data    ${pcc_setup}
-                         
-        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
-                         Log To Console    ${server2_id}
-                         Set Global Variable    ${server2_id}
-                         
-        ${invader1_id}    PCC.Get Node Id    Name=${INVADER_1_NAME}
-                         Log To Console    ${invader1_id}
-                         Set Global Variable    ${invader1_id}
+                         Load OpenSSH_Keys Data    ${pcc_setup}
                          
 ###################################################################################################################################
 Add Private Key
