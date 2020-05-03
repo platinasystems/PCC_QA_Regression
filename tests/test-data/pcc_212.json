@@ -143,6 +143,18 @@
             "Description":"Added dummy certificate for testing"
         },
         
+    "openSSH_keys":
+        {
+            "public_key_alias":"KC",
+            "public_key_description":"KC_Public_Key",
+            "public_type":"any", 
+            "public_key":"Temp_public.pub",
+            "private_key_alias":"Dummy_Private",
+            "private_key_description":"Dummy_Private_Key",
+            "private_type":"Private", 
+            "private_key":"Temp_private.ppk"
+        },
+        
     "ceph_cluster":
         {
             "name":"ceph-pvt",
