@@ -164,7 +164,7 @@ Update interface of pxe-booted node
 Verify Provision Ready Status and update node, if not ready (TC-1)
 ###################################################################################################################################
 
-    [Documentation]    *Verify Provision Ready Status* test  
+    [Documentation]    *Verify Provision Ready Status and update node, if not ready* test  
     [Tags]    OS
         
                  
@@ -189,10 +189,10 @@ Verify Provision Ready Status and update node, if not ready (TC-1)
                    Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Update OS details (centos76) - Brownfield
+Update OS details (centos76)
 ###################################################################################################################################
 
-    [Documentation]    *Verify Provision Ready Status* test                           
+    [Documentation]    *Update OS details (centos76)* test                           
     [Tags]    OS               
                           
     ${response}           PCC.Update OS details 
@@ -216,10 +216,10 @@ Update OS details (centos76) - Brownfield
                           Log To Console    Done sleeping
 
 ###################################################################################################################################
-Wait Until Node Ready (centos76) - Brownfield
+Wait Until Node Ready (centos76)
 ###################################################################################################################################
 
-    [Documentation]    *Wait Until Node Ready (centos76) - Brownfield* test                           
+    [Documentation]    *Wait Until Node Ready (centos76)* test                           
     [Tags]    OS
 
                           
@@ -231,12 +231,13 @@ Wait Until Node Ready (centos76) - Brownfield
                  
                  
 ###################################################################################################################################
-Verify OS details from PCC (centos76) - Brownfield
+Verify OS details from PCC (centos76)
 ###################################################################################################################################
 
     [Documentation]    *Verify OS details from PCC* test 
     
     [Tags]    OS_Verify
+    
     ${status}    PCC.Verify OS details from PCC
                  ...  Name=${SERVER_1_NAME}
                  ...  image_name=${IMAGE_1_NAME}
