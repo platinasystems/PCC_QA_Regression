@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_215
+${pcc_setup}    pcc_212
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -670,5 +670,3 @@ User should not be able to access Portus URL and images : TCP- 591 (Negative)
                      
                      Log to Console    ${result}
                      Should Not Be Equal As Strings    ${result}    OK                     
-
-                     

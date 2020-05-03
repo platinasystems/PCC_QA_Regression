@@ -4,6 +4,7 @@ Library                         aa.common.Result
 Library                         aa.common.TestData
 Library                         aa.common.LinuxUtils
 Library                         aa.common.DockerUtils
+
 Library                         aa.pcc.Login
 Library                         aa.pcc.Certificate
 Library                         aa.pcc.Applications
@@ -13,6 +14,8 @@ Library                         aa.pcc.Tenants
 Library                         aa.pcc.Nodes
 Library                         aa.pcc.ContainerRegistry
 Library                         aa.pcc.Auth_Profile
+Library                         aa.pcc.Tunneling
+Library                         aa.pcc.OS_Deployment
 Library                         aa.pcc.CephCluster
 Library                         aa.pcc.CephPool
 Library                         aa.pcc.CephRbd
@@ -24,7 +27,6 @@ Library                         aa.pcc.Roles
 Library                         aa.pcc.Sites
 Library                         aa.pcc.RoleOperations
 Library                         aa.pcc.Interfaces
-#Library                        motorframework.pcc_keywords.Tunneling
 
 Library                         Collections
 
@@ -103,7 +105,7 @@ Load Clusterhead 1 Test Data
         [Documentation]         *Load Clusterhead 1 Test Data* 
                                 Log To Console          **** Load Clusterhead 1 Test Data ****
 
-            ${pcc_server_dict}  TESTDATA.Get            ${testdata_key}.json        clusterhead-1
+            ${pcc_server_dict}    TESTDATA.Get            ${testdata_key}.json        clusterhead-1
                                 
                                 # Clusterhead Info
                                 
@@ -153,7 +155,7 @@ Load Clusterhead 2 Test Data
         [Documentation]         *Load Clusterhead 2 Test Data* 
                                 Log To Console          **** Load Clusterhead 2 Test Data ****
 
-            ${pcc_server_dict}  TESTDATA.Get            ${testdata_key}.json        clusterhead-2
+            ${pcc_server_dict}    TESTDATA.Get            ${testdata_key}.json        clusterhead-2
                                 
                                 # Clusterhead Info
                                 
@@ -203,7 +205,7 @@ Load Server 1 Test Data
         [Documentation]         *Load Server 1 Test Data* 
                                 Log To Console          **** Load Server 1 Test Data ****
 
-            ${pcc_server_dict}  TESTDATA.Get            ${testdata_key}.json        server-1
+            ${pcc_server_dict}    TESTDATA.Get            ${testdata_key}.json        server-1
                                 
                                 # Server Info
                                 
@@ -257,7 +259,7 @@ Load Server 2 Test Data
         [Documentation]         *Load Server 2 Test Data* 
                                 Log To Console          **** Load Server 2 Test Data ****
 
-            ${pcc_server_dict}  TESTDATA.Get            ${testdata_key}.json        server-2
+            ${pcc_server_dict}    TESTDATA.Get            ${testdata_key}.json        server-2
                                 
                                 # Server Info
                                 
@@ -701,3 +703,64 @@ Load OS-Deployment Data
                                     
         ${SSH_KEYS}                 Evaluate    $pcc_server_dict.get("ssh_keys", None)
                                     Set Suite Variable    ${SSH_KEYS}
+                                    
+                                    
+###################################################################################################################################
+Load PXE-Boot Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load PXE-Boot Data*
+
+                                    Log To Console      **** Load OS-Deployment Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    pxe-boot
+
+                                    # Pxe-boot
+                                    
+        ${GATEWAY}                  Evaluate    $pcc_server_dict.get("gateway", None)
+                                    Set Suite Variable    ${GATEWAY}
+                                    
+        ${PXE_BOOTED_SERVER}        Evaluate    $pcc_server_dict.get("pxe_booted_server", None)
+                                    Set Suite Variable    ${PXE_BOOTED_SERVER}
+                                  
+        ${ADMINSTATUS_UP}           Evaluate    $pcc_server_dict.get("adminStatus_up", None)
+                                    Set Suite Variable    ${ADMINSTATUS_UP}
+                                    
+        ${ADMINSTATUS_DOWN}         Evaluate    $pcc_server_dict.get("adminStatus_down", None)
+                                    Set Suite Variable    ${ADMINSTATUS_DOWN}
+                                    
+                                    
+###################################################################################################################################
+Load OpenSSH_Keys Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load OpenSSH_Keys Data*
+
+                                    Log To Console      **** Load OpenSSH_Keys Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    openSSH_keys
+
+                                    # OpenSSH_Keys
+                                    
+        ${PUBLIC_KEY_ALIAS}         Evaluate    $pcc_server_dict.get("public_key_alias", None)
+                                    Set Suite Variable    ${PUBLIC_KEY_ALIAS}
+                                    
+        ${PUBLIC_KEY_DESCRIPTION}    Evaluate    $pcc_server_dict.get("public_key_description", None)
+                                     Set Suite Variable    ${PUBLIC_KEY_DESCRIPTION}
+                                  
+        ${PUBLIC_TYPE}           Evaluate    $pcc_server_dict.get("public_type", None)
+                                    Set Suite Variable    ${PUBLIC_TYPE}
+                                    
+        ${PUBLIC_KEY}         Evaluate    $pcc_server_dict.get("public_key", None)
+                                    Set Suite Variable    ${PUBLIC_KEY}
+                                    
+                                    
+        ${PRIVATE_KEY_ALIAS}         Evaluate    $pcc_server_dict.get("private_key_alias", None)
+                                    Set Suite Variable    ${PRIVATE_KEY_ALIAS}
+                                    
+        ${PRIVATE_KEY_DESCRIPTION}    Evaluate    $pcc_server_dict.get("private_key_description", None)
+                                     Set Suite Variable    ${PRIVATE_KEY_DESCRIPTION}
+                                  
+        ${PRIVATE_TYPE}           Evaluate    $pcc_server_dict.get("private_type", None)
+                                    Set Suite Variable    ${PRIVATE_TYPE}
+                                    
+        ${PRIVATE_KEY}         Evaluate    $pcc_server_dict.get("private_key", None)
+                                    Set Suite Variable    ${PRIVATE_KEY}

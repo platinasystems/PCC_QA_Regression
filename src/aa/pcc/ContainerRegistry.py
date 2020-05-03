@@ -38,6 +38,8 @@ class ContainerRegistry(AaBase):
         self.portus_uname = None
         self.authenticationProfileId = None
         self.storageLocation = None
+        self.registryCertId = None
+        self.registryKeyId = None
         
         super().__init__()
 
@@ -63,6 +65,9 @@ class ContainerRegistry(AaBase):
         
         if self.nodeID:
             payload = {
+                "registryCertId":self.registryCertId,
+                "registryKeyId":self.registryKeyId,
+                "storageLocation":self.storageLocation,
                 "nodeID": self.nodeID,
                 "name": self.Name,
                 "fullyQualifiedDomainName": self.fullyQualifiedDomainName,
@@ -77,7 +82,9 @@ class ContainerRegistry(AaBase):
                 }
         else:
             payload = {
-            
+                "registryCertId":self.registryCertId,
+                "registryKeyId":self.registryKeyId,
+                "storageLocation":self.storageLocation,
                 "name": self.Name,
                 "fullyQualifiedDomainName": self.fullyQualifiedDomainName,
                 "password":self.password,
@@ -303,6 +310,8 @@ class ContainerRegistry(AaBase):
         self.CR_ID= self.get_CR_id(**kwargs)
         payload = {
                 "id":self.CR_ID,
+                "registryCertId":self.registryCertId,
+                "registryKeyId":self.registryKeyId,
                 "storageLocation":self.storageLocation,
                 "nodeID": self.get_CR_server_id(**kwargs),
                 "name": str(self.Name),

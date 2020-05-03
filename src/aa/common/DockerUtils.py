@@ -180,7 +180,7 @@ class DockerUtils(AaBase):
     
     def pull_from_registry(self, *args, **kwargs):
         self._load_kwargs(kwargs)
-        print("kwargs are: {}".format(kwargs))        
+                
         try:
             self.cmd = "docker pull {}:{}/{}".format(self.registry_url,self.registryPort,self.image_name)
             time.sleep(5)
@@ -192,9 +192,12 @@ class DockerUtils(AaBase):
             self.cmd_output = str(serialised_pull_command_execution['Result']['stdout']).replace('\n', '').strip()
             
             print("pull_image_cmd with registry url_executed successfully: {}".format(self.cmd_output))
-            if ("Downloaded newer image for {}:{}/{}:latest".format(self.registry_url,self.registryPort,self.image_name)) or ("Status: Image is up to date") in self.cmd_output:
-                banner("Image pulled from Registry successfully")
-                return "OK"
+            if self.cmd_output:
+                if ("Downloaded newer image for {}:{}/{}:latest".format(self.registry_url,self.registryPort,self.image_name)) or ("Status: Image is up to date") in self.cmd_output:
+                    banner("Image pulled from Registry successfully")
+                    return "OK"
+            elif self.cmd_output == "":
+                raise Exception("No value found in cmd output")
             else:
                 return "Error"
                 

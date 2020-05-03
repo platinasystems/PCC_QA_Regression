@@ -200,13 +200,20 @@
     "os_deployment":
         {
             "image1_name":"centos76",            
-            "image2_name":"ubuntu-disco",       
-            "image3_name":"ubuntu-bionic",  
+            "image2_name":"ubuntu-bionic",       
+            "image3_name":"ubuntu-disco",  
             "locale":"en-US",     
             "time_zone":"PDT",
-            "admin_user":"RasikB",
-            "ssh_keys":"RasikB"
-        }
-        
+            "admin_user":"admin",
+            "ssh_keys":"KC"
+        },
+     
+     "pxe-boot":
+        {
+            "gateway":"172.17.2.1",            
+            "pxe_booted_server":"0123456789",
+            "adminStatus_up":"UP",
+            "adminStatus_down":"DOWN"
+        }   
+                
 }
-
