@@ -35,6 +35,10 @@ Login to PCC
         ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
+        
+        ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
+                         Log To Console    ${server_id}
+                         Set Global Variable    ${server_id}
                          
 ###################################################################################################################################
 Name validation on CR where name is null : TCP-841 
@@ -47,7 +51,7 @@ Name validation on CR where name is null : TCP-841
                            
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    Name=""
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}
@@ -77,7 +81,7 @@ Name validation on CR where name is invalid : TCP-827
         
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    Name=${INVALID_CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}
@@ -106,7 +110,7 @@ FQDN validation on CR where FQDN is null : TCP-840
         
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=""
                        ...    password=${CR_PASSWORD}
@@ -135,7 +139,7 @@ FQDN validation on CR where FQDN is invalid : TCP-828
         
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_INVALID_FQDN}
                        ...    password=${CR_PASSWORD}
@@ -165,7 +169,7 @@ Portus Password validation on CR where Portus Password is null : TCP-842
         
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=""
@@ -198,7 +202,7 @@ Secret key Base validation on CR where Secret key Base is null : TCP-831
         
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}
@@ -226,7 +230,7 @@ StorageLocation validation on CR where Storage Location is invalid
 
         ${response}    PCC.Update Container Registry 
                        
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server_id}
                        ...    storageLocation=${CR_INVALID_STORAGE_LOCATION}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
