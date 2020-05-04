@@ -24,6 +24,10 @@ Login to PCC.
                          Load Container Registry Data    ${pcc_setup}
                          Load Auth Profile Data    ${pcc_setup}
                          
+        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
+                         Log To Console    ${server1_id}
+                         Set Global Variable    ${server1_id}                 
+        
         ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
                          Log To Console    ${server2_id}
                          Set Global Variable    ${server2_id}
@@ -91,7 +95,7 @@ Assigning Tenant to Node and creating CR (using Tenant User)
                         
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant_id=${tenant_id}
-                       ...    ids=${server2_id}
+                       ...    ids=${server1_id}
                       
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -121,9 +125,9 @@ Login to PCC using Tenant User
                                 Log to Console    ${login_success}
                                 Should Be Equal As Strings    ${login_success}    OK
                                 
-        ${server2_id}           PCC.Get Node Id    Name=${SERVER_2_NAME}
-                                Log To Console    ${server2_id}
-                                Set Global Variable    ${server2_id}
+        ${server1_id}           PCC.Get Node Id    Name=${SERVER_1_NAME}
+                                Log To Console    ${server1_id}
+                                Set Global Variable    ${server1_id}
                          
 ###################################################################################################################################
 Create an Auth Profile after login as Tenant user : TCP-866
@@ -181,7 +185,7 @@ Creation of CR (Using Tenant User, Static mode) : TCP-825
         
         
         ${response}    PCC.Create Container Registry 
-                       ...    nodeID=${server2_id}
+                       ...    nodeID=${server1_id}
                        ...    authenticationProfileId=${Auth_Profile_Id}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
@@ -520,9 +524,9 @@ Login to PCC using Admin User
                          Load Container Registry Data    ${pcc_setup}
                          
 
-        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
-                         Log To Console    ${server2_id}
-                         Set Global Variable    ${server2_id}
+        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
+                         Log To Console    ${server1_id}
+                         Set Global Variable    ${server1_id}
                          
 ###################################################################################################################################
 Verify CR created by Tenant user is visible or not, by Admin User
@@ -557,7 +561,7 @@ Re-assigning ROOT to Node
                         
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant=${tenant_id}
-                       ...    ids=${server2_id}
+                       ...    ids=${server1_id}
                       
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -587,9 +591,9 @@ Login to PCC using Tenant User after assigning node to ROOT user
                                 Log to Console    ${login_success}
                                 Should Be Equal As Strings    ${login_success}    OK
                                 
-        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
-                         Log To Console    ${server2_id}
-                         Set Global Variable    ${server2_id}
+        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
+                         Log To Console    ${server1_id}
+                         Set Global Variable    ${server1_id}
                          
 ###################################################################################################################################
 Cleanup Auth Profiles after login as Tenant user
@@ -641,7 +645,7 @@ User should not be able to access Portus URL and images : TCP- 591 (Negative)
                            ...  Check if image exists in local repo
                            ...  Delete image from local repo, if exists
                            ...  aa.common.LinuxUtils.Is FQDN reachable
-                           ...
+                           
                             
         
         ${check_image_status}    Check if image exists in local repo    
