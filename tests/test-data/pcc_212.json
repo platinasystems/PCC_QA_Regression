@@ -46,23 +46,6 @@
         
     "server-1":
         {
-            "server_name":"sv125",
-            "pcc_url": "https://172.17.2.125:9999",
-            "pcc_host_ip": "172.17.2.125",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.125",
-            "mgmt_ip": "172.17.2.125/23",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
-        },
-        
-    "server-2":
-        {
             "server_name":"sv124",
             "pcc_url": "https://172.17.2.124:9999",
             "pcc_host_ip": "172.17.2.124",
@@ -71,6 +54,25 @@
             "pcc_password": "cals0ft",
             "bmc": "172.17.3.124",
             "mgmt_ip": "172.17.2.124/23",
+            "bmc_user": "ADMIN",
+            "bmc_pwd": "ADMIN",
+            "console": "ttyS1",
+            "managed_by_pcc": "true",
+            "ssh_keys": "pcc"
+            
+            
+        },
+        
+    "server-2":
+        {
+            "server_name":"sv125",
+            "pcc_url": "https://172.17.2.125:9999",
+            "pcc_host_ip": "172.17.2.125",
+            "pcc_linux_password": "cals0ft",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft",
+            "bmc": "172.17.3.125",
+            "mgmt_ip": "172.17.2.125/23",
             "bmc_user": "ADMIN",
             "bmc_pwd": "ADMIN",
             "console": "ttyS1",
