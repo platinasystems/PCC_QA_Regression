@@ -21,6 +21,7 @@ pipeline {
         stage('Clean Test Results') {
             steps {
                 sh "sudo rm -rf output"
+                sh "sudo rm -rf tmp_output"
                 sh "sudo rm -f robot_output.zip"
                 sh "sudo rm -f robot_logs.zip"
                 sh "mkdir output"
@@ -64,6 +65,7 @@ pipeline {
         stage('Zip the output') {
             steps {
                 sh "zip -r robot_output.zip output -x *logs*"
+                sh "sudo cp -rf output tmp_output"
             }
         }     
         stage('Copy PCC Logs from PCC to motor-test-runner container') {
@@ -97,6 +99,13 @@ pipeline {
         stage('Zip the logs') {
             steps {
                 sh "zip -r robot_logs.zip output"
+                sh "sudo rm -rf output"
+                sh "sudo mv tmp_output output"                
+            }
+            post {
+                always {
+                    junit 'output/robot.xml'
+                }
             }
         }
         stage('Email Test Results') {
