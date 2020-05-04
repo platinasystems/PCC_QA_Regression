@@ -21,17 +21,8 @@ pipeline {
         stage('Clean Test Results') {
             steps {
                 sh "sudo rm -rf output"
-                sh "sudo rm -rf tmp_output"
-                sh "sudo rm -f robot_output.zip"
-                sh "sudo rm -f robot_logs.zip"
+                sh "sudo rm -f output.zip"
                 sh "mkdir output"
-            }
-        }
-        stage('Truncate PCC Logs') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
-                    sh "docker run -v ${WORKSPACE}:/aa ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} /aa/pipeline/test-run/cli-truncate-pcc-logs.robot"
-                }
             }
         }
         stage('Run Tests') {
@@ -42,40 +33,6 @@ pipeline {
             }
         }  
         stage('Publish Test Results') {
-            steps {
-                step([$class: 'RobotPublisher',
-                    outputPath: 'output',
-                    outputFileName: 'output.xml',
-                    reportFileName: 'report.html',
-                    logFileName: 'log.html',
-                    otherFiles: '',
-                    disableArchiveOutput: false,
-                    enableCache: true,
-                    unstableThreshold: 90,
-                    passThreshold: 95,
-                    onlyCritical: true
-                ])
-            }
-            post {
-                always {
-                    junit 'output/robot.xml'
-                }
-            }
-        }     
-        stage('Zip the output') {
-            steps {
-                sh "zip -r robot_output.zip output -x *logs*"
-                sh "sudo cp -rf output tmp_output"
-            }
-        }     
-        stage('Copy PCC Logs from PCC to motor-test-runner container') {
-            steps {
-                catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
-                    sh "docker run -v ${WORKSPACE}:/aa ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} /aa/pipeline/test-run/cli-copy-pcc-logs.robot"
-                }
-            }
-        }
-        stage('Publish Logs') {
             steps {
                 step([$class: 'RobotPublisher',
                     outputPath: 'output',
@@ -95,19 +52,12 @@ pipeline {
                     junit 'output/robot.xml'
                 }
             }
-        }
-        stage('Zip the logs') {
+        }     
+        stage('Zip the output') {
             steps {
-                sh "zip -r robot_logs.zip output"
-                sh "sudo rm -rf output"
-                sh "sudo mv tmp_output output"                
+                sh "zip -r output.zip output"
             }
-            post {
-                always {
-                    junit 'output/robot.xml'
-                }
-            }
-        }
+        }     
         stage('Email Test Results') {
             steps {
                 emailext (
@@ -117,7 +67,7 @@ pipeline {
                     """,
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
                     from: "msuman@platinasystems.com",
-                    attachmentsPattern: "robot_output.zip, robot_logs.zip"
+                    attachmentsPattern: "output.zip"
                 )
             }
         }        
