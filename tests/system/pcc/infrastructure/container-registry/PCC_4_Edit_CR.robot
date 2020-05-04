@@ -25,7 +25,10 @@ Login to PCC
                          Load Server 2 Test Data    ${pcc_setup}
                          
                          Load Container Registry Data    ${pcc_setup}
-                         
+        
+        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
+                         Log To Console    ${server1_id}
+                         Set Global Variable    ${server1_id}                 
                          
         ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
                          Log To Console    ${server2_id}
