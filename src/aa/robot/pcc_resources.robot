@@ -764,3 +764,27 @@ Load OpenSSH_Keys Data
                                     
         ${PRIVATE_KEY}         Evaluate    $pcc_server_dict.get("private_key", None)
                                     Set Suite Variable    ${PRIVATE_KEY}
+###################################################################################################################################
+Load i28 Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load i28 Data*
+
+                                    Log To Console      **** Load OpenSSH_Keys Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    i28
+
+                                    # i28
+                                    
+        ${i28_NAME}           Evaluate    $pcc_server_dict.get("host_name", None)
+                              Set Suite Variable    ${i28_NAME}
+                                    
+        ${i28_HOST_IP}        Evaluate    $pcc_server_dict.get("host_ip", None)
+                              Set Suite Variable    ${i28_HOST_IP}
+                                  
+        ${i28_USERNAME}       Evaluate    $pcc_server_dict.get("username", None)
+                              Set Suite Variable    ${i28_USERNAME}
+                                    
+        ${i28_PASSWORD}       Evaluate    $pcc_server_dict.get("password", None)
+                              Set Suite Variable    ${i28_PASSWORD}                            
+                                    
+                                    

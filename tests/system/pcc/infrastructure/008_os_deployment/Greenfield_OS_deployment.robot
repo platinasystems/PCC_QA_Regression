@@ -19,12 +19,18 @@ Login to PCC.
                          
                          Load Clusterhead 1 Test Data    ${pcc_setup}
                          Load Clusterhead 2 Test Data    ${pcc_setup}
+                         
                          Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
                          
+                         Load i28 Data    ${pcc_setup}
+                         
                          Load OS-Deployment Data    ${pcc_setup}
                          Load PXE-Boot Data    ${pcc_setup}
-                         
+        
+        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
+                         Log To Console    ${server1_id}
+                         Set Global Variable    ${server1_id}                 
                          
         ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
                          Log To Console    ${server2_id}
@@ -47,9 +53,9 @@ PXE-Boot node
     
     ${result}    PCC.Pxe-boot node 
                  ...    bmc_ip=${SERVER_1_BMC}
-                 ...    host_ip=172.17.2.28
-                 ...    username=pcc
-                 ...    password=cals0ft
+                 ...    host_ip=${i28_HOST_IP}
+                 ...    username=${i28_USERNAME}
+                 ...    password=${i28_PASSWORD}
                  
                  Log To Console    ${result}
                  Should be equal as strings    ${result}    OK
@@ -245,7 +251,23 @@ Verify OS details from PCC (centos76)
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    True
                    
+###################################################################################################################################
+Set Password on Server
+###################################################################################################################################
+
+    [Documentation]    *Set Password on Server* test 
+    
+    [Tags]    OS_Verify
+    
+    ${status}    PCC.Set password on Server
+                 ...  admin_user=${ADMIN_USER}
+                 ...  serverIP=${SERVER_1_HOST_IP}
+                 ...  pwd=${SERVER_1_PWD}
+                 ...  user=${SERVER_1_UNAME}
+                 ...  hostip=${i28_HOST_IP}
                  
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    True                 
                  
     
     
