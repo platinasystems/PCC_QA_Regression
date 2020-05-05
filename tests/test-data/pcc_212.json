@@ -1,10 +1,10 @@
 {
-    "pcc_server": 
+    "pcc_server":
         {
-            "pcc_url": "https://172.17.2.212:9999",
-            "pcc_host_ip": "172.17.2.212",
+            "pcc_url":"https://172.17.2.212:9999",
+            "pcc_host_ip":"172.17.2.212",
             "pcc_linux_user":"pcc",
-            "pcc_linux_password": "cals0ft",
+            "pcc_linux_password":"cals0ft",
             "pcc_username":"admin",
             "pcc_password":"admin",
             "tenant_user_username":"Abinash.Patnaik@calsoftinc.com",
@@ -16,58 +16,58 @@
         {	
             "host_name":"i28",	
             "host_ip":"172.17.2.28",	
-            "username": "pcc"	
-            "password": "cals0ft"	
+            "username":"pcc",	
+            "password":"cals0ft"	
             	
         },
     
     "clusterhead-1":
         {
             "invader_name":"i43",
-            "pcc_url": "https://172.17.2.43:9999",
-            "pcc_host_ip": "172.17.2.43",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.43",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
+            "pcc_url":"https://172.17.2.43:9999",
+            "pcc_host_ip":"172.17.2.43",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.43",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
         },
     
     "clusterhead-2":
         {
             "invader_name":"i-42",
-            "pcc_url": "https://172.17.2.42:9999",
-            "pcc_host_ip": "172.17.2.42",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.42",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
+            "pcc_url":"https://172.17.2.42:9999",
+            "pcc_host_ip":"172.17.2.42",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.42",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
         },
         
     "server-1":
         {
             "server_name":"sv124",
-            "pcc_url": "https://172.17.2.124:9999",
-            "pcc_host_ip": "172.17.2.124",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.124",
-            "mgmt_ip": "172.17.2.124/23",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
+            "pcc_url":"https://172.17.2.124:9999",
+            "pcc_host_ip":"172.17.2.124",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.124",
+            "mgmt_ip":"172.17.2.124/23",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
             
             
         },
@@ -75,44 +75,44 @@
     "server-2":
         {
             "server_name":"sv125",
-            "pcc_url": "https://172.17.2.125:9999",
-            "pcc_host_ip": "172.17.2.125",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.125",
-            "mgmt_ip": "172.17.2.125/23",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
+            "pcc_url":"https://172.17.2.125:9999",
+            "pcc_host_ip":"172.17.2.125",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.125",
+            "mgmt_ip":"172.17.2.125/23",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
         },
         
     "container-registry":
         {
-            "name": "calsoft1",
+            "name":"calsoft1",
             "static_mode_name":"static_mode_CR",
-            "invalid_name" : "#^cal$%",
-            "fullyQualifiedDomainName": "i124.test.com",
+            "invalid_name" :"#^cal$%",
+            "fullyQualifiedDomainName":"i124.test.com",
             "static_mode_fullyQualifiedDomainName":"static.fqdn.com",
             "invalid_FQDN":"!%SAd",
-            "password": "fJdSr7QrWo4C",
-            "static_mode_password": "static123mode",
+            "password":"fJdSr7QrWo4C",
+            "static_mode_password":"static123mode",
             "invalid_password":"a21$%^638daad",
             "modified_password":"calsoftfJdSr",
-            "secretKeyBase": "UzUUHwNZ5jlZ",
+            "secretKeyBase":"UzUUHwNZ5jlZ",
             "modified_secretKeyBase":"calsoftq5LnSKz4",
-            "databaseName": "portus_production",
-            "databasePassword": "wjuy0i7ayLN3",
-            "port": 3000,
-            "registryPort": 5000,
-            "adminState": "Enabled",
-            "image_name": "hello-world",
-            "custom_image_name": "hello-world123",
-            "portus_uname": "Portus",
+            "databaseName":"portus_production",
+            "databasePassword":"wjuy0i7ayLN3",
+            "port":3000,
+            "registryPort":5000,
+            "adminState":"Enabled",
+            "image_name":"hello-world",
+            "custom_image_name":"hello-world123",
+            "portus_uname":"Portus",
             "invalid_portus_uname":"sadad$#%^&ad",
-            "modified_name": "calsoft123",
+            "modified_name":"calsoft123",
             "modified_fullyQualifiedDomainName":"abc.def.com",
             "tenant_user":"Tenant_6",
             "invalid_storage_location":"sa#^cal$%"

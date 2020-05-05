@@ -55,8 +55,10 @@ class Cli(AaBase):
             (str) OK if command successful, stderr output if there's an error
         """
         self._load_kwargs(kwargs)
+        print("kwargs"+str(kwargs))
         banner("CLI.Truncate PCC Logs ip=%s" % self.host_ip)
         ret = easy.cli_truncate_pcc_logs(self.host_ip, self.linux_user, self.linux_password)
+        print("Response"+str(ret))
         if ret.stderr == "":
             return "OK"
         else:
@@ -80,5 +82,6 @@ class Cli(AaBase):
             (str) OK if command successful, stderr output if there's an error
         """
         self._load_kwargs(kwargs)
+        print("kwargs:-"+str(kwargs))
         banner("CLI.Copy PCC Logs ip=%s" % self.host_ip)
         return easy.cli_copy_pcc_logs(self.host_ip, self.linux_user, self.linux_password)

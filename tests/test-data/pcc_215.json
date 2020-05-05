@@ -15,7 +15,7 @@
         {	
             "host_name":"i28",	
             "host_ip":"172.17.2.28",	
-            "username": "pcc"	
+            "username": "pcc",	
             "password": "cals0ft"	
             	
         },
