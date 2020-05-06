@@ -40,7 +40,29 @@ Login to PCC.
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
 
+###################################################################################################################################
+Delete node which needs to be PXE-Booted
+###################################################################################################################################
 
+    [Documentation]    *Delete node which needs to be PXE-Booted* test
+    
+    [Tags]    Greenfield
+        
+    ${response}    PCC.Delete Node
+                   ...    Id=${server1_id}
+                   
+                   Log To Console    ${response}
+                   ${result}    Get Result    ${response}
+                   ${status}    Get From Dictionary    ${result}    status
+                   ${message}    Get From Dictionary    ${result}    message
+                   Log to Console    ${message}
+                   Should Be Equal As Strings    ${status}    200
+                   
+    ${result}    PCC.Wait Until Node Deleted
+                 ...    Name=${SERVER_1_NAME}
+                 
+                 Log To Console    ${result}
+                 Should be equal as strings    ${result}    OK
         
                          
 ###################################################################################################################################
