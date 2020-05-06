@@ -819,3 +819,24 @@ Ceph Cluster Delete
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD} 
 
+###################################################################################################################################
+Delete K8 Cluster
+###################################################################################################################################     
+        [Documentation]             *Delete K8 Cluster*  
+                               ...  Keywords:
+                               ...  PCC.K8s Upgrade Cluster
+                               ...  PCC.K8s Delete Cluster
+                               ...  PCC.K8s Wait Until Cluster Deleted
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8s_NAME}
+                                    Pass Execution If    ${cluster_id} is ${None}    Cluster is alredy Deleted
+
+        ${response}                 PCC.K8s Delete Cluster
+                               ...  cluster_id=${cluster_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster Deleted
+                               ...  cluster_id=${cluster_id}
+                                    Should Be Equal As Strings    ${status}  OK
