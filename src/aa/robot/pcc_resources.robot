@@ -787,4 +787,36 @@ Load i28 Data
         ${i28_PASSWORD}       Evaluate    $pcc_server_dict.get("password", None)
                               Set Suite Variable    ${i28_PASSWORD}                            
                                     
+###################################################################################################################################
+Load Alert Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Alert Data*
+
+                                    Log To Console      **** Load Alert Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    alerting
+                            
+        ${ALERT_NAME}               Evaluate    $pcc_server_dict.get("name", None)
+                                    Set Suite Variable    ${ALERT_NAME}
+                                        
+        ${ALERT_PARAMETER}          Evaluate    $pcc_server_dict.get("parameter", None)
+                                    Set Suite Variable    ${ALERT_PARAMETER}
+                                      
+        ${ALERT_OPERATOR}           Evaluate    $pcc_server_dict.get("operator", None)
+                                    Set Suite Variable    ${ALERT_OPERATOR}
+                                        
+        ${ALERT_VALUE}              Evaluate    $pcc_server_dict.get("value", None)
+                                    Set Suite Variable    ${ALERT_VALUE}                                          
                                     
+        ${ALERT_TIME}               Evaluate    $pcc_server_dict.get("time", None)
+                                    Set Suite Variable    ${ALERT_TIME}
+                                      
+        ${ALERT_TEMPLATE_ID}        Evaluate    $pcc_server_dict.get("templateId", None)
+                                    Set Suite Variable    ${ALERT_TEMPLATE_ID}
+                                        
+        ${ALERT_RAW_FILE}           Evaluate    $pcc_server_dict.get("raw_file", None)
+                                    Set Suite Variable    ${ALERT_RAW_FILE}   
+                                    
+        ${ALERT_RAW_NAME}           Evaluate    $pcc_server_dict.get("raw_name", None)
+                                    Set Suite Variable    ${ALERT_RAW_NAME} 
+                                

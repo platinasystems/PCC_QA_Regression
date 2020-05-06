@@ -38,15 +38,16 @@ class Alerting(AaBase):
         self.auth_data=None
         self.setup_ip=None
         self.user="pcc"
-        self.password="Cals0ft"        
+        self.password="Cals0ft"
+        self.filename=None        
         super().__init__()
 
     ###########################################################################
-    @keyword(name="PCC.Alert Post Template")
+    @keyword(name="PCC.Alert Create Rule Template")
     ###########################################################################
-    def alert_post_template(self,*args,**kwargs):
+    def alert_create_rule_template(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Alert Template Post")
+        banner("PCC.Alert Create Rule Template")
 
         print("kwargs:-"+str(kwargs))        
 
@@ -90,7 +91,39 @@ class Alerting(AaBase):
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
-        if serialise_output['status']==0:
+        if serialise_output['status']==0 and serialise_output['error']=="":
+            return "OK"
+        return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Alert Create Rule Raw")
+    ###########################################################################
+    def alert_create_rule_raw(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Alert Create Rule Raw")
+        print("kwargs:-"+str(kwargs))        
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
+        
+        if self.templateId:
+            self.templateId=ast.literal_eval(str(self.templateId))
+
+        token=self.auth_data["token"]
+        print("Authorization:-"+str(token))
+        
+        cmd_strct='cd /home/pcc/rules;curl -k -X POST --data-binary @{} -H "Authorization:Bearer {}" -H "Content-type: application/x-yaml" -H "Accept: application/x-yaml" https://127.0.0.1:9999/platina-monitor/alerts/rules'
+        cmd=cmd_strct.format(self.filename,token)
+        print("Command:-"+str(cmd))
+        
+        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        serialise_output=AaBase()._serialize_response(time.time(),output)['Result']['stdout']
+        print("Serialize Output:"+str(serialise_output))
+        trace("Serialize Output:- %s " % (serialise_output))
+        if re.search("statuscode: 0",serialise_output) and re.search("messagetype: OK",serialise_output):
             return "OK"
         return "Error"
 
@@ -123,8 +156,7 @@ class Alerting(AaBase):
         trace("Serialize Output:- %s " % (serialise_output))
         for data in serialise_output['Data']:
              print("DATA:-"+str(data))
-             if str(data['name']).lower()==str(self.name).lower():
-                 print("inside")
+             if str(data['name']).lower()==str(self.name).lower() or re.search(self.name,data['rule'],re.IGNORECASE):
                  return data['id']
                  
         return None
@@ -180,7 +212,7 @@ class Alerting(AaBase):
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
-        if serialise_output['status']==0:
+        if serialise_output['status']==0 and serialise_output['error']=="":
             return "OK"
         return "Error"
 
@@ -217,3 +249,36 @@ class Alerting(AaBase):
         if serialise_output['status']==0:
             return "OK"
         return "Error" 
+        
+    ###########################################################################
+    @keyword(name="PCC.Alert Verify Rule")
+    ###########################################################################
+    def alert_verify_rule(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Alert Verify Rule")
+
+        print("kwargs:-"+str(kwargs))        
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
+        if self.auth_data==None or self.name==None or self.setup_ip==None:
+            return "Error: Auth Data or Name or Setup IP is missing"
+              
+        token=self.auth_data["token"]
+        print("Authorization:-"+str(token))        
+        cmd_strct='curl -k -XGET -H "Content-type:application/json" -H "Authorization:Bearer {}" https://{}:9999/platina-monitor/alerts/rules'
+        cmd=cmd_strct.format(token,self.setup_ip)
+        print("Command:-"+str(cmd))
+        
+        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
+        print("Serialize Output:"+str(serialise_output))
+        trace("Serialize Output:- %s " % (serialise_output))
+        for data in serialise_output['Data']:
+             print("DATA:-"+str(data))
+             if str(data['name']).lower()==str(self.name).lower() or re.search(self.name,data['rule'],re.IGNORECASE):
+                 return "OK"                
+        return None
