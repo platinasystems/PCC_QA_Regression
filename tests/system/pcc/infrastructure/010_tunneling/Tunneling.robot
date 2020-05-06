@@ -22,7 +22,17 @@ Login to PCC.
                          Load Server 2 Test Data    ${pcc_setup}
                          Load Tunneling Data    ${pcc_setup}
                                  
+####################################################################################################################################
+Delete All Nodes
+####################################################################################################################################
 
+    [Documentation]    *Delete All Nodes* test                 
+    [Tags]    delete
+    
+    ${status}    PCC.Delete mutliple nodes and wait until deletion
+                 
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Tunnel On
@@ -560,11 +570,11 @@ Delete Nodes
     [Documentation]    *Delete Nodes* test                 
     [Tags]    delete
     
-    ${status}    Delete mutliple nodes and wait until deletion
+    ${status}    PCC.Delete mutliple nodes and wait until deletion
                  ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}']
 
                  Log To Console    ${status}
-                 Should be equal as strings    ${status}    True
+                 Should be equal as strings    ${status}    OK
                  
 ####################################################################################################################################
 Add Nodes
@@ -573,12 +583,12 @@ Add Nodes
     [Documentation]    *Add Nodes* test                 
     [Tags]    add
     
-    ${status}    Add mutliple nodes and check online
+    ${status}    PCC.Add mutliple nodes and check online
                  ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}']
                  ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}']
 
                  Log To Console    ${status}
-                 Should be equal as strings    ${status}    True
+                 Should be equal as strings    ${status}    OK
 
 ####################################################################################################################################
 Tun command check after adding nodes
