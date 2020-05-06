@@ -1,4 +1,5 @@
 import time
+import ast
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -20,6 +21,7 @@ class Nodes(AaBase):
         self.Host = None
         self.Model = None
         self.Name = None
+        self.Names = []
         self.SN = None
         self.Site_Id = 0
         self.Type_Id = 0
@@ -51,6 +53,7 @@ class Nodes(AaBase):
         self.tenant = None
         self.tenant_id = None
         self.ids = None
+        self.host_ips = []
 
         self.interface_name = []
         self.interface_id = []
@@ -280,3 +283,116 @@ class Nodes(AaBase):
             "interfaces": self.interfaces
         }
         return pcc.modify_node(conn, payload)
+    
+    ###############################################################################################################
+    @keyword(name="PCC.Add mutliple nodes and check online")
+    ###############################################################################################################   
+    
+    def add_multiple_nodes_and_check_online(self, *args, **kwargs):
+        """
+        Adds multiple nodes and checks online status 
+        [Args]
+            (list) Names: List of Names of the Nodes to be added
+            (list) host_ips: List of Host of the Nodes to be added
+            ...
+        [Returns]
+            (str) OK: Returns "OK" if all nodes are added successfully and are online
+            else: returns "Error"
+        """
+        
+        banner("Add mutliple nodes and check online")
+        self._load_kwargs(kwargs)
+        try:
+            wait_for_node_addition_status = []
+            for hostip in ast.literal_eval(self.host_ips):
+                add_node_status = self.add_node(Host=hostip, managed= self.managed, standby = self.standby)
+                
+            for name in ast.literal_eval(self.Names):
+                verify_node_online_status = self.wait_until_node_ready(Name=name)
+                banner("verify_node_online_status : {}".format(verify_node_online_status))
+                wait_for_node_addition_status.append(verify_node_online_status)
+            print("wait_for_node_addition_status : {}".format(wait_for_node_addition_status))
+            result = len(wait_for_node_addition_status) > 0 and all(elem == wait_for_node_addition_status[0] for elem in wait_for_node_addition_status)
+            if result:
+                return "OK"
+            else:
+                return "Error"
+            
+        except Exception as e:
+            logger.console("Error in add_node_and_check_online status: {}".format(e))
+    
+    ###############################################################################################################
+    @keyword(name="PCC.Delete mutliple nodes and wait until deletion")
+    ###############################################################################################################   
+    
+    def delete_multiple_nodes_and_wait_until_deletion(self, *args, **kwargs):
+        """
+        Deletes multiple nodes/ all nodes 
+        [Args]
+            (list) Names: List of Names of the Nodes to be deleted
+            or
+            Don't provide any arguments if you want to delete all nodes
+            ...
+        [Returns]
+            (str) OK: Returns "OK" if all nodes are deleted successfully
+            else: returns "Error"
+        """
+        
+        banner("Delete mutliple nodes and wait until deletion")
+        self._load_kwargs(kwargs)
+        
+        try:
+            if self.Names:
+                deletion_status = []
+                for name in ast.literal_eval(self.Names):
+                    node_id= self.get_node_id(Name=name)
+                    banner("Node id: {}".format(node_id))
+                    delete_node_status = self.delete_node(Id=str(node_id))
+                    logger.console(delete_node_status)
+                        
+                for name in ast.literal_eval(self.Names):
+                    deletion_response = self.wait_until_node_deleted(Name=name)
+                    deletion_status.append(deletion_response)
+                print("deletion_status: {}".format(deletion_status))
+                result = len(deletion_status) > 0 and all(elem == deletion_status[0] for elem in deletion_status)
+                if result:
+                    return "OK"
+                else:
+                    return "Error"
+                    
+                    
+            else:
+                response = self.get_nodes()
+                list_id = []
+                
+                if get_response_data(response) == []:
+                    return "OK"
+                else:
+                    for ids in get_response_data(response):
+                        list_id.append(ids['id'])
+                    print("list of id:{}".format(list_id))
+                    for id_ in list_id:
+                        response = self.delete_node(Id=str(id_))
+                        
+                deletion_status = False
+                counter = 0
+                while deletion_status == False:
+                    counter+=1
+                    response = self.get_nodes()
+                    if get_response_data(response) != []:
+                        time.sleep(6)
+                        banner("All Nodes not yet deleted")
+                        if counter < 50:
+                            banner("Counter: {}".format(counter))
+                            continue
+                        else:
+                            break
+                    elif get_response_data(response) == []:
+                        deletion_status = True
+                        banner("All Nodes deleted successfully")
+                        return "OK"
+                    else:
+                        banner("Entered into continuous loop")
+                        return "Error"
+        except Exception as e:
+            logger.console("Error in delete_multiple_nodes_and_wait_until_deletion status: {}".format(e))
