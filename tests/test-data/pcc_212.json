@@ -228,7 +228,8 @@
             "locale":"en-US",     
             "time_zone":"PDT",
             "admin_user":"admin",
-            "ssh_keys":"KC"
+            "ssh_keys":"KC",
+            "key_name":"id_rsa_khusboo"
         },
      
      "pxe-boot":
