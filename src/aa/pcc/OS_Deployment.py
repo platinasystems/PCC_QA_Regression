@@ -44,6 +44,10 @@ class OS_Deployment(AaBase):
         self.management = "true"
         self.managed_by_PCC = None
         self.adminStatus = None
+        self.key_name = None
+        self.i28_hostip = None
+        self.i28_username = None
+        self.i28_password = None
         
         super().__init__()
 
@@ -351,7 +355,31 @@ class OS_Deployment(AaBase):
         
         return management_interface 
         
+    ###########################################################################
+    @keyword(name="PCC.Set password on Server")
+    ###########################################################################
+    
+    def set_password_on_server(self, *args, **kwargs):
+        banner("PCC.Set password on Server")
+        self._load_kwargs(kwargs)             
         
+        try:
+            cmd = """ssh -i {} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)
+            
+            password_reset = easy.cli_run(cmd=cmd, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
+            
+            serialised_password_reset = self._serialize_response(time.time(), password_reset)
+            print("serialised_password_reset is:{}".format(serialised_password_reset))
+            
+            cmd_output = str(serialised_password_reset['Result']['stdout']).replace('\n', '').strip()
+            
+            print("output of set_password_on_server:{}".format(cmd_output))
+            if "updated successfully" in self.cmd_output:
+                return "OK"
+            else:
+                return "Error"
+        except Exception as e:
+            logger.console("Error in set password on server: " + str(e))    
                  
         
         
