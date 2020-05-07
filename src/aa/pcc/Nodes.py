@@ -1,6 +1,7 @@
 import time
 import ast
 from robot.api.deco import keyword
+from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
