@@ -821,4 +821,56 @@ Load Alert Data
                                     
         ${ALERT_RAW_NAME}           Evaluate    $pcc_server_dict.get("raw_name", None)
                                     Set Suite Variable    ${ALERT_RAW_NAME} 
+                                    
+
+###################################################################################################################################
+Load Node Groups Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Node Groups Data*
+
+                                    Log To Console      **** Load Node Groups Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    node_groups
+                            
+        ${NODE_GROUP1}              Evaluate    $pcc_server_dict.get("group1_name", None)
+                                    Set Suite Variable    ${NODE_GROUP1}
+                                        
+        ${NODE_GROUP2}              Evaluate    $pcc_server_dict.get("group2_name", None)
+                                    Set Suite Variable    ${NODE_GROUP2}
+                                      
+        ${NODE_GROUP3}              Evaluate    $pcc_server_dict.get("group3_name", None)
+                                    Set Suite Variable    ${NODE_GROUP3}
+                                        
+        ${NODE_GROUP4}              Evaluate    $pcc_server_dict.get("group4_name", None)
+                                    Set Suite Variable    ${NODE_GROUP4}                                          
+                                    
+        ${NODE_GROUP5}              Evaluate    $pcc_server_dict.get("group5_name", None)
+                                    Set Suite Variable    ${NODE_GROUP5}
+                                      
+        ${NODE_GROUP6}              Evaluate    $pcc_server_dict.get("group6_name", None)
+                                    Set Suite Variable    ${NODE_GROUP6}
+                                        
+        ${NODE_GROUP7}              Evaluate    $pcc_server_dict.get("group7_name", None)
+                                    Set Suite Variable    ${NODE_GROUP7}   
+                                    
+        ${NODE_GROUP_DESC1}         Evaluate    $pcc_server_dict.get("group1_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC1}
+                                    
+        ${NODE_GROUP_DESC2}         Evaluate    $pcc_server_dict.get("group2_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC2}
+                                    
+        ${NODE_GROUP_DESC3}         Evaluate    $pcc_server_dict.get("group3_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC3}
+                                    
+        ${NODE_GROUP_DESC4}         Evaluate    $pcc_server_dict.get("group4_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC4}
+                                    
+        ${NODE_GROUP_DESC5}         Evaluate    $pcc_server_dict.get("group5_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC5}
+                                    
+        ${NODE_GROUP_DESC6}         Evaluate    $pcc_server_dict.get("group6_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC6}
+                                    
+        ${NODE_GROUP_DESC7}         Evaluate    $pcc_server_dict.get("group7_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC7}
                                 
