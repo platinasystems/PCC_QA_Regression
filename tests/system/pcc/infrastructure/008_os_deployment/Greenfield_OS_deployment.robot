@@ -282,14 +282,16 @@ Set Password on Server
     [Tags]    OS_Verify
     
     ${status}    PCC.Set password on Server
+                 ...  key_name=${KEY_NAME} 
                  ...  admin_user=${ADMIN_USER}
-                 ...  serverIP=${SERVER_1_HOST_IP}
-                 ...  pwd=${SERVER_1_PWD}
-                 ...  user=${SERVER_1_UNAME}
-                 ...  hostip=${i28_HOST_IP}
+                 ...  host_ip=${SERVER_1_HOST_IP}
+                 ...  password=${SERVER_1_PWD}
+                 ...  i28_username=${i28_USERNAME}
+                 ...  i28_hostip=${i28_HOST_IP}
+                 ...  i28_password=${i28_PASSWORD} 
                  
                  Log To Console    ${status}
-                 Should be equal as strings    ${status}    True                 
+                 Should be equal as strings    ${status}    OK                 
                  
     
     
