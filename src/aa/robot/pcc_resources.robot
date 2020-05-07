@@ -705,7 +705,9 @@ Load OS-Deployment Data
                                     
         ${SSH_KEYS}                 Evaluate    $pcc_server_dict.get("ssh_keys", None)
                                     Set Suite Variable    ${SSH_KEYS}
-                                    
+        
+        ${KEY_NAME}                 Evaluate    $pcc_server_dict.get("key_name", None)
+                                    Set Suite Variable    ${KEY_NAME}
                                     
 ###################################################################################################################################
 Load PXE-Boot Data
