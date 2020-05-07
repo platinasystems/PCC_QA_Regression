@@ -3,6 +3,7 @@
         {
             "pcc_url": "https://172.17.2.215:9999",
             "pcc_host_ip": "172.17.2.215",
+            "pcc_linux_user":"pcc",
             "pcc_linux_password": "cals0ft",
             "pcc_username":"admin",
             "pcc_password":"admin",
@@ -229,7 +230,8 @@
             "locale":"en-US",       
             "time_zone":"PDT",
             "admin_user":"admin",
-            "ssh_keys":"KC"
+            "ssh_keys":"KC",
+            "key_name":"id_rsa_khusboo"
         },
      
      "pxe-boot":
@@ -238,7 +240,24 @@
             "pxe_booted_server":"0123456789",
             "adminStatus_up":"UP",
             "adminStatus_down":"DOWN"
-        }   
+        },
+     
+     "node_groups":
+        {
+            "group1_name":"Test_Group_1",            
+            "group2_name":"Test_Group_2",
+            "group3_name":"Test_Group_3",
+            "group4_name":"Test_Group_4",
+            "group5_name":"!@#$%^&*()_{}",
+            "group6_name":"11223344556677",
+            "group7_name":"  ",
+            "group1_desc":"Test_Group_Desc1",
+            "group2_desc":"Test_Group_Desc2",
+            "group3_desc":"Test_Group_Desc3",
+            "group4_desc":"Test_Group_Desc4",
+            "group5_desc":"!@#$%^&*()_{}",
+            "group6_desc":"11223344556677",
+            "group7_desc":"Test"
+        }      
                 
 }
-
