@@ -199,7 +199,7 @@ class Nodes(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Delete Node")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.delete_node_by_id(conn, self.Id)
+        return pcc.delete_node_by_id(conn, Id=str(self.Id))
 
     ###########################################################################
     @keyword(name="PCC.Wait Until Node Deleted")
@@ -348,7 +348,7 @@ class Nodes(AaBase):
                 for name in ast.literal_eval(self.Names):
                     node_id= self.get_node_id(Name=name)
                     banner("Node id: {}".format(node_id))
-                    delete_node_status = self.delete_node(Id=str(node_id))
+                    delete_node_status = self.delete_node(Id=node_id)
                     logger.console(delete_node_status)
                         
                 for name in ast.literal_eval(self.Names):
@@ -373,7 +373,7 @@ class Nodes(AaBase):
                         list_id.append(ids['id'])
                     print("list of id:{}".format(list_id))
                     for id_ in list_id:
-                        response = self.delete_node(Id=str(id_))
+                        response = self.delete_node(Id=id_)
                         
                 deletion_status = False
                 counter = 0
