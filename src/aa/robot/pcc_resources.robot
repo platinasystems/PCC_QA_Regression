@@ -853,7 +853,13 @@ Load Node Groups Data
                                     Set Suite Variable    ${NODE_GROUP6}
                                         
         ${NODE_GROUP7}              Evaluate    $pcc_server_dict.get("group7_name", None)
-                                    Set Suite Variable    ${NODE_GROUP7}   
+                                    Set Suite Variable    ${NODE_GROUP7}
+                                    
+        ${NODE_GROUP8}              Evaluate    $pcc_server_dict.get("group8_name", None)
+                                    Set Suite Variable    ${NODE_GROUP8}
+        
+        ${NODE_GROUP9}              Evaluate    $pcc_server_dict.get("group9_name", None)
+                                    Set Suite Variable    ${NODE_GROUP9}                                                         
                                     
         ${NODE_GROUP_DESC1}         Evaluate    $pcc_server_dict.get("group1_desc", None)
                                     Set Suite Variable    ${NODE_GROUP_DESC1}
@@ -875,4 +881,10 @@ Load Node Groups Data
                                     
         ${NODE_GROUP_DESC7}         Evaluate    $pcc_server_dict.get("group7_desc", None)
                                     Set Suite Variable    ${NODE_GROUP_DESC7}
+        
+        ${NODE_GROUP_DESC8}         Evaluate    $pcc_server_dict.get("group8_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC8}
+        
+        ${NODE_GROUP_DESC9}         Evaluate    $pcc_server_dict.get("group9_desc", None)
+                                    Set Suite Variable    ${NODE_GROUP_DESC9}
                                 

@@ -379,7 +379,33 @@ class OS_Deployment(AaBase):
             else:
                 return "Error"
         except Exception as e:
-            logger.console("Error in set password on server: " + str(e))    
+            logger.console("Error in set password on server: " + str(e))
+            
+    ###########################################################################
+    @keyword(name="PCC.Update OS Images")
+    ###########################################################################
+    
+    def update_OS_images(self, *args, **kwargs):
+        banner("PCC.Update OS Images")
+        self._load_kwargs(kwargs)             
+        
+        try:
+            cmd = "sudo chown -R pcc:pcc /srv/pcc; curl http://172.17.2.253/bugbits/baremetal/update-prod | bash"
+            
+            update_OS_images = easy.cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+            
+            serialised_update_OS_images = self._serialize_response(time.time(), update_OS_images)
+            print("serialised_update_OS_images is:{}".format(serialised_update_OS_images))
+            
+            cmd_output = str(serialised_update_OS_images['Result']['stdout']).replace('\n', '').strip()
+            
+            print("output of serialised_update_OS_images:{}".format(cmd_output))
+            if "Finished" in self.cmd_output:
+                return "OK"
+            else:
+                return "Error"
+        except Exception as e:
+            logger.console("Error in Update OS Images: " + str(e))    
                  
         
         

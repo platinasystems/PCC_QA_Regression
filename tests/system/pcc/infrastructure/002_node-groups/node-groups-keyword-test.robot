@@ -12,7 +12,7 @@ Login to PCC
                 
         
         [Documentation]    *Login to PCC* test
-        
+        [Tags]    Delete
         
         ${status}        Login To PCC    ${pcc_setup}
                          
@@ -423,47 +423,221 @@ Node group name contain only space are not allowed(Negative)
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    Node group not available    msg=Node group with ${NODE_GROUP7} created
                      
+###################################################################################################################################
+Create 100 node groups
+###################################################################################################################################
 
-                       
+        [Documentation]    *Create 100 node groups* test
+                           ...  keywords:
+                           ...  PCC.Add Multiple Node Groups
+        #[Tags]    Test                   
 
+        ${owner}       PCC.Get Tenant Id    Name=ROOT
+        
+        ${status}    PCC.Add Multiple Node Groups
+                     ...    Name=${NODE_GROUP8} 
+                     ...    owner=${owner}
+                     ...    Description=${NODE_GROUP_DESC8}
+                     ...    number_of_node_groups=10
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    All Node groups not added to PCC
+                     
+###################################################################################################################################
+Delete 100 node groups
+###################################################################################################################################
+
+        [Documentation]    *Delete 100 node groups* test
+                           ...  keywords:
+                           ...  PCC.Delete Multiple Node Groups
+        [Tags]    Test                   
+        
+        ${status}    PCC.Delete Multiple Node Groups
+                     ...    Name=${NODE_GROUP8}
+                     ...    number_of_node_groups=10
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    All Node groups not deleted from PCC
+                     
+###################################################################################################################################
+Update PCC Node Group Name with Existing Group Name(Negative)
+###################################################################################################################################
+
+        [Documentation]    *PCC Node group creation without description* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Add Node Group
+                           ...  PCC.Validate Node Group
+
+        ${owner}       PCC.Get Tenant Id       Name=ROOT
+        
+        ${response}    PCC.Add Node Group
+                       ...    Name=${NODE_GROUP9} 
+                       ...    owner=${owner}
+                       ...    Description=${NODE_GROUP_DESC9}
                        
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+                       
+        ${status}    PCC.Validate Node Group
+                     ...    Name=${NODE_GROUP9}
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+                     
+        ${nodegroup_id}    PCC.Get Node Group Id                                  
+                           ...    Name=${NODE_GROUP9}
+        
+        ${owner}       PCC.Get Tenant Id       Name=ROOT
+        
+        ${response}    PCC.Modify Node Group
+                       ...    Id=${nodegroup_id}
+                       ...    Name=${NODE_GROUP4} 
+                       ...    owner=${owner}
+                       ...    Description=${NODE_GROUP_DESC4}
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Clearing existing node group name and verify it is not allowed
+###################################################################################################################################
+
+        [Documentation]    *PCC Node group creation without description* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Add Node Group
+                           ...  PCC.Validate Node Group
+
         
                      
-
-                     
-
-                       
+        ${nodegroup_id}    PCC.Get Node Group Id                                  
+                           ...    Name=${NODE_GROUP9}
         
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                     
-                      
+        ${owner}       PCC.Get Tenant Id       Name=ROOT
+        
+        ${response}    PCC.Modify Node Group
+                       ...    Id=${nodegroup_id}
+                       ...    Name=''
+                       ...    owner=${owner}
+                       ...    Description=${NODE_GROUP_DESC9}
                        
-                                         
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Pcc Node Group Assignment
+###################################################################################################################################
+
+        [Documentation]    *Pcc-Node-Group-Assignment* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Add Node Group
+                           ...  PCC.Validate Node Group
+
+        ${nodegroup_id}    PCC.Get Node Group Id                                  
+                           ...    Name=${NODE_GROUP9}
+                     
+        ${response}    PCC.Assign Node Group to Node                                  
+                       ...    Id=${nodegroup_id}
+                       ...    node_id=${invader1_id}
+                     
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+                     
+                     
+        ${status}    PCC.Validate Node Group Assigned to Node
+                     ...    Name=${CLUSTERHEAD_1_NAME}
+                     ...    Id=${nodegroup_id}
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+                     
+                     
+###################################################################################################################################
+Delete Group in the PCC when group is associated with the Node
+###################################################################################################################################
+
+        [Documentation]    *Delete Group in the PCC when group is associated with the Node* test
+                           ...  keywords:
+                           ...  PCC.Delete Node Group
+                           ...  PCC.Get Node Group Id
+                           ...  PCC.Validate Node Group 
                            
+        ${nodegroup_id}    PCC.Get Node Group Id                                  
+                           ...    Name=${NODE_GROUP9}
+                           
+        ${response}    PCC.Delete Node Group
+                       ...    Id=${nodegroup_id}
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+                       Sleep    2s
+                       
+        ${status}    PCC.Validate Node Group
+                     ...    Name=${NODE_GROUP9}
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node group doesnot exists
+
+###################################################################################################################################
+Pcc Node Group Un-Assignment
+###################################################################################################################################
+
+        [Documentation]    *Pcc-Node-Group-UnAssignment* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Add Node Group
+                           ...  PCC.Validate Node Group
+
+
+        ${response}    PCC.Assign Node Group to Node
+                       ...    Id=0
+                       ...    node_id=${invader1_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Delete All Node Groups
+###################################################################################################################################
+
+        [Documentation]    *Delete All Node Groups* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Add Node Group
+                           ...  PCC.Validate Node Group
+        [Tags]    Delete
+
+        ${status}    PCC.Delete all Node groups
+                       
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node group still exists    
+        
+
+

@@ -36,6 +36,22 @@ Login to PCC.
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
                          
+###################################################################################################################################
+Update OS Images
+###################################################################################################################################
+
+    [Documentation]    *Update OS Images* test
+    
+    [Tags]    Greenfield
+        
+    ${result}    PCC.Update OS Images
+                 ...    host_ip=${PCC_HOST_IP}
+                 ...    username=${PCC_LINUX_USER}
+                 ...    password=${PCC_LINUX_PASSWORD}
+                   
+                 Log To Console    ${result}
+                 Should be equal as strings    ${result}    OK
+
                          
                          
 ###################################################################################################################################
