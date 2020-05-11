@@ -888,3 +888,66 @@ Load Node Groups Data
         ${NODE_GROUP_DESC9}         Evaluate    $pcc_server_dict.get("group9_desc", None)
                                     Set Suite Variable    ${NODE_GROUP_DESC9}
                                 
+###################################################################################################################################
+Load Tenant Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Tenant Data*
+
+                                    Log To Console      **** Load Tenant Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    tenant
+                            
+        ${ROOT_TENANT}              Evaluate    $pcc_server_dict.get("root_tenant", None)
+                                    Set Suite Variable    ${ROOT_TENANT}
+                                        
+        ${TENANT1}              Evaluate    $pcc_server_dict.get("tenant_1", None)
+                                Set Suite Variable    ${TENANT1}
+                                      
+        ${TENANT2}              Evaluate    $pcc_server_dict.get("tenant_2", None)
+                                Set Suite Variable    ${TENANT2}
+                                        
+        ${TENANT3}              Evaluate    $pcc_server_dict.get("tenant_3", None)
+                                Set Suite Variable    ${TENANT3}                                          
+                                    
+        ${TENANT4}              Evaluate    $pcc_server_dict.get("tenant_4", None)
+                                Set Suite Variable    ${TENANT4}
+                                      
+        ${TENANT5}              Evaluate    $pcc_server_dict.get("tenant_5", None)
+                                Set Suite Variable    ${TENANT5}
+                                        
+        ${TENANT6}              Evaluate    $pcc_server_dict.get("tenant_6", None)
+                                Set Suite Variable    ${TENANT6}
+                                    
+        ${TENANT7}              Evaluate    $pcc_server_dict.get("tenant_7", None)
+                                Set Suite Variable    ${TENANT7}
+        
+        ${ROOT_TENANT_DESC}     Evaluate    $pcc_server_dict.get("root_tenant_desc", None)
+                                Set Suite Variable    ${ROOT_TENANT_DESC}                                                         
+                                    
+        ${TENANT1_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_1", None)
+                                Set Suite Variable    ${TENANT1_DESC}
+                                    
+        ${TENANT2_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_2", None)
+                                Set Suite Variable    ${TENANT2_DESC}
+                                    
+        ${TENANT3_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_3", None)
+                                Set Suite Variable    ${TENANT3_DESC}
+                                    
+        ${TENANT4_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_4", None)
+                                Set Suite Variable    ${TENANT4_DESC}
+                                    
+        ${TENANT5_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_5", None)
+                                Set Suite Variable    ${TENANT5_DESC}
+                                    
+        ${TENANT6_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_6", None)
+                                Set Suite Variable    ${TENANT6_DESC}
+                                    
+        ${TENANT7_DESC}         Evaluate    $pcc_server_dict.get("tenant_desc_7", None)
+                                Set Suite Variable    ${TENANT7_DESC}
+        
+        ${SUB_TENANT}           Evaluate    $pcc_server_dict.get("sub_tenant", None)
+                                Set Suite Variable    ${SUB_TENANT}
+                                
+        ${SUB_TENANT_DESC}      Evaluate    $pcc_server_dict.get("sub_tenant_desc", None)
+                                Set Suite Variable    ${SUB_TENANT_DESC}        
+                                
