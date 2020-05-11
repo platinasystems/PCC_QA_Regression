@@ -383,7 +383,7 @@ class Tunneling(AaBase):
 
         self._load_kwargs(kwargs)
         try:
-            cmd= "sudo cat /etc/pcc/profile_node.json"
+            cmd= "sudo cat /opt/platina/pcc/etc/profile_node.json"
             profile_node_json_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_profile_node_json_status = self._serialize_response(time.time(), profile_node_json_status)
