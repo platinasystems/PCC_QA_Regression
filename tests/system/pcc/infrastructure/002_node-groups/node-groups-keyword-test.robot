@@ -99,7 +99,7 @@ PCC Node group creation without description
         ${response}    PCC.Add Node Group
                        ...    Name=${NODE_GROUP2} 
                        ...    owner=${owner}
-                       ...    Description=${NODE_GROUP_DESC2}
+                       ...    Description=''
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -127,7 +127,7 @@ PCC Node group creation without name
         ${owner}       PCC.Get Tenant Id       Name=ROOT
         
         ${response}    PCC.Add Node Group
-                       ...    Name=${NODE_GROUP2} 
+                       ...    Name='' 
                        ...    owner=${owner}
                        ...    Description=${NODE_GROUP_DESC2}
                        
