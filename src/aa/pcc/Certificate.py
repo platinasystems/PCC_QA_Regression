@@ -36,7 +36,7 @@ class Certificate(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Add Certificate [Alias=%s]" % self.Alias)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        filename_path = os.path.join("tests/environment", self.Filename)
+        filename_path = os.path.join("/tests/test-data", self.Filename)
         return pcc.add_certificate(conn, self.Alias, self.Description, filename_path)
 
     ###########################################################################
