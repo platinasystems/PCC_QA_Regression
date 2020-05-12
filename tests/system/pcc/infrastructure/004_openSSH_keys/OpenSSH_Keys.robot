@@ -25,7 +25,7 @@ Add Private Key
         
         [Documentation]    *Add Private Key* test
         
-        ${response}    PCC.Add OpenSSH_keys
+        ${response}    PCC.Add OpenSSH Key
                        ...  Alias=${PRIVATE_KEY_ALIAS}
                        ...  Description=${PRIVATE_KEY_DESCRIPTION}
                        ...  Filename=${PRIVATE_KEY}
@@ -43,7 +43,7 @@ Add Public Key
         
         [Documentation]    *Add Public Key* test
         
-        ${response}    PCC.Add OpenSSH_keys
+        ${response}    PCC.Add OpenSSH Key
                        ...  Alias=${PUBLIC_KEY_ALIAS}
                        ...  Description=${PUBLIC_KEY_DESCRIPTION}
                        ...  Filename=${PUBLIC_KEY}
