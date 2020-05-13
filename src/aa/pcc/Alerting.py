@@ -279,6 +279,24 @@ class Alerting(AaBase):
         trace("Serialize Output:- %s " % (serialise_output))
         for data in serialise_output['Data']:
              print("DATA:-"+str(data))
-             if str(data['name']).lower()==str(self.name).lower() or re.search(self.name,data['rule'],re.IGNORECASE):
+             if re.search(self.name,data['rule'],re.IGNORECASE):
+                 return "OK"
+             if str(data['name']).lower()==str(self.name).lower():
+                 for key,value in kwargs.items():
+                     if str(key)=="auth_data" or str(key)=="setup_ip" or str(key)=="user" or str(key)=="password":
+                         continue
+                     elif str(key)=="nodes":
+                         tmp_node=[]
+                         print("inside")
+                         for node_name in eval(str(self.nodes)):
+                             node_id=easy.get_node_id_by_name(conn,node_name)
+                             tmp_node.append(node_id)
+                         if str(data['nodeIds'])==str(tmp_node):
+                             continue
+                     elif str(data[key])==str(value):
+                         continue
+                     else:
+                         print("Could not verfiy all the Values")
+                         return "Error"
                  return "OK"                
-        return None
+        return "Error"
