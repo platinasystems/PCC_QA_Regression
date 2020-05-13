@@ -951,3 +951,89 @@ Load Tenant Data
         ${SUB_TENANT_DESC}      Evaluate    $pcc_server_dict.get("sub_tenant_desc", None)
                                 Set Suite Variable    ${SUB_TENANT_DESC}        
                                 
+###################################################################################################################################
+Load Node Roles Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Node Roles Data*
+
+                                    Log To Console      **** Load Node Roles Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    node_roles
+                            
+        ${APP_1}                Evaluate    $pcc_server_dict.get("app_1", None)
+                                Set Suite Variable    ${APP_1}
+                                        
+        ${APP_2}                Evaluate    $pcc_server_dict.get("app_2", None)
+                                Set Suite Variable    ${APP_2}
+                                      
+        ${NODE_ROLE_1}          Evaluate    $pcc_server_dict.get("node_role1", None)
+                                Set Suite Variable    ${NODE_ROLE_1}
+                                        
+        ${NODE_ROLE_2}          Evaluate    $pcc_server_dict.get("node_role2", None)
+                                Set Suite Variable    ${NODE_ROLE_2}                                          
+                                    
+        ${NODE_ROLE_3}          Evaluate    $pcc_server_dict.get("node_role3", None)
+                                Set Suite Variable    ${NODE_ROLE_3}
+                                      
+        ${NODE_ROLE_4}          Evaluate    $pcc_server_dict.get("node_role4", None)
+                                Set Suite Variable    ${NODE_ROLE_4}
+                                        
+        ${NODE_ROLE_5}          Evaluate    $pcc_server_dict.get("node_role5", None)
+                                Set Suite Variable    ${NODE_ROLE_5}
+                                    
+        ${NODE_ROLE_6}          Evaluate    $pcc_server_dict.get("node_role6", None)
+                                Set Suite Variable    ${NODE_ROLE_6}
+        
+        ${NODE_ROLE_7}          Evaluate    $pcc_server_dict.get("node_role7", None)
+                                Set Suite Variable    ${NODE_ROLE_7}
+                                
+        ${NODE_ROLE_8}          Evaluate    $pcc_server_dict.get("node_role8", None)
+                                Set Suite Variable    ${NODE_ROLE_8}
+                                
+        ${NODE_ROLE_9}          Evaluate    $pcc_server_dict.get("node_role9", None)
+                                Set Suite Variable    ${NODE_ROLE_9}
+                                
+        ${NODE_ROLE_10}         Evaluate    $pcc_server_dict.get("node_role10", None)
+                                Set Suite Variable    ${NODE_ROLE_10}
+                                
+        ${NODE_ROLE_11}         Evaluate    $pcc_server_dict.get("node_role11", None)
+                                Set Suite Variable    ${NODE_ROLE_11}
+        
+        ${MULTIPLE_NODE_ROLE}   Evaluate    $pcc_server_dict.get("multiple_noderole", None)
+                                Set Suite Variable    ${MULTIPLE_NODE_ROLE}                                                                                                       
+                                    
+        ${NODE_ROLE_DESC_1}     Evaluate    $pcc_server_dict.get("node_role_desc1", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_1}
+                                    
+        ${NODE_ROLE_DESC_2}     Evaluate    $pcc_server_dict.get("node_role_desc2", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_2}
+                                    
+        ${NODE_ROLE_DESC_3}     Evaluate    $pcc_server_dict.get("node_role_desc3", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_3}
+                                    
+        ${NODE_ROLE_DESC_4}     Evaluate    $pcc_server_dict.get("node_role_desc4", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_4}
+                                    
+        ${NODE_ROLE_DESC_5}     Evaluate    $pcc_server_dict.get("node_role_desc5", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_5}
+                                    
+        ${NODE_ROLE_DESC_6}     Evaluate    $pcc_server_dict.get("node_role_desc6", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_6}
+                                    
+        ${NODE_ROLE_DESC_7}     Evaluate    $pcc_server_dict.get("node_role_desc7", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_7}
+                                
+        ${NODE_ROLE_DESC_8}     Evaluate    $pcc_server_dict.get("node_role_desc8", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_8}
+        
+        ${NODE_ROLE_DESC_9}     Evaluate    $pcc_server_dict.get("node_role_desc9", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_9}
+                                
+        ${NODE_ROLE_DESC_10}    Evaluate    $pcc_server_dict.get("node_role_desc10", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_10}
+                                
+        ${NODE_ROLE_DESC_11}    Evaluate    $pcc_server_dict.get("node_role_desc11", None)
+                                Set Suite Variable    ${NODE_ROLE_DESC_11}
+                                
+        ${MULTIPLE_NODE_ROLE_DESC}    Evaluate    $pcc_server_dict.get("multiple_noderole_desc", None)
+                                      Set Suite Variable    ${MULTIPLE_NODE_ROLE_DESC}

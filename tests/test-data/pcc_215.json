@@ -280,9 +280,37 @@
             "tenant_desc_6":"!@#$%^&*()_{}",
             "tenant_desc_7":"   ",
             "sub_tenant_desc":"SubTenant_1"
-            
-            
-            
-        }      
+        },
+        
+     "node_roles":
+        {
+            "app_1":"LLDP",
+            "app_2":"MaaS",            
+            "node_role1":"Test_NodeRole_1",
+            "node_role2":"Test_NodeRole_2",
+            "node_role3":"Test_NodeRole_3",
+            "node_role4":"Test_NodeRole_4",
+            "node_role5":"Test_NodeRole_5",
+            "node_role6":"!@#$%^&*()_{}",
+            "node_role7":"  ",
+            "node_role8":"1234567",
+            "node_role9":"Test_NodeRole_9",
+            "node_role10":"Test_NodeRole_10",
+            "node_role11":"Test_NodeRole_11",
+            "multiple_noderole":"Test_NR_",
+            "node_role_desc1":"Test_NodeRole_Desc_1",
+            "node_role_desc2":"Test_NodeRole_Desc_2",
+            "node_role_desc3":"Test_NodeRole_Desc_3",
+            "node_role_desc4":"Test_NodeRole_Desc_4",
+            "node_role_desc5":"Test_NodeRole_Desc_5",
+            "node_role_desc6":"!@#$%^&*()_{}",
+            "node_role_desc7":"  ",
+            "node_role_desc8":"1234567",
+            "multiple_noderole_desc":"Test_NR_Desc_",
+            "node_role_desc9":"Test_NodeRole_Desc_9",
+            "node_role_desc10":"Test_NodeRole_Desc_10",
+            "node_role_desc11":"Test_NodeRole_Desc_11"
+        }
+              
                 
 }
