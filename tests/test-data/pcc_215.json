@@ -201,9 +201,9 @@
     "ceph_fs":
         {
             "name":"fs-pvt",            
-            "meta_pool":"Pool1",       
-            "data_pool":"Pool2",       
-            "default_pool":"Pool3" 
+            "meta_pool":"pool1",       
+            "data_pool":"pool2",       
+            "default_pool":"pool3" 
         },
 
     "k8s":
