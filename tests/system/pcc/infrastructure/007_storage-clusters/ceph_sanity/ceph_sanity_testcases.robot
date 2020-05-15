@@ -390,7 +390,7 @@ Ceph Fs Update
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=Pool4
+                               ...  data_pool=pool4
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -473,7 +473,7 @@ Ceph Pool Delete
 
 
         ${id}                       PCC.Ceph Get Pool Id
-                               ...  name=Pool1
+                               ...  name=pool1
                                     Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
 
         ${response}                 PCC.Ceph Delete Pool
@@ -487,7 +487,7 @@ Ceph Pool Delete
                                     Should Be Equal     ${status}  OK
 
         ${id}                       PCC.Ceph Get Pool Id
-                               ...  name=Pool2
+                               ...  name=pool2
                                     Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
 
         ${response}                 PCC.Ceph Delete Pool
@@ -501,7 +501,7 @@ Ceph Pool Delete
                                     Should Be Equal     ${status}  OK
 
         ${id}                       PCC.Ceph Get Pool Id
-                               ...  name=Pool3
+                               ...  name=pool3
                                     Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
 
         ${response}                 PCC.Ceph Delete Pool
@@ -515,7 +515,7 @@ Ceph Pool Delete
                                     Should Be Equal     ${status}  OK
 
         ${id}                       PCC.Ceph Get Pool Id
-                               ...  name=Pool4
+                               ...  name=pool4
                                     Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
 
         ${response}                 PCC.Ceph Delete Pool
