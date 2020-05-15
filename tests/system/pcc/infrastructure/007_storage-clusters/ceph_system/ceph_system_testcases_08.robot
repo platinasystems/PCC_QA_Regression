@@ -190,10 +190,10 @@ Create CephFS - with multiple metadata pools (Negative)
                                ...  name=${CEPH_FS_META}
 
         ${meta1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool6
+                               ...  name=pool6
 
         ${meta2}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool7
+                               ...  name=pool7
 
         ${data}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DATA}
@@ -293,7 +293,7 @@ Update CephFS – when it is in deploying state (Negative)
                                ...  name=${CEPH_Cluster_NAME}
 
         ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool4
+                               ...  name=pool4
 
         ${meta}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_META}
@@ -386,13 +386,13 @@ Ceph Fs Update with multiple pool data
                                ...  name=${CEPH_FS_DATA}
 
         ${data1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool4
+                               ...  name=pool4
 
         ${data2}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool5
+                               ...  name=pool5
 
         ${data3}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool6
+                               ...  name=pool6
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
@@ -438,7 +438,7 @@ Ceph Fs Update Data Pool with One pool data
                                ...  name=${CEPH_FS_DATA}
 
         ${data1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool7
+                               ...  name=pool7
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
@@ -487,7 +487,7 @@ Update CephFS - add_default_pool (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${default1}                 PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool8
+                               ...  name=pool8
 
         ${response}                 PCC.Ceph Update Fs
                                ...  id=${id}

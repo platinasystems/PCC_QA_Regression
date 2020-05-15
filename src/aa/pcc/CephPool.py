@@ -103,6 +103,7 @@ class CephPool(AaBase):
             raise e
 
         response = pcc.get_ceph_pools(conn)['Result']['Data']
+        print("Response:-"+str(response))
         for data in response:
             if str(data['name']) == str(self.name):
                 temp["id"] = data["id"]
@@ -159,12 +160,6 @@ class CephPool(AaBase):
             except ValueError:
                 print("Values is None or AlphaNumeric")
 
-        if self.quota:
-            try:
-                self.quota=ast.literal_eval(str(self.quota))
-            except ValueError:
-                print("Values is None or AlphaNumeric")
-
         if self.tags:
             self.tags=eval(self.tags)
 
@@ -194,12 +189,6 @@ class CephPool(AaBase):
         if self.size:
             try:
                 self.size= ast.literal_eval(str(self.size))
-            except ValueError:
-                print("Values is None or AlphaNumeric")
-
-        if self.quota:
-            try:
-                self.quota=ast.literal_eval(str(self.quota))
             except ValueError:
                 print("Values is None or AlphaNumeric")
 
@@ -344,12 +333,6 @@ class CephPool(AaBase):
         if self.size:
             try:
                 self.size= ast.literal_eval(str(self.size))
-            except ValueError:
-                print("Values is None or AlphaNumeric")
-
-        if self.quota:
-            try:
-                self.quota=ast.literal_eval(str(self.quota))
             except ValueError:
                 print("Values is None or AlphaNumeric")
 

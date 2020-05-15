@@ -31,7 +31,7 @@ Ceph Pool Creation for Fs
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool9
+                               ...  name=pool9
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -43,12 +43,12 @@ Ceph Pool Creation for Fs
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool9                            
+                               ...  name=pool9                            
 
                                     Should Be Equal As Strings      ${status}    OK   
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool10
+                               ...  name=pool10
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -60,12 +60,12 @@ Ceph Pool Creation for Fs
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool10                            
+                               ...  name=pool10                            
 
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool11
+                               ...  name=pool11
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -77,7 +77,7 @@ Ceph Pool Creation for Fs
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool11                           
+                               ...  name=pool11                           
 
                                     Should Be Equal As Strings      ${status}    OK                                      
                                     
@@ -94,7 +94,7 @@ Ceph Pool Update Pool Name with existing Pool Name (Negative)
                                ...  name=${CEPH_Cluster_NAME}
 
         ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=Pool12
+                               ...  name=pool12
 
         ${response}                 PCC.Ceph Pool Update
                                ...  id=${pool_id}
@@ -124,11 +124,11 @@ Ceph Pool Edit Name
                                ...  name=${CEPH_Cluster_NAME}
 
         ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=Pool10
+                               ...  name=pool10
 
         ${response}                 PCC.Ceph Pool Update
                                ...  id=${pool_id}
-                               ...  name=Pool13
+                               ...  name=pool13
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -141,7 +141,7 @@ Ceph Pool Edit Name
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool13
+                               ...  name=pool13
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -334,7 +334,7 @@ Ceph Pool Creation with pool size contain alphabets/ special characters (Negativ
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool7
+                               ...  name=pool7
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=abs
                                ...  tags=${CEPH_POOL_TAGS}

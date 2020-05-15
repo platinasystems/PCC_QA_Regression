@@ -182,7 +182,7 @@
     "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":3,
+            "size":"3",
             "tags":[],
             "pool_type":"replicated",
             "quota":1,
@@ -193,7 +193,7 @@
         {
             "name":"rbd-pvt",
             "image_feature":"layering",
-            "size":3,
+            "size":"3",
             "tags":[],
             "size_units":"MiB"
         },

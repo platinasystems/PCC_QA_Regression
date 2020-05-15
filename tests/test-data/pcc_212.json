@@ -183,7 +183,7 @@
             "size":3,
             "tags":[],
             "pool_type":"replicated",
-            "quota":1,
+            "quota":"1",
             "quota_unit":"TiB"
         },
 
@@ -191,7 +191,7 @@
         {
             "name":"rbd-pvt",
             "image_feature":"layering",
-            "size":3,
+            "size":"3",
             "tags":[],
             "size_units":"MiB"
         },
@@ -199,9 +199,9 @@
     "ceph_fs":
         {
             "name":"fs-pvt",            
-            "meta_pool":"Pool1",       
-            "data_pool":"Pool2",       
-            "default_pool":"Pool3" 
+            "meta_pool":"pool1",       
+            "data_pool":"pool2",       
+            "default_pool":"pool3" 
         },
 
     "k8s":

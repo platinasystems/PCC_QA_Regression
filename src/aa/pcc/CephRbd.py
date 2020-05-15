@@ -92,12 +92,6 @@ class CephRbd(AaBase):
         banner("PCC.Ceph Create Rbd")
         self._load_kwargs(kwargs)
 
-        if self.size:
-            try:
-                self.size= ast.literal_eval(str(self.size))
-            except ValueError:
-                print("Values is None or AlphaNumeric")
-                  
         if self.tags:
             self.tags=eval(self.tags)
 
@@ -123,12 +117,6 @@ class CephRbd(AaBase):
     def create_rbd_multiple(self, *args, **kwargs):
         banner("PCC.Ceph Create Rbd")
         self._load_kwargs(kwargs)
-
-        if self.size:
-            try:
-                self.size= ast.literal_eval(str(self.size))
-            except ValueError:
-                print("Values is None or AlphaNumeric")
 
         if self.tags:
             self.tags=eval(self.tags)
@@ -248,12 +236,6 @@ class CephRbd(AaBase):
     def modify_ceph_rbds(self, *args, **kwargs):
         self._load_kwargs(kwargs)
 
-        if self.size:
-            try:
-                self.size= ast.literal_eval(str(self.size))
-            except ValueError:
-                print("Values is None or AlphaNumeric")
-
         if self.tags:
             self.tags=eval(self.tags)
 
@@ -264,7 +246,7 @@ class CephRbd(AaBase):
             "ceph_pool_id":self.ceph_pool_id,
             "ceph_cluster_id":self.ceph_cluster_id,
             "name":self.name,
-            "size":int(self.size),
+            "size":self.size,
             "size_units": self.size_units,
             "tags":self.tags,
             "image_feature":self.image_feature

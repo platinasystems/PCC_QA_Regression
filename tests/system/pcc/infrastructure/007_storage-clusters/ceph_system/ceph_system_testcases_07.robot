@@ -311,13 +311,13 @@ Create CephFS - with mutiple data pools
                                ...  name=${CEPH_FS_DATA}
 
         ${data1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool4
+                               ...  name=pool4
 
         ${data2}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool5
+                               ...  name=pool5
 
         ${data3}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool6
+                               ...  name=pool6
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}

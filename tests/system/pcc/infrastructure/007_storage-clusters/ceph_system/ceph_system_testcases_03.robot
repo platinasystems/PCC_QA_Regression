@@ -342,7 +342,7 @@ Ceph Pool Creation and Verification with quota unit GiB
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool1
+                               ...  name=pool1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -354,7 +354,7 @@ Ceph Pool Creation and Verification with quota unit GiB
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool1                             
+                               ...  name=pool1                             
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -372,7 +372,7 @@ Ceph Pool Creation and Verification with quota unit TiB
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool2
+                               ...  name=pool2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -384,7 +384,7 @@ Ceph Pool Creation and Verification with quota unit TiB
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool2                             
+                               ...  name=pool2                             
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -402,7 +402,7 @@ Ceph Pool Creation and Verification with quota unit PiB
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool3
+                               ...  name=pool3
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -414,7 +414,7 @@ Ceph Pool Creation and Verification with quota unit PiB
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool3                       
+                               ...  name=pool3                       
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -432,7 +432,7 @@ Ceph Pool Creation and Verification with quota unit EiB
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool4
+                               ...  name=pool4
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -444,7 +444,7 @@ Ceph Pool Creation and Verification with quota unit EiB
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool4                          
+                               ...  name=pool4                          
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -462,7 +462,7 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool5
+                               ...  name=pool5
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
@@ -474,7 +474,7 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool5
+                               ...  name=pool5
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -492,7 +492,7 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool6
+                               ...  name=pool6
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=2
                                ...  tags=${CEPH_POOL_TAGS}
@@ -504,7 +504,7 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool6
+                               ...  name=pool6
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -522,7 +522,7 @@ Ceph Pool Creation and Verification with No. of Copies 3
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool7
+                               ...  name=pool7
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=3
                                ...  tags=${CEPH_POOL_TAGS}
@@ -534,7 +534,7 @@ Ceph Pool Creation and Verification with No. of Copies 3
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool7
+                               ...  name=pool7
 
                                     Should Be Equal As Strings      ${status}    OK
 

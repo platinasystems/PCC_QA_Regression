@@ -90,7 +90,7 @@ Ceph Pool Creation
                                     Should Be Equal As Strings      ${status_code}  200
         
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool1
+                               ...  name=pool1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -103,7 +103,7 @@ Ceph Pool Creation
         
         
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool2
+                               ...  name=pool2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -116,7 +116,7 @@ Ceph Pool Creation
                                     
         
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool3
+                               ...  name=pool3
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -129,7 +129,7 @@ Ceph Pool Creation
                                     
                                     
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=Pool4
+                               ...  name=pool4
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -153,22 +153,22 @@ Ceph Pool Verification
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool1
+                               ...  name=pool1
 
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool2
+                               ...  name=pool2
 
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool3
+                               ...  name=pool3
 
                                     Should Be Equal As Strings      ${status}    OK
         
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=Pool4
+                               ...  name=pool4
 
                                     Should Be Equal As Strings      ${status}    OK
                                     

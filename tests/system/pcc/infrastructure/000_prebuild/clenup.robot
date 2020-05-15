@@ -91,10 +91,6 @@ Ceph Cluster Delete
                                ...  id=${id}
                                     Should Be Equal As Strings     ${status}  OK
 
-        ${response}                 PCC.Ceph Cleanup BE
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD} 
 
 ###################################################################################################################################
 Delete K8 Cluster
@@ -117,3 +113,13 @@ Delete K8 Cluster
         ${status}                   PCC.K8s Wait Until Cluster Deleted
                                ...  cluster_id=${cluster_id}
                                     Should Be Equal As Strings    ${status}  OK
+
+
+###################################################################################################################################
+BE Ceph Cleanup
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Cleanup BE
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}

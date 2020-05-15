@@ -43,7 +43,7 @@ Update CephFS - add_metadata_pool (Negative)
                                ...  name=${CEPH_FS_META}
 
         ${meta1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=Pool8
+                               ...  name=pool8
 
         ${data}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DATA}
