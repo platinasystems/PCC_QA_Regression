@@ -54,9 +54,34 @@ Update OS Images
                  ...    password=${PCC_LINUX_PASSWORD}
                    
                  Log To Console    ${result}
-                 Should be equal as strings    ${result}    OK
+                
+
+###################################################################################################################################
+Adding Mass To Invaders
+###################################################################################################################################
+    [Documentation]                 *Adding Mass To Invaders*
+                               ...  Keywords:
+                               ...  PCC.Add and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes
+                               ...  
 
 
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  roles=["maas"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                                     
+                                    Should Be Equal As Strings      ${status_code}  OK     
+                                      
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+                                    
 ###################################################################################################################################
 Delete node which needs to be PXE-Booted
 ###################################################################################################################################
