@@ -50,9 +50,9 @@ Update OS Images
                  ...    password=${PCC_LINUX_PASSWORD}
                    
                  Log To Console    ${result}
-                 Should be equal as strings    ${result}    OK
+                 
 
-                         
+
                          
 ###################################################################################################################################
 Verify Provision Ready Status and update node, if not ready (TC-1)
