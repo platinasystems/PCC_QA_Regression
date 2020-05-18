@@ -300,7 +300,7 @@ Deleting Mass+LLDP From Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
                                
         ${response}                 PCC.Delete and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}","${SERVER_2_NAME}"]
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  roles=["lldp","maas"]
 
                                     Should Be Equal As Strings      ${response}  OK
@@ -316,10 +316,8 @@ Deleting Mass+LLDP From Nodes
 
                                     Should Be Equal As Strings      ${status_code}  OK
 
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_2_NAME}
+        
 
-                                    Should Be Equal As Strings      ${status_code}  OK
                    
 ###################################################################################################################################
 Set Password on Server
