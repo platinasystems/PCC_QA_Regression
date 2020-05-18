@@ -29,6 +29,7 @@ Library                         aa.pcc.RoleOperations
 Library                         aa.pcc.Interfaces
 Library                         aa.pcc.Alerting
 Library                         aa.pcc.Topology
+Library                         aa.pcc.SAS_Enclosure
 Library                         Collections
 
 
