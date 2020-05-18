@@ -305,8 +305,14 @@ class Nodes(AaBase):
         self._load_kwargs(kwargs)
         try:
             wait_for_node_addition_status = []
+            node_not_exists=[]
             for hostip in ast.literal_eval(self.host_ips):
-                add_node_status = self.add_node(Host=hostip, managed= self.managed, standby = self.standby)
+                exists = easy.check_node_exists(conn, IP=hostip)
+                if exists == False:
+                    node_not_exists.append(hostip)
+                    
+            for node_hostip in node_not_exists:
+                add_node_status = self.add_node(Host=node_hostip, managed= self.managed, standby = self.standby)
                 
             for name in ast.literal_eval(self.Names):
                 verify_node_online_status = self.wait_until_node_ready(Name=name)
