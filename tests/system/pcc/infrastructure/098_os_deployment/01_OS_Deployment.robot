@@ -51,7 +51,28 @@ Update OS Images
                    
                  Log To Console    ${result}
                  
+###################################################################################################################################
+Adding Mass+LLDP To Invaders
+###################################################################################################################################
+    [Documentation]                 *Adding Mass+LLDP To Invaders*
+                               ...  Keywords:
+                               ...  PCC.Add and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  roles=["maas","lldp"]
 
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                                     
+                                    Should Be Equal As Strings      ${status_code}  OK     
+                                      
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
 
                          
 ###################################################################################################################################
