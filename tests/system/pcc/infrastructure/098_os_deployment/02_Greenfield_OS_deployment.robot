@@ -56,31 +56,7 @@ Update OS Images
                  Log To Console    ${result}
                 
 
-###################################################################################################################################
-Adding Mass To Invaders
-###################################################################################################################################
-    [Documentation]                 *Adding Mass To Invaders*
-                               ...  Keywords:
-                               ...  PCC.Add and Verify Roles On Nodes
-                               ...  PCC.Wait Until Roles Ready On Nodes
-                               ...  
 
-
-        ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  roles=["maas"]
-
-                                    Should Be Equal As Strings      ${response}  OK
-
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_1_NAME}
-                                     
-                                    Should Be Equal As Strings      ${status_code}  OK     
-                                      
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_2_NAME}
-
-                                    Should Be Equal As Strings      ${status_code}  OK
                                     
 ###################################################################################################################################
 Delete node which needs to be PXE-Booted
@@ -314,6 +290,36 @@ Verify OS details from PCC (centos76)
                  
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    True
+                 
+###################################################################################################################################
+Deleting Mass+LLDP From Nodes
+###################################################################################################################################
+    [Documentation]                 *Deleting Mass+LLDP From Nodes*
+                               ...  Keywords:
+                               ...  PCC.Delete and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes
+                               
+        ${response}                 PCC.Delete and Verify Roles On Nodes
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}","${SERVER_2_NAME}"]
+                               ...  roles=["lldp","maas"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${SERVER_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
                    
 ###################################################################################################################################
 Set Password on Server
