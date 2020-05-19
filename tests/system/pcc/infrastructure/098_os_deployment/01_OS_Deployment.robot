@@ -127,7 +127,7 @@ Update OS details (centos76) - Brownfield
                           Should Be Equal As Strings    ${status}    200 
                           
                           Log To Console    Sleeping for a while till OS gets updated
-                          Sleep    10 minutes 
+                          Sleep    15 minutes 
                           Log To Console    Done sleeping
 
 ###################################################################################################################################
@@ -211,7 +211,7 @@ Update OS details (ubuntu-bionic) - Brownfield
                           Should Be Equal As Strings    ${status}    200 
                           
                           Log To Console    Sleeping for a while till OS gets updated
-                          Sleep    10 minutes 
+                          Sleep    15 minutes 
                           Log To Console    Done sleeping
 
 ###################################################################################################################################
