@@ -120,6 +120,40 @@ class Kubernetes(AaBase):
             return pcc.delete_kubernetes_by_id(conn, str(self.cluster_id))
 
     ###########################################################################
+    @keyword(name="PCC.K8s Delete All Cluster")
+    ###########################################################################
+    def delete_all_kubernetes(self, *args, **kwargs): 
+        banner("PCC.K8s Delete All Cluster")
+        self._load_kwargs(kwargs)
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
+        response = pcc.get_kubernetes(conn)
+        for data in get_response_data(response):
+            print("Response To Look :-"+str(data))
+            print("K8s {} and id {} is deleting....".format(data['name'],data['ID']))
+            self.cluster_id=data['ID']
+            del_response=pcc.delete_kubernetes_by_id(conn, str(self.cluster_id))
+            if del_response['Result']['status']==200:
+                del_check=self.k8s_wait_until_cluster_deleted()
+                print("del_check:"+str(del_check))
+                if del_check=="OK":
+                    print("k8s {} is deleted sucessfully".format(data['name']))
+                    return "OK"
+                else:
+                    print("k8s {} unable to delete".format(data['name']))
+                    return "Error"
+            else:
+                print("Delete Response:"+str(del_response))
+                print("Issue: Not getting 200 response back")
+                return "Error"
+                        
+        return "OK" 
+
+    ###########################################################################
     @keyword(name="PCC.K8s Wait Until Cluster is Ready")
     ###########################################################################
     def k8s_wait_until_cluster_ready(self, *args, **kwargs):
@@ -175,6 +209,7 @@ class Kubernetes(AaBase):
             Id_found_in_list_of_clusters = False
             response = pcc.get_kubernetes(conn)
             for data in get_response_data(response):
+                print("K8s Delete Wait Response:"+str(data))
                 if str(data['ID']) == str(self.cluster_id):
                     Id_found_in_list_of_clusters = True
                 elif re.search("failed",str(data['deployStatus'])):

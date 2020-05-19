@@ -269,3 +269,36 @@ class CephCluster(AaBase):
             data=easy.cli_run(ip,self.user,self.password,cmd)
         time.sleep(30)
         return
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Delete All Cluster")
+    ###########################################################################
+    def delete_all_ceph_cluster(self, *args, **kwargs):
+        banner("PCC.Ceph Delete All Cluster")
+        self._load_kwargs(kwargs)
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        
+        response = pcc.get_ceph_clusters(conn)
+        for data in get_response_data(response):
+            print("Response To Look :-"+str(data))
+            print("Ceph Cluster {} and id {} is deleting....".format(data['name'],data['id']))
+            self.id=data['id']
+            del_response=pcc.delete_ceph_cluster_by_id(conn, str(self.id))
+            if del_response['Result']['status']==200:
+                del_check=self.wait_until_cluster_deleted()
+                if del_check=="OK":
+                    print("Ceph Cluster {} is deleted sucessfully".format(data['name']))
+                    return "OK"
+                else:
+                    print("Ceph Cluster {} unable to delete".format(data['name']))
+                    return "Error"
+            else:
+                print("Delete Response:"+str(del_response))
+                print("Issue: Not getting 200 response back")
+                return "Error"
+
+        return "OK"

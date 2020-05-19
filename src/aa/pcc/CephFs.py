@@ -208,3 +208,36 @@ class CephFs(AaBase):
             raise Exception(e)
 
         return pcc.modify_ceph_fs(conn, payload)
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Delete All Fs")
+    ###########################################################################
+    def delete_ceph_all_fs(self, *args, **kwargs):
+        banner("PCC.Ceph Delete All Fs")
+        self._load_kwargs(kwargs)
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
+        response = pcc.get_ceph_fs(conn)
+        for data in get_response_data(response):
+            print("Response To Look :-"+str(data))
+            print("Ceph Fs {} and id {} is deleting....".format(data['name'],data['id']))
+            self.id=data['id']
+            del_response=pcc.delete_ceph_fs_by_id(conn, str(self.id))
+            if del_response['Result']['status']==200:
+                del_check=self.wait_until_fs_deleted()
+                if del_check=="OK":
+                    print("Ceph Fs {} is deleted sucessfully".format(data['name']))
+                    return "OK"
+                else:
+                    print("Ceph Fs {} unable to delete".format(data['name']))
+                    return "Error"
+            else:
+                print("Delete Response:"+str(del_response))
+                print("Issue: Not getting 200 response back")
+                return "Error"
+                        
+        return "OK" 
