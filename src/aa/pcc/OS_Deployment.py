@@ -196,7 +196,7 @@ class OS_Deployment(AaBase):
         logger.console("label_name: {}".format(label_name))
         OS_version = self.get_OS_version_by_node_name(**kwargs)
         logger.console("OS_version: {}".format(OS_version))
-        if OS_version in label_name:
+        if str(OS_version) in str(label_name):
             print("OS deployed successfully")
             return True
         else:
