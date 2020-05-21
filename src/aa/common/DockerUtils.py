@@ -16,7 +16,7 @@ class DockerUtils(AaBase):
 
     def __init__(self):
 
-        self.hostip = "172.17.10.100"
+        self.hostip = None
         self.username = "pcc"
         self.password = "cals0ft"
         self.cmd_output = None
@@ -180,10 +180,12 @@ class DockerUtils(AaBase):
     
     def pull_from_registry(self, *args, **kwargs):
         self._load_kwargs(kwargs)
-                
+        print("Kwargs are: {}".format(kwargs))        
         try:
             self.cmd = "docker pull {}:{}/{}".format(self.registry_url,self.registryPort,self.image_name)
             time.sleep(5)
+            
+            print("Command used is: {}".format(self.cmd))
             pull_command_execution = easy.cli_run(cmd= self.cmd,host_ip=self.hostip, linux_user=self.username, linux_password = self.password)
             
             serialised_pull_command_execution = self._serialize_response(time.time(), pull_command_execution)
@@ -196,6 +198,8 @@ class DockerUtils(AaBase):
                 if ("Downloaded newer image for {}:{}/{}:latest".format(self.registry_url,self.registryPort,self.image_name)) or ("Status: Image is up to date") in self.cmd_output:
                     banner("Image pulled from Registry successfully")
                     return "OK"
+                else:
+                    return str(serialised_pull_command_execution['Result']['stderr']).replace('\n', '').strip() 
             elif self.cmd_output == "":
                 raise Exception("No value found in cmd output")
             else:
@@ -275,8 +279,11 @@ class DockerUtils(AaBase):
         print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker login {}:{} --password='{}' --username='{}'".format(self.fullyQualifiedDomainName,self.registryPort,self.portus_password,self.portus_uname)
+            
+            print("Cmd executed is: {}".format(self.cmd))
             CR_login_cmd_execution = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
+            print("CR_login_cmd_execution is : {}".format(CR_login_cmd_execution))
             serialised_CR_login_cmd_execution = self._serialize_response(time.time(), CR_login_cmd_execution)
             print("serialised_CR_login_cmd_execution is:{}".format(serialised_CR_login_cmd_execution))
             

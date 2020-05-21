@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_212
+${pcc_setup}    pcc_218
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -12,6 +12,7 @@ Login to PCC.
                 
         [Documentation]    *Login to PCC* test
         
+        [Tags]    Negative
         ${status}        Login To PCC    ${pcc_setup}
                          Should Be Equal    ${status}  OK
                          
@@ -216,6 +217,7 @@ Get Host IP used by CR
         [Documentation]    *Get Host IP used by CR* test
                            ...  keywords:
                            ...  PCC.Get Host IP
+        [Tags]    Negative
         
         ${host_ip}    PCC.Get Host IP
                       ...  Name=${CR_NAME} 
@@ -646,7 +648,7 @@ User should not be able to access Portus URL and images : TCP- 591 (Negative)
                            ...  Delete image from local repo, if exists
                            ...  aa.common.LinuxUtils.Is FQDN reachable
                            
-                            
+        [Tags]    Negative                    
         
         ${check_image_status}    Check if image exists in local repo    
                                  ...    image_name=${CR_CUSTOM_IMAGE_NAME}

@@ -127,7 +127,7 @@ Update OS details (centos76) - Brownfield
                           Should Be Equal As Strings    ${status}    200 
                           
                           Log To Console    Sleeping for a while till OS gets updated
-                          Sleep    15 minutes 
+                          Sleep    20 minutes 
                           Log To Console    Done sleeping
 
 ###################################################################################################################################
@@ -158,6 +158,10 @@ Verify OS details from PCC (centos76) - Brownfield
                  
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    True
+                 
+                 Sleep    3 minutes                
+                  
+                 
                  
 ###################################################################################################################################
 Verify Provision Ready Status and update node, if not ready (TC-2)
@@ -211,7 +215,7 @@ Update OS details (ubuntu-bionic) - Brownfield
                           Should Be Equal As Strings    ${status}    200 
                           
                           Log To Console    Sleeping for a while till OS gets updated
-                          Sleep    15 minutes 
+                          Sleep    20 minutes 
                           Log To Console    Done sleeping
 
 ###################################################################################################################################
