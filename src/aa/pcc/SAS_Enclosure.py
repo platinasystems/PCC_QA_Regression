@@ -27,10 +27,12 @@ class SAS_Enclosure(AaBase):
 
         # Robot arguments definitions
         
-        self.auth_data= None
-        self.setup_ip=None
-        self.user="pcc"
-        self.password="Cals0ft"     
+        self.auth_data = None
+        self.setup_ip = None
+        self.user = "pcc"
+        self.password = "Cals0ft"   
+        self.slot_name = None 
+        self.led_status = None 
         super().__init__()
 
     ###########################################################################
@@ -40,7 +42,7 @@ class SAS_Enclosure(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Get SAS Enclosures")
 
-        print("kwargs:-"+str(kwargs))        
+        print("kwargs in Get SAS Enclosure :-  "+str(kwargs))        
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         
         token=self.auth_data["token"]
@@ -56,5 +58,67 @@ class SAS_Enclosure(AaBase):
         trace("Serialize Output:- %s " % (serialise_output))
         
         if serialise_output['status']==200 and serialise_output['error']=="":
-            return "OK"
+            return serialise_output
         return "Error"
+    
+    
+    
+    ###########################################################################
+    @keyword(name="PCC.Get Sub-Enclosure Slot Id")
+    ###########################################################################
+    def get_sub_enclosure_slot_id(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Get Sub-Enclosure Slot Id")
+
+        print("kwargs in get sub enclosure slot id :-  {}".format(str(kwargs)))        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")  
+        try:
+            sub_enclosures = self.get_SAS_enclosures()['Data'][0]['subenclosures'][0]['slots']
+            
+            for slots in sub_enclosures:
+                if str(slots['deviceName'])== str(self.slot_name):
+                    trace("Slot name found")
+                    return slots['slotID']
+            trace("Slot not found")
+            return "Error: Slot_name not found"
+        except Exception as e:
+            return {'Error':str(e)}
+        
+              
+    
+        
+    ###########################################################################
+    @keyword(name="PCC.Update SAS Enclosure")
+    ###########################################################################
+    def update_SAS_enclosure(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Update SAS Enclosure")
+
+        print("kwargs:-"+str(kwargs))        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        payload = {
+                    "ledOn": json.loads(self.led_status.lower())
+                  }        
+
+        print("Payload:-"+str(payload))
+        trace("Payload:- %s " % (payload))
+        
+        token=self.auth_data["token"]
+        
+        slot_id=self.get_sub_enclosure_slot_id(**kwargs)
+        banner("Slot id is: {}".format(slot_id))
+        
+        cmd_strct = """curl -k -X PUT --data \'{}\' -H "Content-type:application/json" -H "Authorization:Bearer {}" https://{}:9999/pccserver/v2/enclosures/1/slots/{}"""
+        cmd=cmd_strct.format(json.dumps(payload),token,self.setup_ip,slot_id)
+        print("Command:-"+str(cmd))
+        
+        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
+        print("Serialize Output:"+str(serialise_output))
+        trace("Serialize Output:- %s " % (serialise_output))
+        if serialise_output['status']==200 and serialise_output['error']=="":
+            return serialise_output
+        return "Error"
+        
+        

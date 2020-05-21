@@ -1038,3 +1038,15 @@ Load Node Roles Data
                                 
         ${MULTIPLE_NODE_ROLE_DESC}    Evaluate    $pcc_server_dict.get("multiple_noderole_desc", None)
                                       Set Suite Variable    ${MULTIPLE_NODE_ROLE_DESC}
+                                      
+###################################################################################################################################
+Load SAS Enclosure Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load SAS Enclosure Data*
+
+                                    Log To Console      **** Load Node Roles Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    SAS_Enclosure
+                            
+        ${SUB-ENCLOSURE_NAME}   Evaluate    $pcc_server_dict.get("sub-enclosure_name", None)
+                                Set Suite Variable    ${SUB-ENCLOSURE_NAME}
