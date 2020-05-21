@@ -99,55 +99,55 @@ Delete App To K8 Cluster
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Add Node to Kubernetes cluster
+#Add Node to Kubernetes cluster
 ###################################################################################################################################
-        [Documentation]             *Add Node to Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Update Cluster Nodes
-                               ...  PCC.K8s Get Cluster Id
-                               ...  PCC.K8s Wait Until Cluster is Ready                             
-
-        ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8S_NAME}
-
-        ${response}                 PCC.K8s Update Cluster Nodes
-                               ...  cluster_id=${cluster_id}
-                               ...  name=${K8S_NAME}
-                               ...  toAdd=["i-42"]
-                               ...  rolePolicy=auto
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
+#        [Documentation]             *Add Node to Kubernetes cluster*
+#                               ...  Keywords:
+#                              ...  PCC.K8s Update Cluster Nodes
+#                              ...  PCC.K8s Get Cluster Id
+#                              ...  PCC.K8s Wait Until Cluster is Ready                             
+#
+#       ${cluster_id}               PCC.K8s Get Cluster Id
+#                              ...  name=${K8S_NAME}
+#
+#       ${response}                 PCC.K8s Update Cluster Nodes
+#                              ...  cluster_id=${cluster_id}
+#                              ...  name=${K8S_NAME}
+#                              ...  toAdd=["i-42"]
+#                              ...  rolePolicy=auto
+#
+#       ${status_code}              Get Response Status Code        ${response}
+#                                   Should Be Equal As Strings      ${status_code}  200
+#
+#       ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                              ...  name=${K8S_NAME}
+#                                   Should Be Equal As Strings      ${status}    OK
+#
 ###################################################################################################################################
-Remove Node to Kubernetes cluster
-###################################################################################################################################
-        [Documentation]             *Remove Node to Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Update Cluster Nodes
-                               ...  PCC.K8s Get Cluster Id
-                               ...  PCC.K8s Wait Until Cluster is Ready
-
-        ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8S_NAME}
-
-        ${response}                 PCC.K8s Update Cluster Nodes
-                               ...  cluster_id=${cluster_id}
-                               ...  name=${K8S_NAME}
-                               ...  toRemove=["i-42"]
-                               ...  rolePolicy=auto
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
+#Remove Node to Kubernetes cluster
+####################################################################################################################################
+#        [Documentation]             *Remove Node to Kubernetes cluster*
+#                               ...  Keywords:
+#                               ...  PCC.K8s Update Cluster Nodes
+#                               ...  PCC.K8s Get Cluster Id
+#                               ...  PCC.K8s Wait Until Cluster is Ready
+#
+#        ${cluster_id}               PCC.K8s Get Cluster Id
+#                               ...  name=${K8S_NAME}
+#
+#        ${response}                 PCC.K8s Update Cluster Nodes
+#                               ...  cluster_id=${cluster_id}
+#                               ...  name=${K8S_NAME}
+#                               ...  toRemove=["i-42"]
+#                               ...  rolePolicy=auto
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                               ...  name=${K8S_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
 ###################################################################################################################################
 Upgrade K8 Cluster Version
 ###################################################################################################################################     
