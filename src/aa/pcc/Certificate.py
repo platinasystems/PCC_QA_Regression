@@ -36,13 +36,13 @@ class Certificate(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Add Certificate [Alias=%s]" % self.Alias)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        filename_path = os.path.join("/tests/test-data", self.Filename)
+        filename_path = os.path.join("tests/test-data", self.Filename)
         return pcc.add_certificate(conn, self.Alias, self.Description, filename_path)
 
     ###########################################################################
     @keyword(name="PCC.Delete Certificate")
     ###########################################################################
-    def get_application_id(self, *args, **kwargs):
+    def delete_certificate(self, *args, **kwargs):
         """
         Delete Certificate
         [Args]
@@ -51,7 +51,13 @@ class Certificate(AaBase):
             (dict) Delete Certificate Response
         """
         self._load_kwargs(kwargs)
+        banner("Kwargs are: {}".format(kwargs))
         banner("PCC.Delete Certificate [Alias=%s]" % self.Alias)
-
+        
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.delete_certificate_by_id(conn, self.Alias)
+        certificate_id = easy.get_certificate_id_by_name(conn, Name = self.Alias)
+        banner("Certificate id is: {}".format(certificate_id))
+        return pcc.delete_certificate_by_id(conn, Id=str(certificate_id))
+        
+        
+        
