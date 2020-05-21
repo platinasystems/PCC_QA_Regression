@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_212
+${pcc_setup}    pcc_218
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -41,6 +41,19 @@ Login to PCC
         ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
                          Log To Console    ${server_id}
                          Set Global Variable    ${server_id}
+
+###################################################################################################################################
+Get Host IP used by CR in Auto Mode
+###################################################################################################################################
+                
+        [Documentation]    *Get Host IP used by CR in Auto Mode* test
+                           ...  keywords:
+                           ...  PCC.Get Host IP
+        
+        ${host_ip}    PCC.Get Host IP
+                      ...  Name=calsoft1 
+                      Log To Console    ${host_ip}
+                      Set Global Variable    ${host_ip}
                          
 ###################################################################################################################################
 Edit FQDN : TCP-584
@@ -155,6 +168,7 @@ Login to C-Registry using new Portus password : TCP-834
                      ...    portus_password=${CR_MODIFIED_PASSWORD}  
                      ...    fullyQualifiedDomainName=${CR_FQDN}
                      ...    portus_uname=${CR_PORTUS_UNAME}
+                     ...    hostip=${host_ip}
                                      
                      Log To Console    ${result}
                      Should Be Equal As Strings    ${result}    OK
