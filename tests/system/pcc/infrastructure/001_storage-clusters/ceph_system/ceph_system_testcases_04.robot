@@ -389,7 +389,7 @@ Ceph Rbd Creation with decimal RBD size (Negative)
         ${response}                 PCC.Ceph Create Rbd
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${CEPH_POOL_NAME}
+                               ...  ceph_pool_id=${pool_id}
                                ...  size=1.2
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
@@ -415,7 +415,7 @@ Ceph Rbd Creation with negative RBD size (Negative)
         ${response}                 PCC.Ceph Create Rbd
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${CEPH_POOL_NAME}
+                               ...  ceph_pool_id=${pool_id}
                                ...  size=-1
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
@@ -441,7 +441,7 @@ Ceph Rbd Creation with zero RBD size (Negative)
         ${response}                 PCC.Ceph Create Rbd
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${CEPH_POOL_NAME}
+                               ...  ceph_pool_id=${pool_id}
                                ...  size=0
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
@@ -467,7 +467,7 @@ Ceph Rbd Creation with alphabet or special charaters RBD size (Negative)
         ${response}                 PCC.Ceph Create Rbd
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${CEPH_POOL_NAME}
+                               ...  ceph_pool_id=${pool_id}
                                ...  size=asda23
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
@@ -493,7 +493,7 @@ Ceph Rbd Creation without image size (Negative)
         ${response}                 PCC.Ceph Create Rbd
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${CEPH_POOL_NAME}
+                               ...  ceph_pool_id=${pool_id}
                                ...  size=None
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}

@@ -35,7 +35,7 @@ Create CephFS - with one pool created (Negative)
 
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
+                               ...  name=cfs1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
                                ...  data_pool=
@@ -65,7 +65,7 @@ Create CephFS - without selecting metadata pool (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
+                               ...  name=cfs2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=
                                ...  data_pool=${data}
@@ -94,7 +94,7 @@ Create CephFS - without selecting default pool (Negative)
                                ...  name=${CEPH_FS_DATA}
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
+                               ...  name=cfs3
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
                                ...  data_pool=${data}
@@ -164,7 +164,7 @@ Create CephFS - with multiple default pools (Negative)
                                ...  name= Pool5
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
+                               ...  name=cfs4
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
                                ...  data_pool=${data}
@@ -202,7 +202,7 @@ Create CephFS - with multiple metadata pools (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
+                               ...  name=cfs5
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=[${meta},${meta1},${meta2}]
                                ...  data_pool=${data}

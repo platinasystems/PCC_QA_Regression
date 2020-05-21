@@ -44,60 +44,49 @@ Ceph Pool Creation without name (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
 ###################################################################################################################################
-#Ceph Pool Creation with name contain special characters only (Negative)
+Ceph Pool Creation with name contain special characters only (Negative)
 ####################################################################################################################################
-#
-#    [Documentation]                 *Ceph Pool Creation without name*
-#
-#                               
-#        ${cluster_id}               PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_Cluster_NAME}
-#
-#        ${response}                 PCC.Ceph Create Pool
-#                               ...  name=@#$%^&
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  tags=${CEPH_POOL_TAGS}
-#                               ...  pool_type=${CEPH_POOL_TYPE}
-#                               ...  quota=${CEPH_POOL_QUOTA}
-#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-#
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Not Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Ceph Wait Until Pool Ready
-#                               ...  name=@#$%^&
-#
-#                                    Should Not Be Equal As Strings      ${status}    OK
-#                                    
+
+    [Documentation]                 *Ceph Pool Creation without name*
+
+                               
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=@#$%^&
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200
+                                    
 ####################################################################################################################################
-#Ceph Pool Creation with name contain only hyphens (Negative)
+Ceph Pool Creation with name contain only hyphens (Negative)
 ####################################################################################################################################
-#
-#    [Documentation]                 *Ceph Pool Creation without name*
-#
-#                               
-#        ${cluster_id}               PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_Cluster_NAME}
-#
-#        ${response}                 PCC.Ceph Create Pool
-#                               ...  name=------------
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  tags=${CEPH_POOL_TAGS}
-#                               ...  pool_type=${CEPH_POOL_TYPE}
-#                               ...  quota=${CEPH_POOL_QUOTA}
-#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-#
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Not Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Ceph Wait Until Pool Ready
-#                               ...  name=------------
-#
-#                                    Should Not Be Equal As Strings      ${status}    OK
-#
-#
+
+    [Documentation]                 *Ceph Pool Creation without name*
+
+                               
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=------------
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
 ####################################################################################################################################
 #Ceph Pool Creation with Name greater then 48 length (Negative)
 ####################################################################################################################################
@@ -253,7 +242,7 @@ Ceph Pool Creation with negative quota size (Negative)
 
                                     
 ###################################################################################################################################
-Ceph Pool Creation with quota size greater than 5 digit number (Negative)
+Ceph Pool Creation with quota size greater than 5 digit number
 ###################################################################################################################################
 
     [Documentation]                 *Ceph Pool Creation with quota size greater than 5 digit number*
@@ -265,7 +254,7 @@ Ceph Pool Creation with quota size greater than 5 digit number (Negative)
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
-                               ...  name=${CEPH_POOL_NAME}
+                               ...  name=pool123456
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
@@ -274,32 +263,36 @@ Ceph Pool Creation with quota size greater than 5 digit number (Negative)
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
         ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=pool123456
+                                    Should Be Equal As Strings      ${status}    OK
 
 
 ###################################################################################################################################
-#Ceph Pool Creation with quota size greater than 16 EiB (Negative)
+Ceph Pool Creation with quota size greater than 16 EiB (Negative)
 ####################################################################################################################################
-#
-#    [Documentation]                 *Ceph Pool Creation with quota size greater than 16 EiB*
-#
-#                               
-#        ${cluster_id}               PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_Cluster_NAME}
-#
-#        ${response}                 PCC.Ceph Create Pool
-#                               ...  name=${CEPH_POOL_NAME}
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  tags=${CEPH_POOL_TAGS}
-#                               ...  pool_type=${CEPH_POOL_TYPE}
-#                               ...  quota=17
-#                               ...  quota_unit=EiB
-#
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Not Be Equal As Strings      ${status_code}  200
-#                                    
-#                                    
+
+    [Documentation]                 *Ceph Pool Creation with quota size greater than 16 EiB*
+
+                               
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=${CEPH_POOL_NAME}
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=17
+                               ...  quota_unit=EiB
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200
+                                    
+                                    
 ###################################################################################################################################
 Ceph Pool Creation and Verification with quota unit MiB
 ###################################################################################################################################
@@ -327,6 +320,8 @@ Ceph Pool Creation and Verification with quota unit MiB
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+                            
                               
 ###################################################################################################################################
 Ceph Pool Creation and Verification with quota unit GiB
