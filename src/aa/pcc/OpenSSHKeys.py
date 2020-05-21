@@ -1,4 +1,5 @@
 import time
+import os
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -19,6 +20,7 @@ class OpenSSHKeys(AaBase):
         self.Alias = None
         self.Filename = None
         self.Description = None
+        self.Type = None
         super().__init__()
 
     ###########################################################################
@@ -36,9 +38,13 @@ class OpenSSHKeys(AaBase):
         """
         self._load_kwargs(kwargs)
         banner("PCC.Add OpenSSH Key [Alias=%s]" % self.Alias)
-
+        
+        print("Kwargs are: {}".format(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.add_openssh_key(conn, self.Alias, self.Description, self.Filename)
+        filename_path = os.path.join("tests/test-data", self.Filename)
+        
+        print("Filename_path is {}".format(filename_path))
+        return pcc.add_openSSH_keys(conn, Type = self.Type, Alias = self.Alias, Description=self.Description, filename_path = filename_path)
 
     ###########################################################################
     @keyword(name="PCC.Delete OpenSSH Key")
@@ -54,4 +60,5 @@ class OpenSSHKeys(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Delete OpenSSH Key [Alias=%s]" % self.Alias)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        filename_path = os.path.join("tests/test-data", self.Filename)
         return pcc.delete_openssh_key(conn, self.Alias)
