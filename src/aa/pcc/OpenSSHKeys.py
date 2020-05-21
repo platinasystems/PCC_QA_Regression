@@ -60,5 +60,7 @@ class OpenSSHKeys(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Delete OpenSSH Key [Alias=%s]" % self.Alias)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        filename_path = os.path.join("tests/test-data", self.Filename)
-        return pcc.delete_openssh_key(conn, self.Alias)
+        
+        banner("Kwargs are: {}".format(kwargs))
+        key_id = easy.get_openSSH_keys_id_by_name(conn, Name = self.Alias)
+        return pcc.delete_openSSH_keys_by_id(conn, Id = str(key_id))
