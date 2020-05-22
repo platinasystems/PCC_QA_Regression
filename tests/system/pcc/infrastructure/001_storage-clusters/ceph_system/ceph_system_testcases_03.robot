@@ -44,49 +44,49 @@ Ceph Pool Creation without name (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
 ###################################################################################################################################
-Ceph Pool Creation with name contain special characters only (Negative)
-####################################################################################################################################
-
-    [Documentation]                 *Ceph Pool Creation without name*
-
-                               
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${response}                 PCC.Ceph Create Pool
-                               ...  name=@#$%^&
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-                                    
-####################################################################################################################################
-Ceph Pool Creation with name contain only hyphens (Negative)
-####################################################################################################################################
-
-    [Documentation]                 *Ceph Pool Creation without name*
-
-                               
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${response}                 PCC.Ceph Create Pool
-                               ...  name=------------
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
+#Ceph Pool Creation with name contain special characters only (Negative)
+#####################################################################################################################################
+#
+#    [Documentation]                 *Ceph Pool Creation without name*
+#
+#                               
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${response}                 PCC.Ceph Create Pool
+#                               ...  name=@#$%^&
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  quota=${CEPH_POOL_QUOTA}
+#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#                                    
+#####################################################################################################################################
+#Ceph Pool Creation with name contain only hyphens (Negative)
+#####################################################################################################################################
+#
+#    [Documentation]                 *Ceph Pool Creation without name*
+#
+#                               
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${response}                 PCC.Ceph Create Pool
+#                               ...  name=------------
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  quota=${CEPH_POOL_QUOTA}
+#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
 ####################################################################################################################################
 #Ceph Pool Creation with Name greater then 48 length (Negative)
 ####################################################################################################################################

@@ -89,59 +89,59 @@ Ceph Rbd Creation without rdb name (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Ceph Rbd where name contain special character "!@#$%^" (Negative)
-###################################################################################################################################
-     [Documentation]                *Ceph Rbd where name contain special character "!@#$%^"*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Rbd
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=!@#$%^
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=${CEPH_RBD_SIZE}
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
-###################################################################################################################################
-Ceph Rbd without pool name (Negative)
-###################################################################################################################################
-     [Documentation]                *Ceph Rbd without pool name*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Rbd
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=${CEPH_RBD_NAME}
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=
-                               ...  size=${CEPH_RBD_SIZE}
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-                                    
+#Ceph Rbd where name contain special character "!@#$%^" (Negative)
+####################################################################################################################################
+#     [Documentation]                *Ceph Rbd where name contain special character "!@#$%^"*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Create Rbd
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=!@#$%^
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=${CEPH_RBD_SIZE}
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
+####################################################################################################################################
+#Ceph Rbd without pool name (Negative)
+####################################################################################################################################
+#     [Documentation]                *Ceph Rbd without pool name*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Create Rbd
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=${CEPH_RBD_NAME}
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=
+#                               ...  size=${CEPH_RBD_SIZE}
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#                                    
 ###################################################################################################################################
 Ceph Rbd without pool(Negative)
 ###################################################################################################################################
@@ -238,121 +238,121 @@ Ceph Rbd where size unit is in MiB
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Rbd where size unit is in GiB
-####################################################################################################################################
-    [Documentation]                 *Creating Ceph Rbd*
-                            
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-                               
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=rbd1
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=1
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=GiB
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd1
-
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
-####################################################################################################################################
-Ceph Rbd where size unit is in TiB
-####################################################################################################################################
-    [Documentation]                 *Creating Ceph Rbd*
-                               
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-                               
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=rbd2
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=1
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=TiB
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd2
-
-                                    Should Be Equal As Strings      ${status}    OK
-
-####################################################################################################################################
-Ceph Rbd where size unit is in PiB
-####################################################################################################################################
-    [Documentation]                 *Creating Ceph Rbd*
-                               
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-                               
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=rbd3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=1
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=PiB
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd3
-
-                                    Should Be Equal As Strings      ${status}    OK
-
-####################################################################################################################################
-Ceph Rbd where size unit is in EiB
-####################################################################################################################################
-    [Documentation]                 *Creating Ceph Rbd*
-                               
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-                               
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=rbd4
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=1
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=EiB
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd4
-
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
+#Ceph Rbd where size unit is in GiB
+#####################################################################################################################################
+#    [Documentation]                 *Creating Ceph Rbd*
+#                            
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#                               
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=rbd1
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=1
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=GiB
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rbd Ready
+#                               ...  name=rbd1
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#####################################################################################################################################
+#Ceph Rbd where size unit is in TiB
+#####################################################################################################################################
+#    [Documentation]                 *Creating Ceph Rbd*
+#                               
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#                               
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=rbd2
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=1
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=TiB
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rbd Ready
+#                               ...  name=rbd2
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#####################################################################################################################################
+#Ceph Rbd where size unit is in PiB
+#####################################################################################################################################
+#    [Documentation]                 *Creating Ceph Rbd*
+#                               
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#                               
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=rbd3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=1
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=PiB
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rbd Ready
+#                               ...  name=rbd3
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#####################################################################################################################################
+#Ceph Rbd where size unit is in EiB
+#####################################################################################################################################
+#    [Documentation]                 *Creating Ceph Rbd*
+#                               
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#                               
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=rbd4
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=1
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=EiB
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rbd Ready
+#                               ...  name=rbd4
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
 ###################################################################################################################################
 Ceph 2 RBDs using same pool
 ###################################################################################################################################

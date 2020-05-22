@@ -334,7 +334,7 @@ Pool released from RBD is used for creating/updating CephFS
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-Ceph Create 20 Pools
+Ceph Create 10 Pools
 ###################################################################################################################################
     [Documentation]                 *Ceph Create 20 Pools*  
                                ...  keywords:    
@@ -346,7 +346,7 @@ Ceph Create 20 Pools
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool Multiple
-                               ...  count=20
+                               ...  count=10
                                ...  name=xyz
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
@@ -364,7 +364,7 @@ Ceph Create 20 Pools
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Create 20 Rbd
+Ceph Create 10 Rbd
 ###################################################################################################################################
     [Documentation]                 *Ceph Create 20 Rbd*  
                                ...  keywords:    
@@ -379,7 +379,7 @@ Ceph Create 20 Rbd
                                ...  name=xyz-2
 
         ${response}                 PCC.Ceph Create Rbd Multiple
-                               ...  count=20
+                               ...  count=10
                                ...  name=abc
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -598,32 +598,32 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 													
 ###################################################################################################################################	
-TCP-985 Update Cluster - Try to add Tags
-###################################################################################################################################
-    [Documentation]                 *Update Cluster - Try to add Tags*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-                               ...  tags=["ROTATIONAL","SOLID_STATE","SATA/SAS"]
-                               ...  config=${CEPH_CLUSTER_CONFIG}
-							   
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-													
-	${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-							  
-###################################################################################################################################	
+#TCP-985 Update Cluster - Try to add Tags
+####################################################################################################################################
+#    [Documentation]                 *Update Cluster - Try to add Tags*
+#                               ...  keyword:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Cluster Update
+#                               ...  PCC.Ceph Wait Until Cluster Ready
+#
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#
+#        ${response}                 PCC.Ceph Cluster Update
+#                               ...  id=${id}
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+#                               ...  tags=["ROTATIONAL","SOLID_STATE","SATA/SAS"]
+#                               ...  config=${CEPH_CLUSTER_CONFIG}
+#							   
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#													
+#	${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#							  
+####################################################################################################################################	
 TCP-985 Update Cluster - Try to remove Tags (Negative)
 ###################################################################################################################################
     [Documentation]                 *Update Cluster - Try to remove Tags*

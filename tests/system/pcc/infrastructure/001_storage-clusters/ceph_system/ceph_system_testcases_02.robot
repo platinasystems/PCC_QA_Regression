@@ -31,7 +31,7 @@ Ceph Cluster with one node (Negative)
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=[${SERVER_2_NAME}]
+                               ...  nodes=["${SERVER_2_NAME}"]
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  config=${CEPH_CLUSTER_CONFIG}
                                ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
