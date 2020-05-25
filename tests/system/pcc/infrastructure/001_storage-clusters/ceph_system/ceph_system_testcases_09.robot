@@ -790,6 +790,24 @@ Remove pools from Kubernetes Cluster
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
+Ceph Cleanup For Ceph Cluster Delete
+###################################################################################################################################
+    [Documentation]                 *Deleting all Pools*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Pools
+                               ...  PCC.Ceph Delete All Fs
+                               ...  PCC.Ceph Delete All Rbds
+
+        ${status}                   PCC.Ceph Delete All Fs
+                                    Should Be Equal     ${status}  OK 
+  
+        ${status}                   PCC.Ceph Delete All Rbds
+                                    Should Be Equal     ${status}  OK
+                               
+        ${status}                   PCC.Ceph Delete All Pools
+                                    Should Be Equal     ${status}  OK
+                                    
+###################################################################################################################################
 Ceph Cluster Delete
 ###################################################################################################################################
     [Documentation]                 *Delete cluster if it exist*
