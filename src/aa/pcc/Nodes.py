@@ -320,7 +320,7 @@ class Nodes(AaBase):
                 banner("verify_node_online_status : {}".format(verify_node_online_status))
                 wait_for_node_addition_status.append(verify_node_online_status)
             print("wait_for_node_addition_status : {}".format(wait_for_node_addition_status))
-            result = len(wait_for_node_addition_status) > 0 and all(elem == wait_for_node_addition_status[0] for elem in wait_for_node_addition_status)
+            result = len(wait_for_node_addition_status) > 0 and all(elem == "OK" for elem in wait_for_node_addition_status)
             if result:
                 return "OK"
             else:
@@ -362,7 +362,7 @@ class Nodes(AaBase):
                     deletion_response = self.wait_until_node_deleted(Name=name)
                     deletion_status.append(deletion_response)
                 print("deletion_status: {}".format(deletion_status))
-                result = len(deletion_status) > 0 and all(elem == '200' for elem in deletion_status)
+                result = len(deletion_status) > 0 and all(elem == "OK" for elem in deletion_status)
                 if result:
                     return "OK"
                 else:
