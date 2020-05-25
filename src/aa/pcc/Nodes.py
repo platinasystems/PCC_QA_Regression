@@ -304,6 +304,7 @@ class Nodes(AaBase):
         banner("Add mutliple nodes and check online")
         self._load_kwargs(kwargs)
         try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
             wait_for_node_addition_status = []
             node_not_exists=[]
             for hostip in ast.literal_eval(self.host_ips):
@@ -347,7 +348,7 @@ class Nodes(AaBase):
         
         banner("Delete mutliple nodes and wait until deletion")
         self._load_kwargs(kwargs)
-        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
         try:
             if self.Names:
                 deletion_status = []
