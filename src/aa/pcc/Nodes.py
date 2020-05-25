@@ -362,7 +362,7 @@ class Nodes(AaBase):
                     deletion_response = self.wait_until_node_deleted(Name=name)
                     deletion_status.append(deletion_response)
                 print("deletion_status: {}".format(deletion_status))
-                result = len(deletion_status) > 0 and all(elem == deletion_status[0] for elem in deletion_status)
+                result = len(deletion_status) > 0 and all(elem == '200' for elem in deletion_status)
                 if result:
                     return "OK"
                 else:
@@ -394,7 +394,7 @@ class Nodes(AaBase):
                             banner("Counter: {}".format(counter))
                             continue
                         else:
-                            break
+                            return "Error: All nodes not deleted"
                     elif get_response_data(response) == []:
                         deletion_status = True
                         banner("All Nodes deleted successfully")
