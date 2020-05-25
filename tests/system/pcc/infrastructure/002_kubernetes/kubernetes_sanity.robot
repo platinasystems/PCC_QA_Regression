@@ -20,6 +20,10 @@ Create Kubernetes cluster
         [Documentation]             *Create Kubernetes cluster*
                                ...  Keywords:
                                ...  PCC.K8s Create Cluster
+                               
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8s_NAME}
+                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is alredy there
 
         ${response}                 PCC.K8s Create Cluster
                                ...  id=${K8S_ID}

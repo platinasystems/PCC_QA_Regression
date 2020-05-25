@@ -134,11 +134,11 @@ Check Mass and LLDP from BE
                                ...  PCC.Mass Verify BE
                                ...  PCC.Lldp Verify BE
                                
-        ${response}                 PCC.Mass Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                                    Should Be Equal As Strings      ${response}  OK
+#        ${response}                 PCC.Mass Verify BE
+#                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                                    Should Be Equal As Strings      ${response}  OK
 
         ${response}                 PCC.Lldp Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
