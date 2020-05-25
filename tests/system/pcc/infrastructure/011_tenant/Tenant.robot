@@ -566,5 +566,21 @@ PCC Sub-Tenant deletion
                      ...    Name=${SUB_TENANT}
                      
                      Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    Tenant not available    Tenant not deleted                     
+                     Should Be Equal As Strings    ${status}    Tenant not available    Tenant not deleted
+
+###################################################################################################################################
+PCC Multiple Tenant deletion
+###################################################################################################################################
+
+        [Documentation]    *PCC Multiple Tenant deletion* test
+                           ...  keywords:
+                           ...  PCC.Delete Multiple Tenants
+        
+        [Tags]    Delete
+                           
+        ${status}    PCC.Delete Multiple Tenants
+                       ...    Tenant_list=['Test_Tenant_4','Test_Tenant_5'] 
+                       
+                       Log To Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK    Not Deleted
 
