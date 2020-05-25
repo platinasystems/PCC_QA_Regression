@@ -67,3 +67,10 @@ Delete Key
                        Log To Console    ${response}
                        ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
+                       
+        ${response}    PCC.Delete OpenSSH Key
+                       ...  Alias=${PUBLIC_KEY_ALIAS}
+                       
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
