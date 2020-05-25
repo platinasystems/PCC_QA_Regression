@@ -359,7 +359,7 @@ Ceph Create 10 Pools
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=xyz-20
+                               ...  name=xyz-10
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -393,7 +393,7 @@ Ceph Create 10 Rbd
 
 
         ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=abc-20
+                               ...  name=abc-10
 
                                     Should Be Equal As Strings      ${status}    OK
 
