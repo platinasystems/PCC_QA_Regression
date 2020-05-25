@@ -20,6 +20,7 @@ class Tenants(AaBase):
         self.Description = None
         self.Parent_id = None
         self.Tenant_Name = None
+        self.Tenant_list = None
         super().__init__()
 
     ###########################################################################
@@ -218,6 +219,37 @@ class Tenants(AaBase):
         logger.console("Kwargs are: {}".format(kwargs)) 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return easy.validate_tenant_assigned_to_node(conn, Name=self.Name, Tenant_Name=self.Tenant_Name)
-        
+    
+    ###########################################################################
+    @keyword(name="PCC.Delete Multiple Tenants")
+    ###########################################################################
+    def delete_multiple_tenants(self, *args, **kwargs):
+        """
+        Delete Multiple Tenants
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (list) tenants: Tenants list to be deleted
+    
+        [Returns]
+            "OK": If all Tenants are deleted
+            else "Error"
+            
+        """
+        banner("Delete Multiple Tenants")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        banner("Kwargs are: {}".format(kwargs))
+        try:
+            tenant_list = ast.literal_eval(self.Tenant_list)
+            for tenant in tenant_list:
+                tenant_id = self.get_tenant_id(Name=tenant)
+                response = self.delete_tenant(Id= str(tenant_id))
+                if response['StatusCode'] == 200:
+                    continue
+                else:
+                    return Error
+            return "OK"
+        except Exception as e:
+            return {"Error: {}".format(e)}
         
     
