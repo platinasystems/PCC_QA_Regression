@@ -63,15 +63,15 @@ Ceph Cluster Delete
                                     Should Be Equal     ${status}  OK
                                     
 ###################################################################################################################################
-#Delete K8 Cluster
+Delete K8 Cluster
 ###################################################################################################################################
-#        [Documentation]             *Delete K8 Cluster*
-#                               ...  Keywords:
-#                               ...  PCC.K8s Delete All Cluster
-#
-#        ${status}                   PCC.K8s Delete All Cluster
-#                                    Should Be Equal As Strings    ${status}  OK
-#
+        [Documentation]             *Delete K8 Cluster*
+                               ...  Keywords:
+                               ...  PCC.K8s Delete All Cluster
+
+        ${status}                   PCC.K8s Delete All Cluster
+                                    Should Be Equal As Strings    ${status}  OK
+
 ###################################################################################################################################
 BE Ceph Cleanup
 ###################################################################################################################################
