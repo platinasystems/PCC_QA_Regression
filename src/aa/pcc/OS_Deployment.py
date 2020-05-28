@@ -6,7 +6,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from platina_sdk import pcc_easy_api as easy
+from aa.common import PccEasyApi as easy
 
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, pretty_print

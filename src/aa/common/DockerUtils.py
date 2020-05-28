@@ -10,7 +10,7 @@ from aa.common.AaBase import AaBase
 from aa.common.LinuxUtils import LinuxUtils
 from aa.common.Utils import banner, trace, pretty_print
 from platina_sdk import pcc_api as pcc
-from platina_sdk import pcc_easy_api as easy
+from aa.common import PccEasyApi as easy
 
 class DockerUtils(AaBase):
 
