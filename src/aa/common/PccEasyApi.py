@@ -77,6 +77,7 @@ def wait_until_node_ready(conn:dict, Name:str)->int:
     """
     ready = False
     time_waited = 0
+    PCC_TIMEOUT = 60*30 #30 minutes
     timeout = time.time() + PCC_TIMEOUT
     while not ready:
         ready = False
