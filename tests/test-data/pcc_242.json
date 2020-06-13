@@ -55,20 +55,19 @@
         
     "server-1":
         {  
-            "server_name":"qa-server-101",
-            "pcc_url": "https://172.17.10.101:9999",
-            "pcc_host_ip": "172.17.10.101",
+            "server_name":"qa-server-100",
+            "pcc_url": "https://172.17.10.100:9999",
+            "pcc_host_ip": "172.17.10.100",
             "pcc_linux_password": "cals0ft",
             "pcc_username": "pcc",
             "pcc_password": "cals0ft",
             "bmc": "172.17.11.101",
-            "mgmt_ip": "172.17.10.101/23",
+            "mgmt_ip": "172.17.10.100/23",
             "bmc_user": "ADMIN",
             "bmc_pwd": "ADMIN",
             "console": "ttyS1",
             "managed_by_pcc": "true",
             "ssh_keys": "pcc"
-            
         },
         
     "server-2":
