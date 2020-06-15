@@ -61,7 +61,7 @@
             "pcc_linux_password": "cals0ft",
             "pcc_username": "pcc",
             "pcc_password": "cals0ft",
-            "bmc": "172.17.11.101",
+            "bmc": "172.17.11.100",
             "mgmt_ip": "172.17.10.100/23",
             "bmc_user": "ADMIN",
             "bmc_pwd": "ADMIN",
