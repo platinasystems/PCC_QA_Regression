@@ -47,20 +47,19 @@ Get SAS Enclosures
 #    [Documentation]                 *Get SAS Enclosures*
 #                                     ...  Keywords:
 #                                     ...  PCC.Update SAS Enclosure
-#    
+#
 #
 #        ${response}                 PCC.Update SAS Enclosure
-#                               
+#
 #                                    ...  auth_data=${PCC_CONN}
 #                                    ...  setup_ip=${PCC_HOST_IP}
 #                                    ...  user=${PCC_LINUX_USER}
 #                                    ...  password=${PCC_LINUX_PASSWORD}
 #                                    ...  led_status=false
 #                                    ...  slot_name=/dev/sg8
-#                             
+#
 #                                    Log To Console    ${response}
 #                                    ${status}    Get From Dictionary    ${response}    status
 #                                    ${message}    Get From Dictionary    ${response}    message
 #                                    Log to Console    ${message}
 #                                    Should Be Equal As Strings    ${status}    200
-                                    

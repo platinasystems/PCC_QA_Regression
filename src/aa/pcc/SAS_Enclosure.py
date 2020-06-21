@@ -8,12 +8,12 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print, cmp_json
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
-
+from aa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*40
 
@@ -51,7 +51,7 @@ class SAS_Enclosure(AaBase):
         cmd ='curl -k -X GET "https://{}:9999/pccserver/v2/enclosures" -H "accept: application/json" -H "Authorization: Bearer {}"'.format(self.setup_ip,token)
         
         
-        output=easy.cli_run(cmd=cmd, host_ip=self.setup_ip, linux_user=self.user,linux_password=self.password)
+        output=cli_run(cmd=cmd, host_ip=self.setup_ip, linux_user=self.user,linux_password=self.password)
         
         serialise_output=json.loads(self._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
@@ -113,7 +113,7 @@ class SAS_Enclosure(AaBase):
         cmd=cmd_strct.format(json.dumps(payload),token,self.setup_ip,slot_id)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))

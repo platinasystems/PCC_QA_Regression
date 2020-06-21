@@ -158,7 +158,25 @@ Alert Delete Template Rule
                                ...  password=${PCC_LINUX_PASSWORD}
                              
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
+        ${id}                       PCC.Alert Get Rule Id
+                               ...  name=alert1
+                               ...  auth_data=${PCC_CONN}
+                               ...  setup_ip=${PCC_HOST_IP}
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               
+                                    Pass Execution If    ${id} is ${None}    Alert Rule is alredy Deleted
+                             
+        ${status}                   PCC.Alert Delete Rule
+                               ...  name=alert1
+                               ...  auth_data=${PCC_CONN}
+                               ...  setup_ip=${PCC_HOST_IP}
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                             
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${status}                   PCC.Alert Verify Rule
                                ...  name=alert1
                                ...  auth_data=${PCC_CONN}

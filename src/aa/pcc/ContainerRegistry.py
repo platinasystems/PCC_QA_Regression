@@ -5,7 +5,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, pretty_print
@@ -47,7 +47,7 @@ class ContainerRegistry(AaBase):
     @keyword(name="PCC.Create Container Registry")
     ###########################################################################
     
-    def CR_create(self, *args, **kwargs):
+    def cr_create(self, *args, **kwargs):
         
         """
         Create Container Registry
@@ -97,6 +97,7 @@ class ContainerRegistry(AaBase):
                 "authenticationProfileId":self.authenticationProfileId
                 }
         
+        print("Payload is :{}".format(payload))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return pcc.add_portus(conn, data=payload)
             
@@ -187,7 +188,7 @@ class ContainerRegistry(AaBase):
     @keyword(name="PCC.CR Wait For Creation")
     ###########################################################################
     
-    def wait_for_CR_create(self, *args, **kwargs):
+    def wait_for_cr_create(self, *args, **kwargs):
         
         """
         Wait for creation of Container Registry
@@ -210,31 +211,34 @@ class ContainerRegistry(AaBase):
         else:
             return "Object with {} not found".format(self.Name)
     
-        for i in range(1,41):
+        for i in range(1,50):
             time.sleep(10)
             banner("Loop: {}".format(i))
-            response = pcc.get_portus_by_id(conn, Id=str(self.CR_ID))
-    
+            response = pcc.get_portus_by_id(conn, id=str(self.CR_ID))
+            print("Response is:{}".format(response))
+            
+            node = get_response_data(response)
             try:
-                node= response['Result']['Data']
-                if str(node['name']) == str(self.Name):
+                if node['name'] == self.Name:
                     self.availability = node["available"]
                     print("availability status: ",self.availability)
                     banner("availability is: {}".format(self.availability))
-                    try:
+                    if self.availability == True:
                         if node.get("portusInfo") != None:
                             self.running = node["portusInfo"]["running"]
                             print("running status: ",self.running)
                             banner("running is: {}".format(self.running))
-                    except Exception as e:
-                        #portusinfo if not available continue for loop
-                        continue
-                if self.availability == True and self.running == True:
-                    return "OK"
+                            if self.running == True:
+                                return "OK"
+                            else:
+                                continue
+                    else:
+                        continue # continue for loop if availability is false
+                if i>=49:
+                    return {"Error: Timeout while creating Container Registry: {}".format(self.Name)}
             except Exception as e:
-                logger.console("Error in wait_for_CR_creation:{}".format(e))
-        if self.availability != True or self.running != True:
-            return "Error"
+                print("Error in creating CR: {}".format(self.Name))
+                return "Error in creating CR: {}".format(self.Name)
             
     ###########################################################################
     @keyword(name="PCC.CR Verify Creation from PCC")
@@ -263,7 +267,7 @@ class ContainerRegistry(AaBase):
         else:
             return "Object with {} not found".format(self.Name)
     
-        response = pcc.get_portus_by_id(conn, Id=str(self.CR_ID))
+        response = pcc.get_portus_by_id(conn, id=str(self.CR_ID))
     
         try:
             node= response['Result']['Data']
@@ -348,7 +352,7 @@ class ContainerRegistry(AaBase):
                 
         """
         
-        banner("PCC.CR Wait For Creation")
+        banner("PCC.CR Wait For Updation")
         self._load_kwargs(kwargs)
         self.CR_ID = self.get_CR_id(**kwargs)
         if self.CR_ID!= None:
@@ -356,37 +360,35 @@ class ContainerRegistry(AaBase):
         else:
             return "Object with {} not found".format(self.Name)
     
-        for i in range(20):
+        for i in range(1,50):
             time.sleep(10)
             banner("Loop: {}".format(i))
+            response = pcc.get_portus_by_id(conn, id=str(self.CR_ID))
+            print("Response is:{}".format(response))
             
-            response = pcc.get_portus_by_id(conn, Id=str(self.CR_ID))
-            
+            node = get_response_data(response)
             try:
-                node= response['Result']['Data']
-                if str(node['name']) == str(self.Name):
+                if node['name'] == self.Name:
                     self.availability = node["available"]
-                    self.CR_Url = node["url"]
-                    self.FQDN = node["fullyQualifiedDomainName"]
                     print("availability status: ",self.availability)
                     banner("availability is: {}".format(self.availability))
-                    try:
+                    if self.availability == True:
                         if node.get("portusInfo") != None:
                             self.running = node["portusInfo"]["running"]
                             print("running status: ",self.running)
                             banner("running is: {}".format(self.running))
-                    except Exception as e:
-                        #portusinfo if not available continue for loop
-                        continue
-                if self.availability == True and self.running == True:
-                    return "OK"
-                    
+                            if self.running == True:
+                                return "OK"
+                            else:
+                                continue
+                    else:
+                        continue # continue for loop if availability is false
+                if i>=49:
+                    return {"Error: Timeout while updating Container Registry: {}".format(self.Name)}
             except Exception as e:
-                logger.console("Error in wait_for_CR_updation: {}".format(e))
-        if self.availability != True or self.running != True:
-            return "Error"
+                print("Error in updating CR: {}".format(self.Name))
+                return "Error in updating CR: {}".format(self.Name)
     
-
     ###########################################################################
     @keyword(name="PCC.CR Delete")
     ###########################################################################
@@ -412,7 +414,7 @@ class ContainerRegistry(AaBase):
             else:
                 self.CR_ID= self.get_CR_id(**kwargs)
                 conn = BuiltIn().get_variable_value("${PCC_CONN}")
-                return pcc.delete_portus_by_id(conn, Id=str(self.CR_ID))    
+                return pcc.delete_portus_by_id(conn, id=str(self.CR_ID))    
                 
         except Exception as e:
             logger.console("Error in CR deletion: "+str(e))
@@ -454,7 +456,8 @@ class ContainerRegistry(AaBase):
             response_code_list = []
             try:
                 for id_ in list_id:
-                    response = pcc.delete_portus_by_id(conn, Id=str(id_))
+                    response = pcc.delete_portus_by_id(conn, id=str(id_))
+                    print()
                     response_code_list.append(response['StatusCode'])
                 result = len(response_code_list) > 0 and all(elem == response_code_list[0] for elem in response_code_list) 
                 if result:

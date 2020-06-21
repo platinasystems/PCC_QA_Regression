@@ -89,6 +89,23 @@
             "ssh_keys":"pcc"
         },
         
+    "server-3":
+        {
+            "server_name":"sr0",
+            "pcc_url":"https://172.17.2.110:9999",
+            "pcc_host_ip":"172.17.2.110",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.110",
+            "mgmt_ip":"172.17.2.110/23",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
+        },
+        
     "container-registry":
         {
             "name":"calsoft1",

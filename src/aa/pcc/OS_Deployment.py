@@ -6,14 +6,13 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
-#from motorframework.api import nodes
 from aa.pcc.Nodes import Nodes
-
+from aa.common.Cli import cli_run
 
 PCC_TIMEOUT = 60*10  #10 min
 
@@ -102,7 +101,7 @@ class OS_Deployment(AaBase):
         provison_ready = self.check_provision_ready_status(**kwargs)
         
         logger.console("provison_ready : {}".format(provison_ready))
-        if self.check_provision_ready_status(**kwargs) == False:
+        if provison_ready == False:
             logger.console("I am inside if")
             return pcc.modify_node(conn, data=payload)
         else:
@@ -137,7 +136,7 @@ class OS_Deployment(AaBase):
                   }
         logger.console("Payload : {}".format(payload))          
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.update_OS_deployment(conn, data = payload)
+        return pcc.update_deployment(conn, data = payload)
     
     ###########################################################################
     @keyword(name="PCC.Get OS version by node name")
@@ -163,7 +162,7 @@ class OS_Deployment(AaBase):
             Id = Nodes().get_node_id(conn, Name=self.Name)
             
             logger.console("Node Id is: {}".format(Id))  
-            OS_version = Nodes().get_node(conn, Id= str(Id))['Result']['Data']['systemData']['osVersion']
+            OS_version = Nodes().get_node_by_id(conn, id= str(Id))['Result']['Data']['systemData']['osVersion']
             
             return OS_version
         except Exception as e:
@@ -218,12 +217,12 @@ class OS_Deployment(AaBase):
         cmd_1 = "ipmitool -I lanplus -H {} -U ADMIN -P ADMIN chassis bootdev pxe".format(self.bmc_ip)
         
         logger.console("command 1 hitting is: {}".format(cmd_1))
-        cmd_1_output = easy.cli_run(cmd=cmd_1, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+        cmd_1_output = cli_run(cmd=cmd_1, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
         logger.console("cmd_1_output:{}".format(cmd_1_output))
         cmd_2 = "ipmitool -I lanplus -H {} -U ADMIN -P ADMIN chassis power cycle".format(self.bmc_ip)
         
         logger.console("command 2 hitting is: {}".format(cmd_2))
-        cmd_2_output = easy.cli_run(cmd=cmd_2, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+        cmd_2_output = cli_run(cmd=cmd_2, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
 
         if cmd_1_output and cmd_2_output:
             return "OK"
@@ -333,7 +332,7 @@ class OS_Deployment(AaBase):
                     
         
         ## Interfaces from node properties            
-        node_details = pcc.get_node_by_id(conn, Id = str(self.Id))['Result']['Data']['HardwareInventory']['Network']
+        node_details = pcc.get_node_by_id(conn, id = str(self.Id))['Result']['Data']['HardwareInventory']['Network']
         
         li= []
         interface_dict = {}
@@ -366,7 +365,7 @@ class OS_Deployment(AaBase):
         try:
             cmd = r"""ssh -i {} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)
             
-            password_reset = easy.cli_run(cmd=cmd, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
+            password_reset = cli_run(cmd=cmd, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
             
             serialised_password_reset = self._serialize_response(time.time(), password_reset)
             print("serialised_password_reset is:{}".format(serialised_password_reset))
@@ -392,7 +391,7 @@ class OS_Deployment(AaBase):
         try:
             cmd = "sudo chown -R pcc:pcc /srv/pcc; curl http://172.17.2.253/bugbits/baremetal/update-prod | bash"
             
-            update_OS_images = easy.cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+            update_OS_images = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
             
             serialised_update_OS_images = self._serialize_response(time.time(), update_OS_images)
             print("serialised_update_OS_images is:{}".format(serialised_update_OS_images))

@@ -36,6 +36,10 @@ Login to PCC
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
         
+        ${invader2_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
+                         Log To Console    ${invader2_id}
+                         Set Global Variable    ${invader2_id}
+        
         ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
                          Log To Console    ${server_id}
                          Set Global Variable    ${server_id}
@@ -261,7 +265,7 @@ Creating two Container Registry on same server should be rejected
         
                        
         ${response}    PCC.Create Container Registry 
-                       ...    nodeID=${invader1_id}
+                       ...    nodeID=${invader2_id}
                        ...    Name=invalidCR_name
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}

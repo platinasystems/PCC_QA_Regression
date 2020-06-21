@@ -7,11 +7,12 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*10
 
@@ -177,7 +178,7 @@ class CephFs(AaBase):
         self._load_kwargs(kwargs)
 
         for ip in self.nodes_ip:
-            output=easy.cli_run(ip,self.user,self.password,ceph_be_cmd)
+            output=cli_run(ip,self.user,self.password,ceph_be_cmd)
             if re.search(self.name,str(output)):
                 continue
             else:

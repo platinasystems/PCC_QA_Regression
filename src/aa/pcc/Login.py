@@ -6,10 +6,9 @@ import json
 import distro
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
-from platina_sdk import pcc_api as pcc
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.AaBase import AaBase
-
+from aa.common.Login import login
 class Login(AaBase):
     """ 
     Login
@@ -25,5 +24,8 @@ class Login(AaBase):
     ###########################################################################
     def login(self, **kwargs):
         self._load_kwargs(kwargs)
+        print("Kwargs:-"+str(kwargs))
         banner("PCC.Login")
-        return pcc.login(self.url, self.username, self.password)
+        var=login(self.url, self.username, self.password)
+        print(var)
+        return var

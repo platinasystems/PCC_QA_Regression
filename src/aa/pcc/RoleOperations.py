@@ -5,11 +5,11 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
-
+from aa.common.Cli import cli_run
 
 PCC_TIMEOUT = 60*10  # 10 min
 
@@ -175,7 +175,7 @@ class RoleOperations(AaBase):
         print("Kwargs:-"+str(kwargs))
 
         for ip in eval(str(self.nodes_ip)):
-            output=easy.cli_run(ip,self.user,self.password,mass_cmd)
+            output=cli_run(ip,self.user,self.password,mass_cmd)
             print("Output:"+str(output))
             if re.search("lighttpd.conf",str(output)) and re.search("tinyproxy.conf",str(output)) and re.search("dnsmasq",str(output)):
                 continue
@@ -193,7 +193,7 @@ class RoleOperations(AaBase):
         print("Kwargs:-"+str(kwargs))
         
         for ip in eval(str(self.nodes_ip)):
-            output=easy.cli_run(ip,self.user,self.password,lldp_cmd)
+            output=cli_run(ip,self.user,self.password,lldp_cmd)
             print("Output:"+str(output))
             if re.search("running",str(output)):
                 continue

@@ -4,7 +4,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
@@ -51,20 +51,30 @@ class Roles(AaBase):
 
     ###########################################################################
     @keyword(name="PCC.Get Role Id")
-    ###########################################################################
-    def get_role_id(self, *args, **kwargs):
+    ########################################################################### 
+    def get_role_id_by_name(self, *args, **kwargs):
         """
-        Get Role Id
+        Get Role Id by Name
         [Args]
-            (str) Name
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Role 
         [Returns]
-            (int) id: Role Id if there is one, 
-                None: If not found
+            (int) Id: Id of the matchining Role, or
+                None: if no match found, or
+            (dict) Error response: If Exception occured
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Get Role Id [Name=%s]" % self.Name)
+        banner("PCC.Get Role Id by Name [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.get_role_id_by_name(conn, self.Name)
+        role_list = pcc.get_roles(conn)['Result']['Data']
+        try:
+            for role in role_list:
+                if str(role['Name']) == str(self.Name):
+                    return role['Id']
+            return None
+        except Exception as e:
+            return {"Error": str(e)}
+   
 
     ###########################################################################
     @keyword(name="PCC.Delete Role")

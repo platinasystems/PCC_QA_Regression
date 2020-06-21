@@ -3,7 +3,7 @@ Resource    pcc_resources.robot
 Library    Collections
 
 *** Variables ***
-${pcc_setup}    pcc_212
+${pcc_setup}    pcc_242
 
 *** Test Cases ***
 ###################################################################################################################################

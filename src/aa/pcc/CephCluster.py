@@ -7,11 +7,12 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print, cmp_json
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*40
 
@@ -251,7 +252,7 @@ class CephCluster(AaBase):
         self._load_kwargs(kwargs)
 
         for ip in self.nodes_ip:
-            output=easy.cli_run(ip,self.user,self.password,ceph_be_cmd)
+            output=cli_run(ip,self.user,self.password,ceph_be_cmd)
             print("Output:"+str(output))
             if re.search("HEALTH_OK",str(output)):
                 continue
@@ -266,7 +267,7 @@ class CephCluster(AaBase):
         self._load_kwargs(kwargs)
         cmd="sudo wipefs -a /dev/sdb; sudo wipefs -a /dev/sdc"
         for ip in self.nodes_ip:
-            data=easy.cli_run(ip,self.user,self.password,cmd)
+            data=cli_run(ip,self.user,self.password,cmd)
         time.sleep(30)
         return
 

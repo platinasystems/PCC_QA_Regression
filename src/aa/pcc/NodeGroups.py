@@ -5,7 +5,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
@@ -122,42 +122,85 @@ class NodeGroups(AaBase):
     ###########################################################################
     @keyword(name="PCC.Validate Node Group")
     ###########################################################################
-    def validate_node_group(self, *args, **kwargs):
+    def validate_node_group_by_name(self, *args, **kwargs):
         """
-        Validate Node Group 
+        Validate Node Group by Name
         [Args]
-            (str) Name
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Cluster
         [Returns]
-            (str) "OK":If node group present in PCC
-        else: "Node group not available" : If node group not present in PCC
+            "OK": If node group present in PCC
+            else: "Node group not available" : If node group not present in PCC
             
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Validate Node Group [Name=%s]" % self.Name)
-
+        banner("PCC.Validate Node Group")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.validate_node_group_by_name(conn, self.Name)
-        
-    
+        cluster_list = pcc.get_clusters(conn)['Result']['Data']
+        try:
+            for cluster in cluster_list:
+                if str(cluster['Name']) == str(self.Name):
+                    return "OK"
+            return "Node group not available"
+        except Exception as e:
+            return {"Error": str(e)}
+            
     ###########################################################################
     @keyword(name="PCC.Validate Node Group Description")
     ###########################################################################
-    def validate_node_group_description(self, *args, **kwargs):
+        
+    def validate_node_group_description_by_name(self, *args, **kwargs):
         """
-        Validate Node Group 
+        Validate Node Group Description by Name
         [Args]
-            (str) Name
-            (str) Description
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Cluster
+            (str) Description: Description of the Cluster
         [Returns]
-            (str) "OK":If node group description matches
-        else: "Description does not match" : If node group description doesn't matches
+            "OK": If node group description matches
+            else: "Description does not match" : If node group not present in PCC
             
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Validate Node Group Description [Name=%s]" % self.Name)
-
+        banner("PCC.Validate Node Group")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.validate_node_group_description_by_name(conn, self.Name, self.Description)
+        cluster_list = pcc.get_clusters(conn)['Result']['Data']
+        try:
+            for cluster in cluster_list:
+                if str(cluster['Name']) == str(self.Name):
+                    if str(cluster['Description']) == str(self.Description):
+                        return "OK"
+            return "Description does not match"
+        except Exception as e:
+            return {"Error": str(e)}
+
+    ###########################################################################
+    @keyword(name="PCC.Validate Node Group Assigned to Node")
+    ###########################################################################
+    def validate_node_group_assigned_to_node(self, *args, **kwargs):
+        """
+        Validate Node Group assigned to Node
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Node
+            (str) Id : Id of the node group
+        [Returns]
+            "OK": If node group assigned to Node
+            else: "Not assigned" : If node group not assigned to node
+            
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Validate Node Group Assigned to Node")
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        nodes_response = pcc.get_nodes(conn)['Result']['Data']
+        try:
+            for node in nodes_response:
+                if str(node['Name']) == str(self.Name):
+                    if node['ClusterId'] == int(self.Id):
+                        return "OK"
+            return "Not assigned"
+        except Exception as e:
+            return {"Error": str(e)}
         
     ###########################################################################
     @keyword(name="PCC.Modify Node Group")
@@ -222,12 +265,14 @@ class NodeGroups(AaBase):
             
             response_status.append(add_cluster_response['StatusCode'])
             
-            availabilty_response = easy.validate_node_group_by_name(conn, Name=node["Name"])
+            availabilty_response = self.validate_node_group_by_name(Name=node["Name"])
             print("availabilty_response is: ",availabilty_response)
             
             availability_status.append(availabilty_response)
             
-        response_result = len(response_status) > 0 and all(elem == response_status[0] for elem in response_status) 
+        response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
+        print("response_status : {}".format(response_status)) 
+        print("response_result : {}".format(response_result)) 
         availability_result = len(availability_status) > 0 and all(elem == availability_status[0] for elem in availability_status)
         
         if (response_result) and (availability_result):
@@ -266,12 +311,14 @@ class NodeGroups(AaBase):
             
             response_status.append(deletion_response["StatusCode"])
             
-            availabilty_response = easy.validate_node_group_by_name(conn, Name=node["Name"])
+            availabilty_response = self.validate_node_group_by_name(Name=node["Name"])
             print("availabilty_response is: ",availabilty_response)
             
             availability_status.append(availabilty_response)
             
-        response_result = len(response_status) > 0 and all(elem == response_status[0] for elem in response_status) 
+        response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status) 
+        print("response_status : {}".format(response_status)) 
+        print("response_result : {}".format(response_result)) 
         availability_result = len(availability_status) > 0 and all(elem == availability_status[0] for elem in availability_status)
         
         if (response_result) and (availability_result):
@@ -299,30 +346,6 @@ class NodeGroups(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         response = pcc.modify_node(conn, data=node_payload)
         return pcc.get_nodes(conn)
-            
-            
-    ###########################################################################
-    @keyword(name="PCC.Validate Node Group Assigned to Node")
-    ###########################################################################
-    def validate_node_group_assignment(self, *args, **kwargs):
-        """
-        Validate Node Group assigned to Node
-        [Args]
-            (dict) conn: Connection dictionary obtained after logging in
-            (str) Name: Name of the Node
-            (str) Id : Id of the node group
-    
-        [Returns]
-            "OK": If node group assigned to Node
-            else: "Not assigned" : If node group not assigned to node
-            
-        """
-        self._load_kwargs(kwargs)
-        banner("PCC.Validate Node Group Assigned to Node [Name=%s]" % self.Name)
-        
-        logger.console("Kwargs are: {}".format(kwargs)) 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.validate_node_group_assigned_to_node(conn, Name=self.Name, Id=int(self.Id))
         
     
     ###########################################################################
@@ -354,13 +377,13 @@ class NodeGroups(AaBase):
                     list_id.append(ids['Id'])
                 print("list of id:{}".format(list_id))
                 for id_ in list_id:
-                    response = pcc.delete_cluster_by_id(conn, Id=str(id_))
+                    response = pcc.delete_cluster_by_id(conn,str(id_))
                     
             deletion_status = False
             counter = 0
             while deletion_status == False:
                 counter+=1
-                response = self.get_node_groups()
+                response = pcc.get_clusters(conn)
                 if get_response_data(response) != []:
                     time.sleep(2)
                     banner("All Node groups not yet deleted")

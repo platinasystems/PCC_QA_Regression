@@ -4,10 +4,11 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
+from aa.common.Cli import *
 
 class Cli(AaBase):
     """ 
@@ -39,7 +40,7 @@ class Cli(AaBase):
         """
         self._load_kwargs(kwargs)
         banner("CLI.Run ip=%s [cmd=%s]" % (self.host_ip, self.cmd))
-        return easy.cli_run(self.host_ip, self.linux_user, self.linux_password, self.cmd)
+        return cli_run(self.host_ip, self.linux_user, self.linux_password, self.cmd)
 
     ###########################################################################
     @keyword(name="CLI.Truncate PCC Logs")
@@ -57,7 +58,7 @@ class Cli(AaBase):
         self._load_kwargs(kwargs)
         print("kwargs"+str(kwargs))
         banner("CLI.Truncate PCC Logs ip=%s" % self.host_ip)
-        ret = easy.cli_truncate_pcc_logs(self.host_ip, self.linux_user, self.linux_password)
+        ret = cli_truncate_pcc_logs(self.host_ip, self.linux_user, self.linux_password)
         print("Response"+str(ret))
         if ret.stderr == "":
             return "OK"
@@ -84,4 +85,4 @@ class Cli(AaBase):
         self._load_kwargs(kwargs)
         print("kwargs:-"+str(kwargs))
         banner("CLI.Copy PCC Logs ip=%s" % self.host_ip)
-        return easy.cli_copy_pcc_logs(self.host_ip, self.linux_user, self.linux_password)
+        return cli_copy_pcc_logs(self.host_ip, self.linux_user, self.linux_password)

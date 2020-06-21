@@ -7,9 +7,10 @@ from robot.api import logger
 from robot.api.deco import keyword
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, debug, pretty_print
+from aa.common.Cli import cli_run
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 
 class LinuxUtils(AaBase):
@@ -40,7 +41,7 @@ class LinuxUtils(AaBase):
         self._load_kwargs(kwargs)
         try:
             self.cmd = "ps -aux|grep {}|grep -v grep|wc -l".format(self.process_name)
-            process_up_status = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            process_up_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
                                            linux_password=self.password)
             
             serialised_process_up_status = self._serialize_response(time.time(), process_up_status)
@@ -66,7 +67,7 @@ class LinuxUtils(AaBase):
         self._load_kwargs(kwargs)
         try:
             self.cmd = "sudo service {} status|grep -e 'Active:' -e 'running'|wc -l".format(self.service_name)
-            daemon_up_status = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            daemon_up_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
                                           linux_password=self.password)
             
             serialised_daemon_up_status = self._serialize_response(time.time(), daemon_up_status)
@@ -93,7 +94,7 @@ class LinuxUtils(AaBase):
         self._load_kwargs(kwargs)
         try:
             self.cmd = "ping {} -c 4".format(self.FQDN_name)
-            FQDN_status = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            FQDN_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
                                      linux_password=self.password)
             
             serialised_FQDN_status = self._serialize_response(time.time(), FQDN_status)
@@ -119,7 +120,7 @@ class LinuxUtils(AaBase):
         self._load_kwargs(kwargs)
         try:
             self.cmd = "sudo netstat -antlp|grep -w {}|wc -l".format(self.port_number)
-            port_used_status = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            port_used_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
                                           linux_password=self.password)
             
             serialised_port_used_status = self._serialize_response(time.time(), port_used_status)
@@ -145,14 +146,14 @@ class LinuxUtils(AaBase):
         self._load_kwargs(kwargs)
         try:
             self.cmd = "sudo reboot"
-            restart_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            restart_cmd = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
                                           linux_password=self.password)
             banner("Sleeping")
             time.sleep(int(self.time_to_wait))
             banner("Done sleeping")
             self.cmd = "ping {} -c 4".format(self.hostip)
             
-            restart_up_status = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            restart_up_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
                                      linux_password=self.password)
             
             serialised_restart_up_status = self._serialize_response(time.time(), restart_up_status)

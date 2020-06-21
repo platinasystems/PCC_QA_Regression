@@ -10,7 +10,8 @@ from aa.common.AaBase import AaBase
 from aa.common.LinuxUtils import LinuxUtils
 from aa.common.Utils import banner, trace, pretty_print
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
+from aa.common.Cli import cli_run
 
 class DockerUtils(AaBase):
 
@@ -44,7 +45,7 @@ class DockerUtils(AaBase):
         self._load_kwargs(kwargs)
         print("kwargs are: {}".format(kwargs))
         try:
-            process_up_status = easy.cli_run(cmd='docker ps|grep -Ew "{}"|grep -v grep | wc -l'.format(self.container_name), host_ip=self.hostip,linux_user=self.username, linux_password=self.password)
+            process_up_status = cli_run(cmd='docker ps|grep -Ew "{}"|grep -v grep | wc -l'.format(self.container_name), host_ip=self.hostip,linux_user=self.username, linux_password=self.password)
             
             serialised_process_up_status = self._serialize_response(time.time(), process_up_status)
             print("serialised_process_up_status is:{}".format(serialised_process_up_status))
@@ -69,7 +70,7 @@ class DockerUtils(AaBase):
         print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker restart {}".format(self.container_name)
-            container_restart_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            container_restart_cmd = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_container_restart_cmd = self._serialize_response(time.time(), container_restart_cmd)
             print("serialised_container_restart_cmd is:{}".format(serialised_container_restart_cmd))
@@ -98,7 +99,7 @@ class DockerUtils(AaBase):
         print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker images|grep -w {}".format(self.image_name)
-            check_image_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            check_image_cmd = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_check_image_cmd = self._serialize_response(time.time(), check_image_cmd)
             print("serialised_check_image_cmd is:{}".format(serialised_check_image_cmd))
@@ -128,7 +129,7 @@ class DockerUtils(AaBase):
 
             print("Image exists in repository ")
             self.cmd = "docker rmi {}".format(self.image_name)
-            deleting_image_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip,linux_user=self.username, linux_password=self.password)
+            deleting_image_cmd = cli_run(cmd=self.cmd, host_ip=self.hostip,linux_user=self.username, linux_password=self.password)
             
             serialised_deleting_image_cmd = self._serialize_response(time.time(), deleting_image_cmd)
             print("serialised_deleting_image_cmd is:{}".format(serialised_deleting_image_cmd))
@@ -155,7 +156,7 @@ class DockerUtils(AaBase):
         print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker pull {}".format(self.image_name)
-            pull_command_execution = easy.cli_run(cmd=self.cmd,host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            pull_command_execution = cli_run(cmd=self.cmd,host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_pull_command_execution = self._serialize_response(time.time(), pull_command_execution)
             print("serialised_pull_command_execution is:{}".format(serialised_pull_command_execution))
@@ -186,7 +187,7 @@ class DockerUtils(AaBase):
             time.sleep(5)
             
             print("Command used is: {}".format(self.cmd))
-            pull_command_execution = easy.cli_run(cmd= self.cmd,host_ip=self.hostip, linux_user=self.username, linux_password = self.password)
+            pull_command_execution = cli_run(cmd= self.cmd,host_ip=self.hostip, linux_user=self.username, linux_password = self.password)
             
             serialised_pull_command_execution = self._serialize_response(time.time(), pull_command_execution)
             print("serialised_pull_command_execution is:{}".format(serialised_pull_command_execution))
@@ -222,7 +223,7 @@ class DockerUtils(AaBase):
         print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker push {}:{}/{}".format(str(self.registry_url), str(self.port), str(self.custom_name))
-            push_to_registry_cmd = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            push_to_registry_cmd = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_push_to_registry_cmd = self._serialize_response(time.time(), push_to_registry_cmd)
             print("serialised_push_to_registry_cmd is:{}".format(serialised_push_to_registry_cmd))
@@ -251,8 +252,8 @@ class DockerUtils(AaBase):
         print("kwargs are: {}".format(kwargs))
         try:
             self.cmd = "docker tag {} {}:{}/{}".format(self.image_name, self.registry_url, str(self.port),self.custom_name)
-            tag_cmd_execution = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            grep_after_tag_execution = easy.cli_run(cmd="docker images|grep {}".format(self.image_name),host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            tag_cmd_execution = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            grep_after_tag_execution = cli_run(cmd="docker images|grep {}".format(self.image_name),host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_grep_after_tag_execution = self._serialize_response(time.time(), grep_after_tag_execution)
             print("serialised_grep_after_tag_execution is:{}".format(serialised_grep_after_tag_execution))
@@ -281,7 +282,7 @@ class DockerUtils(AaBase):
             self.cmd = "docker login {}:{} --password='{}' --username='{}'".format(self.fullyQualifiedDomainName,self.registryPort,self.portus_password,self.portus_uname)
             
             print("Cmd executed is: {}".format(self.cmd))
-            CR_login_cmd_execution = easy.cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            CR_login_cmd_execution = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             print("CR_login_cmd_execution is : {}".format(CR_login_cmd_execution))
             serialised_CR_login_cmd_execution = self._serialize_response(time.time(), CR_login_cmd_execution)

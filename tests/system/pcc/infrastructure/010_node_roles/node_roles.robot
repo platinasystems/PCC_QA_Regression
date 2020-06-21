@@ -12,7 +12,7 @@ Login to PCC
                 
         
         [Documentation]    *Login to PCC* test
-        [Tags]    Delete
+        [Tags]    Only
         
         ${status}        Login To PCC    ${pcc_setup}
                          
@@ -501,7 +501,7 @@ Create 100 node roles
         ${status}    PCC.Add Multiple Node Roles
                      ...    Name=${MULTIPLE_NODE_ROLE} 
                      ...    Description=${MULTIPLE_NODE_ROLE_DESC}
-                     ...    number_of_node_roles=100
+                     ...    number_of_node_roles=10
                      ...    templateIDs=[${template_id_1}]
                      ...    owners=[${owner}]
                      
@@ -519,7 +519,7 @@ Delete 100 node roles
         
         ${status}    PCC.Delete Multiple Node Roles
                      ...    Name=${MULTIPLE_NODE_ROLE}
-                     ...    number_of_node_roles=100
+                     ...    number_of_node_roles=10
                      
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK    All Node roles not deleted from PCC                                                            
@@ -530,7 +530,7 @@ Delete All Node Roles
         [Documentation]    *Delete All Node Roles* test
                            ...  keywords:
                            ...  PCC.Delete all Node roles
-        [Tags]    Delete
+        [Tags]    Only
 
         ${status}    PCC.Delete all Node roles
                        

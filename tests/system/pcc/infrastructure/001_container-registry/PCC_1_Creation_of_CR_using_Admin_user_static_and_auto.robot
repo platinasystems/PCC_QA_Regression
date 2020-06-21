@@ -34,6 +34,10 @@ Login to PCC
         ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
+        
+        ${invader2_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
+                         Log To Console    ${invader2_id}
+                         Set Global Variable    ${invader2_id}
                          
 ####################################################################################################################################
 Cleanup Container Registry If Already Exists
@@ -64,7 +68,7 @@ Create a Container Registry(using Static mode) : TCP-825
                            ...  PCC.Create Container Registry
 
         ${response}    PCC.Create Container Registry
-                       ...    nodeID=${invader1_id}
+                       ...    nodeID=${invader2_id}
                        ...    Name=${STATIC_MODE_CR_NAME}
                        ...    fullyQualifiedDomainName=${STATIC_MODE_CR_FQDN}
                        ...    password=${STATIC_MODE_CR_PASSWORD}

@@ -11,12 +11,12 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 from aa.common.LinuxUtils import LinuxUtils
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
-
+from aa.common.Cli import cli_run
 from aa.pcc.Nodes import Nodes
 
 class Tunneling(AaBase):
@@ -74,7 +74,7 @@ class Tunneling(AaBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "python /home/pcc/tmp/read_pccserver_yml.py"
-            data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+            data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                                  linux_password=self.password)
             print("Data: {}".format(data))
             serialised_data = self._serialize_response(time.time(), data)
@@ -94,11 +94,11 @@ class Tunneling(AaBase):
                     logger.console("Wrong Cidr value exists: {}".format(re_match[0]))
                     
                     cmd = "sed -i s/'cidr:{}'/'cidr: {}'/ {}".format(re_match[0],self.modified_cidr_val,self.path)
-                    edit_cidr = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                    edit_cidr = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                              linux_password=self.password)
                     
                     cmd = "python /home/pcc/tmp/read_pccserver_yml.py"
-                    data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                    data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                                      linux_password=self.password)
                     
                     serialised_data = self._serialize_response(time.time(), data)
@@ -117,11 +117,11 @@ class Tunneling(AaBase):
             
             else:
                 cmd = "sed -i s/'cidr:'/'cidr: {}'/ {}".format(self.modified_cidr_val,self.path)
-                edit_cidr = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                edit_cidr = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                          linux_password=self.password)
                 
                 cmd = "python /home/pcc/tmp/read_pccserver_yml.py"
-                data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                                  linux_password=self.password)
                 
                 serialised_data = self._serialize_response(time.time(), data)
@@ -149,7 +149,7 @@ class Tunneling(AaBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "python /home/pcc/tmp/read_pccserver_yml.py"
-            data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+            data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                 linux_password=self.password)
             
             serialised_data = self._serialize_response(time.time(), data)
@@ -167,10 +167,10 @@ class Tunneling(AaBase):
                 if re_match[0] == self.cidr_val:
 
                     cmd = "sed -i s/'cidr: {}'/'cidr:'/ {}".format(self.modified_cidr_val, self.path)
-                    edit_cidr = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                    edit_cidr = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                              linux_password=self.password)
                     cmd = "python /home/pcc/tmp/read_pccserver_yml.py"
-                    data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                    data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                         linux_password=self.password)
                     
                     serialised_data = self._serialize_response(time.time(), data)
@@ -191,11 +191,11 @@ class Tunneling(AaBase):
                 elif re_match[0] != self.cidr_val:
 
                     cmd = "sed -i s/'cidr: {}'/'cidr:'/ {}".format(re_match[0], self.path)
-                    edit_cidr = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                    edit_cidr = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                              linux_password=self.password)
 
                     cmd = "python /home/pcc/tmp/read_pccserver_yml.py"
-                    data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                    data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                         linux_password=self.password)
                     
                     serialised_data = self._serialize_response(time.time(), data)
@@ -234,7 +234,7 @@ class Tunneling(AaBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "cat {}".format(self.path)
-            data = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+            data = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                              linux_password=self.password)
             print("Data is : {}".format(data))
             serialised_data = self._serialize_response(time.time(), data)
@@ -269,7 +269,7 @@ class Tunneling(AaBase):
         try:
             cmd= "sudo ./platina-cli-ws/platina-cli restart -p {}".format(self.setup_password)
             
-            restart_container_status = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            restart_container_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_restart_container_status = self._serialize_response(time.time(), restart_container_status)
             print("serialised_restart_container_status is:{}".format(serialised_restart_container_status))
@@ -294,7 +294,7 @@ class Tunneling(AaBase):
             if self.restart == None:
                 cmd= "ip addr | grep tun"
                 
-                tun_cmd_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+                tun_cmd_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_tun_cmd_status = self._serialize_response(time.time(), tun_cmd_status)
                 print("serialised_tun_cmd_status is:{}".format(serialised_tun_cmd_status))
@@ -311,7 +311,7 @@ class Tunneling(AaBase):
             
             elif self.restart == "Restarted":
                 cmd= "ip addr | grep tun"
-                tun_cmd_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+                tun_cmd_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_tun_cmd_status = self._serialize_response(time.time(), tun_cmd_status)
                 print("serialised_tun_cmd_status is:{}".format(serialised_tun_cmd_status))
@@ -340,7 +340,7 @@ class Tunneling(AaBase):
         try:
             if self.tun_interface_state == "UP": 
                 cmd = "ping {} -c 4".format(self.interface_ip)
-                peer_ip_reachability_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+                peer_ip_reachability_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_peer_ip_reachability_status = self._serialize_response(time.time(), peer_ip_reachability_status)
                 print("serialised_peer_ip_reachability_status is:{}".format(serialised_peer_ip_reachability_status))
@@ -353,7 +353,7 @@ class Tunneling(AaBase):
                     return False
             elif self.tun_interface_state == "DOWN":
                 cmd = "ping {} -c 4".format(self.interface_ip)
-                peer_ip_reachability_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+                peer_ip_reachability_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_peer_ip_reachability_status = self._serialize_response(time.time(), peer_ip_reachability_status)
                 print("serialised_peer_ip_reachability_status is:{}".format(serialised_peer_ip_reachability_status))
@@ -384,7 +384,7 @@ class Tunneling(AaBase):
         self._load_kwargs(kwargs)
         try:
             cmd= "sudo cat /opt/platina/pcc/etc/profile_node.json"
-            profile_node_json_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+            profile_node_json_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_profile_node_json_status = self._serialize_response(time.time(), profile_node_json_status)
             print("serialised_profile_node_json_status is:{}".format(serialised_profile_node_json_status))
@@ -441,7 +441,7 @@ class Tunneling(AaBase):
         self._load_kwargs(kwargs)
         try:
             cmd= "docker exec pccserver ip addr|grep tun"
-            find_tun_value = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            find_tun_value = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_find_tun_value = self._serialize_response(time.time(), find_tun_value)
             print("serialised_find_tun_value is:{}".format(serialised_find_tun_value))
@@ -471,7 +471,7 @@ class Tunneling(AaBase):
         try:
             if self.tun_interface_state == "UP":          
                 cmd= "docker exec kafka kafka-avro-console-consumer --topic memory --bootstrap-server localhost:9092|head -20|grep {}|wc -l".format(self.host_name)
-                kafka_memory_validation = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+                kafka_memory_validation = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_kafka_memory_validation = self._serialize_response(time.time(), kafka_memory_validation)
                 print("serialised_kafka_memory_validation is:{}".format(serialised_kafka_memory_validation))
@@ -485,7 +485,7 @@ class Tunneling(AaBase):
             
             elif self.tun_interface_state == "DOWN":
                 cmd= "docker exec kafka kafka-avro-console-consumer --topic memory --bootstrap-server localhost:9092|head -20|grep {}|wc -l".format(self.host_name)
-                kafka_memory_validation = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+                kafka_memory_validation = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_kafka_memory_validation = self._serialize_response(time.time(), kafka_memory_validation)
                 print("serialised_kafka_memory_validation is:{}".format(serialised_kafka_memory_validation))
@@ -518,7 +518,7 @@ class Tunneling(AaBase):
         try:
             if self.tun_interface_state == "UP":
                 cmd = "docker exec kafka kafka-avro-console-consumer --topic cpu --bootstrap-server localhost:9092|head -20|grep {}|wc -l".format(self.host_name)
-                kafka_CPU_validation = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+                kafka_CPU_validation = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_kafka_CPU_validation = self._serialize_response(time.time(), kafka_CPU_validation)
                 print("serialised_kafka_CPU_validation is:{}".format(serialised_kafka_CPU_validation))
@@ -532,7 +532,7 @@ class Tunneling(AaBase):
                     
             elif self.tun_interface_state == "DOWN":
                 cmd = "docker exec kafka kafka-avro-console-consumer --topic cpu --bootstrap-server localhost:9092|head -20|grep {}|wc -l".format(self.host_name)
-                kafka_CPU_validation = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+                kafka_CPU_validation = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
                 
                 serialised_kafka_CPU_validation = self._serialize_response(time.time(), kafka_CPU_validation)
                 print("serialised_kafka_CPU_validation is:{}".format(serialised_kafka_CPU_validation))
@@ -560,10 +560,10 @@ class Tunneling(AaBase):
         
         try:
             cmd= "docker exec pccserver ifconfig {} {}".format(self.tun_value, self.tun_switch)
-            tunnel_down_cmd = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_down_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             cmd= "docker exec pccserver ip addr|grep tun"
-            tunnel_down_status = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_down_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_tunnel_down_status = self._serialize_response(time.time(), tunnel_down_status)
             print("serialised_tunnel_down_status is:{}".format(serialised_tunnel_down_status))
@@ -607,10 +607,10 @@ class Tunneling(AaBase):
         
         try:
             cmd= "sudo ifconfig {} {}".format(self.tun_value, self.tun_switch)
-            tunnel_down_cmd = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_down_cmd = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             cmd= "sudo ip addr|grep tun"
-            tunnel_down_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_down_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_tunnel_down_status = self._serialize_response(time.time(), tunnel_down_status)
             print("serialised_tunnel_down_status is:{}".format(serialised_tunnel_down_status))
@@ -656,7 +656,7 @@ class Tunneling(AaBase):
         try:
             verification_status_during_restart = []
             cmd= "sudo ip link delete dev {}".format(self.tun_value)
-            tunnel_restart_cmd = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_restart_cmd = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             time.sleep(2)
             
@@ -700,7 +700,7 @@ class Tunneling(AaBase):
             
             verification_status_after_restart = []
             cmd= "sudo ip addr|grep tun"
-            tunnel_down_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_down_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_tunnel_down_status = self._serialize_response(time.time(), tunnel_down_status)
             print("serialised_tunnel_down_status is:{}".format(serialised_tunnel_down_status))
@@ -770,7 +770,7 @@ class Tunneling(AaBase):
         try:
             verification_status_during_kill = []
             cmd= "docker exec pccserver ps aux | grep ssh | grep -ie {} | awk '{print $2}'| xargs kill -9".format(self.tun_value)
-            tunnel_kill_cmd = easy.cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            tunnel_kill_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             
             #Verification steps during Tunnel operation kill 
             self.tun_interface_state = "DOWN"
@@ -813,7 +813,7 @@ class Tunneling(AaBase):
             verification_status_after_kill =[]
             
             cmd= "docker exec pccserver ip addr|grep tun"
-            grep_tun_status = easy.cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
+            grep_tun_status = cli_run(cmd=cmd, host_ip=self.node_hostip, linux_user=self.username,linux_password=self.password)
             
             serialised_grep_tun_status = self._serialize_response(time.time(), grep_tun_status)
             print("serialised_grep_tun_status is:{}".format(serialised_grep_tun_status))

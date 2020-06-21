@@ -6,7 +6,7 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
@@ -97,7 +97,6 @@ class NodeRoles(AaBase):
         except Exception as e:
             return {"Error": str(e)}
     
-    
     ###########################################################################
     @keyword(name="PCC.Get Node Role Id")
     ###########################################################################
@@ -115,25 +114,49 @@ class NodeRoles(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return easy.get_node_role_id_by_name(conn=conn, Name=self.Name)
 
-
     ###########################################################################
     @keyword(name="PCC.Validate Node Role")
     ###########################################################################
-    def validate_node_role(self, *args, **kwargs):
+    def validate_node_role_by_name(self, *args, **kwargs):
         """
-        Validate Node Role 
+        Validate Node Role by Name
         [Args]
-            (str) Name
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Node Role
         [Returns]
-            (str) "OK":If node role present in PCC
-        else: "Node role not available" : If node role not present in PCC
+            "OK": If node role present in PCC
+            else: "Node role not available" : If node role not present in PCC
             
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Validate Node Role [Name=%s]" % self.Name)
-
+        banner("PCC.Validate Node Role")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.validate_node_role_by_name(conn, Name=self.Name)
+        noderoles_list = pcc.get_roles(conn)['Result']['Data']
+        try:
+            for noderole in noderoles_list:
+                if str(noderole['name']) == str(self.Name):
+                    return "OK"
+            return "Node role not available"
+        except Exception as e:
+            return {"Error": str(e)}
+            
+    ###########################################################################
+    @keyword(name="PCC.Delete Node Role")
+    ###########################################################################        
+    def delete_node_role_by_name(self, *args, **kwargs):
+        """
+        Delete Node Role by Name
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name
+        [Returns]
+            (dict) Response: Delete Roles response (includes any errors)
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Validate Node Role")
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        Id = self.get_node_role_id(Name=self.Name)
+        return pcc.delete_role_by_id(conn, str(Id))
     
     ###########################################################################
     @keyword(name="PCC.Modify Node Role")
@@ -163,24 +186,7 @@ class NodeRoles(AaBase):
                   "owners":ast.literal_eval(self.owners)
                   }
                   
-        return pcc.modify_role(conn,Id=str(self.Id), data=payload)
-    
-    
-    ###########################################################################
-    @keyword(name="PCC.Delete Node Role")
-    ###########################################################################
-    def delete_node_role(self, *args, **kwargs):
-        """
-        Delete Node Role for matching Name
-        [Args]
-            (int) Name
-        [Returns]
-            (dict) Delete Node Role Response
-        """
-        self._load_kwargs(kwargs)
-        banner("PCC.Delete Node Role [Id=%s]" % self.Name)
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.delete_node_role_by_name(conn=conn, Name=self.Name)
+        return pcc.modify_role(conn,str(self.Id), data=payload)
         
         
     ###########################################################################
@@ -220,12 +226,12 @@ class NodeRoles(AaBase):
             
             response_status.append(add_node_role_response['StatusCode'])
             time.sleep(1)
-            availabilty_response = easy.validate_node_role_by_name(conn, Name=node["Name"])
+            availabilty_response = self.validate_node_role_by_name(Name=node["Name"])
             print("availabilty_response is: ",availabilty_response)
             
             availability_status.append(availabilty_response)
             
-        response_result = len(response_status) > 0 and all(elem == response_status[0] for elem in response_status) 
+        response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status) 
         availability_result = len(availability_status) > 0 and all(elem == availability_status[0] for elem in availability_status)
         
         if (response_result) and (availability_result):
@@ -246,7 +252,7 @@ class NodeRoles(AaBase):
             (dict) Response: Add Node Role response (includes any errors)
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Add Multiple Node Roles [Name=%s]" % self.Name)
+        banner("PCC.Delete Multiple Node Roles [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         
         node_role_dict = {}
@@ -257,18 +263,17 @@ class NodeRoles(AaBase):
         response_status = []
         availability_status = []
         for node in node_role_dict.values():
-            node_id = self.get_node_role_id(conn, Name= node["Name"])
-            deletion_response = self.delete_node_role(conn, Id = node_id)
+            deletion_response = self.delete_node_role_by_name(Name=node["Name"])
             print("deletion_response is: ",deletion_response)
             
             response_status.append(deletion_response["StatusCode"])
             time.sleep(1)
-            availabilty_response = easy.validate_node_role_by_name(conn, Name=node["Name"])
+            availabilty_response = self.validate_node_role_by_name(Name=node["Name"])
             print("availabilty_response is: ",availabilty_response)
             
             availability_status.append(availabilty_response)
-            
-        response_result = len(response_status) > 0 and all(elem == response_status[0] for elem in response_status) 
+        
+        response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)     
         availability_result = len(availability_status) > 0 and all(elem == availability_status[0] for elem in availability_status)
         
         if (response_result) and (availability_result):
@@ -306,11 +311,13 @@ class NodeRoles(AaBase):
             print("list of node roles: {}".format(list_node_roles))
             response_status = []
             try:
-                for name in list_node_roles:
-                    response = self.delete_node_role(conn, Name=str(name))
+                for node in list_node_roles:
+                    print("Node is : " + node)
+                    Id = self.get_node_role_id(Name=node)
+                    response = pcc.delete_role_by_id(conn, str(Id))
                     print("Response: {}".format(response))
-                    response_status.append(str(response["StatusCode"]))
-                response_result = len(response_status) > 0 and all(elem == '200' for elem in response_status)
+                    response_status.append(response["StatusCode"])
+                response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
                 if response_result:
                     return "OK"
                 else:

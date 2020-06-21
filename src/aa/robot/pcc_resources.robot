@@ -52,7 +52,7 @@ Login To PCC
                                 # PCC.Login is defined in Login.py   it takes PCC_URL from defined Robot variable
         
         ${PCC_CONN}             PCC.Login               url=${PCC_URL}   username=${PCC_USERNAME}    password=${PCC_PASSWORD}
-                                
+                                Log To Console    ${PCC_CONN}
                                 # Log To Console          CH-NAME=${CLUSTERHEAD_1_NAME}
                                 # Using SESSION and TOKEN for all subsequent REST API calls
                                 
@@ -305,6 +305,58 @@ Load Server 2 Test Data
     
             ${SERVER_2_SSHKEYS}        Evaluate    $pcc_server_dict.get("ssh_keys", None)
                                         Set Suite Variable    ${SERVER_2_SSHKEYS}                                  
+
+###################################################################################################################################
+Load Server 3 Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key} 
+
+        [Documentation]         *Load Server 3 Test Data* 
+                                Log To Console          **** Load Server 3 Test Data ****
+
+            ${pcc_server_dict}    TESTDATA.Get            ${testdata_key}.json        server-3
+                                
+                                # Server Info
+                                
+            ${SERVER_3_NAME}            Evaluate    $pcc_server_dict.get("server_name", None)
+                                        Set Suite Variable    ${SERVER_3_NAME}
+        
+        
+            ${SERVER_3_URL}             Evaluate    $pcc_server_dict.get("pcc_url", None)
+                                        Set Suite Variable    ${SERVER_3_URL}
+    
+            ${SERVER_3_HOST_IP}         Evaluate    $pcc_server_dict.get("pcc_host_ip", None)
+                                        Set Suite Variable    ${SERVER_3_HOST_IP}
+    
+            ${SERVER_3_LINUX_PWD}       Evaluate    $pcc_server_dict.get("pcc_linux_password", None)
+                                        Set Suite Variable    ${SERVER_3_LINUX_PWD}
+    
+            ${SERVER_3_UNAME}           Evaluate    $pcc_server_dict.get("pcc_username", None)
+                                        Set Suite Variable    ${SERVER_3_UNAME}
+    
+            ${SERVER_3_PWD}             Evaluate    $pcc_server_dict.get("pcc_password", None)
+                                        Set Suite Variable    ${SERVER_3_PWD}
+            
+            ${SERVER_3_BMC}             Evaluate    $pcc_server_dict.get("bmc", None)
+                                        Set Suite Variable    ${SERVER_3_BMC}
+            
+            ${SERVER_3_MGMT_IP}         Evaluate    $pcc_server_dict.get("mgmt_ip", None)
+                                        Set Suite Variable    ${SERVER_3_MGMT_IP}
+                                        
+            ${SERVER_3_BMCUSER}         Evaluate    $pcc_server_dict.get("bmc_user", None)
+                                        Set Suite Variable    ${SERVER_3_BMCUSER}
+                                        
+            ${SERVER_3_BMCPWD}          Evaluate    $pcc_server_dict.get("bmc_pwd", None)
+                                        Set Suite Variable    ${SERVER_3_BMCPWD}
+                                        
+            ${SERVER_3_CONSOLE}         Evaluate    $pcc_server_dict.get("console", None)
+                                        Set Suite Variable    ${SERVER_3_CONSOLE}
+            
+            ${SERVER_3_MANAGED_BY_PCC}  Evaluate    $pcc_server_dict.get("managed_by_pcc", None)
+                                        Set Suite Variable    ${SERVER_3_MANAGED_BY_PCC}
+    
+            ${SERVER_3_SSHKEYS}         Evaluate    $pcc_server_dict.get("ssh_keys", None)
+                                        Set Suite Variable    ${SERVER_3_SSHKEYS}
                                   
 ###################################################################################################################################
 Verify List of Nodes

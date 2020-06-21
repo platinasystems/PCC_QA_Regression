@@ -647,7 +647,7 @@ TCP-985 Update Cluster - Try to remove Tags (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools
+Add 20 pools to Kubernetes Cluster which are part of Fs with 20 data pools
 ###################################################################################################################################      
         [Documentation]             *Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools*
                                ...  Keywords:
@@ -682,7 +682,7 @@ Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool Multiple
-                               ...  count=32
+                               ...  count=22
                                ...  name=k8s
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
@@ -695,7 +695,7 @@ Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=k8s-32
+                               ...  name=k8s-22
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -703,12 +703,12 @@ Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools
                                ...  name=${CEPH_Cluster_NAME}
 
         ${meta}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=k8s-32
+                               ...  name=k8s-22
                                
         ${data}                     PCC.Ceph Get Multiple Pool Details For FS
-                               ...  name=['k8s-1','k8s-2','k8s-3','k8s-4','k8s-5','k8s-6','k8s-7','k8s-8','k8s-9','k8s-10','k8s-11','k8s-12','k8s-13','k8s-14','k8s-15','k8s-16','k8s-17','k8s-18','k8s-19','k8s-20','k8s-21','k8s-22','k8s-23','k8s-24','k8s-25','k8s-26','k8s-27','k8s-28','k8s-29','k8s-30']                             
+                               ...  name=['k8s-1','k8s-2','k8s-3','k8s-4','k8s-5','k8s-6','k8s-7','k8s-8','k8s-9','k8s-10','k8s-11','k8s-12','k8s-13','k8s-14','k8s-15','k8s-16','k8s-17','k8s-18','k8s-19','k8s-20']                             
         ${default}                  PCC.Ceph Get Pool Details For FS
-                               ...  name=k8s-31
+                               ...  name=k8s-21
 
         ${response}                 PCC.Ceph Create Fs
                                ...  name=${CEPH_FS_NAME}
@@ -727,7 +727,7 @@ Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools
         ${response}                 PCC.K8s Upgrade Cluster
                                ...  cluster_id=${cluster_id}
                                ...  k8sVersion=${K8S_VERSION}
-                               ...  pools=[ 'k8s-1', 'k8s-2', 'k8s-3', 'k8s-4', 'k8s-5', 'k8s-6', 'k8s-7', 'k8s-8', 'k8s-9', 'k8s-10','k8s-11', 'k8s-12', 'k8s-13', 'k8s-14', 'k8s-15', 'k8s-16', 'k8s-17', 'k8s-18', 'k8s-19', 'k8s-20','k8s-21', 'k8s-22', 'k8s-23', 'k8s-24', 'k8s-25', 'k8s-26', 'k8s-27', 'k8s-28', 'k8s-29', 'k8s-30']
+                               ...  pools=[ 'k8s-1', 'k8s-2', 'k8s-3', 'k8s-4', 'k8s-5', 'k8s-6', 'k8s-7', 'k8s-8', 'k8s-9', 'k8s-10','k8s-11', 'k8s-12', 'k8s-13', 'k8s-14', 'k8s-15', 'k8s-16', 'k8s-17', 'k8s-18', 'k8s-19', 'k8s-20']
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
@@ -739,7 +739,7 @@ Add 30 pools to Kubernetes Cluster which are part of Fs with 30 data pools
 
 
 ###################################################################################################################################
-Add 15 pools to Kubernetes Cluster which are part of Fs with 30 data pools
+Add 10 pools to Kubernetes Cluster which are part of Fs with 20 data pools
 ###################################################################################################################################      
         [Documentation]             *Add 15 pools to Kubernetes Cluster which are part of Fs with 30 data pools*
                                ...  Keywords:
@@ -754,7 +754,7 @@ Add 15 pools to Kubernetes Cluster which are part of Fs with 30 data pools
         ${response}                 PCC.K8s Upgrade Cluster
                                ...  cluster_id=${cluster_id}
                                ...  k8sVersion=${K8S_VERSION}
-                               ...  pools=[ 'k8s-1', 'k8s-2', 'k8s-3', 'k8s-4', 'k8s-5', 'k8s-6', 'k8s-7', 'k8s-8', 'k8s-9', 'k8s-10','k8s-11', 'k8s-12', 'k8s-13', 'k8s-14', 'k8s-15']
+                               ...  pools=[ 'k8s-1', 'k8s-2', 'k8s-3', 'k8s-4', 'k8s-5', 'k8s-6', 'k8s-7', 'k8s-8', 'k8s-9', 'k8s-10']
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200

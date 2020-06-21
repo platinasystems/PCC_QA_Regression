@@ -4,7 +4,7 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
@@ -57,7 +57,7 @@ class Certificate(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         certificate_id = easy.get_certificate_id_by_name(conn, Name = self.Alias)
         banner("Certificate id is: {}".format(certificate_id))
-        return pcc.delete_certificate_by_id(conn, Id=str(certificate_id))
+        return pcc.delete_certificate_by_id(conn, id=str(certificate_id))
         
         
         

@@ -5,7 +5,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
@@ -44,7 +44,7 @@ class OpenSSHKeys(AaBase):
         filename_path = os.path.join("tests/test-data", self.Filename)
         
         print("Filename_path is {}".format(filename_path))
-        return pcc.add_openSSH_keys(conn, Type = self.Type, Alias = self.Alias, Description=self.Description, filename_path = filename_path)
+        return pcc.add_keys(conn, type = self.Type, alias = self.Alias, description=self.Description, filename_path = filename_path)
 
     ###########################################################################
     @keyword(name="PCC.Delete OpenSSH Key")
@@ -61,4 +61,4 @@ class OpenSSHKeys(AaBase):
         banner("PCC.Delete OpenSSH Key [Alias=%s]" % self.Alias)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         banner("Kwargs are: {}".format(kwargs))
-        return pcc.delete_openSSH_keys_by_alias(conn, Alias = self.Alias)
+        return pcc.delete_keys_by_alias(conn, alias = self.Alias)

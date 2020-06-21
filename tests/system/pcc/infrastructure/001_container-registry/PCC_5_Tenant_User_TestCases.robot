@@ -12,7 +12,7 @@ Login to PCC.
                 
         [Documentation]    *Login to PCC* test
         
-        [Tags]    Negative
+        [Tags]    Tenant
         ${status}        Login To PCC    ${pcc_setup}
                          Should Be Equal    ${status}  OK
                          
@@ -49,7 +49,7 @@ Cleanup Container Registry If Already Exists
                            ...  keywords:
                            ...  PCC.Clean all CR
                            ...  PCC.Wait for deletion of CR
-        
+        [Tags]    Only
         ${result}    PCC.Clean all CR
         
                      Log to Console    ${result}
@@ -85,7 +85,7 @@ Assigning Tenant to Node and creating CR (using Tenant User)
                            ...  keywords:
                            ...  PCC.Get Tenant Id   
                            ...  PCC.Assign Tenant to Node                   
-                     
+        [Tags]    Only             
         ########  Getting Tenant ID   #######################################################################################  
                    
         ${tenant_id}    PCC.Get Tenant Id
@@ -113,7 +113,7 @@ Login to PCC using Tenant User
                            ...  keywords:
                            ...  PCC.Login
                            ...  PCC.Get Node Id
-                             
+        [Tags]    Tenant                     
         
         ${PCC_CONN}             PCC.Login
                                 ...    url=${PCC_URL}
@@ -136,7 +136,7 @@ Create an Auth Profile after login as Tenant user : TCP-866
         [Documentation]    *Create Auth Profile* test
                            ...  keywords:
                            ...  PCC.Create Auth Profile
-                           
+        [Tags]    Tenant                   
 
         ${response}    PCC.Create Auth Profile 
                        ...    Name=${AUTH_PROFILE_NAME}
@@ -167,7 +167,7 @@ Get Auth Profile Id : TCP-866
                            ...  keywords:
                            ...  PCC.Get Auth Profile Id 
                            
-        
+        [Tags]    CROnly
         ${Auth_Profile_Id}    PCC.Get Auth Profile Id
                               ...    Name=${AUTH_PROFILE_NAME}
                      
@@ -184,6 +184,7 @@ Creation of CR (Using Tenant User, Static mode) : TCP-825
                            ...  PCC.Create Container Registry
                            ...  PCC.CR Wait For Creation
         
+        [Tags]    CROnly
         
         ${response}    PCC.Create Container Registry 
                        ...    nodeID=${server1_id}
@@ -207,8 +208,11 @@ Creation of CR (Using Tenant User, Static mode) : TCP-825
                        Should Be Equal As Strings    ${status}    200
                        
                        
-                       PCC.CR Wait For Creation
+        ${status}      PCC.CR Wait For Creation
                        ...    Name=${CR_NAME}
+                       
+                       Log To Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK      
                        
 ###################################################################################################################################
 Get Host IP used by CR
@@ -580,7 +584,7 @@ Login to PCC using Tenant User after assigning node to ROOT user
                            ...  keywords:
                            ...  PCC.Login
                            ...  PCC.Get Node Id
-                             
+        [Tags]    Tenant                     
         
         ${PCC_CONN}             PCC.Login
                                 ...    url=${PCC_URL}
@@ -605,7 +609,7 @@ Cleanup Auth Profiles after login as Tenant user
                            ...  keywords:
                            ...  PCC.Delete All Auth Profile     
         
-        [Tags]    Login
+        [Tags]    Tenant
         ########  Cleanup Auth Profile   ################################################################################
         
         ${result}    PCC.Delete All Auth Profile
@@ -615,9 +619,12 @@ Cleanup Auth Profiles after login as Tenant user
                      
                      Sleep    1 minutes
                      
-                     PCC.CR Wait For CR updation
+        ${status}    PCC.CR Wait For CR updation
                      ...    Name=${CR_NAME}
                      
+                     Log to Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+                          
 ####################################################################################################################################
 Cleanup Container Registry after login as Tenant user
 ####################################################################################################################################
@@ -647,32 +654,32 @@ Cleanup Container Registry after login as Tenant user
 #                           ...  Check if image exists in local repo
 #                           ...  Delete image from local repo, if exists
 #                           ...  aa.common.LinuxUtils.Is FQDN reachable
-#                           
-#        [Tags]    Negative                    
-#        
-#        ${check_image_status}    Check if image exists in local repo    
+#
+#        [Tags]    Negative
+#
+#        ${check_image_status}    Check if image exists in local repo
 #                                 ...    image_name=${CR_CUSTOM_IMAGE_NAME}
 #                                 ...    hostip=${host_ip}
-#                                 
+#
 #        ${return} =    Run Keyword If    "${check_image_status}" == "OK"
 #                       ...    Delete image from local repo, if exists    image_name=${CR_FQDN}:${CR_REGISTRYPORT}/${CR_CUSTOM_IMAGE_NAME}    hostip=${host_ip}
-#                       
+#
 #                       Log to Console    ${return}
 #                       Should Be Equal As Strings    ${return}    OK
-#                       
+#
 #        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
 #                             ...    FQDN_name=${CR_FQDN}
 #                             ...    hostip=${host_ip}
-#                             
+#
 #                             Log to Console    ${FQDN_reachability_result}
 #                             Should Not Be Equal As Strings    ${FQDN_reachability_result}    OK
-#                             
+#
 #        ${result}    Pull From Registry
-#                     
+#
 #                     ...    image_name=${CR_CUSTOM_IMAGE_NAME}
 #                     ...    registry_url=${CR_FQDN}
 #                     ...    registryPort=${CR_REGISTRYPORT}
 #                     ...    hostip=${host_ip}
-#                     
+#
 #                     Log to Console    ${result}
-#                     Should Not Be Equal As Strings    ${result}    OK                     
+#                     Should Not Be Equal As Strings    ${result}    OK

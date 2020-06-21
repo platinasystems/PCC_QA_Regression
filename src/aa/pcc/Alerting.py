@@ -9,11 +9,11 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
 
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print, cmp_json
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
-
+from aa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*40
 
@@ -87,7 +87,7 @@ class Alerting(AaBase):
         cmd=cmd_strct.format(json.dumps(payload),token,self.setup_ip)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
@@ -119,7 +119,7 @@ class Alerting(AaBase):
         cmd=cmd_strct.format(self.filename,token)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=AaBase()._serialize_response(time.time(),output)['Result']['stdout']
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
@@ -150,7 +150,7 @@ class Alerting(AaBase):
         cmd=cmd_strct.format(token,self.setup_ip)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
@@ -208,7 +208,7 @@ class Alerting(AaBase):
         cmd=cmd_strct.format(json.dumps(payload),token,self.setup_ip,alert_id)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
@@ -242,7 +242,7 @@ class Alerting(AaBase):
         cmd=cmd_strct.format(token,self.setup_ip,alert_id)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
@@ -273,7 +273,7 @@ class Alerting(AaBase):
         cmd=cmd_strct.format(token,self.setup_ip)
         print("Command:-"+str(cmd))
         
-        output=easy.cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(self.setup_ip,self.user,self.password,cmd)
         serialise_output=json.loads(AaBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))

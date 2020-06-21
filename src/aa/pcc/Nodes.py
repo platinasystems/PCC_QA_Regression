@@ -6,11 +6,13 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+
+PCC_TIMEOUT = 60*5  # 5 min
 
 class Nodes(AaBase):
     """ 
@@ -54,6 +56,7 @@ class Nodes(AaBase):
         self.tenant = None
         self.tenant_id = None
         self.ids = None
+        self.IP = None
         self.host_ips = []
 
         self.interface_name = []
@@ -178,12 +181,8 @@ class Nodes(AaBase):
                   }
         
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        response = pcc.assigning_tenant_to_node(conn, data=node_payload)
+        response = pcc.update_tenant_to_node(conn, data=node_payload)
         return self.get_nodes(conn)
-
-
-
-
 
     ###########################################################################
     @keyword(name="PCC.Delete Node")
@@ -199,8 +198,8 @@ class Nodes(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Delete Node")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.delete_node_by_id(conn, Id=str(self.Id))
-
+        return pcc.delete_node_by_id(conn, str(self.Id))
+    
     ###########################################################################
     @keyword(name="PCC.Wait Until Node Deleted")
     ###########################################################################
@@ -208,33 +207,91 @@ class Nodes(AaBase):
         """
         Wait Until Node Deleted
         [Args]
-            (str) Name
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Node 
         [Returns]
-            (dict) OK
-            (dict) Error if timeout
+            (dict) Wait time 
+            (dict) Error response: If Exception occured
         """
         self._load_kwargs(kwargs)
         banner("PCC.Wait Until Node Deleted")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.wait_until_node_deleted(conn, self.Name)
-
-
+        found = True
+        time_waited = 0
+        timeout = time.time() + PCC_TIMEOUT
+        while found:
+            found = False
+            node_list = pcc.get_nodes(conn)['Result']['Data']
+            for node in node_list:
+                if str(node['Name']) == str(self.Name):
+                    found = True
+            if time.time() > timeout:
+                return {"Error": "Timeout"}
+            if not found:
+                time.sleep(5)
+                time_waited += 5
+        return "OK"
+        
     ###########################################################################
     @keyword(name="PCC.Wait Until Node Ready")
-    ###########################################################################
+    ###########################################################################    
     def wait_until_node_ready(self, *args, **kwargs):
         """
         Wait Until Node Ready
         [Args]
-            (str) Name
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Node 
         [Returns]
-            (dict) OK
-            (dict) Error if timeout
+            (dict) Wait Time 
+            (dict) Error response: If Exception occured
         """
         self._load_kwargs(kwargs)
         banner("PCC.Wait Until Node Ready")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return easy.wait_until_node_ready(conn, self.Name)
+        ready = False
+        time_waited = 0
+        PCC_TIMEOUT = 60*30 #30 minutes
+        timeout = time.time() + PCC_TIMEOUT
+        while not ready:
+            ready = False
+            node_list = pcc.get_nodes(conn)['Result']['Data']
+            for node in node_list:
+                if str(node['Name']) == str(self.Name):
+                    if node['provisionStatus'] == 'Ready':
+                        ready = True
+            if time.time() > timeout:
+                return {"Error": "Timeout"}
+            if not ready:
+                time.sleep(5)
+                time_waited += 5
+        return "OK"
+        
+    ###########################################################################
+    @keyword(name="PCC.Check node exists")
+    ###########################################################################
+    def check_node_exists(self, *args, **kwargs):
+        """
+        Check if node already exists and provision status is Ready
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) IP: IP of the Node
+        [Returns]
+            (bool) True: if IP matches the node host in the list of nodes
+                else False: if doesnot exists
+            (dict) Error response: If Exception occured
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Check node exists")
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        node_list = pcc.get_nodes(conn)['Result']['Data']
+        try:
+            for node in node_list:
+                if (str(node['Host']) == str(self.IP)) and (str(node['provisionStatus']) == 'Ready'):
+                    return True
+            return False
+        except Exception as e:
+            return {"Error": str(e)}
+
     ###########################################################################
     @keyword(name="PCC.Update Node")
     ###########################################################################
@@ -308,7 +365,7 @@ class Nodes(AaBase):
             wait_for_node_addition_status = []
             node_not_exists=[]
             for hostip in ast.literal_eval(self.host_ips):
-                exists = easy.check_node_exists(conn, IP=hostip)
+                exists = self.check_node_exists(IP=hostip)
                 if exists == False:
                     node_not_exists.append(hostip)
                     

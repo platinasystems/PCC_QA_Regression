@@ -9,11 +9,12 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccEasyApi as easy
+from aa.common import PccUtility as easy
 
 from aa.common.Utils import banner, trace, pretty_print, cmp_json
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*5
 
@@ -39,7 +40,7 @@ class Topology(AaBase):
             invader_interfaces = []
             for hostip in ast.literal_eval(self.invaders_hostip):
                 cmd= "sudo lldpcli show neighbors |grep xeth"
-                command_execution = easy.cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username,
+                command_execution = cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username,
                                               linux_password=self.password)
                 
                 serialised_command_execution = self._serialize_response(time.time(), command_execution)
@@ -70,7 +71,7 @@ class Topology(AaBase):
             server_interfaces = []
             for hostip in ast.literal_eval(self.servers_hostip):
                 cmd= "sudo lldpcli show neighbors |grep xeth"
-                command_execution = easy.cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username,
+                command_execution = cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username,
                                               linux_password=self.password)
                 
                 serialised_command_execution = self._serialize_response(time.time(), command_execution)
