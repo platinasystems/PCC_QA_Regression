@@ -80,3 +80,12 @@ BE Ceph Cleanup
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
+
+###################################################################################################################################
+BE Ceph Cleanup Tables
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Cleanup BE Tables
+                               ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}

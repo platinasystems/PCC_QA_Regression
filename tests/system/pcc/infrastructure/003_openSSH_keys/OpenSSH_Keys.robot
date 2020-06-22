@@ -19,24 +19,6 @@ Login to PCC
                          Load OpenSSH_Keys Data    ${pcc_setup}
                          
 ###################################################################################################################################
-Add Private Key
-###################################################################################################################################
-                
-        
-        [Documentation]    *Add Private Key* test
-        
-        ${response}    PCC.Add OpenSSH Key
-                       ...  Alias=${PRIVATE_KEY_ALIAS}
-                       ...  Description=${PRIVATE_KEY_DESCRIPTION}
-                       ...  Filename=${PRIVATE_KEY}
-                       ...  Type=${PRIVATE_TYPE} 
-  
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    statusCodeValue
-                       Should Be Equal As Strings    ${status}    200
-                       
-###################################################################################################################################
 Add Public Key
 ###################################################################################################################################
                 
@@ -47,7 +29,6 @@ Add Public Key
                        ...  Alias=${PUBLIC_KEY_ALIAS}
                        ...  Description=${PUBLIC_KEY_DESCRIPTION}
                        ...  Filename=${PUBLIC_KEY}
-                       ...  Type=${PUBLIC_TYPE} 
   
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -61,12 +42,6 @@ Delete Key
         
         [Documentation]    *Delete Key* test
         
-        ${response}    PCC.Delete OpenSSH Key
-                       ...  Alias=${PRIVATE_KEY_ALIAS}
-                       
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
                        
         ${response}    PCC.Delete OpenSSH Key
                        ...  Alias=${PUBLIC_KEY_ALIAS}

@@ -305,7 +305,7 @@ class NodeRoles(AaBase):
             list_node_roles = []
             
             for node_role in get_response_data(response):
-                if node_role['name']== "LLDP" or node_role['name']== "MaaS":
+                if node_role['name']== "LLDP" or node_role['name']== "MaaS" or node_role['name']== "Default" or node_role['name']== "Baremetal Management Node" or node_role['name']== "Cluster Head":
                     continue
                 list_node_roles.append(node_role['name'])
             print("list of node roles: {}".format(list_node_roles))

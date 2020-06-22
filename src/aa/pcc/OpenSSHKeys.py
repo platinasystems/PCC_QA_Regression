@@ -21,8 +21,9 @@ class OpenSSHKeys(AaBase):
         self.Filename = None
         self.Description = None
         self.Type = None
-        super().__init__()
-
+        super().__init__()  
+        
+        
     ###########################################################################
     @keyword(name="PCC.Add OpenSSH Key")
     ###########################################################################
@@ -42,9 +43,12 @@ class OpenSSHKeys(AaBase):
         print("Kwargs are: {}".format(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         filename_path = os.path.join("tests/test-data", self.Filename)
+        multipart_data = {'file': open(filename_path, 'rb'), 'description':(None, self.Description)}
         
         print("Filename_path is {}".format(filename_path))
-        return pcc.add_keys(conn, type = self.Type, alias = self.Alias, description=self.Description, filename_path = filename_path)
+        return pcc.add_keys(conn, alias = self.Alias, description=self.Description,multipart_data=multipart_data )
+        
+            
 
     ###########################################################################
     @keyword(name="PCC.Delete OpenSSH Key")

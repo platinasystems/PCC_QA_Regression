@@ -76,6 +76,8 @@ Edit FQDN : TCP-584
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -110,6 +112,8 @@ Edit Secret key base : TCP-584
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -142,6 +146,9 @@ Edit Portus Password : TCP-834
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
+                       
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}

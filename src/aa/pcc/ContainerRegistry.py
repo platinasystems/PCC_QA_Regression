@@ -40,6 +40,7 @@ class ContainerRegistry(AaBase):
         self.storageLocation = None
         self.registryCertId = None
         self.registryKeyId = None
+        self.storageType = None
         
         super().__init__()
 
@@ -78,7 +79,9 @@ class ContainerRegistry(AaBase):
                 "port":int(self.port),
                 "registryPort":int(self.registryPort),
                 "adminState":str(self.adminState),
-                "authenticationProfileId":self.authenticationProfileId
+                "authenticationProfileId":self.authenticationProfileId,
+                "storageType":self.storageType
+                
                 }
         else:
             payload = {
@@ -94,7 +97,8 @@ class ContainerRegistry(AaBase):
                 "port":int(self.port),
                 "registryPort":int(self.registryPort),
                 "adminState":str(self.adminState),
-                "authenticationProfileId":self.authenticationProfileId
+                "authenticationProfileId":self.authenticationProfileId,
+                "storageType":self.storageType
                 }
         
         print("Payload is :{}".format(payload))
@@ -326,7 +330,8 @@ class ContainerRegistry(AaBase):
                 "databasePassword":str(self.databasePassword),
                 "port":int(self.port),
                 "registryPort":int(self.registryPort),
-                "adminState":str(self.adminState)
+                "adminState":str(self.adminState),
+                "storageType":self.storageType
                 }
         
         banner("Payload: {}".format(payload))

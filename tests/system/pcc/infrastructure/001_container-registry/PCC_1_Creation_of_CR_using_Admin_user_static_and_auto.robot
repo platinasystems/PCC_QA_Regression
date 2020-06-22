@@ -78,6 +78,8 @@ Create a Container Registry(using Static mode) : TCP-825
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=named
+                       ...    storageLocation=testlocationstatic
 
 
                        Log To Console    ${response}
@@ -98,7 +100,8 @@ Create a Container Registry(using Auto mode) : TCP-578
         [Documentation]    *Create CR* test
                            ...  keywords:
                            ...  PCC.Create Container Registry
-
+        
+        
         ${response}    PCC.Create Container Registry
 
                        ...    Name=${CR_NAME}
@@ -110,6 +113,8 @@ Create a Container Registry(using Auto mode) : TCP-578
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
 
 
                        Log To Console    ${response}

@@ -30,10 +30,11 @@ Library                         aa.pcc.Interfaces
 Library                         aa.pcc.Alerting
 Library                         aa.pcc.Topology
 Library                         aa.pcc.SAS_Enclosure
+Library                         aa.pcc.NetworkManager
+Library                         aa.pcc.ErasureCoded
+Library                         aa.pcc.ErasureCodedPool
+Library                         aa.pcc.ApplicationCredentialManager
 Library                         Collections
-
-
-
 
 *** Keywords ***
 ###################################################################################################################################
@@ -52,7 +53,7 @@ Login To PCC
                                 # PCC.Login is defined in Login.py   it takes PCC_URL from defined Robot variable
         
         ${PCC_CONN}             PCC.Login               url=${PCC_URL}   username=${PCC_USERNAME}    password=${PCC_PASSWORD}
-                                Log To Console    ${PCC_CONN}
+                                
                                 # Log To Console          CH-NAME=${CLUSTERHEAD_1_NAME}
                                 # Using SESSION and TOKEN for all subsequent REST API calls
                                 
@@ -304,7 +305,8 @@ Load Server 2 Test Data
                                          Set Suite Variable    ${SERVER_2_MANAGED_BY_PCC}
     
             ${SERVER_2_SSHKEYS}        Evaluate    $pcc_server_dict.get("ssh_keys", None)
-                                        Set Suite Variable    ${SERVER_2_SSHKEYS}                                  
+                                        Set Suite Variable    ${SERVER_2_SSHKEYS}
+                                        
 
 ###################################################################################################################################
 Load Server 3 Test Data
@@ -356,7 +358,8 @@ Load Server 3 Test Data
                                         Set Suite Variable    ${SERVER_3_MANAGED_BY_PCC}
     
             ${SERVER_3_SSHKEYS}         Evaluate    $pcc_server_dict.get("ssh_keys", None)
-                                        Set Suite Variable    ${SERVER_3_SSHKEYS}
+                                        Set Suite Variable    ${SERVER_3_SSHKEYS}                                        
+                                                                        
                                   
 ###################################################################################################################################
 Verify List of Nodes
@@ -399,14 +402,8 @@ Load Ceph Cluster Data
         ${CEPH_CLUSTER_TAGS}        Evaluate    $pcc_server_dict.get("tags", None)
                                     Set Suite Variable    ${CEPH_CLUSTER_TAGS}
 
-        ${CEPH_CLUSTER_CONFIG}      Evaluate    $pcc_server_dict.get("config", None)
-                                    Set Suite Variable    ${CEPH_CLUSTER_CONFIG}
-
-        ${CEPH_CLUSTER_CNTLCIDR}    Evaluate    $pcc_server_dict.get("controlCIDR", None)
-                                    Set Suite Variable    ${CEPH_CLUSTER_CNTLCIDR}
-
-        ${CEPH_CLUSTER_IGWPOLICY}      Evaluate    $pcc_server_dict.get("igwPolicy", None)
-                                    Set Suite Variable    ${CEPH_CLUSTER_IGWPOLICY}
+        ${CEPH_CLUSTER_NETWORK}     Evaluate    $pcc_server_dict.get("networkClusterName", None)
+                                    Set Suite Variable    ${CEPH_CLUSTER_NETWORK}
 
 ###################################################################################################################################
 Load Ceph Pool Data
@@ -725,7 +722,9 @@ Load K8s Data
 
         ${K8S_LABEL}                Evaluate    $pcc_server_dict.get("label", None)
                                     Set Suite Variable    ${K8S_LABEL}
-                                    
+
+        ${K8S_CLUSTER_NETWORK}      Evaluate    $pcc_server_dict.get("networkClusterName", None)
+                                    Set Suite Variable    ${K8S_CLUSTER_NETWORK}
                                     
 ###################################################################################################################################
 Load OS-Deployment Data
@@ -1102,3 +1101,27 @@ Load SAS Enclosure Data
                             
         ${SUB-ENCLOSURE_NAME}   Evaluate    $pcc_server_dict.get("sub-enclosure_name", None)
                                 Set Suite Variable    ${SUB-ENCLOSURE_NAME}
+
+###################################################################################################################################
+Load Network Manager Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Network Manager Data*
+                                    Log To Console      **** Load Network Manager Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json   network_manager
+
+
+        ${NETWORK_MANAGER_NAME}    Evaluate    $pcc_server_dict.get("name", None)
+                                   Set Suite Variable    ${NETWORK_MANAGER_NAME}
+
+        ${NETWORK_MANAGER_NODES}    Evaluate    $pcc_server_dict.get("nodes", None)
+                                    Set Suite Variable    ${NETWORK_MANAGER_NODES}
+
+        ${NETWORK_MANAGER_NODES_IP}    Evaluate    $pcc_server_dict.get("nodes_ip", None)
+                                       Set Suite Variable    ${NETWORK_MANAGER_NODES_IP}
+
+        ${NETWORK_MANAGER_CNTLCIDR}    Evaluate    $pcc_server_dict.get("controlCIDR", None)
+                                       Set Suite Variable    ${NETWORK_MANAGER_CNTLCIDR}
+
+        ${NETWORK_MANAGER_IGWPOLICY}    Evaluate    $pcc_server_dict.get("igwPolicy", None)
+                                        Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY}

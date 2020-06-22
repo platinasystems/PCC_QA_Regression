@@ -13,11 +13,31 @@ Login
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
                                     Load Ceph Fs Data    ${pcc_setup}
+                                    Load Network Manager Data    ${pcc_setup}
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
 
+###################################################################################################################################
+Network Manager Creation
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation*
+                               ...  keywords:
+                               ...  PCC.Network Manager Create
 
+        ${network_id}               PCC.Get Network Manager Id
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Pass Execution If    ${network_id} is not ${None}    Network is already there
+
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
 ###################################################################################################################################
 Ceph Cluster Creation
 ###################################################################################################################################
@@ -36,9 +56,7 @@ Ceph Cluster Creation
                                ...  name=${CEPH_CLUSTER_NAME}
                                ...  nodes=${CEPH_CLUSTER_NODES}
                                ...  tags=${CEPH_CLUSTER_TAGS}
-                               ...  config=${CEPH_CLUSTER_CONFIG}
-                               ...  controlCIDR=${CEPH_CLUSTER_CNTLCIDR}
-                               ...  igwPolicy=${CEPH_CLUSTER_IGWPOLICY}
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
@@ -49,6 +67,7 @@ Ceph Cluster Verification PCC
     [Documentation]                 *Verifying Ceph cluster*
                                ...  keywords:
                                ...  PCC.Ceph Wait Until Cluster Ready
+
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
 
@@ -60,6 +79,7 @@ Ceph Cluster Verification Back End
     [Documentation]                 *Verifying Ceph cluster BE*
                                ...  keywords:
                                ...  PCC.Ceph Verify BE
+
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
@@ -527,6 +547,31 @@ Ceph Pool Delete
         ${status}                   PCC.Ceph Wait Until Pool Deleted
                                ...  id=${id}
                                     Should Be Equal     ${status}  OK
+
+###################################################################################################################################
+Ceph Cluster Update - Add Invader
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
+
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
 Ceph Cluster Delete
@@ -557,3 +602,22 @@ Ceph Cluster Delete
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
+
+###################################################################################################################################
+Network Manager Delete and Verify PCC
+###################################################################################################################################
+    [Documentation]                 *Network Manager Verification PCC*
+                               ...  keywords:
+                               ...  PCC.Network Manager Delete
+                               ...  PCC.Wait Until Network Manager Ready
+
+        ${response}                 PCC.Network Manager Delete
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Deleted
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK

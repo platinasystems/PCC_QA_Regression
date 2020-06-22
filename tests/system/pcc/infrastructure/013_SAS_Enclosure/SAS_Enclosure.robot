@@ -20,26 +20,28 @@ Login
 
         
                                     
-###################################################################################################################################
-Get SAS Enclosures
-###################################################################################################################################
-    [Documentation]                 *Get SAS Enclosures*
-                                     ...  Keywords:
-                                     ...  PCC.Get SAS Enclosures
-    
-
-        ${response}                 PCC.Get SAS Enclosures
-                               
-                                    ...  auth_data=${PCC_CONN}
-                                    ...  setup_ip=${PCC_HOST_IP}
-                                    ...  user=${PCC_LINUX_USER}
-                                    ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Log To Console    ${response}
-                                    ${status}    Get From Dictionary    ${response}    status
-                                    ${message}    Get From Dictionary    ${response}    message
-                                    Log to Console    ${message}
-                                    Should Be Equal As Strings    ${status}    200
+####################################################################################################################################
+#Get SAS Enclosures
+####################################################################################################################################
+#    [Documentation]                 *Get SAS Enclosures*
+#                                     ...  Keywords:
+#                                     ...  PCC.Get SAS Enclosures
+#    
+#
+#        ${response}                 PCC.Get SAS Enclosures
+#                               
+#                                    ...  auth_data=${PCC_CONN}
+#                                    ...  setup_ip=${PCC_HOST_IP}
+#                                    ...  user=${PCC_LINUX_USER}
+#                                    ...  password=${PCC_LINUX_PASSWORD}
+#                             
+#                                    Log To Console    ${response}
+#                                    ${status}    Get From Dictionary    ${response}    status
+#                                    ${message}    Get From Dictionary    ${response}    message
+#                                    Log to Console    ${message}
+#                                    Should Be Equal As Strings    ${status}    200
+#                                    ${data}    Get From Dictionary    ${response}    Data
+#                                    Should Not Be Equal As Strings    None
                                     
 ####################################################################################################################################
 #Edit SAS Enclosure

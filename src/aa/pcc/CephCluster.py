@@ -272,6 +272,17 @@ class CephCluster(AaBase):
         return
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Cleanup BE Tables")
+    ###########################################################################
+    def ceph_cleanup_be_tables(self,**kwargs):
+        self._load_kwargs(kwargs)
+        cmd='sudo iptables -t nat -F && iptables -t filter -F && iptables -t mangle -F && > /etc/frr/frr.conf && > /etc/frr/ospfd.conf && > /etc/frr/zebra.conf && sudo systemctl restart frr && vtysh -c "show run" && ip link del ceph0 && ip link del lo0 && ip link del control0'
+        for ip in self.nodes_ip:
+            data=cli_run(ip,self.user,self.password,cmd)
+        time.sleep(30)
+        return
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Delete All Cluster")
     ###########################################################################
     def delete_all_ceph_cluster(self, *args, **kwargs):

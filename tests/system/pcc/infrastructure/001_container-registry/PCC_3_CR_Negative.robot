@@ -65,6 +65,8 @@ Name validation on CR where name is null : TCP-841
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -95,6 +97,8 @@ Name validation on CR where name is invalid : TCP-827
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -124,6 +128,8 @@ FQDN validation on CR where FQDN is null : TCP-840
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -153,6 +159,8 @@ FQDN validation on CR where FQDN is invalid : TCP-828
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -183,6 +191,8 @@ Portus Password validation on CR where Portus Password is null : TCP-842
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -216,6 +226,8 @@ Secret key Base validation on CR where Secret key Base is null : TCP-831
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -245,6 +257,7 @@ StorageLocation validation on CR where Storage Location is invalid
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageLocation=testlocation
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -275,6 +288,8 @@ Creating two Container Registry on same server should be rejected
                        ...    port=${CR_PORT}
                        ...    registryPort=${CR_REGISTRYPORT}
                        ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
                        
 
                        Log To Console    ${response}
