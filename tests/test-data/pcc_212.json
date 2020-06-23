@@ -183,15 +183,22 @@
             "private_key":"Temp_private.ppk"
         },
         
+    "network_manager":
+        {
+            "name":"network-pvt",
+            "nodes":["sv125","sv124","i43"],
+            "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
+            "controlCIDR":"10.0.202.0/24",
+            "igwPolicy":"default"
+        },
+        
     "ceph_cluster":
         {
             "name":"ceph-pvt",
             "nodes":["sv125","sv124","i43"],
             "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
             "tags":["ROTATIONAL","SOLID_STATE"],
-            "config":{"cluster_network":"192.0.2.96/27","public_network":"192.0.2.96/27"},
-            "controlCIDR":"",
-            "igwPolicy":"default"
+            "networkClusterName":"network-pvt"
         },
   
     "ceph_pool":
@@ -227,8 +234,9 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["i43","i-42","sv125"],
+            "nodes":["i43","sv124","sv125"],
             "pools":[],
+            "networkClusterName":"network-pvt",
             "appName":"nginxapp",
             "appNamespace":"nginxapp",
             "gitUrl":"https://github.com/platinasystems/devops",
@@ -240,9 +248,9 @@
     "os_deployment":
         {
             "image1_name":"centos76",            
-            "image2_name":"ubuntu-bionic",       
-            "image3_name":"ubuntu-disco",  
-            "locale":"en-US",     
+            "image2_name":"ubuntu-disco",       
+            "image3_name":"ubuntu-bionic",
+            "locale":"en-US",       
             "time_zone":"PDT",
             "admin_user":"admin",
             "ssh_keys":"KC",
