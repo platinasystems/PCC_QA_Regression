@@ -458,7 +458,7 @@ def get_network_clusters_id_by_name(conn:dict, Name:str)->int:
         (dict) Error response: If Exception occured
     """
     try:
-        list_of_network_manager = pcc.get_network_manager(conn)['Result']['Data']
+        list_of_network_manager = pcc.get_network_clusters(conn)['Result']['Data']
         for networks in list_of_network_manager:
             if str(networks['name']) == str(Name):
                 return networks['id']
