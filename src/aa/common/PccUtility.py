@@ -444,3 +444,24 @@ def get_erasure_ceph_pool_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)}
+
+## Network Manager
+def get_network_clusters_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get Id of Network Manager with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Network Manager
+    [Returns]
+        (int) Id: Id of the matching Nework Manager, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_network_manager = pcc.get_network_manager(conn)['Result']['Data']
+        for networks in list_of_network_manager:
+            if str(networks['name']) == str(Name):
+                return networks['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}

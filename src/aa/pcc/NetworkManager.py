@@ -37,7 +37,7 @@ class NetworkManager(AaBase):
     ###########################################################################
     @keyword(name="PCC.Get Network Manager Id")
     ###########################################################################
-    def get_network_manager_id(self,*args,**kwargs):
+    def get_network_clusters_id(self,*args,**kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Get Network Manager Id") 
         try:
@@ -45,7 +45,7 @@ class NetworkManager(AaBase):
         except Exception as e:
             raise e
 
-        network_id = easy.get_network_manager_id_by_name(conn,self.name)
+        network_id = easy.get_network_clusters_id_by_name(conn,self.name)
         return network_id
 
     ###########################################################################
@@ -72,7 +72,7 @@ class NetworkManager(AaBase):
         }
 
         print("Payload:-"+str(payload))
-        return pcc.add_network_manager(conn, payload)
+        return pcc.add_network_cluster(conn, payload)
 
     ###########################################################################
     @keyword(name="PCC.Network Manager Update")
@@ -106,12 +106,12 @@ class NetworkManager(AaBase):
             print("[update_cluster] EXCEPTION: %s" % str(e))
             raise Exception(e)
 
-        return pcc.modify_network_manager(conn, payload)
+        return pcc.modify_network_cluster(conn, payload)
     
     ###########################################################################
     @keyword(name="PCC.Network Manager Delete")
     ###########################################################################
-    def delete_network_manager(self, *args, **kwargs):
+    def delete_network_cluster_by_id(self, *args, **kwargs):
         banner("PCC.Network Manager Delete")
         self._load_kwargs(kwargs)
 
@@ -123,9 +123,9 @@ class NetworkManager(AaBase):
         except Exception as e:
             raise e
             
-        self.id=easy.get_network_manager_id_by_name(conn,self.name)
+        self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
-        return pcc.delete_network_manager_by_id(conn, str(self.id))
+        return pcc.delete_network_cluster_by_id(conn, str(self.id))
 
     ###########################################################################
     @keyword(name="PCC.Wait Until Network Manager Ready")
@@ -145,7 +145,7 @@ class NetworkManager(AaBase):
         timeout = time.time() + PCCSERVER_TIMEOUT
   
         while network_ready == False:
-            response = pcc.get_network_manager(conn)
+            response = pcc.get_network_clusters(conn)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print("Response To Look :-"+str(data))
@@ -178,11 +178,11 @@ class NetworkManager(AaBase):
         Id_found_in_list_of_networks = True
         timeout = time.time() + PCCSERVER_TIMEOUT
 
-        self.id=easy.get_network_manager_id_by_name(conn,self.name)
+        self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
         while Id_found_in_list_of_networks == True:
             Id_found_in_list_of_networks = False
-            response = pcc.get_network_manager(conn)
+            response = pcc.get_network_clusters(conn)
             for data in get_response_data(response):
                 if str(data['id']) == str(self.id):
                     Id_found_in_list_of_networks = True
@@ -209,14 +209,14 @@ class NetworkManager(AaBase):
         except Exception as e:
             raise e
         
-        response = pcc.get_network_manager(conn)
+        response = pcc.get_network_clusters(conn)
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
             print("Network Manager {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
-            del_response=pcc.delete_network_manager_by_id(conn, str(self.id))
+            del_response=pcc.delete_network_cluster_by_id(conn, str(self.id))
             if del_response['Result']['status']==200:
-                del_check=self.wait_until_cluster_deleted()
+                del_check=self.wait_until_network_manager_deleted()
                 if del_check=="OK":
                     print("Network Manager {} is deleted sucessfully".format(data['name']))
                     return "OK"

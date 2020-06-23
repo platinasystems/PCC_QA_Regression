@@ -18,6 +18,7 @@ Login
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
                                     Load K8s Data    ${pcc_setup}
+                                    Load Network Manager Data    ${pcc_setup}
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
@@ -89,3 +90,13 @@ BE Ceph Cleanup Tables
                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}"]
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
+
+###################################################################################################################################
+Network Manager Delete
+###################################################################################################################################
+    [Documentation]                 *Delete Network Manager if it exist*
+                               ...  keywords:
+                               ...  PCC.Network Manager Delete All
+   
+        ${status}                   PCC.Network Manager Delete All
+                                    Should Be Equal     ${status}  OK
