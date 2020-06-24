@@ -30,7 +30,7 @@ Adding Mass To Invaders
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  roles=["maas"]
+                               ...  roles=["Baremetal Management Node"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -54,7 +54,7 @@ Adding LLDP To Invaders
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  roles=["lldp"]
+                               ...  roles=["Default"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -78,7 +78,7 @@ Adding Mass+LLDP To Invaders
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  roles=["maas","lldp"]
+                               ...  roles=["Baremetal Management Node","Default"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -102,7 +102,7 @@ Adding LLDP To Server
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${SERVER_2_NAME}"]
-                               ...  roles=["lldp"]
+                               ...  roles=["Default"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -121,7 +121,7 @@ Adding Maas To Server (Negative)
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${SERVER_1_NAME}"]
-                               ...  roles=["mass"]
+                               ...  roles=["Baremetal Management Node"]
 
                                     Should Not Be Equal As Strings      ${response}  OK
 
@@ -168,7 +168,7 @@ Deleting Mass+LLDP From Nodes
                                
         ${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}","${SERVER_2_NAME}"]
-                               ...  roles=["lldp","maas"]
+                               ...  roles=["Default","Baremetal Management Node"]
 
                                     Should Be Equal As Strings      ${response}  OK
 

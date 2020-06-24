@@ -12,7 +12,10 @@ Login
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
-                                    Load Ceph Fs Data    ${pcc_setup}
+                                    Load Clusterhead 1 Test Data    ${pcc_setup}
+                                    Load Clusterhead 2 Test Data    ${pcc_setup}
+                                    Load Server 1 Test Data    ${pcc_setup}
+                                    Load Server 2 Test Data    ${pcc_setup} 
                                     Load Network Manager Data    ${pcc_setup}
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}

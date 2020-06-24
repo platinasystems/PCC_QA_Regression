@@ -30,9 +30,8 @@ class CephCluster(AaBase):
         self.name=None
         self.nodes=[]
         self.tags=[]
-        self.config=dict()
-        self.controlCIDR=None
-        self.igwPolicy=""
+        self.networkClusterId=None
+        self.networkClusterName=None
         self.nodes_ip=[]
         self.user=""
         self.password=""
@@ -70,6 +69,7 @@ class CephCluster(AaBase):
     def add_ceph_cluster(self, *args, **kwargs):
         banner("PCC.Ceph Create Cluster")
         self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         tmp_node=[]
@@ -82,16 +82,14 @@ class CephCluster(AaBase):
         
         if self.tags:
             self.tags=eval(str(self.tags))
-        if self.config:
-            self.config=eval(str(self.config))
+
+        self.networkClusterId=easy.get_network_clusters_id_by_name(conn,self.networkClusterName)
 
         payload = {
             "name": self.name,
             "nodes": self.nodes,
             "tags": self.tags,
-            "config": self.config,
-            "controlCIDR":self.controlCIDR,
-            "igwPolicy":self.igwPolicy
+            "networkClusterId": self.networkClusterId
         }
 
         print("Payload:-"+str(payload))
@@ -102,7 +100,7 @@ class CephCluster(AaBase):
     ###########################################################################
     def modify_ceph_clusters(self, *args, **kwargs):
         self._load_kwargs(kwargs)
-
+        print("Kwargs:"+str(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
 
         tmp_node=[]
@@ -117,14 +115,14 @@ class CephCluster(AaBase):
         for data in get_response_data(response):
             if str(data['name']).lower() == str(self.name).lower():
                 payload_nodes=eval(str(data['nodes']))
-                if not self.controlCIDR: 
-                    self.controlCIDR=data['controlCIDR']
                 if not self.tags:
                     self.tags=data['tags']
-                if not self.igwPolicy:
-                    self.igwPolicy=data['igwPolicy']
                 if not self.name:
                     self.name=data['name']
+                if not self.networkClusterName:
+                    self.networkClusterId=data['networkClusterId']
+                else:
+                    self.networkClusterId=easy.get_network_clusters_id_by_name(conn,self.networkClusterName)
 
         for id in tmp_node:
             count=0
@@ -137,8 +135,7 @@ class CephCluster(AaBase):
         
         if self.tags:
             self.tags=eval(str(self.tags))
-        if self.config:
-            self.config=eval(str(self.config))
+
        
         try:
             payload = {
@@ -146,9 +143,7 @@ class CephCluster(AaBase):
             "name": self.name,
             "nodes": self.nodes,
             "tags": self.tags,
-            "config": self.config,
-            "controlCIDR":self.controlCIDR,
-            "igwPolicy":self.igwPolicy
+            "networkClusterId": self.networkClusterId
              }
 
             print("Payload:-"+str(payload))
@@ -192,20 +187,24 @@ class CephCluster(AaBase):
 
         cluster_ready = False
         timeout = time.time() + PCCSERVER_TIMEOUT
+        capture_data=""
   
         while cluster_ready == False:
             response = pcc.get_ceph_clusters(conn)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
-                    print("Response To Look :-"+str(data))
+                    capture_data=data
                     if data['progressPercentage'] == 100:
+                        print("Response To Look :-"+str(data))
                         cluster_ready = True
                     elif re.search("failed",str(data['deploy_status'])):
+                        print("Response:-"+str(data))
                         return "Error"
             if time.time() > timeout:
+                print("Response:-"+str(capture_data))
                 raise Exception("[PCC.Ceph Wait Until Cluster Ready] Timeout")
             trace("  Waiting until cluster: %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
-            time.sleep(5)
+            time.sleep(5)       
         return "OK"
 
 
@@ -232,12 +231,14 @@ class CephCluster(AaBase):
             response = pcc.get_ceph_clusters(conn)
             for data in get_response_data(response):
                 if str(data['id']) == str(self.id):
+                    print("Response:-"+str(data))
                     Id_found_in_list_of_clusters = True
                 elif re.search("failed",str(data['deploy_status'])):
+                    print("Response:-"+str(data))
                     return "Error"            
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Cluster Deleted] Timeout")
-            if Id_found_in_list_of_clusters:
+            if Id_found_in_list_of_clusters:             
                 trace("  Waiting until cluster: %s is deleted. Timeout in %.1f seconds." % 
                        (data['name'], timeout-time.time()))
                 time.sleep(5)
@@ -251,10 +252,10 @@ class CephCluster(AaBase):
         banner("PCC.Ceph Verify BE")
         self._load_kwargs(kwargs)
 
-        for ip in self.nodes_ip:
+        for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,ceph_be_cmd)
             print("Output:"+str(output))
-            if re.search("HEALTH_OK",str(output)):
+            if re.search("HEALTH_OK",str(output)) or re.search("HEALTH_WARN",str(output)):
                 continue
             else:
                 return None
@@ -281,7 +282,7 @@ class CephCluster(AaBase):
             data=cli_run(ip,self.user,self.password,cmd)
         time.sleep(30)
         return
-
+        
     ###########################################################################
     @keyword(name="PCC.Ceph Delete All Cluster")
     ###########################################################################

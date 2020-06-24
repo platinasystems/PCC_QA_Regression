@@ -12,10 +12,10 @@ from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
-
-PCCSERVER_TIMEOUT = 60*30
-PCCSERVER_TIMEOUT_UPGRADE = 60*100
+PCCSERVER_TIMEOUT = 60*40
+PCCSERVER_TIMEOUT_UPGRADE = 60*60
 
 
 class Kubernetes(AaBase):
@@ -28,6 +28,8 @@ class Kubernetes(AaBase):
         self.nodes = []
         self.pools = []
         self.cluster_id = None
+        self.networkClusterId=None
+        self.networkClusterName=None
         self.DeployStatus = None
         self.appName = None
         self.appIds = None
@@ -40,6 +42,9 @@ class Kubernetes(AaBase):
         self.toAdd = []
         self.toRemove = []
         self.invader_id = None
+        self.nodes_ip= None
+        self.user="pcc"
+        self.password="cals0ft"
     
         super().__init__()
 
@@ -64,13 +69,18 @@ class Kubernetes(AaBase):
                  tmp_pool.append(easy.get_ceph_pool_id_by_name(conn,pool))
                  
         self.pools=tmp_pool
+        
+        if self.networkClusterName:
+            self.networkClusterId=easy.get_network_clusters_id_by_name(conn,self.networkClusterName)
+        
         payload = {
             "id": int(self.id),
             "k8sVersion": self.k8sVersion,
             "cniPlugin": self.cniPlugin,  
             "name": self.name,
             "nodes": self.nodes,
-            "pools": self.pools
+            "pools": self.pools,
+            "networkClusterId": self.networkClusterId
         }
        
         print("paylod:-"+str(payload)) 
@@ -165,22 +175,27 @@ class Kubernetes(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         cluster_ready = False
         timeout = time.time() + PCCSERVER_TIMEOUT
+        capture_data=""
 
         time.sleep(60)
         while cluster_ready == False:
             response = pcc.get_kubernetes(conn)
-            print("Response:-"+str(response))
-            for data in get_response_data(response):
+            for data in get_response_data(response):            
                 if str(data['name']).lower() == str(self.name).lower():
+                    capture_data=data
                     if "progressPercentage" in data['latestAnsibleJob'].keys():
                         trace("  Waiting until cluster: %s is Ready, currently:  %s" % (data['ID'], data['latestAnsibleJob']['progressPercentage']))
                         if int(data['latestAnsibleJob']['progressPercentage'])==100:
+                            print("Response:-"+str(data))
                             cluster_ready = True
                     elif str(data['deployStatus']).lower() == 'installed' or str(data['deployStatus']).lower() == 'update completed':
+                        print("Response:-"+str(data))
                         cluster_ready = True
                     elif re.search("failed",str(data['deployStatus'])):
+                        print("Response:-"+str(data))
                         return "Error"
             if time.time() > timeout:
+                print("Response:-"+str(capture_data))
                 raise Exception("[PCC.Wait Until Cluster is Ready] Timeout")
             trace("  Waiting until cluster: %s is Ready, currently:     %s" % (data['ID'], data['deployStatus']))
             time.sleep(5)
@@ -194,7 +209,7 @@ class Kubernetes(AaBase):
         self._load_kwargs(kwargs)
 
         if self.cluster_id == None:
-            return {"Error": "[PCC.Ceph Delete Cluster]: Id of the cluster is not specified."}
+            return {"Error": "[PCC.K8s Wait Until Cluster Deleted]: Id of the cluster is not specified."}
 
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -209,10 +224,11 @@ class Kubernetes(AaBase):
             Id_found_in_list_of_clusters = False
             response = pcc.get_kubernetes(conn)
             for data in get_response_data(response):
-                print("K8s Delete Wait Response:"+str(data))
                 if str(data['ID']) == str(self.cluster_id):
+                    print("K8s Delete Response:"+str(data))
                     Id_found_in_list_of_clusters = True
                 elif re.search("failed",str(data['deployStatus'])):
+                    print("K8s Delete Response:"+str(data))
                     return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.K8s Wait Until Cluster Deleted] Timeout")
@@ -236,10 +252,14 @@ class Kubernetes(AaBase):
             for pool in eval(str(self.pools)):
                  tmp_pool.append(easy.get_ceph_pool_id_by_name(conn,pool))
         self.pools=tmp_pool
+
+        if self.networkClusterName:
+            self.networkClusterId=easy.get_network_clusters_id_by_name(conn,self.networkClusterName)
                          
         payload = {
             "k8sVersion": self.k8sVersion,
-            "pools": self.pools
+            "pools": self.pools,
+            "networkClusterId": self.networkClusterId
         }
 
         if self.cluster_id == None:
@@ -318,3 +338,22 @@ class Kubernetes(AaBase):
         print("Payload:-"+str(payload))
                 
         return pcc.modify_kubernetes_by_id(conn,str(self.cluster_id),payload)
+
+    ###########################################################################
+    @keyword(name="PCC.K8s Verify BE")
+    ###########################################################################
+    def verify_k8s_be(self, *args, **kwargs):
+        cmd="sudo kubectl get nodes"
+        banner("PCC.K8s Verify BE")
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
+
+        for ip in eval(str(self.nodes_ip)):
+            output=cli_run(cmd=cmd, host_ip=ip, linux_user=self.user,linux_password=self.password)
+            print("Output:"+str(output))
+            if re.search("Ready",str(output)):
+                continue
+            else:
+                print("Could not verify K8s on "+str(ip))
+                return "Error"
+        return "OK"

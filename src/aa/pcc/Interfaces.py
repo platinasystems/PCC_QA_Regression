@@ -13,6 +13,7 @@ from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print, cmp_json
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*5
 
@@ -34,6 +35,9 @@ class Interfaces(AaBase):
         self.adminstatus=None
         self.managedbypcc=None
         self.cleanUp=None
+        self.host_ip=None
+        self.user="pcc"
+        self.password="Cals0ft"
         super().__init__()
 
     ###########################################################################
@@ -118,4 +122,44 @@ class Interfaces(AaBase):
                 raise Exception("[PCC.Wait Until Interface Ready] Timeout")
             trace("  Waiting until Interface : is Ready .....")
             time.sleep(5)
+        return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Set Interface Up")
+    ###########################################################################
+    def set_interface_up(self, *args, **kwargs):
+        banner("PCC.Verify Default IgwPolicy BE")
+        self._load_kwargs(kwargs)
+        
+        cmd="sudo ip link set up {}".format(self.interface_name)
+        interface_up=cli_run(ip,self.user,self.password,cmd)
+        check_cmd="sudo ip addr sh {}".format(self.interface_name)
+        interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
+        status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
+        print("Interface Status"+str(status))
+        if re.search("UP",str(status)):    
+            return "OK"
+        else:
+            return "Error"
+            
+        return "OK"
+        
+    ###########################################################################
+    @keyword(name="PCC.Set Interface Down")
+    ###########################################################################
+    def set_interface_up(self, *args, **kwargs):
+        banner("PCC.Verify Default IgwPolicy BE")
+        self._load_kwargs(kwargs)
+        
+        cmd="sudo ip link set down {}".format(self.interface_name)
+        interface_up=cli_run(ip,self.user,self.password,cmd)
+        check_cmd="sudo ip addr sh {}".format(self.interface_name)
+        interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
+        status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
+        print("Interface Status"+str(status))
+        if re.search("DOWN",str(status)):
+            return "OK"
+        else:
+            return "Error"
+                
         return "OK"
