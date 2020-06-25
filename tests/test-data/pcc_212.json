@@ -248,8 +248,8 @@
     "os_deployment":
         {
             "image1_name":"centos76",            
-            "image2_name":"ubuntu-disco",       
-            "image3_name":"ubuntu-bionic",
+            "image2_name":"ubuntu-bionic",       
+            "image3_name":"ubuntu-disco",
             "locale":"en-US",       
             "time_zone":"PDT",
             "admin_user":"admin",

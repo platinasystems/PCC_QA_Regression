@@ -67,6 +67,10 @@ Ceph Cluster Creation with 2 nodes both servers (Negative)
     [Documentation]                *Creating a cluster - Creation with 2 nodes*
                               ...  keywords:
                               ...  PCC.Ceph Create Cluster
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy there
                              
         ${response}                PCC.Ceph Create Cluster
                               ...  name=${CEPH_CLUSTER_NAME}
@@ -83,6 +87,10 @@ Ceph Cluster Creation without name (Negative)
     [Documentation]                *Creating a cluster - without name*
                               ...  keywords:
                               ...  PCC.Ceph Create Cluster
+
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
                               
         ${response}                PCC.Ceph Create Cluster
                               ...  name=""
@@ -100,7 +108,11 @@ Ceph Cluster Creation with invalid name (Negative)
     [Documentation]                *Creating a cluster - with invalid name*
                               ...  keywords:
                               ...  PCC.Ceph Create Cluster
-                             
+
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there  
+                    
         ${response}                PCC.Ceph Create Cluster
                               ...  name="!@#$%^"
                               ...  nodes=${CEPH_CLUSTER_NODES}
@@ -117,6 +129,10 @@ Ceph Cluster Creation without selecting any nodes (Negative)
     [Documentation]                *Creating a cluster - without selecting any nodes* 
                               ...  keywords:
                               ...  PCC.Ceph Create Cluster
+
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
                               
         ${response}                PCC.Ceph Create Cluster
                               ...  name=${CEPH_CLUSTER_NAME}
@@ -134,6 +150,10 @@ Ceph Cluster Creation without tags (Negative)
     [Documentation]                *Creating a cluster - without tags*
                               ...  keywords:
                               ...  PCC.Ceph Create Cluster
+
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
                               
         ${response}                PCC.Ceph Create Cluster
                               ...  name=${CEPH_CLUSTER_NAME}
@@ -152,6 +172,10 @@ Ceph Cluster with one node (Negative)
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
                                ...  nodes=["${SERVER_2_NAME}"]
@@ -168,6 +192,10 @@ Ceph Cluster with two node one server one invader(Negative)
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -186,6 +214,10 @@ Ceph Cluster Create
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${id}                      PCC.Ceph Get Cluster Id
+                              ...  name=${CEPH_CLUSTER_NAME}
+                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}

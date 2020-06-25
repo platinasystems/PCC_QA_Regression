@@ -132,7 +132,7 @@ class Interfaces(AaBase):
         self._load_kwargs(kwargs)
         
         cmd="sudo ip link set up {}".format(self.interface_name)
-        interface_up=cli_run(ip,self.user,self.password,cmd)
+        interface_up=cli_run(self.host_ip,self.user,self.password,cmd)
         check_cmd="sudo ip addr sh {}".format(self.interface_name)
         interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
         status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
@@ -152,7 +152,7 @@ class Interfaces(AaBase):
         self._load_kwargs(kwargs)
         
         cmd="sudo ip link set down {}".format(self.interface_name)
-        interface_up=cli_run(ip,self.user,self.password,cmd)
+        interface_up=cli_run(self.host_ip,self.user,self.password,cmd)
         check_cmd="sudo ip addr sh {}".format(self.interface_name)
         interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
         status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()

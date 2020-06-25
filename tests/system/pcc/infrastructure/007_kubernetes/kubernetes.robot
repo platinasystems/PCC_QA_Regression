@@ -184,36 +184,36 @@ Reboot Node And Verify K8s is Intact
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
 ##################################################################################################################################
-Remove Node to Kubernetes cluster
-###################################################################################################################################
-
-        [Documentation]             *Remove Node to Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Update Cluster Nodes
-                               ...  PCC.K8s Get Cluster Id
-                               ...  PCC.K8s Wait Until Cluster is Ready
-
-        ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8S_NAME}
-
-        ${response}                 PCC.K8s Update Cluster Nodes
-                               ...  cluster_id=${cluster_id}
-                               ...  name=${K8S_NAME}
-                               ...  toRemove=["${CLUSTERHEAD_2_NAME}"]
-                               ...  rolePolicy=auto
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
+#Remove Node to Kubernetes cluster
+####################################################################################################################################
+#
+#        [Documentation]             *Remove Node to Kubernetes cluster*
+#                               ...  Keywords:
+#                               ...  PCC.K8s Update Cluster Nodes
+#                               ...  PCC.K8s Get Cluster Id
+#                               ...  PCC.K8s Wait Until Cluster is Ready
+#
+#        ${cluster_id}               PCC.K8s Get Cluster Id
+#                               ...  name=${K8S_NAME}
+#
+#        ${response}                 PCC.K8s Update Cluster Nodes
+#                               ...  cluster_id=${cluster_id}
+#                               ...  name=${K8S_NAME}
+#                               ...  toRemove=["${CLUSTERHEAD_2_NAME}"]
+#                               ...  rolePolicy=auto
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                               ...  name=${K8S_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
 ##################################################################################################################################
 #Upgrade K8 Cluster Version
 ####################################################################################################################################     

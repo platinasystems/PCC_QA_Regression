@@ -11,6 +11,7 @@ Login
 
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
+                                    Load Ceph Fs Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
                                     Load Clusterhead 2 Test Data    ${pcc_setup}
@@ -55,6 +56,10 @@ Ceph Cluster Creation
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
 
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy Created
+
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
                                ...  nodes=${CEPH_CLUSTER_NODES}
@@ -91,7 +96,7 @@ Ceph Cluster Verification Back End
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Pool Creation
+Ceph Pool Creation And PCC Verification
 ###################################################################################################################################
     [Documentation]                 *Creating Ceph Pool*
                                ...  keywords:
@@ -111,89 +116,76 @@ Ceph Pool Creation
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-        
-        ${response}                 PCC.Ceph Create Pool
-                               ...  name=pool1
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-        
-        
-        ${response}                 PCC.Ceph Create Pool
-                               ...  name=pool2
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                    
-        
-        ${response}                 PCC.Ceph Create Pool
-                               ...  name=pool3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                    
-                                    
-        ${response}                 PCC.Ceph Create Pool
-                               ...  name=pool4
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-###################################################################################################################################
-Ceph Pool Verification
-###################################################################################################################################
-    [Documentation]                 *Verifying Ceph Pool*
-                               ...  keywords:
-                               ...  PCC.Ceph Wait Until Pool Ready
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
 
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK 
+ 
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=pool1
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+        
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool1
-
                                     Should Be Equal As Strings      ${status}    OK
+                                    
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=pool2
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+ 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool2
+                                    Should Be Equal As Strings      ${status}    OK 
+        
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=pool3
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-                                    Should Be Equal As Strings      ${status}    OK
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool3
+                                    Should Be Equal As Strings      ${status}    OK                                    
+                                    
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=pool4
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-                                    Should Be Equal As Strings      ${status}    OK
-        
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool4
-
                                     Should Be Equal As Strings      ${status}    OK
+
                                     
 ###################################################################################################################################
 Ceph Pool Verification Back End

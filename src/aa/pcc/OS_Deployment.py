@@ -124,7 +124,7 @@ class OS_Deployment(AaBase):
                             "sshKeys":["RasikB"]
                             }
         '''
-        banner("PCC.Update Node for OS Deployment")
+        banner("PCC.Update OS details")
         self._load_kwargs(kwargs)
          
         payload = {"nodes":ast.literal_eval(self.Id),
@@ -162,7 +162,7 @@ class OS_Deployment(AaBase):
             Id = Nodes().get_node_id(conn, Name=self.Name)
             
             logger.console("Node Id is: {}".format(Id))  
-            OS_version = Nodes().get_node_by_id(conn, id= str(Id))['Result']['Data']['systemData']['osVersion']
+            OS_version = Nodes().get_node(conn, Id= str(Id))['Result']['Data']['systemData']['osVersion']
             
             return OS_version
         except Exception as e:
@@ -186,12 +186,12 @@ class OS_Deployment(AaBase):
         
         
         '''
-        banner("PCC.Update Node for OS Deployment")
+        banner("PCC.Verify OS details from PCC")
         self._load_kwargs(kwargs)
         logger.console("kwargs in verify_OS_details_from_PCC are: {}".format(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         
-        label_name = easy.get_OS_label_by_name(conn, Name=self.image_name)
+        label_name = easy.get_os_label_by_name(conn, Name=self.image_name)
         logger.console("label_name: {}".format(label_name))
         OS_version = self.get_OS_version_by_node_name(**kwargs)
         logger.console("OS_version: {}".format(OS_version))
@@ -293,6 +293,7 @@ class OS_Deployment(AaBase):
         '''
         banner("PCC.Edit interface of pxe-booted node")
         self._load_kwargs(kwargs)
+        print("Kwargs are: {}".format(kwargs))
         
         interface_id = self.get_interface_id(**kwargs)
         
@@ -329,6 +330,7 @@ class OS_Deployment(AaBase):
             if interfaces['NodeName'] == self.Node_name:
                 for link in interfaces['links']:
                     interface_list.append(link['interface_name'])
+        print("Interface list from Topology: {}".format(interface_list))
                     
         
         ## Interfaces from node properties            
@@ -340,6 +342,7 @@ class OS_Deployment(AaBase):
             name=interfaces['name']
             status = interfaces["link"]
             interface_dict[name]= status
+        print("Interface dict from node properties: {}".format(interface_dict))
             
         list_of_online_interfaces = [key  for (key, value) in interface_dict.items() if value == 'yes']
         
@@ -348,11 +351,12 @@ class OS_Deployment(AaBase):
         interface_list = set(interface_list)
         
         management_interfaces = list_of_online_interfaces - interface_list
+        print("Management interfaces: {}".format(management_interfaces))
         
         for management_interface in management_interfaces:
             logger.console(management_interface)
-        
-        return management_interface 
+            return management_interface
+         
         
     ###########################################################################
     @keyword(name="PCC.Set password on Server")
@@ -364,7 +368,7 @@ class OS_Deployment(AaBase):
         
         try:
             cmd = r"""ssh -i {} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)
-            
+            print("Command is {}".format(cmd))
             password_reset = cli_run(cmd=cmd, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
             
             serialised_password_reset = self._serialize_response(time.time(), password_reset)
@@ -373,7 +377,7 @@ class OS_Deployment(AaBase):
             cmd_output = str(serialised_password_reset['Result']['stdout']).replace('\n', '').strip()
             
             print("output of set_password_on_server:{}".format(cmd_output))
-            if "updated successfully" in self.cmd_output:
+            if "updated successfully" in cmd_output:
                 return "OK"
             else:
                 return "Error"

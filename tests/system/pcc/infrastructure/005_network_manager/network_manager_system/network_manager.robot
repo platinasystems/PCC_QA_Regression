@@ -213,7 +213,7 @@ Reboot Node And Verify K8s Is Intact
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
                                     

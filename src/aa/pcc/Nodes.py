@@ -250,7 +250,7 @@ class Nodes(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         ready = False
         time_waited = 0
-        PCC_TIMEOUT = 60*30 #30 minutes
+        PCC_TIMEOUT = 60*10 #10 minutes
         timeout = time.time() + PCC_TIMEOUT
         while not ready:
             ready = False

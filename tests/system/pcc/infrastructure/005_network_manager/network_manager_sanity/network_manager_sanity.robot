@@ -24,7 +24,7 @@ Verify Default IgwPolicy
 ###################################################################################################################################
 
         ${status}                   PCC.Verify Default IgwPolicy BE
-                               ...  nodes=["172.17.2.42","172.17.2.125"]
+                               ...  nodes=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
 

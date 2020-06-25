@@ -194,7 +194,7 @@ class CephCluster(AaBase):
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     capture_data=data
-                    if data['progressPercentage'] == 100:
+                    if data['progressPercentage'] == 100 or data['deploy_status'].lower() == "completed":
                         print("Response To Look :-"+str(data))
                         cluster_ready = True
                     elif re.search("failed",str(data['deploy_status'])):
