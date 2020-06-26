@@ -123,8 +123,12 @@ Adding Maas To Server (Negative)
                                ...  nodes=["${SERVER_1_NAME}"]
                                ...  roles=["Baremetal Management Node"]
 
-                                    Should Not Be Equal As Strings      ${response}  OK
+                                    Should Be Equal As Strings      ${response}  OK
 
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${SERVER_1_NAME}
+                                     
+                                    Should Not Be Equal As Strings      ${status_code}  OK
 
 ###################################################################################################################################
 Check Mass and LLDP from BE

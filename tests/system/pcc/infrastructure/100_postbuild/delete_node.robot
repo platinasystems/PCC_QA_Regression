@@ -14,6 +14,7 @@ Login
                                     Load Server 2 Test Data        ${pcc_setup}
                                     Load Server 1 Test Data        ${pcc_setup}
                                     Load Server 3 Test Data        ${pcc_setup}
+                                    Load Network Manager Data    ${pcc_setup} 
                                     
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
@@ -24,9 +25,13 @@ Delete Nodes
 
     [Documentation]    *Delete Nodes* test                 
     [Tags]    delete
-    
-    ${status}    PCC.Delete mutliple nodes and wait until deletion
-                 ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
 
-                 Log To Console    ${status}
-                 Should be equal as strings    ${status}    OK
+        ${network_id}              PCC.Get Network Manager Id
+                              ...  name=${NETWORK_MANAGER_NAME}
+                                   Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
+
+        ${status}                  PCC.Delete mutliple nodes and wait until deletion
+                              ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
+
+                                   Log To Console    ${status}
+                                   Should be equal as strings    ${status}    OK
