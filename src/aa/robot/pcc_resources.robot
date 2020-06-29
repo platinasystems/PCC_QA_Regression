@@ -20,6 +20,7 @@ Library                         aa.pcc.CephCluster
 Library                         aa.pcc.CephPool
 Library                         aa.pcc.CephRbd
 Library                         aa.pcc.CephFs
+Library                         aa.pcc.CephRgw
 Library                         aa.pcc.Cli
 Library                         aa.pcc.Kubernetes
 Library                         aa.pcc.OpenSSHKeys

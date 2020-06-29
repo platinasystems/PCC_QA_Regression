@@ -142,7 +142,7 @@ def get_ceph_cluster_id_by_name(conn:dict, Name:str)->int:
         (dict) conn: Connection dictionary obtained after logging in
         (str) Name: Name of Ceph Cluster
     [Returns]
-        (int) Id: Id of the matchining tenant, or
+        (int) Id: Id of the matchining ceph cluster, or
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
@@ -162,7 +162,7 @@ def get_ceph_pool_id_by_name(conn:dict, Name:str)->int:
         (dict) conn: Connection dictionary obtained after logging in
         (str) Name: Name of Ceph Pool
     [Returns]
-        (int) Id: Id of the matchining tenant, or
+        (int) Id: Id of the matchining pool, or
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
@@ -182,7 +182,7 @@ def get_ceph_rbd_id_by_name(conn:dict, Name:str)->int:
         (dict) conn: Connection dictionary obtained after logging in
         (str) Name: Name of Ceph Rbd
     [Returns]
-        (int) Id: Id of the matchining tenant, or
+        (int) Id: Id of the matchining rbd, or
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
@@ -202,7 +202,7 @@ def get_ceph_fs_id_by_name(conn:dict, Name:str)->int:
         (dict) conn: Connection dictionary obtained after logging in
         (str) Name: Name of Ceph Fs
     [Returns]
-        (int) Id: Id of the matchining tenant, or
+        (int) Id: Id of the matchining Fs, or
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
@@ -211,6 +211,26 @@ def get_ceph_fs_id_by_name(conn:dict, Name:str)->int:
         for ceph_fs in list_of_ceph_fs:
             if str(ceph_fs['name']) == str(Name):
                 return ceph_fs['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
+
+def get_ceph_rgw_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get Id of Ceph Rgw with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Ceph Rgw
+    [Returns]
+        (int) Id: Id of the matchining Rgw, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_ceph_rgws = pcc.get_ceph_rgws(conn)['Result']['Data']
+        for ceph_rgw in list_of_ceph_rgws:
+            if str(ceph_rgw['name']).lower() == str(Name).lower():
+                return ceph_rgw['ID']
         return None
     except Exception as e:
         return {"Error": str(e)}
