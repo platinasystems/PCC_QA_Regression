@@ -485,3 +485,25 @@ def get_network_clusters_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)}
+        
+## Application Credentials
+def get_metadata_profile_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get Metadata Profile Id by Name
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of the Metadata profile
+    [Returns]
+        (int) Id: Id of the matchining Metadata profile, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    
+    try:
+        profiles_list = pcc.get_metadata_profiles(conn)['Result']['Data']
+        for profile in profiles_list:
+            if str(profile['name']) == str(Name):
+                return profile['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)} 

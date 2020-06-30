@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ -z "$MOTOR_HOME" ]; 
-  then export MOTOR_HOME="/aa";
+  then export MOTOR_HOME="/home/pcc/aa";
 fi
 echo "MOTOR_HOME=$MOTOR_HOME"
 cd $MOTOR_HOME

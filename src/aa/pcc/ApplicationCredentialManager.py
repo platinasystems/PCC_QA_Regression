@@ -39,6 +39,16 @@ class ApplicationCredentialManager(AaBase):
         self.Email = None
         self.Type = None
         self.Filename = None
+        self.ApplicationId = None
+        self.Active = None
+        self.Files = []
+        self.ProfileActive = None
+        self.MaxBuckets = None
+        self.maxBucketObjects = None
+        self.maxBucketSize = None
+        self.maxObjectSize = None
+        self.maxUserSize = None
+        self.maxUserObjects = None
         
         
         
@@ -75,42 +85,62 @@ class ApplicationCredentialManager(AaBase):
     def add_metadata_profile(self, *args, **kwargs):
         """
         Add Metadata Profile
-        [Args]
-            (str) Filename:
-            (str) data:
-        [Returns]
-            (dict) Response: Add Metadata Profile response
+            [Args]
+                (dict) Data: 
+                      {
+                    
+                        "name":"test",
+                        "type":"ceph",
+                        "applicationId":null,
+                        "active":true,
+                        "profile":{
+                            "username":"testuser",
+                            "email":"test123@test.com",
+                            "active":true,
+                            "maxBuckets":"2000",
+                            "maxBucketObjects":2000,
+                            "maxBucketSize":3994,
+                            "maxObjectSize":2000,
+                            "maxUserSize":7,
+                            "maxUserObjects":30
+                        },
+                        "files":[]
+                    
+                    }  
+                
+            [Returns]
+                (dict) Response: Add Metadata Profile response
+                
         """
         self._load_kwargs(kwargs)
         banner("PCC.Add Metadata Profile")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        print("Kwargs are: {}".format(kwargs))
-        if self.Filename:
-            filename_path = os.path.join("tests/test-data", self.Filename)
-        else:
-            filename_path = None
+        print("Kwargs are: {}".format(kwargs))        
         
-        payload = {
-                  "name":self.Name,
-                  "type":self.Type,
-                  "profile":{
-                             "username":self.Username,
-                             "email":self.Email 
-                            }
-                  }
-        
-        '''
-        payload = {
-                  '\"name\"':self.Name.replace("'","'\""),
-                  '\"type\"':self.Type.replace("'","'\""),
-                  '\"profile\"':{
-                             '\"username\"':self.Username.replace("'","'\""),
-                             '\"email\"':self.Email.replace("'","'\"")
-                            }
-                  }
-        '''
-        print("Type of payload is {} \n Payload is {}".format(type(payload),payload))
-        return pcc.add_metadata_profile(conn, payload, filename_path)
+        payload =  {"name":self.Name,
+                    "type":self.Type,
+                    "applicationId":self.ApplicationId,
+                    "active":bool(self.Active),
+                    "files":self.Files,
+                    "profile":{"username":self.Username,
+                               "email":self.Email,
+                               "active":self.ProfileActive,
+                               "maxBuckets":self.MaxBuckets,
+                               "maxBucketObjects":self.maxBucketObjects,
+                               "maxBucketSize":self.maxBucketSize,
+                               "maxObjectSize":self.maxObjectSize,
+                               "maxUserSize":self.maxUserSize,
+                               "maxUserObjects":self.maxUserObjects
+                              }
+                    
+                    }                             
+        dump = json.dumps(payload)
+        multipart_data = {'data':(None,dump)}
+    
+        print("multipart_data: {}".format(multipart_data))
+        response = pcc.add_metadata_profile(conn, multipart_data)
+        print("Response from keyword: {}".format(response))
+        return response
         
     ###########################################################################
     @keyword(name="PCC.Get Metadata Profiles")
@@ -131,7 +161,7 @@ class ApplicationCredentialManager(AaBase):
     ###########################################################################
     @keyword(name="PCC.Get Profile by Id")
     ###########################################################################
-    def get_authprofile_by_id(self, *args, **kwargs):
+    def get_application_credential_profile_by_id(self, *args, **kwargs):
         """
         Get Profile by Id
         [Args]
@@ -142,12 +172,12 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Get Profile by Id")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_authprofile_by_id(conn, str(self.Id))
+        return pcc.get_application_credential_profile_by_id(conn, str(self.Id))
         
     ###########################################################################
     @keyword(name="PCC.Get Profile By Type")
     ###########################################################################
-    def get_profile_by_type(self, *args, **kwargs):
+    def get_application_credential_profile_by_type(self, *args, **kwargs):
         """
         Get Profile By Type
         [Args]
@@ -158,7 +188,7 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Get Profile By Type")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_profile_by_type(conn, str(self.Type))
+        return pcc.get_application_credential_profile_by_type(conn, str(self.Type))
         
     ###########################################################################
     @keyword(name="PCC.Get Metadata Profile By Type")
@@ -179,7 +209,7 @@ class ApplicationCredentialManager(AaBase):
     ###########################################################################
     @keyword(name="PCC.Get Profiles")
     ###########################################################################
-    def get_authprofiles(self, *args, **kwargs):
+    def get_application_credential_profiles(self, *args, **kwargs):
         """
         Get Profiles
         [Args]
@@ -190,12 +220,12 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Get Profiles")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_authprofiles(conn)
+        return pcc.get_application_credential_profiles(conn)
         
     ###########################################################################
     @keyword(name="PCC.Describe Profile By Id")
     ###########################################################################
-    def describe_profile_by_id(self, *args, **kwargs):
+    def describe_application_credential_profile_by_id(self, *args, **kwargs):
         """
         Describe Profile By Id
         [Args]
@@ -206,12 +236,12 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Describe Profile By Id")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.describe_profile_by_id(conn, str(self.Id))
+        return pcc.describe_application_credential_profile_by_id(conn, str(self.Id))
         
     ###########################################################################
     @keyword(name="PCC.Describe Profile per Type")
     ###########################################################################
-    def describe_profile_per_type(self, *args, **kwargs):
+    def describe_application_credential_profile_per_type(self, *args, **kwargs):
         """
         Describe Profile per Type
         [Args]
@@ -222,7 +252,7 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Describe Profile per Type")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.describe_profile_per_type(conn, str(self.Type))
+        return pcc.describe_application_credential_profile_per_type(conn, str(self.Type))
         
     ###########################################################################
     @keyword(name="PCC.Describe Metadata Profile per Type")
@@ -243,7 +273,7 @@ class ApplicationCredentialManager(AaBase):
     ###########################################################################
     @keyword(name="PCC.Describe Profiles")
     ###########################################################################
-    def describe_profiles(self, *args, **kwargs):
+    def describe_application_credential_profiles(self, *args, **kwargs):
         """
         Describe Profiles
         [Args]
@@ -254,7 +284,7 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Describe Profiles")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.describe_profiles(conn)
+        return pcc.describe_application_credential_profiles(conn)
         
     ###########################################################################
     @keyword(name="PCC.Describe Metadata Profiles")
@@ -275,7 +305,7 @@ class ApplicationCredentialManager(AaBase):
     ###########################################################################
     @keyword(name="PCC.Delete Profile By Id")
     ###########################################################################
-    def delete_authprofile_by_id(self, *args, **kwargs):
+    def delete_application_credential_profile_by_id(self, *args, **kwargs):
         """
         Delete Profile By Id
         [Args]
@@ -286,7 +316,10 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Delete Profile By Id")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.delete_authprofile_by_id(conn, str(self.Id))
+        Id= easy.get_metadata_profile_id_by_name(conn,Name=self.Name)
+        print("Id response: {}".format(Id))
+        return pcc.delete_application_credential_profile_by_id(conn, str(Id))
+
     
         
     
