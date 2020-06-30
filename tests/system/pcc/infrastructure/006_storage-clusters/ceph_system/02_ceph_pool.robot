@@ -509,7 +509,7 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                     Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
-Ceph Pool Creation and Verification with No. of Copies 3
+Ceph Pool Creation and Verification with No. of Copies 2
 ###################################################################################################################################
 
     [Documentation]                 *Ceph Pool Creation and Verification with No. of Copies 3*
@@ -524,7 +524,7 @@ Ceph Pool Creation and Verification with No. of Copies 3
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool7
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  size=3
+                               ...  size=2
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
                                ...  quota=${CEPH_POOL_QUOTA}
