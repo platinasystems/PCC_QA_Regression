@@ -348,13 +348,14 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
 
         ${response}                 PCC.Ceph Cluster Update
                                ...  id=${id}
+                               ...  name=ceph-rename
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 							   
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-													
+                                    													
 ###################################################################################################################################	
 TCP-985 Update Cluster - Try to add Tags
 ###################################################################################################################################
@@ -377,7 +378,7 @@ TCP-985 Update Cluster - Try to add Tags
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 													
-	${status}                   PCC.Ceph Wait Until Cluster Ready
+	    ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 							  

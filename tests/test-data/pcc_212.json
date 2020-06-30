@@ -204,11 +204,11 @@
     "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":3,
+            "size":2,
             "tags":[],
             "pool_type":"replicated",
             "quota":"1",
-            "quota_unit":"TiB"
+            "quota_unit":"MiB"
         },
 
     "ceph_rbd":
@@ -226,6 +226,16 @@
             "meta_pool":"pool1",       
             "data_pool":"pool2",       
             "default_pool":"pool3" 
+        },
+        
+    "ceph_rgw":
+        {
+            "name":"rados-pvt",
+            "poolName":"rgw-pool",
+            "targetNodes":["sv124"],
+            "port":443,
+            "certificateName":"rgw-cert",
+            "S3Accounts":"rgw-app"
         },
 
     "k8s":

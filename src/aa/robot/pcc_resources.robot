@@ -566,7 +566,32 @@ Load Ceph Fs Data
         ${CEPH_FS_DEFAULT}          Evaluate    $pcc_server_dict.get("default_pool", None)
                                     Set Suite Variable    ${CEPH_FS_DEFAULT}
                                     
+###################################################################################################################################
+Load Ceph Rgw Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Ceph Rgw Data*
+                                    Log To Console      **** Load Ceph Rgw Data ****
+        ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json   ceph_rgw
 
+        ${CEPH_RGW_NAME}             Evaluate    $pcc_server_dict.get("name", None)
+                                     Set Suite Variable    ${CEPH_RGW_NAME}
+
+        ${CEPH_RGW_POOLNAME}         Evaluate    $pcc_server_dict.get("poolName", None)
+                                     Set Suite Variable    ${CEPH_RGW_POOLNAME}
+
+        ${CEPH_RGW_NODES}            Evaluate    $pcc_server_dict.get("targetNodes", None)
+                                     Set Suite Variable    ${CEPH_RGW_NODES}
+
+        ${CEPH_RGW_PORT}             Evaluate    $pcc_server_dict.get("port", None)
+                                     Set Suite Variable    ${CEPH_RGW_PORT}
+                                   
+        ${CEPH_RGW_CERT_NAME}        Evaluate    $pcc_server_dict.get("certificateName", None)
+                                     Set Suite Variable    ${CEPH_RGW_CERT_NAME}
+                                    
+        ${CEPH_RGW_S3ACCOUNTS}       Evaluate    $pcc_server_dict.get("S3Accounts", None)
+                                     Set Suite Variable    ${CEPH_RGW_S3ACCOUNTS}
+                                    
 ###################################################################################################################################
 Load Auth Profile Data
 ###################################################################################################################################

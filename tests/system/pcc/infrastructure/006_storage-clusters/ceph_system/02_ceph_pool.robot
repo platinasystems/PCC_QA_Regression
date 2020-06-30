@@ -317,7 +317,7 @@ Ceph Pool Creation and Verification with quota unit MiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -347,7 +347,7 @@ Ceph Pool Creation and Verification with quota unit GiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=GiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -377,7 +377,7 @@ Ceph Pool Creation and Verification with quota unit TiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=TiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -407,7 +407,7 @@ Ceph Pool Creation and Verification with quota unit PiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=PiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -437,7 +437,7 @@ Ceph Pool Creation and Verification with quota unit EiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=EiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -557,7 +557,7 @@ Ceph Pool Creation for Fs
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=TiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -574,7 +574,7 @@ Ceph Pool Creation for Fs
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=TiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -591,7 +591,7 @@ Ceph Pool Creation for Fs
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=TiB
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -887,7 +887,7 @@ Ceph Pool Creation Duplicate (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=10
+                               ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
         ${status_code}              Get Response Status Code        ${response}     

@@ -128,15 +128,16 @@ class Interfaces(AaBase):
     @keyword(name="PCC.Set Interface Up")
     ###########################################################################
     def set_interface_up(self, *args, **kwargs):
-        banner("PCC.Verify Default IgwPolicy BE")
+        banner("PCC.Set Interface Up")
         self._load_kwargs(kwargs)
         
         cmd="sudo ip link set up {}".format(self.interface_name)
-        interface_up=cli_run(self.host_ip,self.user,self.password,cmd)
+        interface_up = cli_run(self.host_ip,self.user,self.password,cmd)
+        print("Interface Status:"+str(interface_up))
         check_cmd="sudo ip addr sh {}".format(self.interface_name)
         interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
         status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
-        print("Interface Status"+str(status))
+        print("Interface Status Serialize:"+str(status))
         if re.search("UP",str(status)):    
             return "OK"
         else:
@@ -148,15 +149,16 @@ class Interfaces(AaBase):
     @keyword(name="PCC.Set Interface Down")
     ###########################################################################
     def set_interface_up(self, *args, **kwargs):
-        banner("PCC.Verify Default IgwPolicy BE")
+        banner("PCC.Set Interface Down")
         self._load_kwargs(kwargs)
         
         cmd="sudo ip link set down {}".format(self.interface_name)
-        interface_up=cli_run(self.host_ip,self.user,self.password,cmd)
+        interface_down = cli_run(self.host_ip,self.user,self.password,cmd)
+        print("Interface Status:"+str(interface_down))
         check_cmd="sudo ip addr sh {}".format(self.interface_name)
         interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
         status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
-        print("Interface Status"+str(status))
+        print("Interface Status Serialize:"+str(status))
         if re.search("DOWN",str(status)):
             return "OK"
         else:
