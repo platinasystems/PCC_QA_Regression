@@ -6,6 +6,7 @@ import ast
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
+from robot.api import logger
 
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
@@ -143,6 +144,70 @@ class ApplicationCredentialManager(AaBase):
         return response
         
     ###########################################################################
+    @keyword(name="PCC.Update Metadata Profile")
+    ###########################################################################
+    def update_metadata_profile(self, *args, **kwargs):
+        """
+        Update Metadata Profile
+            [Args]
+                (dict) Data: 
+                      {
+                        "id":2
+                        "name":"test",
+                        "type":"ceph",
+                        "applicationId":null,
+                        "active":true,
+                        "profile":{
+                            "username":"testuser",
+                            "email":"test123@test.com",
+                            "active":true,
+                            "maxBuckets":"2000",
+                            "maxBucketObjects":2000,
+                            "maxBucketSize":3994,
+                            "maxObjectSize":2000,
+                            "maxUserSize":7,
+                            "maxUserObjects":30
+                        },
+                        "files":[]
+                    
+                    }  
+                
+            [Returns]
+                (dict) Response: Update Metadata Profile response
+                
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Add Metadata Profile")
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("Kwargs are: {}".format(kwargs))
+                
+        payload =  {"id":self.Id,
+                    "name":self.Name,
+                    "type":self.Type,
+                    "applicationId":self.ApplicationId,
+                    "active":bool(self.Active),
+                    "files":self.Files,
+                    "profile":{"username":self.Username,
+                               "email":self.Email,
+                               "active":self.ProfileActive,
+                               "maxBuckets":self.MaxBuckets,
+                               "maxBucketObjects":self.maxBucketObjects,
+                               "maxBucketSize":self.maxBucketSize,
+                               "maxObjectSize":self.maxObjectSize,
+                               "maxUserSize":self.maxUserSize,
+                               "maxUserObjects":self.maxUserObjects
+                              }
+                    
+                    }                             
+        dump = json.dumps(payload)
+        multipart_data = {'data':(None,dump)}
+    
+        print("multipart_data: {}".format(multipart_data))
+        response = pcc.add_metadata_profile(conn, multipart_data)
+        print("Response from keyword: {}".format(response))
+        return response
+        
+    ###########################################################################
     @keyword(name="PCC.Get Metadata Profiles")
     ###########################################################################
     def get_metadata_profiles(self, *args, **kwargs):
@@ -172,7 +237,9 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Get Profile by Id")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_application_credential_profile_by_id(conn, str(self.Id))
+        Id= easy.get_metadata_profile_id_by_name(conn,Name=self.Name)
+        print("Id response: {}".format(Id))
+        return pcc.get_application_credential_profile_by_id(conn, str(Id))
         
     ###########################################################################
     @keyword(name="PCC.Get Profile By Type")
@@ -236,7 +303,8 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Describe Profile By Id")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.describe_application_credential_profile_by_id(conn, str(self.Id))
+        Id= easy.get_metadata_profile_id_by_name(conn,Name=self.Name)
+        return pcc.describe_application_credential_profile_by_id(conn, str(Id))
         
     ###########################################################################
     @keyword(name="PCC.Describe Profile per Type")
@@ -300,7 +368,7 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Describe Metadata Profiles")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.describe_metadata_profiles(conn, str(self.Type))
+        return pcc.describe_metadata_profiles(conn)
         
     ###########################################################################
     @keyword(name="PCC.Delete Profile By Id")
@@ -319,10 +387,118 @@ class ApplicationCredentialManager(AaBase):
         Id= easy.get_metadata_profile_id_by_name(conn,Name=self.Name)
         print("Id response: {}".format(Id))
         return pcc.delete_application_credential_profile_by_id(conn, str(Id))
-
     
-        
+    ###########################################################################
+    @keyword(name="PCC.Delete All Profiles")
+    ###########################################################################
     
+    def delete_all_profiles(self, *args, **kwargs):
         
+        """
+        Delete All Profiles
     
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            
+        [Returns]
+            (bool) OK: OK if All Profiles are deleted (includes any errors)
+        """
         
+        banner("PCC.Delete All Profiles")
+        self._load_kwargs(kwargs)
+        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        response = self.get_metadata_profiles(conn)
+        print("Response is :{}".format(response))
+        
+        list_id = []
+        if get_response_data(response)==None:
+            print("No metadata profiles available on PCC")
+            return "OK"
+        else:
+            try:
+                for ids in get_response_data(response):
+                    list_id.append(ids['id'])
+                print("list of id:{}".format(list_id))                
+            except Exception as e:
+                logger.console("Error in Delete All Profiles: {}".format(e))
+            response_code_list = []
+            try:
+                for id_ in list_id:
+                    response = pcc.delete_application_credential_profile_by_id(conn, str(id_))
+                    response_code_list.append(str(response['StatusCode']))
+                result = len(response_code_list) > 0 and all(elem == '200' for elem in response_code_list) 
+                if result == True:
+                    return "OK"    
+            except Exception as e:
+                logger.console("Error in Delete All Profiles: {}".format(e))    
+                
+    #################################################################################
+    @keyword(name="PCC.Get Profiles with additional data for specific application")
+    #################################################################################
+    def get_profiles_with_additional_data_for_specific_application(self, *args, **kwargs):
+        """
+        Get Profiles with additional data for specific application
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str)  type: Type of application
+            (str)  application_id: Application Id 
+        [Returns]
+            (dict) Response: Get Profiles with additional data for specific application response (includes any errors)
+        """
+        banner("PCC.Get Profiles with additional data for specific application")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.get_profiles_with_additional_data_for_specific_application(conn, type = str(self.Type), application_id = str(self.ApplicationId))
+        
+    #################################################################################
+    @keyword(name="PCC.Describe Profiles per type and application")
+    #################################################################################
+    def describe_profiles_per_type_and_application(self, *args, **kwargs):
+        """
+        Describe Profiles per type and application
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str)  type: Type of application
+            (str)  application_id: Application Id 
+        [Returns]
+            (dict) Response: Describe Profiles per type and application response (includes any errors)
+        """
+        banner("PCC.Describe Profiles per type and application")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.describe_profiles_per_type_and_application(conn, type = str(self.Type), application_id = str(self.ApplicationId))
+        
+    #################################################################################
+    @keyword(name="PCC.Get Profile Types")
+    #################################################################################
+    def get_profile_types(self, *args, **kwargs):
+        """
+        Get Profile Types
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+        [Returns]
+            (dict) Response: Get Profile Types response (includes any errors)
+        """
+        banner("PCC.Get Profile Types")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.get_profile_types(conn)
+        
+    #################################################################################
+    @keyword(name="PCC.Get Profile Template Per Type")
+    #################################################################################
+    def get_profiles_template_per_type(self, *args, **kwargs):
+        """
+        Get Profile Types
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str)  type: Type of application
+        [Returns]
+            (dict) Response: Get Profile Types response (includes any errors)
+        """
+        banner("PCC.Get Profile Template Per Type")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.get_profiles_template_per_type(conn, str(self.Type))              
+    
