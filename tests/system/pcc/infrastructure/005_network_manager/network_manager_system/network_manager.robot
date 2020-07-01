@@ -197,98 +197,98 @@ Delete Network Manager When Ceph And K8s Are Present (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
 ##################################################################################################################################
-Reboot Node And Verify K8s Is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying K8s cluster BE*
-                               ...  keywords:
-                               ...  PCC.K8s Verify BE
-                               ...  Restart node
-                               
-    ${restart_status}               Restart node
-                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
-##################################################################################################################################
-Reboot Node And Verify Ceph Is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying Ceph cluster BE*
-                               ...  keywords:
-                               ...  Ceph Verify BE
-                               ...  Restart node
-                               
-    ${restart_status}               Restart node
-                               ...  hostip=${SERVER_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK  
-                                    
+#Reboot Node And Verify K8s Is Intact
 ###################################################################################################################################
-Down And Up The Interface And Check For Ceph
+#    [Documentation]                 *Verifying K8s cluster BE*
+#                               ...  keywords:
+#                               ...  PCC.K8s Verify BE
+#                               ...  Restart node
+#                               
+#    ${restart_status}               Restart node
+#                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
 ###################################################################################################################################
-        [Documentation]             *Down And Up The Interface And Check For Ceph*
-                               ...  Keywords:
-                               ...  PCC.Set Interface Down
-                               ...  PCC.Set Interface Up
-                               ...  PCC.Ceph Verify BE
-                               
-        ${status}                   PCC.Set Interface Down
-                               ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
-                                    Should Be Equal As Strings      ${status}  OK
-
-        ${status}                   PCC.Set Interface Up
-                               ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
-                                    Should Be Equal As Strings      ${status}  OK
-                                    
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                                    Should Be Equal As Strings      ${status}    OK
-
+#Reboot Node And Verify Ceph Is Intact
 ###################################################################################################################################
-Down And Up The Interface And Check For K8s
-###################################################################################################################################
-        [Documentation]             *Down And Up The Interface And Check For Ceph*
-                               ...  Keywords:
-                               ...  PCC.Set Interface Down
-                               ...  PCC.Set Interface Up
-                               ...  PCC.Ceph Verify BE
-                               
-        ${status}                   PCC.Set Interface Down
-                               ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
-                                    Should Be Equal As Strings      ${status}  OK
-
-        ${status}                   PCC.Set Interface Up
-                               ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
-                                    Should Be Equal As Strings      ${status}  OK
-                                    
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
+#    [Documentation]                 *Verifying Ceph cluster BE*
+#                               ...  keywords:
+#                               ...  Ceph Verify BE
+#                               ...  Restart node
+#                               
+#    ${restart_status}               Restart node
+#                               ...  hostip=${SERVER_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.Ceph Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK  
+#                                    
+####################################################################################################################################
+#Down And Up The Interface And Check For Ceph
+####################################################################################################################################
+#        [Documentation]             *Down And Up The Interface And Check For Ceph*
+#                               ...  Keywords:
+#                               ...  PCC.Set Interface Down
+#                               ...  PCC.Set Interface Up
+#                               ...  PCC.Ceph Verify BE
+#                               
+#        ${status}                   PCC.Set Interface Down
+#                               ...  host_ip=${SERVER_1_HOST_IP}
+#                               ...  interface_name="enp130s0"
+#                                    Should Be Equal As Strings      ${status}  OK
+#
+#        ${status}                   PCC.Set Interface Up
+#                               ...  host_ip=${SERVER_1_HOST_IP}
+#                               ...  interface_name="enp130s0"
+#                                    Should Be Equal As Strings      ${status}  OK
+#                                    
+#        ${status}                   PCC.Ceph Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Down And Up The Interface And Check For K8s
+####################################################################################################################################
+#        [Documentation]             *Down And Up The Interface And Check For Ceph*
+#                               ...  Keywords:
+#                               ...  PCC.Set Interface Down
+#                               ...  PCC.Set Interface Up
+#                               ...  PCC.Ceph Verify BE
+#                               
+#        ${status}                   PCC.Set Interface Down
+#                               ...  host_ip=${SERVER_1_HOST_IP}
+#                               ...  interface_name="enp130s0"
+#                                    Should Be Equal As Strings      ${status}  OK
+#
+#        ${status}                   PCC.Set Interface Up
+#                               ...  host_ip=${SERVER_1_HOST_IP}
+#                               ...  interface_name="enp130s0"
+#                                    Should Be Equal As Strings      ${status}  OK
+#                                    
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
 Network Manager Add Node For Ceph And K8s Update
 ###################################################################################################################################
