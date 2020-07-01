@@ -1384,37 +1384,38 @@ Ceph Rbd Resize_increase
 #                                    Should Not Be Equal As Strings      ${status_code}  200
 #
 ###################################################################################################################################
-Ceph Create 20 Rbd
-###################################################################################################################################
-    [Documentation]                 *Ceph Create 20 Rbd*  
-                               ...  keywords:    
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Rbd Multiple
-                               ...  PCC.Ceph Wait Until Rbd Ready
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=xyz-2
-
-        ${response}                 PCC.Ceph Create Rbd Multiple
-                               ...  count=20
-                               ...  name=abc
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=1
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=abc-20
-
-                                    Should Be Equal As Strings      ${status}    OK
-
-
+#Ceph Create 20 Rbd
+####################################################################################################################################
+#    [Documentation]                 *Ceph Create 20 Rbd*  
+#                               ...  keywords:    
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Create Rbd Multiple
+#                               ...  PCC.Ceph Wait Until Rbd Ready
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=xyz-2
+#
+#        ${response}                 PCC.Ceph Create Rbd Multiple
+#                               ...  count=20
+#                               ...  name=abc
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=1
+#                               ...  tags=${CEPH_RBD_TAGS}
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rbd Ready
+#                               ...  name=abc-20
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#
+#

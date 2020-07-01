@@ -37,7 +37,7 @@ class Interfaces(AaBase):
         self.cleanUp=None
         self.host_ip=None
         self.user="pcc"
-        self.password="Cals0ft"
+        self.password="cals0ft"
         super().__init__()
 
     ###########################################################################

@@ -894,31 +894,31 @@ Ceph Pool Creation Duplicate (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
 ###################################################################################################################################
-Ceph Create 20 Pools
-###################################################################################################################################
-    [Documentation]                 *Ceph Create 20 Pools*  
-                               ...  keywords:    
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Pool Multiple
-                               ...  PCC.Ceph Wait Until Pool Ready
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${response}                 PCC.Ceph Create Pool Multiple
-                               ...  count=20
-                               ...  name=xyz
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=1
-                               ...  quota_unit=MiB
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=xyz-20
-
-                                    Should Be Equal As Strings      ${status}    OK
+#Ceph Create 20 Pools
+####################################################################################################################################
+#    [Documentation]                 *Ceph Create 20 Pools*  
+#                               ...  keywords:    
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Create Pool Multiple
+#                               ...  PCC.Ceph Wait Until Pool Ready
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${response}                 PCC.Ceph Create Pool Multiple
+#                               ...  count=20
+#                               ...  name=xyz
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  quota=1
+#                               ...  quota_unit=MiB
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Pool Ready
+#                               ...  name=xyz-20
+#
+#                                    Should Be Equal As Strings      ${status}    OK
