@@ -167,27 +167,27 @@ Add Node to Kubernetes cluster
                                    Should Be Equal As Strings      ${status}    OK
 
 ##################################################################################################################################
-Reboot Node And Verify K8s is Intact
-##################################################################################################################################
-
-    [Documentation]                 *Verifying K8s cluster BE*
-                               ...  keywords:
-                               ...  PCC.K8s Verify BE
-                               ...  Restart node
-
-    ${restart_status}               Restart node
-                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
+#Reboot Node And Verify K8s is Intact
+###################################################################################################################################
+#
+#    [Documentation]                 *Verifying K8s cluster BE*
+#                               ...  keywords:
+#                               ...  PCC.K8s Verify BE
+#                               ...  Restart node
+#
+#    ${restart_status}               Restart node
+#                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
 ##################################################################################################################################
 #Remove Node to Kubernetes cluster
 ####################################################################################################################################

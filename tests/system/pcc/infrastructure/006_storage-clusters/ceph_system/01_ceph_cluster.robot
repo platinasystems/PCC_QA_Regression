@@ -270,26 +270,26 @@ Ceph Cluster Update - Add Invader
                                     Should Be Equal As Strings      ${status}    OK
                                     
 ##################################################################################################################################
-Reboot Node And Verify Ceph is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying Ceph cluster BE*
-                               ...  keywords:
-                               ...  Ceph Verify BE
-                               ...  Restart node
-
-    ${restart_status}               Restart node
-                               ...  hostip=${SERVER_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-							   
+#Reboot Node And Verify Ceph is Intact
+###################################################################################################################################
+#    [Documentation]                 *Verifying Ceph cluster BE*
+#                               ...  keywords:
+#                               ...  Ceph Verify BE
+#                               ...  Restart node
+#
+#    ${restart_status}               Restart node
+#                               ...  hostip=${SERVER_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.Ceph Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#							   
 ###################################################################################################################################
 TCP-1012 Update Cluster(2 Invader setup) - Remove - Remove TWO OSD nodes from cluster [4 nodes (3 MONs + 2 OSDs)] (Negative)
 ###################################################################################################################################

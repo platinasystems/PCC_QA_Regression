@@ -68,6 +68,12 @@ class CephRgw(AaBase):
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
         if  self.port!=None:
             self.port=int(self.port)
+        if self.S3Accounts!=None or self.S3Accounts!=[]:
+            tmp_cert={}
+            for cert in eval(str(self.S3Accounts)):
+                cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
+                tmp_cert[str(cert_id)]={}
+            self.S3Accounts=tmp_cert           
         
         tmp_node=[]
         for node_name in eval(str(self.targetNodes)):
@@ -103,6 +109,12 @@ class CephRgw(AaBase):
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
         if  self.port!=None:
             self.port=int(self.port)
+        if self.S3Accounts!=None or self.S3Accounts!=[]:
+            tmp_cert={}
+            for cert in eval(str(self.S3Accounts)):
+                cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
+                tmp_cert[str(cert_id)]={}
+            self.S3Accounts=tmp_cert
         
         tmp_node=[]
         for node_name in eval(str(self.targetNodes)):
