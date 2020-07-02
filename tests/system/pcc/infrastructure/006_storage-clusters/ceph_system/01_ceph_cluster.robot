@@ -152,9 +152,9 @@ Ceph Cluster with one node (Negative)
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
-        ${id}                      PCC.Ceph Get Cluster Id
-                              ...  name=${CEPH_CLUSTER_NAME}
-                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+        ${id}                       PCC.Ceph Get Cluster Id
+                              ...   name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy there
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -173,9 +173,9 @@ Ceph Cluster with two node one server one invader(Negative)
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
-        ${id}                      PCC.Ceph Get Cluster Id
-                              ...  name=${CEPH_CLUSTER_NAME}
-                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+        ${id}                       PCC.Ceph Get Cluster Id
+                              ...   name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy there
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -195,9 +195,9 @@ Ceph Cluster Create
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
-        ${id}                      PCC.Ceph Get Cluster Id
-                              ...  name=${CEPH_CLUSTER_NAME}
-                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+        ${id}                       PCC.Ceph Get Cluster Id
+                              ...   name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy there
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -357,50 +357,51 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     													
 ###################################################################################################################################	
-TCP-985 Update Cluster - Try to add Tags
-###################################################################################################################################
-    [Documentation]                 *Update Cluster - Try to add Tags*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-                               ...  tags=["ROTATIONAL","SOLID_STATE","SATA/SAS"]
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-							   
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-													
-	    ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-							  
+#TCP-985 Update Cluster - Try to add Tags
+####################################################################################################################################
+#    [Documentation]                 *Update Cluster - Try to add Tags*
+#                               ...  keyword:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Cluster Update
+#                               ...  PCC.Ceph Wait Until Cluster Ready
+#
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#
+#        ${response}                 PCC.Ceph Cluster Update
+#                               ...  id=${id}
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+#                               ...  tags=["ROTATIONAL","SOLID_STATE","SATA/SAS"]
+#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+#							   
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#													
+#	    ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#							  
 ###################################################################################################################################	
-TCP-985 Update Cluster - Try to remove Tags (Negative)
-###################################################################################################################################
-    [Documentation]                 *Update Cluster - Try to remove Tags*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-                               ...  tags=["ROTATIONAL","SOLID_STATE"]
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-							   
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
+#TCP-985 Update Cluster - Try to remove Tags (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Update Cluster - Try to remove Tags*
+#                               ...  keyword:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Cluster Update
+#                               ...  PCC.Ceph Wait Until Cluster Ready
+#
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#
+#        ${response}                 PCC.Ceph Cluster Update
+#                               ...  id=${id}
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+#                               ...  tags=["ROTATIONAL","SOLID_STATE"]
+#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+#							   
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
