@@ -57,7 +57,7 @@ Ceph Ceph Certificate For Rgws
         [Documentation]              *Ceph Ceph Certificate For Rgws*
         
         ${cert_id}                   PCC.Get Certificate Id
-                                ...  name=rgw-cert
+                                ...  Alias=rgw-cert
                                      Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
                 
         ${response}                  PCC.Add Certificate
