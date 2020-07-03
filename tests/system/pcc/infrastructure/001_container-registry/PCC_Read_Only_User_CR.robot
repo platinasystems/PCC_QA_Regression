@@ -401,33 +401,33 @@ Update an Auth Profile after login as Read Only user
                        Log to Console    ${message}
                        Should Not Be Equal    "${status}"    "200"
                        
+#####################################################################################################################################
+#Cleanup Container Registry using Read Only user
+#####################################################################################################################################
+#        
+#        [Documentation]    *Cleanup all CR* test
+#                           ...  keywords:
+#                           ...  PCC.Clean all CR
+#                           ...  PCC.Wait for deletion of CR
+#        
+#        ${result}    PCC.Clean all CR
+#        
+#                     Log to Console    ${result}
+#                     Should Not Be Equal As Strings    ${result}    OK
+#                     
 ####################################################################################################################################
-Cleanup Container Registry using Read Only user
+#Cleanup Auth Profiles using Read Only user
 ####################################################################################################################################
-        
-        [Documentation]    *Cleanup all CR* test
-                           ...  keywords:
-                           ...  PCC.Clean all CR
-                           ...  PCC.Wait for deletion of CR
-        
-        ${result}    PCC.Clean all CR
-        
-                     Log to Console    ${result}
-                     Should Not Be Equal As Strings    ${result}    OK
-                     
-###################################################################################################################################
-Cleanup Auth Profiles using Read Only user
-###################################################################################################################################
-        
-        [Documentation]    *Clean-up Auth Profiles* test
-                           ...  keywords:
-                           ...  PCC.Delete All Auth Profile     
-        
-        ${result}    PCC.Delete All Auth Profile
-        
-                     Log to Console    ${result}
-                     Should Not Be Equal As Strings    ${result}    OK
-                     
+#        
+#        [Documentation]    *Clean-up Auth Profiles* test
+#                           ...  keywords:
+#                           ...  PCC.Delete All Auth Profile     
+#        
+#        ${result}    PCC.Delete All Auth Profile
+#        
+#                     Log to Console    ${result}
+#                     Should Not Be Equal As Strings    ${result}    OK
+#                     
 ###################################################################################################################################
 Login to PCC after testing Read Only user TCs
 ###################################################################################################################################
