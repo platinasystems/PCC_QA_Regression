@@ -316,7 +316,7 @@ Verify CR creation successful from frontend : TCP-825
                      
 
 ####################################################################################################################################
-Login to PCC using Tenant User with Read Only Access
+Login to PCC using Tenant User with Read Only Access after creation of CR using Read Write Access Tenant User
 ####################################################################################################################################
         
         [Documentation]    *Login to PCC using Tenant User* test
