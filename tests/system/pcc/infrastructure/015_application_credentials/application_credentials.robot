@@ -363,6 +363,128 @@ Get Profile Template Per Type
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Create Application credential profile without active state
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_without_active
+                       ...    Type=ceph
+                       ...    Username=profile_without_active
+                       ...    Email=profile_without_active@gmail.com
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Creating App-credential profile with invalid type (Negative)
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_invalid_type
+                       ...    Type=k8s
+                       ...    Username=profile_with_invalid_type
+                       ...    Email=profile_with_invalid_type@gmail.com
+                       ...    Active=True
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+
+###################################################################################################################################
+Creating App-credential profile without name (Negative)
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Type=ceph
+                       ...    Username=profile_without_name
+                       ...    Email=profile_without_name@gmail.com
+                       ...    Active=True
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Creating App-credential profile without type (Negative)
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_without_type
+                       ...    Username=profile_without_type
+                       ...    Email=profile_without_type@gmail.com
+                       ...    Active=True
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Creating App-credential profile without user-name(Negative)
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_without_username
+                       ...    Type=ceph
+                       ...    Email=profile_without_username@gmail.com
+                       ...    Active=True
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
 
 
 
