@@ -21,32 +21,32 @@ Login
                                     Should Be Equal     ${status}  OK
                                     
 ###################################################################################################################################
-Create Kubernetes cluster without Network Manager (Negative)
-###################################################################################################################################
-        [Documentation]             *Create Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Create Cluster
-                               
-        ${network_id}               PCC.Get Network Manager Id
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Pass Execution If    ${network_id} is not ${None}    Network is already there
-
-        ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8s_NAME}
-                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
-
-        ${response}                 PCC.K8s Create Cluster
-                               ...  id=${K8S_ID}
-                               ...  k8sVersion=${K8S_VERSION}
-                               ...  name=${K8S_NAME}
-                               ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=${K8S_NODES}
-                               ...  pools=${K8S_POOL}
-                               ...  networkClusterName=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
+#Create Kubernetes cluster without Network Manager (Negative)
+####################################################################################################################################
+#        [Documentation]             *Create Kubernetes cluster*
+#                               ...  Keywords:
+#                               ...  PCC.K8s Create Cluster
+#                               
+#        ${network_id}               PCC.Get Network Manager Id
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Pass Execution If    ${network_id} is not ${None}    Network is already there
+#
+#        ${cluster_id}               PCC.K8s Get Cluster Id
+#                               ...  name=${K8s_NAME}
+#                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
+#
+#        ${response}                 PCC.K8s Create Cluster
+#                               ...  id=${K8S_ID}
+#                               ...  k8sVersion=${K8S_VERSION}
+#                               ...  name=${K8S_NAME}
+#                               ...  cniPlugin=${K8S_CNIPLUGIN}
+#                               ...  nodes=${K8S_NODES}
+#                               ...  pools=${K8S_POOL}
+#                               ...  networkClusterName=${NETWORK_MANAGER_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
 ###################################################################################################################################
 Ceph Cluster Creation without Network Manager (Negative)
 ###################################################################################################################################
