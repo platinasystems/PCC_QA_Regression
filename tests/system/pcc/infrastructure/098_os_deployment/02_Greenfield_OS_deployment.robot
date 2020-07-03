@@ -144,7 +144,7 @@ Update interface of pxe-booted node
     [Documentation]    *Update interface of pxe-booted node* test
     [Tags]    Update
     ${response}    PCC.Edit interface of pxe-booted node
-                   ...    interface_name=${management_interface}
+                   ...    interface_name=eth2
                    ...    Id=${server3_id}
                    ...    ipv4Address=["${SERVER_3_MGMT_IP}"]
                    ...    gateway=${GATEWAY}
