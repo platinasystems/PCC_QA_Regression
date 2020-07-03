@@ -215,7 +215,7 @@ class ContainerRegistry(AaBase):
         else:
             return "Object with {} not found".format(self.Name)
     
-        for i in range(1,50):
+        for i in range(1,60):
             time.sleep(10)
             banner("Loop: {}".format(i))
             response = pcc.get_portus_by_id(conn, id=str(self.CR_ID))
@@ -365,7 +365,7 @@ class ContainerRegistry(AaBase):
         else:
             return "Object with {} not found".format(self.Name)
     
-        for i in range(1,50):
+        for i in range(1,60):
             time.sleep(10)
             banner("Loop: {}".format(i))
             response = pcc.get_portus_by_id(conn, id=str(self.CR_ID))
@@ -508,7 +508,7 @@ class ContainerRegistry(AaBase):
                     if get_response_data(response) != []:
                         time.sleep(6)
                         banner("All CR not yet deleted")
-                        if counter < 25:
+                        if counter < 40:
                             banner("Counter: {}".format(counter))
                             continue
                         else:
@@ -536,7 +536,7 @@ class ContainerRegistry(AaBase):
                     if self.Name in CR_availability_status:
                         banner("Named CR still not deleted")
                         time.sleep(6)
-                        if counter < 25:
+                        if counter < 40:
                             banner("Counter: {}".format(counter))
                             continue
                         else:
