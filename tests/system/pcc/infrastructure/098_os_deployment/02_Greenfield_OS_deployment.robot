@@ -267,22 +267,22 @@ Deleting Mass+LLDP From Nodes
                                     Should Be Equal As Strings      ${status_code}  OK
 
 ###################################################################################################################################
-Set Password on Server
+#Set Password on Server
 ###################################################################################################################################
-
-    [Documentation]    *Set Password on Server* test
-    [Tags]    Password
-    ${status}    PCC.Set password on Server
-                 ...  key_name=${KEY_NAME}
-                 ...  admin_user=${ADMIN_USER}
-                 ...  host_ip=${SERVER_3_HOST_IP}
-                 ...  password=${SERVER_3_PWD}
-                 ...  i28_username=${i28_USERNAME}
-                 ...  i28_hostip=${i28_HOST_IP}
-                 ...  i28_password=${i28_PASSWORD}
-
-                 Log To Console    ${status}
-                 Should be equal as strings    ${status}    OK
+#
+#    [Documentation]    *Set Password on Server* test
+#    [Tags]    Password
+#    ${status}    PCC.Set password on Server
+#                 ...  key_name=${KEY_NAME}
+#                 ...  admin_user=${ADMIN_USER}
+#                 ...  host_ip=${SERVER_3_HOST_IP}
+#                 ...  password=${SERVER_3_PWD}
+#                 ...  i28_username=${i28_USERNAME}
+#                 ...  i28_hostip=${i28_HOST_IP}
+#                 ...  i28_password=${i28_PASSWORD}
+#
+#                 Log To Console    ${status}
+#                 Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Delete Key
