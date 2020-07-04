@@ -926,35 +926,35 @@ Login to PCC
 #                       ## To DO - Verify Erasure Profile Deleted or not .. Wait until deletion
 #                       
 ####################################################################################################################################
-#Ceph Cluster Delete
-####################################################################################################################################
-#    [Documentation]            *Delete cluster if it exist*
-#                               ...  keywords:
-#                               ...  PCC.Ceph Get Cluster Id
-#                               ...  PCC.Ceph Delete Cluster
-#                               ...  PCC.Ceph Wait Until Cluster Deleted
-#                               ...  PCC.Ceph Cleanup BE
-#    
-#
-#        ${id}                  PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#                               Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
-#
-#        ${response}            PCC.Ceph Delete Cluster
-#                               ...  id=${id}
-#
-#        ${status_code}         Get Response Status Code        ${response}
-#                               Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}              PCC.Ceph Wait Until Cluster Deleted
-#                               ...  id=${id}
-#                               Should Be Equal     ${status}  OK
-#                                    
-#        ${response}            PCC.Ceph Cleanup BE
-#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#
+Ceph Cluster Delete
+###################################################################################################################################
+    [Documentation]            *Delete cluster if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Delete Cluster
+                               ...  PCC.Ceph Wait Until Cluster Deleted
+                               ...  PCC.Ceph Cleanup BE
+    
+
+        ${id}                  PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+                               Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Cluster
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Cluster Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+                                    
+        ${response}            PCC.Ceph Cleanup BE
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+
 ####################################################################################################################################
 #Network Manager Delete and Verify PCC
 ####################################################################################################################################
