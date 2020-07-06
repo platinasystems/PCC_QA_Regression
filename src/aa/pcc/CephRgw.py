@@ -34,7 +34,7 @@ class CephRgw(AaBase):
         self.port=None
         self.certificateName=None
         self.certificateID=None
-        self.S3Accounts={}
+        self.S3Accounts=[]
 
 
     ###########################################################################
@@ -77,8 +77,11 @@ class CephRgw(AaBase):
         
         tmp_node=[]
         for node_name in eval(str(self.targetNodes)):
+            print("Node Name:"+str(node_name))
             node_id=easy.get_node_id_by_name(conn,node_name)
+            print("Node Id:"+str(node_id))
             tmp_node.append(node_id)
+        print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
         
@@ -118,8 +121,11 @@ class CephRgw(AaBase):
         
         tmp_node=[]
         for node_name in eval(str(self.targetNodes)):
+            print("Node Name:"+str(node_name))
             node_id=easy.get_node_id_by_name(conn,node_name)
+            print("Node Id:"+str(node_id))
             tmp_node.append(node_id)
+        print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
         
