@@ -485,9 +485,249 @@ Creating App-credential profile without user-name(Negative)
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
                        Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Check if Maximum Bucket Number accepts only integers as input
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_buckets
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_buckets
+                       ...    Email=profile_with_max_buckets@gmail.com
+                       ...    Active=True
+                       ...    MaxBuckets=123
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_invalid_type
+                       ...    Type=ceph
+                       ...    Username=profile_with_invalid_type
+                       ...    Email=profile_with_invalid_type@gmail.com
+                       ...    Active=True
+                       ...    MaxBuckets=abc
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Check if Maximum Bucket Objects accepts only integers as input
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_buckets
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_buckets
+                       ...    Email=profile_with_max_buckets@gmail.com
+                       ...    Active=True
+                       ...    maxBucketObjects=123
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_buckets1
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_buckets1
+                       ...    Email=profile_with_max_buckets1@gmail.com
+                       ...    Active=True
+                       ...    maxBucketObjects=abc
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
 
 
+###################################################################################################################################
+Check if Maximum Bucket Size accepts only integers as input
+###################################################################################################################################
 
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_bucket_size
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_bucket_size
+                       ...    Email=profile_with_max_bucket_size@gmail.com
+                       ...    Active=True
+                       ...    maxBucketSize=123
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_bucket_size2
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_bucket_size2
+                       ...    Email=profile_with_max_bucket_size2@gmail.com
+                       ...    Active=True
+                       ...    maxBucketSize=abc
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+###################################################################################################################################
+Check if Maximum Object Size accepts only integers as input
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_object_size
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_object_size
+                       ...    Email=profile_with_max_object_size@gmail.com
+                       ...    Active=True
+                       ...    maxObjectSize=123
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_object_size2
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_object_size2
+                       ...    Email=profile_with_max_object_size2@gmail.com
+                       ...    Active=True
+                       ...    maxObjectSize=abc
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+                       
+###################################################################################################################################
+Check if Maximum User Size accepts only integers as input
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_user_size
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_user_size
+                       ...    Email=profile_with_max_user_size@gmail.com
+                       ...    Active=True
+                       ...    maxUserSize=123
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_user_size2
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_user_size2
+                       ...    Email=profile_with_max_user_size2@gmail.com
+                       ...    Active=True
+                       ...    maxUserSize=abc
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+                       
+                       
+###################################################################################################################################
+Check if Maximum Users Objects accepts only integers as input
+###################################################################################################################################
+
+        [Documentation]    *Create Metadata Profile* test
+                           ...  keywords:
+                           ...  PCC.Add Metadata Profile
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_user_size
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_user_size
+                       ...    Email=profile_with_max_user_size@gmail.com
+                       ...    Active=True
+                       ...    maxUserObjects=123
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+        
+        ${response}    PCC.Add Metadata Profile
+                       ...    Name=profile_with_max_user_size2
+                       ...    Type=ceph
+                       ...    Username=profile_with_max_user_size2
+                       ...    Email=profile_with_max_user_size2@gmail.com
+                       ...    Active=True
+                       ...    maxUserObjects=abc
+                       
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
 Delete Metadata Profile
