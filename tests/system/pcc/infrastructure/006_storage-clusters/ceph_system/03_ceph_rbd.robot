@@ -576,39 +576,39 @@ Ceph 2 RBDs using same pool
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 ###################################################################################################################################
-Ceph Rbd with ROTATIONAL and ALL tags
-###################################################################################################################################
-    [Documentation]                 *Ceph Rbd with ROTATIONAL and ALL tags*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Rbd
-                               ...  PCC.Ceph Wait Until Rbd Ready
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
-
-        ${response}                 PCC.Ceph Create Rbd
-                               ...  name=rbd8
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=${CEPH_RBD_SIZE}
-                               ...  tags=["All"]
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd8
-
-                                    Should Be Equal As Strings      ${status}    OK
-
+#Ceph Rbd with ROTATIONAL and ALL tags
+####################################################################################################################################
+#    [Documentation]                 *Ceph Rbd with ROTATIONAL and ALL tags*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Create Rbd
+#                               ...  PCC.Ceph Wait Until Rbd Ready
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${pool_id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_POOL_NAME}
+#
+#        ${response}                 PCC.Ceph Create Rbd
+#                               ...  name=rbd8
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  ceph_pool_id=${pool_id}
+#                               ...  size=${CEPH_RBD_SIZE}
+#                               ...  tags=["All"]
+#                               ...  image_feature=${CEPH_RBD_IMG}
+#                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rbd Ready
+#                               ...  name=rbd8
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
 ###################################################################################################################################
 Ceph 2 RBDs with same pool, size, size unit and tags
 ###################################################################################################################################

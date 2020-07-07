@@ -51,37 +51,37 @@ Ceph Pool For Rgws
                                            Should Be Equal As Strings      ${status}    OK
                                            
 ###################################################################################################################################
-Create Erasure CEPH Pool with 4:2 chunks For Raos
-###################################################################################################################################
-
-     [Documentation]                 *Get Erasure Code Profile Id* test
-                                     ...  keywords:
-                                     ...  PCC.Get Erasure Code Profile Id
-                                     ...  PCC.Ceph Get Cluster Id
-                                     ...  PCC.Ceph Create Erasure Pool
-                           
-        ${cluster_id}                PCC.Ceph Get Cluster Id
-                                     ...  name=${CEPH_CLUSTER_NAME}
-                         
-                                                  
-        ${response}                  PCC.Ceph Create Erasure Pool                
-                                     ...  name=rados-erasure
-                                     ...  ceph_cluster_id=${cluster_id}
-                                     ...  size=${CEPH_POOL_SIZE}
-                                     ...  pool_type=erasure
-                                     ...  quota=${CEPH_POOL_QUOTA}
-                                     ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                                     ...  Datachunks=4
-                                     ...  Codingchunks=2
-                               
-        ${status_code}               Get Response Status Code        ${response}     
-                                     Should Be Equal As Strings      ${status_code}  200
-        
-        
-        ${status}                    PCC.Ceph Wait Until Erasure Pool Ready
-                                     ...  name=rados-erasure
-                                     Should Be Equal As Strings      ${status}    OK
-
+#Create Erasure CEPH Pool with 4:2 chunks For Raos
+####################################################################################################################################
+#
+#     [Documentation]                 *Get Erasure Code Profile Id* test
+#                                     ...  keywords:
+#                                     ...  PCC.Get Erasure Code Profile Id
+#                                     ...  PCC.Ceph Get Cluster Id
+#                                     ...  PCC.Ceph Create Erasure Pool
+#                           
+#        ${cluster_id}                PCC.Ceph Get Cluster Id
+#                                     ...  name=${CEPH_CLUSTER_NAME}
+#                         
+#                                                  
+#        ${response}                  PCC.Ceph Create Erasure Pool                
+#                                     ...  name=rados-erasure
+#                                     ...  ceph_cluster_id=${cluster_id}
+#                                     ...  size=${CEPH_POOL_SIZE}
+#                                     ...  pool_type=erasure
+#                                     ...  quota=${CEPH_POOL_QUOTA}
+#                                     ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+#                                     ...  Datachunks=4
+#                                     ...  Codingchunks=2
+#                               
+#        ${status_code}               Get Response Status Code        ${response}     
+#                                     Should Be Equal As Strings      ${status_code}  200
+#        
+#        
+#        ${status}                    PCC.Ceph Wait Until Erasure Pool Ready
+#                                     ...  name=rados-erasure
+#                                     Should Be Equal As Strings      ${status}    OK
+#
 ###################################################################################################################################
 Create Application credential profile without application For Rados
 ###################################################################################################################################
@@ -340,79 +340,79 @@ Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Rados Gateway Creation With Erasure Pool Without S3 Accounts
+#Ceph Rados Gateway Creation With Erasure Pool Without S3 Accounts
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=rados-erasure
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_Cluster_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK       
+#
 #####################################################################################################################################
-
-     [Documentation]                 *Ceph Rados Gateway Creation*
-              
-        ${response}                 PCC.Ceph Create Rgw
-                               ...  name=${CEPH_RGW_NAME}
-                               ...  poolName=rados-erasure
-                               ...  targetNodes=${CEPH_RGW_NODES}
-                               ...  port=${CEPH_RGW_PORT}
-                               ...  certificateName=${CEPH_RGW_CERT_NAME}
-                           
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_Cluster_NAME}
-                                    Should Be Equal As Strings      ${status}    OK       
-
-####################################################################################################################################
-Ceph Rados Gateway Delete 
-####################################################################################################################################
-
-    [Documentation]                 *Ceph Rados Gateway Delete*
-                             
-        ${response}                 PCC.Ceph Delete Rgw
-                               ...  name=${CEPH_RGW_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Deleted
-                               ...  name=${CEPH_RGW_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-##################################################################################################################################
-Ceph Rados Gateway Creation With Erasure Pool With S3 Accounts
+#Ceph Rados Gateway Delete 
 #####################################################################################################################################
-
-     [Documentation]                 *Ceph Rados Gateway Creation*
-              
-        ${response}                 PCC.Ceph Create Rgw
-                               ...  name=${CEPH_RGW_NAME}
-                               ...  poolName=rados-erasure
-                               ...  targetNodes=${CEPH_RGW_NODES}
-                               ...  port=${CEPH_RGW_PORT}
-                               ...  certificateName=${CEPH_RGW_CERT_NAME}
-                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
-                           
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_Cluster_NAME}
-                                    Should Be Equal As Strings      ${status}    OK   
-
-####################################################################################################################################
-Ceph Rados Gateway Delete 
-####################################################################################################################################
-
-    [Documentation]                 *Ceph Rados Gateway Delete*
-                             
-        ${response}                 PCC.Ceph Delete Rgw
-                               ...  name=${CEPH_RGW_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Deleted
-                               ...  name=${CEPH_RGW_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-                                   
-                                    
+#
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+#                             
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+###################################################################################################################################
+#Ceph Rados Gateway Creation With Erasure Pool With S3 Accounts
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=rados-erasure
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_Cluster_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK   
+#
+#####################################################################################################################################
+#Ceph Rados Gateway Delete 
+#####################################################################################################################################
+#
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+#                             
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                   
+#                                    
 #####################################################################################################################################
 Ceph Rados Create with Multiple Nodes
 #####################################################################################################################################

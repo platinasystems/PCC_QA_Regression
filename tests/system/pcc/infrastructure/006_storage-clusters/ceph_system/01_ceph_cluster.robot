@@ -55,7 +55,7 @@ Ceph Cluster Creation with 2 nodes both servers (Negative)
         ${response}                PCC.Ceph Create Cluster
                               ...  name=${CEPH_CLUSTER_NAME}
                               ...  nodes=["${SERVER_1_NAME}", "${SERVER_2_NAME}"]
-                              ...  tags=["ALL"]
+                              ...  tags=${CEPH_CLUSTER_TAGS}
                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
                              
         ${status_code}             Get Response Status Code  ${response}
@@ -75,7 +75,7 @@ Ceph Cluster Creation without name (Negative)
         ${response}                PCC.Ceph Create Cluster
                               ...  name=""
                               ...  nodes=${CEPH_CLUSTER_NODES}
-                              ...  tags=["ALL"]
+                              ...  tags=${CEPH_CLUSTER_TAGS}
                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}             Get Response Status Code  ${response}
@@ -96,7 +96,7 @@ Ceph Cluster Creation with invalid name (Negative)
         ${response}                PCC.Ceph Create Cluster
                               ...  name="!@#$%^"
                               ...  nodes=${CEPH_CLUSTER_NODES}
-                              ...  tags=["ALL"]
+                              ...  tags=${CEPH_CLUSTER_TAGS}
                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}             Get Response Status Code  ${response}
@@ -117,7 +117,7 @@ Ceph Cluster Creation without selecting any nodes (Negative)
         ${response}                PCC.Ceph Create Cluster
                               ...  name=${CEPH_CLUSTER_NAME}
                               ...  nodes=[]
-                              ...  tags=["ALL"]
+                              ...  tags=${CEPH_CLUSTER_TAGS}
                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}             Get Response Status Code  ${response}
