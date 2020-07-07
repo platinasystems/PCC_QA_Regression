@@ -698,10 +698,10 @@ Check if Maximum Users Objects accepts only integers as input
                            ...  PCC.Add Metadata Profile
         
         ${response}    PCC.Add Metadata Profile
-                       ...    Name=profile_with_max_user_size
+                       ...    Name=profile_with_max_user_objects
                        ...    Type=ceph
-                       ...    Username=profile_with_max_user_size
-                       ...    Email=profile_with_max_user_size@gmail.com
+                       ...    Username=profile_with_max_user_objects
+                       ...    Email=profile_with_max_user_objects@gmail.com
                        ...    Active=True
                        ...    maxUserObjects=123
                        
@@ -714,10 +714,10 @@ Check if Maximum Users Objects accepts only integers as input
                        Should Be Equal As Strings    ${status}    200
         
         ${response}    PCC.Add Metadata Profile
-                       ...    Name=profile_with_max_user_size2
+                       ...    Name=profile_with_max_user_objects2
                        ...    Type=ceph
-                       ...    Username=profile_with_max_user_size2
-                       ...    Email=profile_with_max_user_size2@gmail.com
+                       ...    Username=profile_with_max_user_objects2
+                       ...    Email=profile_with_max_user_objects2@gmail.com
                        ...    Active=True
                        ...    maxUserObjects=abc
                        
