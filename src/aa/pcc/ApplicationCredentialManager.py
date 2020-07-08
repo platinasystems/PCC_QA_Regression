@@ -117,6 +117,37 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Add Metadata Profile")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("Kwargs are: {}".format(kwargs))        
+        if "MaxBuckets" in kwargs:
+            if kwargs['MaxBuckets'].isnumeric(): 
+                self.MaxBuckets= ast.literal_eval(self.MaxBuckets)
+            else:
+                self.MaxBuckets= kwargs['MaxBuckets']
+        if "maxBucketObjects" in kwargs:
+            if kwargs['maxBucketObjects'].isnumeric(): 
+                self.maxBucketObjects = ast.literal_eval(self.maxBucketObjects)
+            else:
+                self.maxBucketObjects= kwargs['maxBucketObjects']
+        if "maxBucketSize" in kwargs:
+            if kwargs['maxBucketSize'].isnumeric(): 
+                self.maxBucketSize = ast.literal_eval(self.maxBucketSize)
+            else:
+                self.maxBucketSize= kwargs['maxBucketSize']
+        if "maxObjectSize" in kwargs:
+            if kwargs['maxObjectSize'].isnumeric(): 
+                self.maxObjectSize = ast.literal_eval(self.maxObjectSize)
+            else:
+                self.maxObjectSize= kwargs['maxObjectSize']
+        if "maxUserSize" in kwargs:
+            if kwargs['maxUserSize'].isnumeric(): 
+                self.maxUserSize = ast.literal_eval(self.maxUserSize)
+            else:
+                self.maxUserSize= kwargs['maxUserSize']
+        if "maxUserObjects" in kwargs:
+            if kwargs['maxUserObjects'].isnumeric(): 
+                self.maxUserObjects = ast.literal_eval(self.maxUserObjects)
+            else:
+                self.maxUserObjects= kwargs['maxUserObjects']
+        
         
         payload =  {"name":self.Name,
                     "type":self.Type,
@@ -134,7 +165,8 @@ class ApplicationCredentialManager(AaBase):
                                "maxUserObjects":self.maxUserObjects
                               }
                     
-                    }                             
+                    } 
+        print("Payload is {}".format(payload))                            
         dump = json.dumps(payload)
         multipart_data = {'data':(None,dump)}
     
