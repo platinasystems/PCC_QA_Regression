@@ -532,5 +532,30 @@ class ApplicationCredentialManager(AaBase):
         banner("PCC.Get Profile Template Per Type")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_profiles_template_per_type(conn, str(self.Type))              
+        return pcc.get_profiles_template_per_type(conn, str(self.Type)) 
+        
+    #################################################################################
+    @keyword(name="PCC.Get Application Id used by Profile")
+    #################################################################################
+    def get_application_id_used_by_profile(self, *args, **kwargs):
+        """
+        Get Application Id used by Profile
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str)  type: Type of application
+        [Returns]
+            (dict) Response: Get Application Id used by Profile response (includes any errors)
+        """
+        banner("PCC.Get Application Id used by Profile")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        try:
+            profiles_list = self.get_application_credential_profiles(conn)['Result']['Data']
+            for profile in profiles_list:
+                if str(profile['name']) == str(self.Name):
+                    return profile['applicationId']
+            return None
+        except Exception as e:
+            return {"Error": str(e)}           
     
