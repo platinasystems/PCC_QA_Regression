@@ -122,7 +122,7 @@ Ceph Ceph Certificate For Rgws
                                 ...  Alias=rgw-cert
                                 ...  Description=certificate-for-rgw
                                 ...  Private_key=rgw_key.key
-                                ...  Certificate_upload=rgw.pem
+                                ...  Certificate_upload=rgw.crt
   
                                      Log To Console    ${response}
         ${result}                    Get Result    ${response}
