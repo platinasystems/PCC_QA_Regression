@@ -31,10 +31,16 @@ class CephRgw(AaBase):
         self.cephPoolID=None
         self.poolName=None
         self.targetNodes=[]
+        self.targetNodeIp=None
+        self.pcc=None
         self.port=None
         self.certificateName=None
         self.certificateID=None
         self.S3Accounts=[]
+        self.secretKey=None
+        self.accessKey=None
+        self.user="pcc"
+        self.password="cals0ft"
 
 
     ###########################################################################
@@ -42,7 +48,7 @@ class CephRgw(AaBase):
     ###########################################################################
     def get_ceph_rgw_id_by_name(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Ceph Get Cluster Id")
+        banner("PCC.Ceph Get Rgw Id")
         
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -262,3 +268,188 @@ class CephRgw(AaBase):
                 return "Error"
 
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get Rgw Access Key")
+    ###########################################################################
+    def get_ceph_rgw_access_key(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Rgw Access Key")
+        
+        if  self.name==None:
+            print("Ceph Rgw name is empty!!")
+            return "Error"
+        
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        rados_id = easy.get_ceph_rgw_id_by_name(conn,self.name)
+        print("RadosId:"+str(rados_id))
+        key_data = get_response_data(pcc.get_profiles_with_additional_data_for_specific_application(conn,"ceph",str(rados_id)))
+        print("Response:"+str(key_data))
+        print("Acess Key:"+str(key_data[0]['profile']["accessKey"]))
+        if key_data[0]['profile']["accessKey"]:
+            return key_data[0]['profile']["accessKey"]
+        else:
+            print("Can't extract Access Key")
+            return "Error"
+        return None
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get Rgw Secret Key")
+    ###########################################################################
+    def get_ceph_rgw_secret_key(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Rgw Secret Key")
+        
+        if  self.name==None:
+            print("Ceph Rgw name is empty!!")
+            return "Error"
+        
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        rados_id = easy.get_ceph_rgw_id_by_name(conn,self.name)
+        key_data = get_response_data(pcc.get_profiles_with_additional_data_for_specific_application(conn,"ceph",str(rados_id)))
+        print("Response:"+str(key_data))
+        print("Secret Key:"+str(key_data[0]['profile']["secretKey"]))
+        if key_data[0]['profile']["secretKey"]:
+            return key_data[0]['profile']["secretKey"]
+        else:
+            print("Can't extract Secret Key")
+            return "Error"
+        return None   
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Configure")
+    ###########################################################################
+    def ceph_rgw_configure(self,**kwargs):
+        banner("PCC.Ceph Rgw Configure")
+        self._load_kwargs(kwargs)
+        
+        cmd='sudo printf "%s\n" "{}" "{}" "" "{}:{}" "{}:{}" "" "" "" "" "n" "y" | s3cmd --configure'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port,self.targetNodeIp,self.port)
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)
+        
+        if re.search("Configuration saved",str(data)):
+            print("File is created Successfully, Changing check_ssl_certificate and check_ssl_hostname to False")
+            cmd='sudo sed -i "s/check_ssl_certificate = True/check_ssl_certificate = False/g" /home/pcc/.s3cfg; sudo sed -i "s/check_ssl_hostname = True/check_ssl_hostname = False/g" /home/pcc/.s3cfg'
+            output=cli_run(self.pcc,self.user,self.password,cmd)
+            return "OK"
+        else:
+            print("Configuration not set properly")
+            return "Error"
+            
+        return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Make Bucket")
+    ###########################################################################
+    def ceph_rgw_make_bucket(self,**kwargs):
+        banner("PCC.Ceph Rgw Make Bucket")
+        self._load_kwargs(kwargs)
+        
+        cmd='sudo s3cmd mb s3://BUCKET --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        if re.search("created",str(data)):
+            print("Bucket Is Created")
+            return "OK"
+        else:
+            print("Bucket is Not Created")
+            return "Error"
+        return
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Upload File To Bucket")
+    ###########################################################################
+    def ceph_rgw_upload_file_bucket(self,**kwargs):
+        banner("PCC.Ceph Rgw Upload File To Bucket ")
+        self._load_kwargs(kwargs)       
+        cmd='sudo echo "Platina Systems" > rgwFile'
+        file_create=cli_run(self.pcc,self.user,self.password,cmd)
+        cmd='sudo s3cmd put rgwFile s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        if re.search("upload",str(data)):
+            print("File is uploaded to bucket")
+            cmd='sudo rm rgwFile'
+            file_del=cli_run(self.pcc,self.user,self.password,cmd)
+            return "OK"
+        else:
+            print("File is not uploaded")
+            return "Error"
+        return
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Get File From Bucket")
+    ###########################################################################
+    def ceph_rgw_get_file_bucket(self,**kwargs):
+        banner("PCC.Ceph Rgw Get File To Bucket ")
+        self._load_kwargs(kwargs)       
+        cmd='sudo s3cmd get s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        if re.search("download",str(data)):
+            print("File is exracted from Bucket")
+            cmd='sudo rm rgwData'
+            data=cli_run(self.pcc,self.user,self.password,cmd)
+            return "OK"
+        else:
+            print("File is not extracted")
+            return "Error"
+        return
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw List Buckets")
+    ###########################################################################
+    def ceph_rgw_list_buckets(self,**kwargs):
+        banner("PCC.Ceph Rgw Delete Bucket")
+        self._load_kwargs(kwargs)       
+        cmd='sudo s3cmd ls'
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        if re.search("BUCKET",str(data)):
+            return "OK"
+        else:
+            print("Buckets are not listed or Buckets are not created yet")
+            return "Error"
+        return
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Delete File From Bucket")
+    ###########################################################################
+    def ceph_rgw_delete_file_bucket(self,**kwargs):
+        banner("PCC.Ceph Rgw Delete File To Bucket")
+        self._load_kwargs(kwargs)       
+        cmd='sudo s3cmd del s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        if re.search("delete",str(data)):
+            print("File is deleted from Bucket")
+            return "OK"
+        else:
+            print("File is not deleted")
+            return "Error"
+        return
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Delete Bucket")
+    ###########################################################################
+    def ceph_delete_bucket(self,**kwargs):
+        banner("PCC.Ceph Rgw Delete Bucket")
+        self._load_kwargs(kwargs)       
+        cmd='sudo s3cmd rb s3://BUCKET --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        if re.search("removed",str(data)):
+            print("Bucket is deleted successfully")
+            return "OK"
+        else:
+            print("Bucket is not deleted")
+            return "Error"
+        return
