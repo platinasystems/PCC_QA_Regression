@@ -1,6 +1,7 @@
 import re
 import time
 import json
+import ast
 
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -14,7 +15,7 @@ from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
 
-PCCSERVER_TIMEOUT = 60*2
+PCCSERVER_TIMEOUT = 60*5
 
 class CephRgw(AaBase):
 
@@ -72,8 +73,8 @@ class CephRgw(AaBase):
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
         if self.certificateID==None:
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
-        if  self.port!=None:
-            self.port=int(self.port)
+        if  self.port!=None or self.port!='':
+            self.port=ast.literal_eval(str(self.port))
         if self.S3Accounts!=None or self.S3Accounts!=[]:
             tmp_cert={}
             for cert in eval(str(self.S3Accounts)):
@@ -82,12 +83,13 @@ class CephRgw(AaBase):
             self.S3Accounts=tmp_cert           
         
         tmp_node=[]
-        for node_name in eval(str(self.targetNodes)):
-            print("Node Name:"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print("Node Id:"+str(node_id))
-            tmp_node.append(node_id)
-        print("Node List:"+str(tmp_node))
+        if self.targetNodes!=[] or self.targetNodes!='':
+            for node_name in eval(str(self.targetNodes)):
+                print("Node Name:"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print("Node Id:"+str(node_id))
+                tmp_node.append(node_id)
+            print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
         
@@ -116,8 +118,8 @@ class CephRgw(AaBase):
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
         if self.certificateID==None:
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
-        if  self.port!=None:
-            self.port=int(self.port)
+        if  self.port!=None or self.port!='':
+            self.port=ast.literal_eval(str(self.port))
         if self.S3Accounts!=None or self.S3Accounts!=[]:
             tmp_cert={}
             for cert in eval(str(self.S3Accounts)):
@@ -126,12 +128,13 @@ class CephRgw(AaBase):
             self.S3Accounts=tmp_cert
         
         tmp_node=[]
-        for node_name in eval(str(self.targetNodes)):
-            print("Node Name:"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print("Node Id:"+str(node_id))
-            tmp_node.append(node_id)
-        print("Node List:"+str(tmp_node))
+        if self.targetNodes!=[] or self.targetNodes!='':
+            for node_name in eval(str(self.targetNodes)):
+                print("Node Name:"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print("Node Id:"+str(node_id))
+                tmp_node.append(node_id)
+            print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
         

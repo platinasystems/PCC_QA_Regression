@@ -49,6 +49,34 @@ Ceph Pool For Rgws
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=${CEPH_RGW_POOLNAME}
                                            Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Ceph Pool For Rgws (For Pool Update)
+###################################################################################################################################
+
+    [Documentation]                        *Ceph Ceph Pool For Rgws*
+                                      ...  keywords:
+                                      ...  PCC.Ceph Get Cluster Id
+                                      ...  PCC.Ceph Create Pool
+                                      ...  PCC.Ceph Wait Until Pool Ready
+                                      
+        ${cluster_id}                      PCC.Ceph Get Cluster Id
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                      
+        ${response}                        PCC.Ceph Create Pool
+                                      ...  name=rgw-pool-upd
+                                      ...  ceph_cluster_id=${cluster_id}
+                                      ...  size=${CEPH_POOL_SIZE}
+                                      ...  tags=${CEPH_POOL_TAGS}
+                                      ...  pool_type=${CEPH_POOL_TYPE}
+                                      ...  quota=1
+                                      ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+                                      
+        ${status_code}                     Get Response Status Code        ${response}     
+                                           Should Be Equal As Strings      ${status_code}  200
+                                           
+        ${status}                          PCC.Ceph Wait Until Pool Ready
+                                      ...  name=rgw-pool-upd
+                                           Should Be Equal As Strings      ${status}    OK       
                                            
 ###################################################################################################################################
 #Create Erasure CEPH Pool with 4:2 chunks For Raos
@@ -89,11 +117,7 @@ Create Application credential profile without application For Rados
         [Documentation]               *Create Metadata Profile* test
                                       ...  keywords:
                                       ...  PCC.Add Metadata Profile
-                       
-        ${profile_id}                 PCC.Get Profile by Id
-                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}  
-                                      Pass Execution If    ${profile_id} is not ${None}    Profile is already there
-                       
+            
         ${response}                   PCC.Add Metadata Profile
                                       ...    Name=${CEPH_RGW_S3ACCOUNTS}
                                       ...    Type=ceph
@@ -129,7 +153,136 @@ Ceph Ceph Certificate For Rgws
         ${status}                    Get From Dictionary    ${result}    statusCodeValue
                                      Should Be Equal As Strings    ${status}    200
 
-                                                                        
+###################################################################################################################################
+Creating RGW using a pool that is used by other Ceph front-ends (Negative)
+#####################################################################################################################################
+
+     [Documentation]                 *Ceph Rados Gateway Creation*
+              
+        ${response}                 PCC.Ceph Create Rgw
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=${CEPH_POOL_TYPE}
+                               ...  targetNodes=${CEPH_RGW_NODES}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+                           
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200
+                                    
+###################################################################################################################################
+#Creating RGW without name (Negative)
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200    
+#
+###################################################################################################################################
+Creating RGW without pool name (Negative)
+#####################################################################################################################################
+
+     [Documentation]                 *Ceph Rados Gateway Creation*
+              
+        ${response}                 PCC.Ceph Create Rgw
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=
+                               ...  targetNodes=${CEPH_RGW_NODES}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+                           
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200   
+
+
+###################################################################################################################################
+#Creating RGW without port (Negative)
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200   
+#
+#
+###################################################################################################################################
+#Creating RGW without name (Negative)
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200   
+#
+###################################################################################################################################
+Creating RGW without certificate (Negative)
+#####################################################################################################################################
+
+     [Documentation]                 *Ceph Rados Gateway Creation*
+              
+        ${response}                 PCC.Ceph Create Rgw
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=${CEPH_RGW_POOLNAME}
+                               ...  targetNodes=${CEPH_RGW_NODES}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=
+                           
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200                                       
+                                    
+###################################################################################################################################
+#Creating RGW without hosts/nodes (Negative)
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=[]
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200  
+#                                    
+###################################################################################################################################
+#Creating RGW with non alphanumeric name (Negative)
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#              
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=@#$%^&
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                           
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200 
+#                                    
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
@@ -150,6 +303,26 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  name=${CEPH_Cluster_NAME}
                                     Should Be Equal As Strings      ${status}    OK       
 
+#####################################################################################################################################
+#Ceph Rados Update Pool
+######################################################################################################################################
+#     [Documentation]                 *Ceph Rados Gateway Update*
+#
+#        ${rgw_id}                   PCC.Ceph Get Rgw Id
+#                               ...  name=${CEPH_RGW_NAME}
+#     
+#        ${response}                 PCC.Ceph Update Rgw
+#                               ...  ID=${rgw_id}
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=rgw-pool-upd
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                                                        
 #####################################################################################################################################
 Ceph Rados Add S3Account 
 #####################################################################################################################################
@@ -235,7 +408,7 @@ Ceph Rados Update Certificte
                                 ...  Alias=cert-upd
                                 ...  Description=certificate-for-rgw
                                 ...  Private_key=rgw_key.key
-                                ...  Certificate_upload=rgw.pem
+                                ...  Certificate_upload=rgw.crt
   
                                      Log To Console    ${response}
         ${result}                    Get Result    ${response}
@@ -623,3 +796,167 @@ Ceph Rados Gateway Delete
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+
+#####################################################################################################################################
+#App credentials associated with RGW instance would work with each node running RGW service 
+######################################################################################################################################
+#     [Documentation]                 *App credentials associated with RGW instance would work with each node running RGW service *
+#     
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_Cluster_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#        ${accessKey}                PCC.Ceph Get Rgw Access Key
+#                               ...  name=${CEPH_RGW_NAME}
+#                              
+#        ${secretKey}                PCC.Ceph Get Rgw Secret Key
+#                               ...  name=${CEPH_RGW_NAME}
+#                               
+#        ${status}                   PCC.Ceph Rgw Configure
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#        ${status}                   PCC.Ceph Rgw Make Bucket
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Be Equal As Strings      ${status}    OK          
+#
+#        ${status}                   PCC.Ceph Rgw Configure
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#        ${status}                   PCC.Ceph Rgw Make Bucket
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Be Equal As Strings      ${status}    OK     
+#
+######################################################################################################################################
+#Ceph Rados Gateway Delete 
+######################################################################################################################################
+#
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+#                             
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+######################################################################################################################################
+#App-credentials do not work when they are deleted from Rgw
+######################################################################################################################################
+#     [Documentation]                 *App credentials associated with RGW instance would work with each node running RGW service *
+#     
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_Cluster_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#        ${accessKey}                PCC.Ceph Get Rgw Access Key
+#                               ...  name=${CEPH_RGW_NAME}
+#                              
+#        ${secretKey}                PCC.Ceph Get Rgw Secret Key
+#                               ...  name=${CEPH_RGW_NAME}
+#                               
+#        ${status}                   PCC.Ceph Rgw Configure
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#        ${status}                   PCC.Ceph Rgw Make Bucket
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Be Equal As Strings      ${status}    OK     
+#                                    
+#        ${rgw_id}                   PCC.Ceph Get Rgw Id
+#                               ...  name=${CEPH_RGW_NAME}
+#     
+#        ${response}                 PCC.Ceph Update Rgw
+#                               ...  ID=${rgw_id}
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_Cluster_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
+#        ${status}                   PCC.Ceph Rgw Configure
+#                               ...  accessKey=${accessKey}
+#                               ...  secretKey=${secretKey}
+#                               ...  pcc=${PCC_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               
+#                                    Should Not Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Delete Metadata Profile
+###################################################################################################################################
+
+        [Documentation]         *Create Metadata Profile* test
+                                ...  keywords:
+                                ...  PCC.Delete Profile By Id
+                               
+                               
+                               
+        ${response}             PCC.Delete Profile By Id
+                                ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                               
+                                Log To Console    ${response}
