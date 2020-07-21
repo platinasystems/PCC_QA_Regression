@@ -456,3 +456,23 @@ class CephRgw(AaBase):
             print("Bucket is not deleted")
             return "Error"
         return
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Verify BE")
+    ###########################################################################
+    def ceph_rgw_verify_be(self,**kwargs):
+        ceph_be_cmd="sudo ceph -s"
+        cmd_rgw="systemctl status radosgw.service"
+        banner("PCC.Ceph Rgw Verify BE")
+        self._load_kwargs(kwargs)
+
+        for ip in eval(str(self.targetNodeIp)):
+            output=cli_run(ip,self.user,self.password,ceph_be_cmd)
+            print("Output Ceph:"+str(output))
+            output1=cli_run(ip,self.user,self.password,cmd_rgw)
+            print("Output Rgw:"+str(output1))
+            if re.search("rgw",str(output)) and re.search("active",str(output1)):
+                continue
+            else:
+                return None
+        return "OK"

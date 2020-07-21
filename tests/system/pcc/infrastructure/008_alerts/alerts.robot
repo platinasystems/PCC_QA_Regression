@@ -22,7 +22,7 @@ Alert Create Template Rule
                                ...  PCC.Alert Create Rule Template
     
 
-        ${status}                   PCC.Alert Create Rule Template
+        ${response}                 PCC.Alert Create Rule Template
                                ...  name=alert1
                                ...  parameter=cachedMem
                                ...  operator=>
@@ -30,13 +30,10 @@ Alert Create Template Rule
                                ...  time=1m
                                ...  templateId=1
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                             
+                                  
 ###################################################################################################################################
 Alert Verify Template Rule
 ###################################################################################################################################
@@ -46,16 +43,6 @@ Alert Verify Template Rule
 
         ${status}                   PCC.Alert Verify Rule
                                ...  name=alert1
-                               ...  parameter=cachedMem
-                               ...  operator=>
-                               ...  value=60000
-                               ...  time=1m
-                               ...  templateId=1
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
                              
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -82,13 +69,13 @@ Alert Verify Raw Rule
                                ...  Keywords:
                                ...  PCC.Alert Verify Rule   
 
-        ${status}                   PCC.Alert Verify Rule
+        ${status}                   PCC.Alert Verify Raw Rule
                                ...  name=FreeSwap
                                ...  auth_data=${PCC_CONN}
                                ...  setup_ip=${PCC_HOST_IP}
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                             
+
                                     Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
@@ -98,15 +85,11 @@ Alert Get Rule Id
                                ...  Keywords:
                                ...  PCC.Alert Get Rule Id   
 
-        ${status}                   PCC.Alert Get Rule Id
+        ${alert_id}                 PCC.Alert Get Rule Id
                                ...  name=alert1
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
+
+                                    Pass Execution If    ${alert_id} is not ${None}    Alert is Created
                              
-                                    Should Not Be Equal As Strings      ${status}    None
-                                    
 ###################################################################################################################################
 Alert Update Rule
 ###################################################################################################################################
@@ -114,7 +97,11 @@ Alert Update Rule
                                ...  Keywords:
                                ...  PCC.Alert Update Rule       
 
-        ${status}                   PCC.Alert Update Rule
+        ${alert_id}                 PCC.Alert Get Rule Id
+                               ...  name=alert1
+
+        ${response}                 PCC.Alert Update Rule
+                               ...  id=${alert_id}
                                ...  name=alert1
                                ...  parameter=cachedMem
                                ...  operator=>
@@ -122,25 +109,15 @@ Alert Update Rule
                                ...  time=1m
                                ...  templateId=1
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
+
                              
-                                    Should Be Equal As Strings      ${status}    OK
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200 
                                     
         ${status}                   PCC.Alert Verify Rule
                                ...  name=alert1
-                               ...  parameter=cachedMem
-                               ...  operator=>
-                               ...  value=70000
-                               ...  time=1m
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  templateId=1
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
+                             
+                                    Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
 Alert Delete Template Rule 
@@ -150,41 +127,16 @@ Alert Delete Template Rule
                                ...  PCC.Alert Delete Rule    
                                ...  PCC.Alert Verify Rule
 
-        ${status}                   PCC.Alert Delete Rule
+        ${response}                 PCC.Alert Delete Rule
                                ...  name=alert1
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Should Be Equal As Strings      ${status}    OK
 
-        ${id}                       PCC.Alert Get Rule Id
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${alert_id}                 PCC.Alert Get Rule Id
                                ...  name=alert1
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               
-                                    Pass Execution If    ${id} is ${None}    Alert Rule is alredy Deleted
-                             
-        ${status}                   PCC.Alert Delete Rule
-                               ...  name=alert1
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Should Be Equal As Strings      ${status}    OK
- 
-        ${status}                   PCC.Alert Verify Rule
-                               ...  name=alert1
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Should Not Be Equal As Strings      ${status}    OK
+
+                                    Pass Execution If    ${alert_id} is ${None}    Alert is Deleted
                                     
 ###################################################################################################################################
 Alert Delete Raw Rule 
@@ -194,21 +146,11 @@ Alert Delete Raw Rule
                                ...  PCC.Alert Delete Rule    
                                ...  PCC.Alert Verify Rule    
 
-        ${status}                   PCC.Alert Delete Rule
-                               ...  name=FreeSwap
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
-        ${status}                   PCC.Alert Verify Rule
-                               ...  name=FreeSwap
-                               ...  auth_data=${PCC_CONN}
-                               ...  setup_ip=${PCC_HOST_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                             
-                                    Should Not Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Alert Delete All Rule   
+                                    Should Be Equal As Strings      ${status}  OK
+
+
+
+
+
 

@@ -317,6 +317,27 @@ Network Manager Add Node For Ceph And K8s Update
                                     Should Be Equal As Strings      ${status}    OK 
 
 ###################################################################################################################################
+Network Manager Try To Remove 2 Invaders (Negative)
+###################################################################################################################################
+    [Documentation]                 *Network Manager Update*
+                               ...  keywords:
+                               ...  PCC.Network Manager Update
+                               ...  PCC.Wait Until Network Manager Ready
+                               
+        ${network_id}               PCC.Get Network Manager Id
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+        ${response}                 PCC.Network Manager Update
+                               ...  id=${network_id}
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Add Node to Ceph Cluster
 ###################################################################################################################################
     [Documentation]                 *Ceph Cluster Update - Add Invade*

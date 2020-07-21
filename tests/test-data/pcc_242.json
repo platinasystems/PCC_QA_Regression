@@ -165,32 +165,39 @@
             "private_key":"Temp_private.ppk"
         },
         
+    "network_manager":
+        {
+            "name":"network-pvt",
+            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-11"],
+            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.11"],
+            "controlCIDR":"10.0.202.0/24",
+            "igwPolicy":"default"
+        },
+        
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["sv125","sv124","i43"],
-            "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
-            "tags":["ROTATIONAL","SOLID_STATE"],
-            "config":{"cluster_network":"192.0.2.96/27","public_network":"192.0.2.96/27"},
-            "controlCIDR":"",
-            "igwPolicy":"default"
+            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-11"],
+            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.11"],
+            "tags":["SATA/SAS"],
+            "networkClusterName":"network-pvt"
         },
   
     "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":3,
+            "size":2,
             "tags":[],
             "pool_type":"replicated",
-            "quota":1,
-            "quota_unit":"TiB"
+            "quota":"1",
+            "quota_unit":"MiB"
         },
-
+        
     "ceph_rbd":
         {
             "name":"rbd-pvt",
             "image_feature":"layering",
-            "size":3,
+            "size":"3",
             "tags":[],
             "size_units":"MiB"
         },
@@ -198,9 +205,19 @@
     "ceph_fs":
         {
             "name":"fs-pvt",            
-            "meta_pool":"Pool1",       
-            "data_pool":"Pool2",       
-            "default_pool":"Pool3" 
+            "meta_pool":"pool1",       
+            "data_pool":"pool2",       
+            "default_pool":"pool3" 
+        },
+        
+    "ceph_rgw":
+        {
+            "name":"rados-pvt",
+            "poolName":"rgw-pool",
+            "targetNodes":["qa-server-100"],
+            "port":443,
+            "certificateName":"rgw-cert",
+            "S3Accounts":"rgw-app"
         },
 
     "k8s":
@@ -209,7 +226,8 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["i43","sv124","sv125"],
+            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-11"],
+            "networkClusterName":"network-pvt",
             "pools":[],
             "appName":"nginxapp",
             "appNamespace":"nginxapp",
@@ -222,8 +240,8 @@
     "os_deployment":
         {
             "image1_name":"centos76",            
-            "image2_name":"ubuntu-disco",       
-            "image3_name":"ubuntu-bionic",
+            "image2_name":"ubuntu-bionic",       
+            "image3_name":"ubuntu-disco",
             "locale":"en-US",       
             "time_zone":"PDT",
             "admin_user":"admin",

@@ -507,3 +507,24 @@ def get_metadata_profile_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)} 
+
+## Alerts
+def get_alert_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get Id of Alert with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Alert
+    [Returns]
+        (int) Id: Id of the matchining alert name, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_alerts = pcc.get_alert_rules(conn)['Result']['Data']
+        for alert in list_of_alerts:
+            if str(alert['name']) == str(Name):
+                return alert['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
