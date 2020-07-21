@@ -507,7 +507,7 @@ Create CephFS - where name contains only special characters (Negative)
 
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=!@#$%^^
+                               ...  name=${CEPH_CLUSTER_NAME}
 
         ${meta}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_META}
@@ -519,7 +519,7 @@ Create CephFS - where name contains only special characters (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
+                               ...  name=!@#$%^^
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
                                ...  data_pool=${data}
