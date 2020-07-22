@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+        
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -194,7 +194,7 @@ Ceph Cluster Create
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
-
+    
         ${id}                       PCC.Ceph Get Cluster Id
                               ...   name=${CEPH_CLUSTER_NAME}
                                     Pass Execution If    ${id} is not ${None}    Cluster is alredy there
@@ -219,7 +219,7 @@ Ceph Cluster Verification Back End
     [Documentation]                 *Verifying Ceph cluster BE*
                                ...  keywords:
                                ...  PCC.Ceph Verify BE
-
+    
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}

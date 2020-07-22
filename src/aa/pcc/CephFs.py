@@ -1,7 +1,7 @@
 import re
 import time
 import json
-
+import ast
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -72,13 +72,13 @@ class CephFs(AaBase):
         banner("PCC.Ceph Create Fs")
         self._load_kwargs(kwargs)
 
-        if re.search("^\[",str(self.data_pool))!=None and type(self.data_pool)!=list:
-            self.data_pool=eval(self.data_pool)
+        #if re.search("^\[",str(self.data_pool))!=None and type(self.data_pool)!=list:
+        #    self.data_pool=eval(self.data_pool)
 
         payload = {
             "name": self.name,
             "metadata_pool": self.metadata_pool,
-            "data_pool": self.data_pool,
+            "data_pools": ast.literal_eval(self.data_pool),
             "default_pool": self.default_pool,
             "ceph_cluster_id": self.ceph_cluster_id
         }
@@ -196,7 +196,7 @@ class CephFs(AaBase):
             "id":self.id,
             "name": self.name,
             "metadata_pool": self.metadata_pool,
-            "data_pool": self.data_pool,
+            "data_pools": ast.literal_eval(self.data_pool),
             "default_pool": self.default_pool,
             "ceph_cluster_id": self.ceph_cluster_id
 

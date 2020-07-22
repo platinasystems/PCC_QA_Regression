@@ -339,7 +339,7 @@ Ceph Fs Creation
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     

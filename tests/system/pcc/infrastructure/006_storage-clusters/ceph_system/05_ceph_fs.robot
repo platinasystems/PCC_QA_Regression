@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+       
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -31,7 +31,8 @@ Ceph Fs Creation
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
-
+        
+        
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -48,7 +49,7 @@ Ceph Fs Creation
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -182,7 +183,7 @@ Create CephFS - deploying and completed status
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -353,7 +354,7 @@ Create CephFS - without selecting metadata pool (Negative)
                                ...  name=cfs2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -382,7 +383,7 @@ Create CephFS - without selecting default pool (Negative)
                                ...  name=cfs3
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -414,7 +415,7 @@ Create CephFS - without CephFS name (Negative)
                                ...  name=
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -452,7 +453,7 @@ Create CephFS - with multiple default pools (Negative)
                                ...  name=cfs4
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=[${default},${default1},${default2}]
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -490,7 +491,7 @@ Create CephFS - with multiple metadata pools (Negative)
                                ...  name=cfs5
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=[${meta},${meta1},${meta2}]
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -522,7 +523,7 @@ Create CephFS - where name contains only special characters (Negative)
                                ...  name=!@#$%^^
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -555,7 +556,7 @@ Ceph Fs Creation and Verify
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -591,7 +592,7 @@ Update CephFS – when it is in deploying state (Negative)
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -779,7 +780,7 @@ Update CephFS - add_default_pool (Negative)
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=[${default},${default1}]
 
         ${status_code}              Get Response Status Code        ${response}
@@ -820,7 +821,7 @@ Update CephFS - add_metadata_pool (Negative)
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=[${meta},${meta1}]
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -854,7 +855,7 @@ Update CephFS - remove_default_pool (Negative)
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=
 
         ${status_code}              Get Response Status Code        ${response}
@@ -1070,7 +1071,7 @@ Pool released from RBD is used for creating/updating CephFS
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=${data}
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}     
