@@ -120,13 +120,13 @@ Adding Maas To Server (Negative)
                                ...  PCC.Wait Until Roles Ready On Nodes
 
         ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}"]
                                ...  roles=["Baremetal Management Node"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
         ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
                                      
                                     Should Not Be Equal As Strings      ${status_code}  OK
 

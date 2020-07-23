@@ -155,69 +155,6 @@ Create CephFS - with mutiple data pools
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-Create CephFS - deploying and completed status 
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - deploying and completed status*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
-                               ...  PCC.Ceph Wait Until Fs Ready
-                               ...  PCC.Ceph Wait Until Fs Deleted
-                               ...  PCC.Ceph Get Fs Id
-                               ...  PCC.Ceph Fs Verify BE    
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${meta}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_META}
-
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
-        ${default}                  PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DEFAULT}
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=${meta}
-                               ...  data_pool=[${data}]
-                               ...  default_pool=${default}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Fs Ready
-                               ...  name=${CEPH_FS_NAME}
-
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                    PCC.Ceph Fs Verify BE
-                                ...  name=${CEPH_FS_NAME}
-                                ...  user=${PCC_LINUX_USER}
-                                ...  password=${PCC_LINUX_PASSWORD}
-                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                                     Should Be Equal As Strings      ${status}    OK
-
-        ${id}                       PCC.Ceph Get Fs Id
-                               ...  name=${CEPH_FS_NAME}
-                                    Pass Execution If    ${id} is ${None}    Fs is alredy Deleted
-
-        ${response}                 PCC.Ceph Delete Fs
-                               ...  id=${id}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Fs Deleted
-                               ...  id=${id}
-                                    Should Be Equal     ${status}  OK
-
-
-###################################################################################################################################
 Create CephFS - without selecting data pool
 ###################################################################################################################################
     [Documentation]                 *Create CephFS - without selecting data pool*
@@ -236,8 +173,6 @@ Create CephFS - without selecting data pool
         ${meta}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_META}
 
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
@@ -246,7 +181,6 @@ Create CephFS - without selecting data pool
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -281,113 +215,107 @@ Create CephFS - without selecting data pool
 
 
 ###################################################################################################################################
-Create CephFS - without pool creation (Negative)
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - without pool creation*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
+#Create CephFS - without pool creation (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Create CephFS - without pool creation*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Details For FS
+#                               ...  PCC.Ceph Create Fs
+#
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${response}                 PCC.Ceph Create Fs
+#                               ...  name=${CEPH_FS_NAME}
+#                               ...  ceph_cluster_id=${cluster_id}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
+####################################################################################################################################
+#Create CephFS - with one pool created (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Create CephFS - with one pool created*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Details For FS
+#                               ...  PCC.Ceph Create Fs
+#
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${meta}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_META}
+#
+#
+#        ${response}                 PCC.Ceph Create Fs
+#                               ...  name=cfs1
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  metadata_pool=${meta}
+#                               
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
+#
+####################################################################################################################################
+#Create CephFS - without selecting metadata pool (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Create CephFS - without selecting metadata pool*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Details For FS
+#                               ...  PCC.Ceph Create Fs
+#
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${data}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DATA}
+#
+#        ${default}                  PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DEFAULT}
+#
+#        ${response}                 PCC.Ceph Create Fs
+#                               ...  name=cfs2
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  data_pool=[${data}]
+#                               ...  default_pool=${default}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
 
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=${CEPH_FS_NAME}
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=
-                               ...  data_pool=
-                               ...  default_pool=
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
-###################################################################################################################################
-Create CephFS - with one pool created (Negative)
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - with one pool created*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
-
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${meta}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_META}
-
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=cfs1
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=${meta}
-                               ...  data_pool=
-                               ...  default_pool=
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
-
-###################################################################################################################################
-Create CephFS - without selecting metadata pool (Negative)
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - without selecting metadata pool*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
-
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
-        ${default}                  PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DEFAULT}
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=cfs2
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=
-                               ...  data_pool=[${data}]
-                               ...  default_pool=${default}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
-###################################################################################################################################
-Create CephFS - without selecting default pool (Negative)
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - without selecting default pool*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
-
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${meta}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_META}
-
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=cfs3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=${meta}
-                               ...  data_pool=[${data}]
-                               ...  default_pool=
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
+####################################################################################################################################
+#Create CephFS - without selecting default pool (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Create CephFS - without selecting default pool*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Details For FS
+#                               ...  PCC.Ceph Create Fs
+#
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${meta}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_META}
+#
+#        ${data}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DATA}
+#
+#        ${response}                 PCC.Ceph Create Fs
+#                               ...  name=cfs3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  metadata_pool=${meta}
+#                               ...  data_pool=[${data}]
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Create CephFS - without CephFS name (Negative) 
@@ -412,7 +340,6 @@ Create CephFS - without CephFS name (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${response}                 PCC.Ceph Create Fs
-                               ...  name=
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
                                ...  data_pool=[${data}]
@@ -497,38 +424,37 @@ Create CephFS - with multiple metadata pools (Negative)
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Not Be Equal As Strings      ${status_code}  200    
 
-###################################################################################################################################
-Create CephFS - where name contains only special characters (Negative)
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - where name contains only special characters*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
-
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${meta}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_META}
-
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
-        ${default}                  PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DEFAULT}
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=!@#$%^^
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=${meta}
-                               ...  data_pool=[${data}]
-                               ...  default_pool=${default}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200    
-
+####################################################################################################################################
+#Create CephFS - where name contains only special characters (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Create CephFS - where name contains only special characters*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Details For FS
+#                               ...  PCC.Ceph Create Fs
+#
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#
+#        ${meta}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_META}
+#
+#        ${data}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DATA}
+#
+#        ${default}                  PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DEFAULT}
+#
+#        ${response}                 PCC.Ceph Create Fs
+#                               ...  name=!@#$%^^
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  metadata_pool=${meta}
+#                               ...  data_pool=[${data}]
+#                               ...  default_pool=${default}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200    
 ###################################################################################################################################
 Ceph Fs Creation and Verify
 ###################################################################################################################################
@@ -597,8 +523,12 @@ Update CephFS – when it is in deploying state (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-
-
+        
+        ${status}                   PCC.Ceph Wait Until Fs Ready
+                               ...  name=${CEPH_FS_NAME}
+                               
+                                    Should Be Equal As Strings      ${status}    OK
+        
 ###################################################################################################################################
 #Pools used for CephFS should not be shown in rbd create pool_list (Negative)
 ####################################################################################################################################
@@ -635,18 +565,6 @@ Update CephFS – when it is in deploying state (Negative)
 #        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Not Be Equal As Strings      ${status_code}  200
 #                                    
-#
-###################################################################################################################################
-Ceph Fs Verification
-###################################################################################################################################
-    [Documentation]                 *Verifying Ceph FS*
-                               ...  keywords:
-                               ...  PCC.Ceph Wait Until Fs Ready
-
-        ${status}                   PCC.Ceph Wait Until Fs Ready
-                               ...  name=${CEPH_FS_NAME}
-
-                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Ceph Fs Update with multiple pool data
@@ -856,7 +774,7 @@ Update CephFS - remove_default_pool (Negative)
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
                                ...  data_pool=[${data}]
-                               ...  default_pool=
+
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
@@ -882,9 +800,6 @@ Update CephFS - remove_data_pools
         ${meta}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_META}
 
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
 
@@ -893,7 +808,6 @@ Update CephFS - remove_data_pools
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -924,19 +838,12 @@ Update CephFS - remove_data_pool_along_with_default_data_pool
         ${meta}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_META}
 
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
-        ${default}                  PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DEFAULT}
-
         ${response}                 PCC.Ceph Update Fs
                                ...  id=${id}
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=
-                               ...  default_pool=
+
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200

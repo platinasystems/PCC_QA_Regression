@@ -24,9 +24,9 @@ class CephFs(AaBase):
 
         self.id = None
         self.name = None
-        self.metadata_pool = dict()
-        self.data_pool = dict()
-        self.default_pool = dict()
+        self.metadata_pool = {}
+        self.data_pool = []
+        self.default_pool = {}
         self.ceph_cluster_id = None
         self.nodes_ip = []
         self.user=""
@@ -74,11 +74,24 @@ class CephFs(AaBase):
 
         #if re.search("^\[",str(self.data_pool))!=None and type(self.data_pool)!=list:
         #    self.data_pool=eval(self.data_pool)
-
+        
+        if 'name' not in kwargs:
+            self.name = None
+        if 'metadata_pool' not in kwargs:
+            self.metadata_pool = {}
+        if 'data_pool' not in kwargs:
+            self.data_pool = []
+        elif 'data_pool' in kwargs:
+            self.data_pool = ast.literal_eval(self.data_pool)
+        if 'default_pool' not in kwargs:
+            self.default_pool = {}
+        if 'ceph_cluster_id' not in kwargs:
+            self.ceph_cluster_id = None
+        
         payload = {
             "name": self.name,
             "metadata_pool": self.metadata_pool,
-            "data_pools": ast.literal_eval(self.data_pool),
+            "data_pools": self.data_pool,
             "default_pool": self.default_pool,
             "ceph_cluster_id": self.ceph_cluster_id
         }
@@ -191,12 +204,25 @@ class CephFs(AaBase):
     def modify_ceph_fs(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         try:
+            if 'name' not in kwargs:
+                self.name = None
+            if 'metadata_pool' not in kwargs:
+                self.metadata_pool = None
+            if 'data_pool' not in kwargs:
+                self.data_pool = None
+            elif 'data_pool' in kwargs:
+                self.data_pool = ast.literal_eval(self.data_pool)
+            if 'default_pool' not in kwargs:
+                self.default_pool = None
+            if 'ceph_cluster_id' not in kwargs:
+                self.ceph_cluster_id = None
+            
             payload = {
 
             "id":self.id,
             "name": self.name,
             "metadata_pool": self.metadata_pool,
-            "data_pools": ast.literal_eval(self.data_pool),
+            "data_pools": self.data_pool,
             "default_pool": self.default_pool,
             "ceph_cluster_id": self.ceph_cluster_id
 

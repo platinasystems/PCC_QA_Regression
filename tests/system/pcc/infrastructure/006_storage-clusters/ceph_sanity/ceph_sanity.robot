@@ -395,7 +395,7 @@ Ceph Fs Update
                                ...  name=${CEPH_FS_META}
 
         ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
+                               ...  name=pool4
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
@@ -405,7 +405,7 @@ Ceph Fs Update
                                ...  name=${CEPH_FS_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  metadata_pool=${meta}
-                               ...  data_pool=pool4
+                               ...  data_pool=[${data}]
                                ...  default_pool=${default}
 
         ${status_code}              Get Response Status Code        ${response}
