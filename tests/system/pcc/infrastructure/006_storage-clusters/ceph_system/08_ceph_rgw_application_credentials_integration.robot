@@ -9,6 +9,9 @@ ${pcc_setup}                 pcc_215
 Login
 ###################################################################################################################################
 
+       [Tags]    Only
+       
+       
                                     Load Ceph Rgw Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -30,6 +33,8 @@ Ceph Pool For Rgws
                                       ...  PCC.Ceph Get Cluster Id
                                       ...  PCC.Ceph Create Pool
                                       ...  PCC.Ceph Wait Until Pool Ready
+        
+        [Tags]    Only
                                       
         ${cluster_id}                      PCC.Ceph Get Cluster Id
                                       ...  name=${CEPH_CLUSTER_NAME}
@@ -58,9 +63,9 @@ Create Metadata Application credential profile without application For Rados
                                       ...  keywords:
                                       ...  PCC.Add Metadata Profile
                        
-                       
+        [Tags]    Only               
         ${response}                   PCC.Add Metadata Profile
-                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                                      ...    Name=test_app_credential
                                       ...    Type=ceph
                                       ...    Username=profile_without_app
                                       ...    Email=profile_without_app@gmail.com
@@ -74,16 +79,16 @@ Create Metadata Application credential profile without application For Rados
                                       Should Be Equal As Strings    ${status}    200
                                       
         ${profile_id}                 PCC.Get Profile by Id
-                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                                      ...    Name=test_app_credential
                                       
                                       Log to Console    ${profile_id}
                                       
 ###################################################################################################################################
-Ceph Ceph Certificate For Rgws
+Ceph Create Certificate For Rgws
 ###################################################################################################################################
 
         [Documentation]              *Ceph Ceph Certificate For Rgws*
-        
+        [Tags]    Only
         ${cert_id}                   PCC.Get Certificate Id
                                 ...  Alias=rgw-cert
                                      Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
@@ -104,7 +109,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
-              
+        [Tags]    Only      
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=pool-for-app-credentials
@@ -123,7 +128,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 Ceph Rados Add S3Account 
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
-
+        [Tags]    Only
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
      
@@ -134,7 +139,7 @@ Ceph Rados Add S3Account
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
-                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+                               ...  S3Accounts=["test_app_credential"]
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
@@ -500,7 +505,7 @@ Delete All Profiles
                            ...  keywords:
                            ...  PCC.Delete All Profiles
         
-        
+        [Tags]    DeleteOnly
         
         ${response}    PCC.Delete All Profiles
                        

@@ -1,10 +1,14 @@
 import os
+import ast
 import sys
 import json
 import time
 from datetime import datetime
 from robot.api import logger
 from robot.api.deco import keyword
+from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import RobotNotRunningError
+
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, debug, pretty_print
 from aa.common.Cli import cli_run
@@ -18,15 +22,14 @@ class LinuxUtils(AaBase):
     
     def __init__(self):
 
-        self.hostip = "172.17.10.100"
+        self.hostip = None
+        self.node_names = []
         self.username = "pcc"
         self.password = "cals0ft"
-        self.cmd_output = None
         self.process_name = None
         self.service_name = None
         self.port_number = None
         self.FQDN_name = None
-        self.cmd = None
         self.time_to_wait = None
         super().__init__()
 
@@ -40,16 +43,16 @@ class LinuxUtils(AaBase):
     def is_process_up(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         try:
-            self.cmd = "ps -aux|grep {}|grep -v grep|wc -l".format(self.process_name)
-            process_up_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            cmd = "ps -aux|grep {}|grep -v grep|wc -l".format(self.process_name)
+            process_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                            linux_password=self.password)
             
             serialised_process_up_status = self._serialize_response(time.time(), process_up_status)
             print("serialised_process_up_status is:{}".format(serialised_process_up_status))
             
-            self.cmd_output = str(serialised_process_up_status['Result']['stdout']).replace('\n', '').strip()
+            cmd_output = str(serialised_process_up_status['Result']['stdout']).replace('\n', '').strip()
             
-            if int(self.cmd_output) > 0:
+            if int(cmd_output) > 0:
                 return "OK"
             else:
                 return "Error"
@@ -66,17 +69,17 @@ class LinuxUtils(AaBase):
     def is_daemon_up(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         try:
-            self.cmd = "sudo service {} status|grep -e 'Active:' -e 'running'|wc -l".format(self.service_name)
-            daemon_up_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            cmd = "sudo service {} status|grep -e 'Active:' -e 'running'|wc -l".format(self.service_name)
+            daemon_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                           linux_password=self.password)
             
             serialised_daemon_up_status = self._serialize_response(time.time(), daemon_up_status)
             print("serialised_daemon_up_status is:{}".format(serialised_daemon_up_status))
             
-            self.cmd_output = str(serialised_daemon_up_status['Result']['stdout']).replace('\n', '').strip()
+            cmd_output = str(serialised_daemon_up_status['Result']['stdout']).replace('\n', '').strip()
             
-            print("daemon_up_status output : {}".format(self.cmd_output))
-            if int(self.cmd_output) > 0:
+            print("daemon_up_status output : {}".format(cmd_output))
+            if int(cmd_output) > 0:
                 return "OK"
             else:
                 return "Error"
@@ -93,16 +96,16 @@ class LinuxUtils(AaBase):
     def is_FQDN_reachable(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         try:
-            self.cmd = "ping {} -c 4".format(self.FQDN_name)
-            FQDN_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            cmd = "ping {} -c 4".format(self.FQDN_name)
+            FQDN_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                      linux_password=self.password)
             
             serialised_FQDN_status = self._serialize_response(time.time(), FQDN_status)
             print("serialised_FQDN_status is:{}".format(serialised_FQDN_status))
             
-            self.cmd_output = str(serialised_FQDN_status['Result']['stdout']).replace('\n', '').strip()
+            cmd_output = str(serialised_FQDN_status['Result']['stdout']).replace('\n', '').strip()
             
-            if ", 0% packet loss" in self.cmd_output:
+            if ", 0% packet loss" in cmd_output:
                 return "OK"
             else:
                 return "Error"
@@ -119,16 +122,16 @@ class LinuxUtils(AaBase):
     def is_port_used(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         try:
-            self.cmd = "sudo netstat -antlp|grep -w {}|wc -l".format(self.port_number)
-            port_used_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            cmd = "sudo netstat -antlp|grep -w {}|wc -l".format(self.port_number)
+            port_used_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                           linux_password=self.password)
             
             serialised_port_used_status = self._serialize_response(time.time(), port_used_status)
             print("serialised_port_used_status is:{}".format(serialised_port_used_status))
             
-            self.cmd_output = str(serialised_port_used_status['Result']['stdout']).replace('\n', '').strip()
+            cmd_output = str(serialised_port_used_status['Result']['stdout']).replace('\n', '').strip()
             
-            if int(self.cmd_output) > 0:
+            if int(cmd_output) > 0:
                 return "OK"
             else:
                 return "Error"
@@ -145,25 +148,104 @@ class LinuxUtils(AaBase):
     def restart_node(self,*args, **kwargs):
         self._load_kwargs(kwargs)
         try:
-            self.cmd = "sudo reboot"
-            restart_cmd = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            cmd = "sudo reboot"
+            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                           linux_password=self.password)
             banner("Sleeping")
             time.sleep(int(self.time_to_wait))
             banner("Done sleeping")
-            self.cmd = "ping {} -c 4".format(self.hostip)
+            cmd = "ping {} -c 4".format(self.hostip)
             
-            restart_up_status = cli_run(cmd=self.cmd, host_ip=self.hostip, linux_user=self.username,
+            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
                                      linux_password=self.password)
             
             serialised_restart_up_status = self._serialize_response(time.time(), restart_up_status)
             print("serialised_restart_up_status is:{}".format(serialised_restart_up_status))
             
-            self.cmd_output = str(serialised_restart_up_status['Result']['stdout']).replace('\n', '').strip()
+            cmd_output = str(serialised_restart_up_status['Result']['stdout']).replace('\n', '').strip()
             
-            if ", 0% packet loss" in self.cmd_output:
+            if ", 0% packet loss" in cmd_output:
                 return "OK"
             else:
                 return "Error"
         except Exception as e:
             logger.console("Error in Restart node: " + e)
+            
+    ###################################################################################################
+    @keyword(name="Install net-tools command")
+    ###################################################################################################
+    
+    def install_nettools(self,*args, **kwargs):
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("Kwargs are: {}".format(kwargs))
+        try:
+            host_ips = []
+            status = []
+            for node_name in ast.literal_eval(self.node_names):
+                host_ip = easy.get_hostip_by_name(conn, Name=node_name)
+                host_ips.append(host_ip)
+            print("host_ips_list : {}".format(host_ips))
+            for ip in host_ips:    
+                cmd = "sudo cat /etc/os-release|grep PRETTY_NAME"
+                cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                              linux_password=self.password)
+                
+                serialised_status = self._serialize_response(time.time(), cmd_output)                    
+                serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()                              
+                                              
+                
+                if "Ubuntu" in serialised_cmd_output:
+                    cmd = "sudo apt-get install net-tools"
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                         linux_password=self.password)
+                    
+                    serialised_status = self._serialize_response(time.time(), cmd_output)                    
+                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+                    
+                    if "0 newly installed" or "1 newly installed" in serialised_cmd_output:
+                        status.append("OK")
+                    else:
+                        logger.console("Error in installing net-tools on Ubuntu: {}".format(serialised_cmd_output))
+                        status.append("Error in installing net-tools on Ubuntu")
+                
+                elif "CentOS" in serialised_cmd_output:
+                    cmd = "sudo yum -y install net-tools"
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                         linux_password=self.password)
+                                         
+                    serialised_status = self._serialize_response(time.time(), cmd_output)                    
+                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+                    
+                    if "Complete!" or "Nothing to do" in serialised_cmd_output:
+                        status.append("OK")
+                    else:
+                        logger.console("Error in installing net-tools on CentOS: {}".format(serialised_cmd_output))
+                        status.append("Error in installing net-tools on CentOS")
+                
+                elif "Debian" in serialised_cmd_output:
+                    cmd = "sudo apt-get install net-tools"
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                         linux_password=self.password)
+                                         
+                    serialised_status = self._serialize_response(time.time(), cmd_output)                    
+                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+                    
+                    if "0 upgraded" or "0 newly installed" or "1 newly installed" in serialised_cmd_output:
+                        status.append("OK")
+                    else:
+                        logger.console("Error in installing net-tools on Debian: {}".format(serialised_cmd_output))
+                        status.append("Error in installing net-tools on Debian")
+                
+                else:
+                    return "Error: OS version not supported in code"
+            print("Status: {}".format(status))    
+            result = len(status) > 0 and all(elem == "OK" for elem in status)
+            if result:
+                return "OK"
+            else:
+                return "Error: Installation of net-tools failed" 
+        
+        except Exception as e:
+            return "Error in installing net-tools: {}".format(e)
+    
