@@ -234,7 +234,7 @@
             "poolName":"rgw-pool",
             "targetNodes":["sv124"],
             "port":443,
-            "certificateName":"rgw-cert",
+            "certificateName":"sandeep-crt-key",
             "S3Accounts":"rgw-app"
         },
 

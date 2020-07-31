@@ -1,3 +1,4 @@
+import re
 import time
 import ast
 from robot.api.deco import keyword
@@ -11,6 +12,7 @@ from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
 PCC_TIMEOUT = 60*5  # 5 min
 
@@ -58,6 +60,8 @@ class Nodes(AaBase):
         self.ids = None
         self.IP = None
         self.host_ips = []
+        self.user= "pcc"
+        self.password= "cals0ft"
 
         self.interface_name = []
         self.interface_id = []
@@ -461,3 +465,39 @@ class Nodes(AaBase):
                         return "Error"
         except Exception as e:
             logger.console("Error in delete_multiple_nodes_and_wait_until_deletion status: {}".format(e))
+
+    ###########################################################################
+    @keyword(name="PCC.Node Verify Back End")
+    ###########################################################################
+    def verify_node_back_end(self, *args, **kwargs):
+
+        banner("PCC.Node Verify Back End")
+        self._load_kwargs(kwargs)
+        print("Kwargs:{}".format(kwargs))
+    
+        pcc_agent_cmd="sudo systemctl status pccagent"
+        sys_cllector_cmd="sudo systemctl status systemCollector"
+
+        failed_host=[]
+
+        if self.host_ips:
+            for host_ip in eval(str(self.host_ips)):
+                logger.console("Verifying services for host {} .....".format(host_ip))
+                pcc_agent_output=cli_run(host_ip,self.user,self.password,pcc_agent_cmd)
+                sys_collector_output=cli_run(host_ip,self.user,self.password,sys_cllector_cmd)   
+                logger.console("Pcc Agent Output: {}".format(pcc_agent_output))
+                logger.console("System Collector Output: {}".format(sys_collector_output))
+                if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output)):
+                    continue
+                else:
+                    
+                    failed_host.append(host_ip)
+                    continue                
+        else:
+            print("Host list is empty, please provide the host ip in a list for eg. host_ips=['000.00.0.00']")
+            
+        if failed_host:  
+            print("Service are down for {}".format(failed_host))     
+            return "Error"
+        else:
+            return "OK"

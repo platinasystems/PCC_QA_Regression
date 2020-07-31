@@ -458,21 +458,75 @@ class CephRgw(AaBase):
         return
 
     ###########################################################################
-    @keyword(name="PCC.Ceph Rgw Verify BE")
+    @keyword(name="PCC.Ceph Rgw Verify BE Creation")
     ###########################################################################
-    def ceph_rgw_verify_be(self,**kwargs):
-        ceph_be_cmd="sudo ceph -s"
-        cmd_rgw="systemctl status radosgw.service"
-        banner("PCC.Ceph Rgw Verify BE")
+    def ceph_rgw_verify_be_creation(self,**kwargs):
+        banner("PCC.Ceph Rgw Verify BE Creation")
         self._load_kwargs(kwargs)
+        
+        ceph_be_cmd="sudo ceph -s"
+        cmd_rgw="sudo systemctl status ceph-radosgw@rgw*"
+        wait_time=600
+        
+        for i in range(30):
+            time.sleep(20)
+            wait_time-=20
+            print("wait time left for RGW backend check {}s".format(wait_time))
+            trace("wait time left for RGW backend check {}s".format(wait_time))
+            failed_chk=[]
+            success_chk=[]
+            for ip in eval(str(self.targetNodeIp)):
+                ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
+                rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
+                if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
+                    success_chk.append(ip)
+                    
+                else:
+                    failed_chk.append(ip)
+                    
+                if len(success_chk)==len(eval(str(self.targetNodeIp))):
+                    print("Backend verification successfuly done for : {}".format(success_chk))
+                    return "OK"
+                                  
+        if failed_chk:  
+            print("Rgw service are down for {}".format(failed_chk))     
+            return "Error"
+        else:
+            return "OK"
 
-        for ip in eval(str(self.targetNodeIp)):
-            output=cli_run(ip,self.user,self.password,ceph_be_cmd)
-            print("Output Ceph:"+str(output))
-            output1=cli_run(ip,self.user,self.password,cmd_rgw)
-            print("Output Rgw:"+str(output1))
-            if re.search("rgw",str(output)) and re.search("active",str(output1)):
-                continue
-            else:
-                return None
-        return "OK"
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Verify BE Deletion")
+    ###########################################################################
+    def ceph_rgw_verify_be_deletion(self,**kwargs):
+        banner("PCC.Ceph Rgw Verify BE Deletion")
+        self._load_kwargs(kwargs)
+        
+        ceph_be_cmd="sudo ceph -s"
+        cmd_rgw="sudo systemctl status ceph-radosgw@rgw*"
+
+        wait_time=300
+        
+        for i in range(15):
+            time.sleep(20)
+            wait_time-=20
+            print("wait time left for RGW backend check {}s".format(wait_time))
+            trace("wait time left for RGW backend check {}s".format(wait_time))
+            failed_chk=[]
+            success_chk=[]
+            for ip in eval(str(self.targetNodeIp)):
+                ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
+                rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
+                if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
+                    failed_chk.append(ip)
+                else:
+                    success_chk.append(ip)
+                                         
+                if len(success_chk)==len(eval(str(self.targetNodeIp))):
+                    print("Backend verification successfuly done for : {}".format(success_chk))
+                    return "OK"
+                                              
+        if failed_chk:  
+            print("Rgw service are not down for {}".format(failed_chk))     
+            return "Error"
+        else:
+            return "OK"
