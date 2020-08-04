@@ -422,6 +422,23 @@ class CephRgw(AaBase):
             print("Buckets are not listed or Buckets are not created yet")
             return "Error"
         return
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Verify File Upload To Pool")
+    ###########################################################################
+    def ceph_rgw_verify_pool_upload_to_pool(self,**kwargs):
+        banner("PCC.Ceph Rgw Verify File Upload To Pool")
+        self._load_kwargs(kwargs)         
+        time.sleep(10)     
+        cmd="sudo ceph df| grep {} | tr -s ' '|sed 's/^ *//' |cut -d ' ' -f6".format(self.poolName)
+        print("Command:"+str(cmd))
+        raw_data=cli_run(self.targetNodeIp,self.user,self.password,cmd)   
+        data=self._serialize_response(time.time(),raw_data)['Result']['stdout']  
+        print("Size used by pool {}:{}".format(self.poolName,data))
+        if str(data) != "0":
+            return "OK"
+        else:
+            return "Error"
         
     ###########################################################################
     @keyword(name="PCC.Ceph Rgw Delete File From Bucket")

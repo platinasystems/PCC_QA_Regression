@@ -408,8 +408,12 @@ Ceph Rados Update Nodes (Add Node)
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
+                               ...  targetNodeIp=["${SERVER_1_NAME}"]
                                     Should Be Equal As Strings      ${backend_status}    OK 
+ 
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  targetNodeIp=["${SERVER_2_NAME}"]
+                                    Should Be Equal As Strings      ${backend_status}    OK  
                                     
 #####################################################################################################################################
 #Ceph Rados Update Certificte 
@@ -514,7 +518,7 @@ Create Rgw Configuration File
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
                                            Should Be Equal As Strings      ${status}    OK
@@ -534,7 +538,7 @@ Create Rgw Bucket
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
                                            Should Be Equal As Strings      ${status}    OK
@@ -564,9 +568,20 @@ Uplaod A File To Rgw Bucket
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
+                                           Should Be Equal As Strings      ${status}    OK
+                                           
+###################################################################################################################################
+Verify File Is Upload on Pool
+###################################################################################################################################
+    [Documentation]                        *Verify File Is Uploaded on Pool*
+                                                                           
+        ${status}                          PCC.Ceph Rgw Verify File Upload To Pool                              
+                                      ...  poolName=${CEPH_RGW_POOLNAME}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                                                      
                                            Should Be Equal As Strings      ${status}    OK
                                    
 ###################################################################################################################################
@@ -584,7 +599,7 @@ Get A File From Rgw Bucket
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
                                            Should Be Equal As Strings      ${status}    OK
@@ -604,7 +619,7 @@ Delete Rgw Bucket When Bucket Is Not Empty (Negative)
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
                                            Should Not Be Equal As Strings      ${status}    OK
@@ -624,7 +639,7 @@ Delete A File From Rgw Bucket
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
                                            Should Be Equal As Strings      ${status}    OK
@@ -644,7 +659,7 @@ Delete Rgw Bucket
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${PCC_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                       
                                            Should Be Equal As Strings      ${status}    OK
