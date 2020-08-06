@@ -49,7 +49,7 @@ Ceph Pool For Rgws
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=${CEPH_RGW_POOLNAME}
                                            Should Be Equal As Strings      ${status}    OK
-###################################################################################################################################
+####################################################################################################################################
 Ceph Pool For Rgws (For Pool Update)
 ###################################################################################################################################
 
@@ -408,11 +408,11 @@ Ceph Rados Update Nodes (Add Node)
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=["${SERVER_1_NAME}"]
+                               ...  targetNodeIp=["${SERVER_1_HOST_IP}"]
                                     Should Be Equal As Strings      ${backend_status}    OK 
- 
+
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=["${SERVER_2_NAME}"]
+                               ...  targetNodeIp=["${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${backend_status}    OK  
                                     
 #####################################################################################################################################
@@ -507,7 +507,8 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 Create Rgw Configuration File
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
-                                  
+    
+                                           Sleep    5 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
 

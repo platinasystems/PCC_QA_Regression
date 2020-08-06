@@ -504,7 +504,10 @@ class CephRgw(AaBase):
                 if len(success_chk)==len(eval(str(self.targetNodeIp))):
                     print("Backend verification successfuly done for : {}".format(success_chk))
                     return "OK"
-                                  
+        if wait_time==0:
+            print("Rgw Check: "+str(rgw_check)) 
+            print("Ceph Rgw Check: "+str(ceph_check))     
+                              
         if failed_chk:  
             print("Rgw service are down for {}".format(failed_chk))     
             return "Error"
