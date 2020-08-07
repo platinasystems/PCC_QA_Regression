@@ -73,7 +73,7 @@ class CephRgw(AaBase):
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
         if self.certificateID==None:
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
-        if  self.port!=None or self.port!='':
+        if  self.port:
             self.port=ast.literal_eval(str(self.port))
         if self.S3Accounts!=None or self.S3Accounts!=[]:
             tmp_cert={}
@@ -430,12 +430,12 @@ class CephRgw(AaBase):
         banner("PCC.Ceph Rgw Verify File Upload To Pool")
         self._load_kwargs(kwargs)         
         time.sleep(10)     
-        cmd="sudo ceph df| grep {} | tr -s ' '|sed 's/^ *//' |cut -d ' ' -f6".format(self.poolName)
+        cmd="sudo ceph df| grep '{} ' | tr -s ' '|sed 's/^ *//' |cut -d ' ' -f6".format(self.poolName)
         print("Command:"+str(cmd))
         raw_data=cli_run(self.targetNodeIp,self.user,self.password,cmd)   
         data=self._serialize_response(time.time(),raw_data)['Result']['stdout']  
         print("Size used by pool {}:{}".format(self.poolName,data))
-        if str(data) != "0":
+        if int(data.strip()) != 0:
             return "OK"
         else:
             return "Error"
