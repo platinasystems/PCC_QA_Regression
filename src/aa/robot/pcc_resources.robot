@@ -35,6 +35,7 @@ Library                         aa.pcc.NetworkManager
 Library                         aa.pcc.ErasureCoded
 Library                         aa.pcc.ErasureCodedPool
 Library                         aa.pcc.ApplicationCredentialManager
+Library                         aa.pcc.Ipam
 Library                         Collections
 
 *** Keywords ***
@@ -1148,6 +1149,9 @@ Load Network Manager Data
 
         ${NETWORK_MANAGER_CNTLCIDR}    Evaluate    $pcc_server_dict.get("controlCIDR", None)
                                        Set Suite Variable    ${NETWORK_MANAGER_CNTLCIDR}
+
+        ${NETWORK_MANAGER_DATACIDR}    Evaluate    $pcc_server_dict.get("dataCIDR", None)
+                                       Set Suite Variable    ${NETWORK_MANAGER_DATACIDR}
 
         ${NETWORK_MANAGER_IGWPOLICY}    Evaluate    $pcc_server_dict.get("igwPolicy", None)
                                         Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY}

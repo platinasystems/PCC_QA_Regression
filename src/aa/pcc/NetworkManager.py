@@ -29,6 +29,9 @@ class NetworkManager(AaBase):
         self.name=None
         self.nodes=[]
         self.controlCIDR=None
+        self.controlCIDRId=None
+        self.dataCIDR=None
+        self.dataCIDRId=None
         self.igwPolicy=None
         self.user="pcc"
         self.password="cals0ft"
@@ -55,7 +58,11 @@ class NetworkManager(AaBase):
         banner("PCC.Create Network Manager")
         self._load_kwargs(kwargs)
 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
         tmp_node=[]
         for node_name in eval(str(self.nodes)):
             print("Getting Node Id for -"+str(node_name))
@@ -64,10 +71,17 @@ class NetworkManager(AaBase):
             tmp_node.append({"id":node_id})
         self.nodes=tmp_node
         
+        if self.controlCIDR:
+            self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
+
+        if self.dataCIDR:
+            self.dataCIDRId=easy.get_subnet_id_by_name(conn,self.dataCIDR)
+       
         payload = {
             "name": self.name,
             "nodes": self.nodes,
-            "controlCIDR":self.controlCIDR,
+            "controlCIDRId":self.controlCIDRId,
+            "dataCIDRId":self.dataCIDRId,
             "igwPolicy":self.igwPolicy
         }
 
@@ -81,31 +95,38 @@ class NetworkManager(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
         banner("PCC.Network Manager Update")
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
- 
+        
         try:
-            tmp_node=[]
-            for node_name in eval(str(self.nodes)):
-                print("Getting Node Id for -"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print(" Node Id retrieved -"+str(node_id))
-                tmp_node.append({"id":node_id})
-            self.nodes=tmp_node
-         
-            payload = {
-                "id":self.id,
-                "name": self.name,
-                "nodes": self.nodes,
-                "controlCIDR":self.controlCIDR,
-                "igwPolicy":self.igwPolicy
-            }
-
-            print("Payload:-"+str(payload))
-
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             print("[update_cluster] EXCEPTION: %s" % str(e))
             raise Exception(e)
+ 
+        tmp_node=[]
+        for node_name in eval(str(self.nodes)):
+            print("Getting Node Id for -"+str(node_name))
+            node_id=easy.get_node_id_by_name(conn,node_name)
+            print(" Node Id retrieved -"+str(node_id))
+            tmp_node.append({"id":node_id})
+        self.nodes=tmp_node
+        
+        if self.controlCIDR:
+            self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
 
+        if self.dataCIDR:
+            self.dataCIDRId=easy.get_subnet_id_by_name(conn,self.dataCIDR)
+       
+        payload ={
+            "id":self.id,
+            "name": self.name,
+            "nodes": self.nodes,
+            "controlCIDRId":self.controlCIDRId,
+            "dataCIDRId":self.dataCIDRId,
+            "igwPolicy":self.igwPolicy
+            }
+            
+        print("Payload:"+str(payload))
+   
         return pcc.modify_network_cluster(conn, payload)
     
     ###########################################################################

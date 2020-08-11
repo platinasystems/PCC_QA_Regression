@@ -2,7 +2,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}                 pcc_212
+${pcc_setup}                 pcc_242
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -86,6 +86,7 @@ Network Manager Creation
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=${NETWORK_MANAGER_NODES}
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -305,6 +306,7 @@ Network Manager Add Node For Ceph And K8s Update
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -332,6 +334,7 @@ Network Manager Try To Remove 2 Invaders (Negative)
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -402,6 +405,7 @@ Remove Node From Network Manager Which Are Part Of Ceph and K8s (Negative)
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}     

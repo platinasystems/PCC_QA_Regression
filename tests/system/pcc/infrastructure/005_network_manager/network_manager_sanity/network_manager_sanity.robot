@@ -2,7 +2,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}                 pcc_212
+${pcc_setup}                 pcc_242
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -18,6 +18,29 @@ Login
                                     
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
+
+###################################################################################################################################
+Create IPAM Subnet
+###################################################################################################################################
+    [Documentation]                 *Create IPAM Subnet*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Create
+                               ...  PCC.Wait Until Ipam Subnet Ready
+
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=subnet-pvt
+                               ...  subnet=10.0.130.0/24
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=subnet-pvt
+
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Verify Default IgwPolicy
@@ -40,6 +63,7 @@ Network Manager Creation
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=${NETWORK_MANAGER_NODES}
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}     
@@ -75,6 +99,7 @@ Network Manager Update
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}     
