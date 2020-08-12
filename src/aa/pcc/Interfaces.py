@@ -58,6 +58,7 @@ class Interfaces(AaBase):
         
         count=0
         node_id=easy.get_node_id_by_name(conn,self.node_name)
+        print("Node ID:"+str(node_id))
         response=pcc.get_node_by_id(conn,str(node_id))['Result']['Data']
         print("Response For Node Interfaces:-"+str(response))
         interfaces = eval(str(response))['interfaces']

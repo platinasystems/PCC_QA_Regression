@@ -2,13 +2,15 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}                 pcc_242
+${pcc_setup}                 pcc_212
 
 *** Test Cases ***
 ###################################################################################################################################
 Login
 ###################################################################################################################################
 
+                                    Load K8s Data    ${pcc_setup}
+                                    Load Ceph Cluster Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
                                     Load Clusterhead 2 Test Data    ${pcc_setup}
@@ -229,6 +231,83 @@ Network Manager Creation
         ${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+ 
+###################################################################################################################################
+Network Manager Update
+###################################################################################################################################
+    [Documentation]                 *Network Manager Update*
+                               ...  keywords:
+                               ...  PCC.Network Manager Update
+                               ...  PCC.Wait Until Network Manager Ready
+
+        ${network_id}               PCC.Get Network Manager Id
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               
+        ${response}                 PCC.Network Manager Update
+                               ...  id=${network_id}
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph Cluster Create 
+###################################################################################################################################
+    [Documentation]                 *Creating Ceph Cluster*
+                               ...  keywords:
+                               ...  PCC.Ceph Create Cluster
+                               ...  PCC.Ceph Wait Until Cluster Ready
+                               
+        ${response}                 PCC.Ceph Create Cluster
+                               ...  name=${CEPH_CLUSTER_NAME}
+                               ...  nodes=${CEPH_CLUSTER_NODES}
+                               ...  tags=${CEPH_CLUSTER_TAGS}
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK
+                                    
+###################################################################################################################################
+Create Kubernetes cluster
+###################################################################################################################################
+        [Documentation]             *Create Kubernetes cluster*
+                               ...  Keywords:
+                               ...  PCC.K8s Create Cluster
+                               
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8s_NAME}
+                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
+
+        ${response}                 PCC.K8s Create Cluster
+                               ...  id=${K8S_ID}
+                               ...  k8sVersion=${K8S_VERSION}
+                               ...  name=${K8S_NAME}
+                               ...  cniPlugin=${K8S_CNIPLUGIN}
+                               ...  nodes=${K8S_NODES}
+                               ...  pools=${K8S_POOL}
+                               ...  networkClusterName=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
 Delete Subnets Which Are Mapped To Nework Manager (Negative)
@@ -264,7 +343,58 @@ Delete Subnet
                                ...  name=subnet-pvt
 
                                     Should Be Equal As Strings      ${status}    OK
- 
+
+###################################################################################################################################
+Ceph Cluster Delete
+###################################################################################################################################
+    [Documentation]                 *Delete cluster if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Delete Cluster
+                               ...  PCC.Ceph Wait Until Cluster Deleted
+                               ...  PCC.Ceph Cleanup BE
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
+
+        ${response}                 PCC.Ceph Delete Cluster
+                               ...  id=${id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Cluster Deleted
+                               ...  id=${id}
+                                    Should Be Equal As Strings     ${status}  OK
+
+        ${response}                 PCC.Ceph Cleanup BE
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+
+###################################################################################################################################
+Delete K8 Cluster
+###################################################################################################################################     
+        [Documentation]             *Delete K8 Cluster*  
+                               ...  Keywords:
+                               ...  PCC.K8s Upgrade Cluster
+                               ...  PCC.K8s Delete Cluster
+                               ...  PCC.K8s Wait Until Cluster Deleted
+                               
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8s_NAME}
+                                    Pass Execution If    ${cluster_id} is ${None}    Cluster is alredy Deleted
+
+        ${response}                 PCC.K8s Delete Cluster
+                               ...  cluster_id=${cluster_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster Deleted
+                               ...  cluster_id=${cluster_id}
+                                    Should Be Equal As Strings    ${status}  OK     
 ###################################################################################################################################
 Network Manager Delete
 ###################################################################################################################################

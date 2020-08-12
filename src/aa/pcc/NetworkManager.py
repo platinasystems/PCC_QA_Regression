@@ -28,6 +28,7 @@ class NetworkManager(AaBase):
         self.id=None
         self.name=None
         self.nodes=[]
+        self.nodes_ip=[]
         self.controlCIDR=None
         self.controlCIDRId=None
         self.dataCIDR=None
@@ -147,6 +148,25 @@ class NetworkManager(AaBase):
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
         return pcc.delete_network_cluster_by_id(conn, str(self.id))
+
+    ###########################################################################
+    @keyword(name="PCC.Network Manager Refresh")
+    ###########################################################################
+    def refresh_network_cluster_by_id(self, *args, **kwargs):
+        banner("PCC.Network Manager Refresh")
+        self._load_kwargs(kwargs)
+
+        if self.name == None:
+            return {"Error": "[PCC.Network Manager Delete]: Name of the Network Manager is not specified."}
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
+        self.id=easy.get_network_clusters_id_by_name(conn,self.name)
+
+        return pcc.refresh_network_cluster_by_id(conn, str(self.id))
 
     ###########################################################################
     @keyword(name="PCC.Wait Until Network Manager Ready")
@@ -282,3 +302,32 @@ class NetworkManager(AaBase):
                 return "Error"
             
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Network Manager Verify BE")
+    ###########################################################################
+    def network_manager_verify_be(self,**kwargs):
+        banner("PCC.Network Manager Verify BE")
+        self._load_kwargs(kwargs)
+        
+        success_chk=[]
+        failed_chk=[]
+        cmd="sudo vtysh -c 'sh ip ospf nei'  && ip addr sh control0|wc -l"
+        for ip in eval(str(self.nodes_ip)):
+            print("Network verification for {} is in progress ...".format(ip))
+            trace("Network verification for {} is in progress ...".format(ip))
+            network_check=cli_run(ip,self.user,self.password,cmd)
+            if re.search(self.dataCIDR,str(network_check)):
+                success_chk.append(ip)         
+            else:
+                failed_chk.append(ip)
+                    
+        if len(success_chk)==len(eval(str(self.nodes_ip))):
+            print("Backend verification successfuly done for : {}".format(success_chk))
+            return "OK"
+                                 
+        if failed_chk:  
+            print("Nework is not properly set for {}".format(failed_chk))     
+            return "Error"
+        else:
+            return "OK"

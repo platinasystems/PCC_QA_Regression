@@ -188,7 +188,8 @@
             "name":"network-pvt",
             "nodes":["sv125","sv124","i43"],
             "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
-            "controlCIDR":"10.0.202.0/24",
+            "controlCIDR":"control-pvt",
+            "dataCIDR":"data-pvt",
             "igwPolicy":"default"
         },
         

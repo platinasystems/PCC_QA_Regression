@@ -548,3 +548,24 @@ def get_alert_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)}
+
+## IPAM
+def get_subnet_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get Id of Subnet with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Subnet
+    [Returns]
+        (int) Id: Id of the matchining subnet name, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_subnets = pcc.get_subnet_objs(conn)['Result']['Data']
+        for subnet in list_of_subnets:
+            if str(subnet['name']) == str(Name):
+                return subnet['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
