@@ -41,10 +41,10 @@ class Interfaces(AaBase):
         super().__init__()
 
     ###########################################################################
-    @keyword(name="PCC.Set 1D Link")
+    @keyword(name="PCC.Interface Set 1D Link")
     ###########################################################################
     def set_link_ip(self,*args,**kwargs):
-        banner("PCC.Set 1D Link")
+        banner("PCC.Interface Set 1D Link")
         self._load_kwargs(kwargs)
         print("Kwargs:-"+str(kwargs))
         
@@ -58,9 +58,7 @@ class Interfaces(AaBase):
         
         count=0
         node_id=easy.get_node_id_by_name(conn,self.node_name)
-        print("Node ID:"+str(node_id))
         response=pcc.get_node_by_id(conn,str(node_id))['Result']['Data']
-        print("Response For Node Interfaces:-"+str(response))
         interfaces = eval(str(response))['interfaces']
         if self.interface_name!= None:
             for data in interfaces:
@@ -85,9 +83,64 @@ class Interfaces(AaBase):
                     trace("Payload Data :- %s" % (payload))
                     break
         if count==1:
-            return pcc.apply_interface(conn,payload)
+            return pcc.set_interface(conn,payload)
         else:
             return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Interface Verify PCC")
+    ###########################################################################
+    def interface_verify_pcc(self,*args,**kwargs):
+        banner("PCC.Interface Verify PCC")
+        self._load_kwargs(kwargs)
+        print("Kwargs:-"+str(kwargs))
+        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        if self.interface_name==None:
+            print("Interface name is Empty or Wrong")
+            return "Error"
+       
+        count=0
+        node_id=easy.get_node_id_by_name(conn,self.node_name)
+        response=pcc.get_node_by_id(conn,str(node_id))['Result']['Data']
+        interfaces = eval(str(response))['interfaces']
+        for data in interfaces:
+            print("Interface Info:"+str(data))
+            print("Name Looking For:"+str(self.interface_name))
+            print("Name Find:"+str(data['interface']['name']))
+            print("--------------------------")
+            if str(data['interface']['name'])==str(self.interface_name):
+                ipv4=data['interface']["ipv4AddressesDesired"]
+                print("IPV4:"+str(ipv4))
+                for ip in ipv4:
+                     for assign_ip in eval(str(self.assign_ip)):
+                         if assign_ip==ip:
+                             count+=1
+                        
+        if count==len(eval(str(self.assign_ip))):
+            print("Interface are set !!")
+            return "OK"
+        else:
+            print("Could not verify all the interfaces on node")
+            return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Interface Apply")
+    ###########################################################################
+    def interface_apply(self,*args,**kwargs):
+        banner("PCC.Interface Verify PCC")
+        self._load_kwargs(kwargs)
+        print("Kwargs:-"+str(kwargs))
+        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        node_id=easy.get_node_id_by_name(conn,self.node_name)
+        print("Node ID:"+str(node_id))
+
+        payload={"nodeId":node_id}
+        print("Payload:"+str(payload))
+        return pcc.apply_interface(conn,payload)
 
     ###########################################################################
     @keyword(name="PCC.Wait Until Interface Ready")
