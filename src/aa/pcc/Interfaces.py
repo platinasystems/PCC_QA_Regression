@@ -202,7 +202,7 @@ class Interfaces(AaBase):
     ###########################################################################
     @keyword(name="PCC.Set Interface Down")
     ###########################################################################
-    def set_interface_up(self, *args, **kwargs):
+    def set_interface_down(self, *args, **kwargs):
         banner("PCC.Set Interface Down")
         self._load_kwargs(kwargs)
         

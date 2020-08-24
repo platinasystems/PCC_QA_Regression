@@ -1155,3 +1155,24 @@ Load Network Manager Data
 
         ${NETWORK_MANAGER_IGWPOLICY}    Evaluate    $pcc_server_dict.get("igwPolicy", None)
                                         Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY}
+
+###################################################################################################################################
+Load Ipam Data
+###################################################################################################################################
+    [Arguments]                        ${testdata_filename}
+    [Documentation]                    *Load Ipam Data*
+                                       Log To Console      **** Load Ipam Data ****
+        ${pcc_server_dict}             TESTDATA.Get        ${testdata_filename}.json   ipam
+
+
+        ${IPAM_CONTROL_SUBNET_NAME}    Evaluate    $pcc_server_dict.get("controlName", None)
+                                       Set Suite Variable    ${IPAM_CONTROL_SUBNET_NAME}
+
+        ${IPAM_DATA_SUBNET_NAME}       Evaluate    $pcc_server_dict.get("dataName", None)
+                                       Set Suite Variable    ${IPAM_DATA_SUBNET_NAME}
+
+        ${IPAM_CONTROL_SUBNET_IP}      Evaluate    $pcc_server_dict.get("controlSubnet", None)
+                                       Set Suite Variable    ${IPAM_CONTROL_SUBNET_IP}
+
+        ${IPAM_DATA_SUBNET_IP}         Evaluate    $pcc_server_dict.get("dataSubnet", None)
+                                       Set Suite Variable    ${IPAM_DATA_SUBNET_IP}

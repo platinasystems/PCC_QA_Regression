@@ -189,15 +189,17 @@ class NetworkManager(AaBase):
             response = pcc.get_network_clusters(conn)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
-                    print("Response To Look :-"+str(data))
-                    if data['progressPercentage'] == 100:
+                    response_data=data
+                    if data['deploy_status'].lower()=='completed' and data['progressPercentage'] == 100:
                         network_ready = True
                     elif re.search("failed",str(data['deploy_status'])):
+                        print("Response To Look :-"+str(response_data))
                         return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Wait Until Network Manager Ready] Timeout")
             trace("  Waiting until network manager: %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
+        print("Response To Look :-"+str(response_data))
         return "OK"
 
 
@@ -312,12 +314,16 @@ class NetworkManager(AaBase):
         
         success_chk=[]
         failed_chk=[]
-        cmd="sudo vtysh -c 'sh ip ospf nei'  && ip addr sh control0|wc -l"
+        cmd="sudo vtysh -c 'sh ip ospf nei'  && ip addr sh control0"
         for ip in eval(str(self.nodes_ip)):
             print("Network verification for {} is in progress ...".format(ip))
             trace("Network verification for {} is in progress ...".format(ip))
-            network_check=cli_run(ip,self.user,self.password,cmd)
-            if re.search(self.dataCIDR,str(network_check)):
+            network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))
+            print("________________________")
+            print("Data Retrieve:"+str(network_check))
+            print("________________________")
+            print("Word to search"+str(self.dataCIDR[0:11]))
+            if re.search(self.dataCIDR[0:11],str(network_check)):
                 success_chk.append(ip)         
             else:
                 failed_chk.append(ip)
@@ -331,3 +337,32 @@ class NetworkManager(AaBase):
             return "Error"
         else:
             return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Health Check Network Manager")
+    ###########################################################################
+    def health_check_network_manager(self, *args, **kwargs):
+        banner("PCC.Health Check Network Manager")
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(self.name))
+
+        if self.name == None:
+            return None
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        self.id=easy.get_network_clusters_id_by_name(conn,self.name)  
+        time.sleep(30) 
+        response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
+        print("Response:"+str(response))
+        if response["deploy_status"].lower()=="completed":
+            return "OK"
+        else:
+            print("--------------")
+            print("Status we got from API:"+str(response["deploy_status"]))
+            print("--------------")
+            return "Error"
+        print("Could not verify the health of network cluter "+str(self.name))
+        return "Error"
