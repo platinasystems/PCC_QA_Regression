@@ -357,11 +357,11 @@ class NetworkManager(AaBase):
         time.sleep(30) 
         response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
         print("Response:"+str(response))
-        if response["deploy_status"].lower()=="completed":
+        if response["deploy_status"].lower()=="completed" and (response['health']=="OK" or response['health']=="Warning"):
             return "OK"
         else:
             print("--------------")
-            print("Status we got from API:"+str(response["deploy_status"]))
+            print("Status we got from API as {} and heath as {}".format(response["deploy_status"],response['health']))
             print("--------------")
             return "Error"
         print("Could not verify the health of network cluter "+str(self.name))

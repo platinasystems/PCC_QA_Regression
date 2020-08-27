@@ -129,7 +129,7 @@ Set Interfaces For Server Falling in DataCIDR
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
-                               ...  assign_ip=["192.168.150.10/24"]
+                               ...  assign_ip=["192.168.150.10/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -154,13 +154,13 @@ Set Interfaces For Server Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
-                               ...  assign_ip=["192.168.150.10/24"]
+                               ...  assign_ip=["192.168.150.10/31"]
                                     Should Be Equal As Strings      ${status}    OK 
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
-                               ...  assign_ip=["192.168.150.12/24"]
+                               ...  assign_ip=["192.168.150.12/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -185,11 +185,11 @@ Set Interfaces For Server Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
-                               ...  assign_ip=["192.168.150.12/24"]
+                               ...  assign_ip=["192.168.150.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Network Manager Creation Interfaces For Server Falling in DataCIDR
+Network Manager Creation (Interfaces For Server Falling in DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Creation*
                                ...  keywords:
@@ -231,17 +231,17 @@ Interface Verification For Server Falling In DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
-                               ...  assign_ip=["192.168.150.10/24"]
+                               ...  assign_ip=["192.168.150.10/31"]
                                     Should Not Be Equal As Strings      ${status}    OK 
                                     
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
-                               ...  assign_ip=["192.168.150.12/24"]
+                               ...  assign_ip=["192.168.150.12/31"]
                                     Should Not Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
-Network Manager Update Interfaces For Server Falling in DataCIDR
+Network Manager Update (Interfaces For Server Falling in DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Update*
                                ...  keywords:
@@ -278,7 +278,7 @@ Network Manager Update Interfaces For Server Falling in DataCIDR
                                     Should Be Equal As Strings      ${status}  OK
                                     
 ###################################################################################################################################
-Network Manager Refresh Interfaces For Server Falling in DataCIDR
+Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Refresh Interfaces For Server Falling in DataCIDR*
                                ...  keywords:
@@ -306,7 +306,7 @@ Network Manager Refresh Interfaces For Server Falling in DataCIDR
                                     Should Be Equal As Strings      ${status}  OK
                                     
 ###################################################################################################################################
-Network Manager Delete Interfaces For Server Falling in DataCIDR
+Network Manager Delete (Interfaces For Server Falling in DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Delete Interfaces For Server Falling in DataCIDR*
                                ...  keywords:
@@ -396,7 +396,7 @@ Set Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Network Manager Creation Interfaces For Server Not Falling In DataCIDR
+Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Creation Interfaces For Server Not Falling In DataCIDR*
                                ...  keywords:
@@ -428,7 +428,7 @@ Network Manager Creation Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Interface Verification Interfaces For Server Not Falling In DataCIDR
+Interface Verification For Server Not Falling In DataCIDR
 ###################################################################################################################################
     [Documentation]                 *Interface Verification Interfaces For Server Not Falling In DataCIDR*
                                ...  keywords:
@@ -447,7 +447,7 @@ Interface Verification Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
-Network Manager Update Interfaces For Server Not Falling In DataCIDR
+Network Manager Update (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Update Interfaces For Server Not Falling In DataCIDR*
                                ...  keywords:
@@ -484,7 +484,7 @@ Network Manager Update Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status}  OK
                                     
 ###################################################################################################################################
-Network Manager Refresh Interfaces For Server Not Falling In DataCIDR
+Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Refresh Interfaces For Server Not Falling In DataCIDR*
                                ...  keywords:
@@ -512,7 +512,7 @@ Network Manager Refresh Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status}  OK
                                     
 ###################################################################################################################################
-Network Manager Delete Interfaces For Server Not Falling In DataCIDR
+Network Manager Delete (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
     [Documentation]                 *Network Manager Delete Interfaces For Server Not Falling In DataCIDR*
                                ...  keywords:
@@ -918,7 +918,7 @@ Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Ad
         ${response}                 PCC.Network Manager Update
                                ...  id=${network_id}
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -935,7 +935,7 @@ Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Ad
                                     Should Be Equal As Strings      ${status}    OK 
                                     
         ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes_ip=["${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 

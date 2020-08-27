@@ -435,9 +435,13 @@ def get_os_label_by_name(conn:dict, Name:str)->str:
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
+    print("Name in get_os_label_by_name: {}".format(Name))
     OS_list = pcc.get_images(conn)['Result']['Data']
+    print("OS list: {}".format(OS_list))
     try:
         for OS in OS_list:
+            print("OS found: {}".format(OS['name']))
+            print("OS looking for : {}".format(Name))
             if str(OS['name']) == str(Name):
                 return OS['label']
         return None
