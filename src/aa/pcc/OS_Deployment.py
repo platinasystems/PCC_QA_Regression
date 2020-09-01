@@ -48,6 +48,7 @@ class OS_Deployment(AaBase):
         self.i28_hostip = None
         self.i28_username = None
         self.i28_password = None
+        self.version=None
         
         super().__init__()
 
@@ -423,7 +424,33 @@ class OS_Deployment(AaBase):
             print("Error in Update OS Images: " + str(e))    
                  
         
+    ###########################################################################
+    @keyword(name="PCC.Verify OS And Its Version Back End")
+    ###########################################################################
+ 
+    def verify_os_and_version(self, *args, **kwargs):
+        banner("PCC.Verify OS And Its Version Back End")
+        self._load_kwargs(kwargs)   
+        print("Kwargs:"+str(kwargs))          
         
+        try:
+            if self.Name and self.version:
+                cmd = "sudo cat /etc/os-release | grep 'NAME\|VERSION'"
+                print("******************")
+                print("Command for Verifying OS and its version {}".format(cmd))
+                print("******************")
+                os_verify = cli_run(self.host_ip,self.username,self.password,cmd)        
+                print("Backend Data:"+str(os_verify)) 
+                if re.search(self.Name,str(os_verify)) and re.search(self.version,str(os_verify)):
+                    return "OK"
+                else:
+                    return "Error"
+            else:
+                prinr("Name and Version OS is Empty, Please Provide ...")
+                return "Error"
+        except Exception as e:
+            logger.console("Error in set password on server: " + str(e))
+        return "OK"      
         
         
         

@@ -477,6 +477,7 @@ class Nodes(AaBase):
     
         pcc_agent_cmd="sudo systemctl status pccagent"
         sys_cllector_cmd="sudo systemctl status systemCollector"
+        frr_cmd="sudo service frr status|head -10"
 
         failed_host=[]
 
@@ -487,6 +488,9 @@ class Nodes(AaBase):
                 sys_collector_output=cli_run(host_ip,self.user,self.password,sys_cllector_cmd)   
                 logger.console("Pcc Agent Output: {}".format(pcc_agent_output))
                 logger.console("System Collector Output: {}".format(sys_collector_output))
+                #frr_output=cli_run(host_ip,self.user,self.password,frr_cmd)
+                #logger.console("Frr Service Output: {}".format(frr_output))
+                #if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output) and re.search("running",str(frr_output))):
                 if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output)):
                     continue
                 else:
@@ -501,3 +505,45 @@ class Nodes(AaBase):
             return "Error"
         else:
             return "OK"
+            
+    #verifying sn and model number from front-end to backend        
+    ###########################################################################
+    @keyword(name="PCC.Node Verify Model And Serial Number")
+    ###########################################################################
+    def verify_model_and_serial_number(self, *args, **kwargs):
+        banner("PCC.Node Verify Model And Serial Number")
+        self._load_kwargs(kwargs)
+        print("Kwargs:{}".format(kwargs))      
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")    
+        serial_cmd="sudo dmidecode -s baseboard-serial-number"
+        model_cmd="sudo dmidecode -s baseboard-product-name"       
+        failed_host=[]
+        if self.Names:
+            for name in ast.literal_eval(self.Names):
+                node_id= self.get_node_id(Name=name)
+                node_details=get_response_data(pcc.get_node_summary_by_id(conn,str(node_id)))
+                print("1. Node Summary:"+str(node_details))
+                print("++++++++++++++++++++++++++++++++++++++++++++")
+                print("2. Serial Number"+str(node_details['SN']))
+                print("++++++++++++++++++++++++++++++++++++++++++++")
+                print("3. Model Number"+str(node_details['Model']))
+                print("++++++++++++++++++++++++++++++++++++++++++++")
+                logger.console("Verifying services for host {} .....".format(node_details['Host']))
+                print("Verifying services for host {} .....".format(node_details['Host']))
+                serial_number=self._serialize_response(time.time(),cli_run(node_details['Host'], self.user, self.password, serial_cmd))['Result']['stdout']
+                model_number=self._serialize_response(time.time(),cli_run(node_details['Host'], self.user, self.password, model_cmd))['Result']['stdout']
+                print("Backend Serial Data:"+str(serial_number))
+                print("Backend Model Data:"+str(model_number))
+                if node_details['Model']==str(model_number.strip()) and node_details['SN']==str(serial_number.strip()):
+                    continue
+                else:
+                    
+                    failed_host.append(name)
+                    continue                
+        else:
+            print("Node names is empty, please provide the node name list for eg. Names=['sv124','sv125']")           
+        if failed_host:  
+            print("Couldn't verify Serial and Model Number for {}".format(failed_host))     
+            return "Error"
+        else:
+            return "OK"        
