@@ -165,6 +165,14 @@
             "private_key":"Temp_private.ppk"
         },
 
+    "ipam":
+        {
+            "controlName":"control-pvt",
+            "dataName":"data-pvt",
+            "controlSubnet":"10.0.202.0/24",
+            "dataSubnet":"192.168.150.0/24"
+        },
+
     "network_manager":
         {
             "name":"network-pvt",

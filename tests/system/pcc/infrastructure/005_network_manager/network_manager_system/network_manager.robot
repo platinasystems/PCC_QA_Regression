@@ -147,7 +147,7 @@ Set Interfaces For Server Falling in DataCIDR
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name${SERVER_1_NAME}
+                               ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
                                     Should Be Equal As Strings      ${status}    OK  
 
@@ -178,7 +178,7 @@ Set Interfaces For Server Falling in DataCIDR
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name${SERVER_1_NAME}
+                               ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
                                     Should Be Equal As Strings      ${status}    OK  
 
@@ -187,6 +187,70 @@ Set Interfaces For Server Falling in DataCIDR
                                ...  interface_name=enp130s0d1
                                ...  assign_ip=["192.168.150.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
+                                    
+ #################################################################################################################################
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.150.9/31"]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                                    Should Be Equal As Strings      ${status}    OK  
+
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.150.9/31"]
+                                    Should Be Equal As Strings      ${status}    OK 
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                                    Should Be Equal As Strings      ${status}    OK  
+
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.150.11/31"]
+                                    Should Be Equal As Strings      ${status}    OK 
 
 ###################################################################################################################################
 Network Manager Creation (Interfaces For Server Falling in DataCIDR)
@@ -211,16 +275,16 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR)
         ${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
+                                    Should Be Equal As Strings      ${status}  OK
                                     
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK 
                                
-        ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
-                                    Should Be Equal As Strings      ${status}  OK
-
 ###################################################################################################################################
 Interface Verification For Server Falling In DataCIDR
 ###################################################################################################################################
@@ -268,15 +332,15 @@ Network Manager Update (Interfaces For Server Falling in DataCIDR)
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                    
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
-                                    
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+                                                                       
 ###################################################################################################################################
 Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
 ###################################################################################################################################
@@ -296,14 +360,14 @@ Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK 
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
- 
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
                                     
 ###################################################################################################################################
 Network Manager Delete (Interfaces For Server Falling in DataCIDR)
@@ -354,7 +418,7 @@ Set Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name${SERVER_1_NAME}
+                               ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
                                     Should Be Equal As Strings      ${status}    OK  
 
@@ -385,7 +449,7 @@ Set Interfaces For Server Not Falling In DataCIDR
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name${SERVER_1_NAME}
+                               ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
                                     Should Be Equal As Strings      ${status}    OK  
 
@@ -395,6 +459,69 @@ Set Interfaces For Server Not Falling In DataCIDR
                                ...  assign_ip=["192.168.72.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
+###################################################################################################################################
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.72.9/31"]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                                    Should Be Equal As Strings      ${status}    OK  
+
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.72.9/31"]
+                                    Should Be Equal As Strings      ${status}    OK 
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.72.11/31"]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                                    Should Be Equal As Strings      ${status}    OK  
+
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.72.11/31"]
+                                    Should Be Equal As Strings      ${status}    OK
+                                    
 ###################################################################################################################################
 Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
@@ -418,15 +545,15 @@ Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                               
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+                               
 ###################################################################################################################################
 Interface Verification For Server Not Falling In DataCIDR
 ###################################################################################################################################
@@ -474,14 +601,14 @@ Network Manager Update (Interfaces For Server Not Falling In DataCIDR)
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
                                     
 ###################################################################################################################################
 Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
@@ -502,15 +629,15 @@ Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK 
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
- 
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
                                     
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+                                     
 ###################################################################################################################################
 Network Manager Delete (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
@@ -560,7 +687,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name${SERVER_1_NAME}
+                               ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
                                     Should Be Equal As Strings      ${status}    OK  
 
@@ -591,7 +718,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name${SERVER_1_NAME}
+                               ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
                                     Should Be Equal As Strings      ${status}    OK  
 
@@ -599,6 +726,69 @@ Set Interfaces For Server Partially Falling In DataCIDR
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0d1
                                ...  assign_ip=["192.168.150.12/31"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.72.9/31"]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                                    Should Be Equal As Strings      ${status}    OK  
+
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.72.9/31"]
+                                    Should Be Equal As Strings      ${status}    OK 
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth32-1
+                                    Should Be Equal As Strings      ${status}    OK  
+
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth32-1
+                               ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -645,15 +835,15 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR)
         ${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
- 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                    
+                                     
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
                                     Should Be Equal As Strings      ${status}  OK
+                                    
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
 
 ###################################################################################################################################
 Interface Verification For Server Partially Falling in DataCIDR
@@ -693,15 +883,15 @@ Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK 
  
-         ${status}                  PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
- 
-        ${status}                   PCC.Network Manager Verify BE      
+         ${status}                  PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
-                                    
+ 
+         ${status}                  PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+                                     
 ###################################################################################################################################
 #Create Kubernetes cluster with nodes which are not part of Network Manager (Negative)
 ####################################################################################################################################
@@ -930,15 +1120,15 @@ Down And Up The Interface And Check For K8s
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK
 #
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK 
-#                                    
 #        ${status}                   PCC.Network Manager Verify BE      
 #                               ...  nodes_ip=["${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
 #
+#        ${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#                                   
 ###################################################################################################################################
 Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Add Node)
 ###################################################################################################################################
@@ -967,15 +1157,15 @@ Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Ad
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                    
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+                                    
 ###################################################################################################################################
 Network Manager Try To Remove 2 Invaders (Negative)
 ###################################################################################################################################
@@ -1211,15 +1401,15 @@ Network Manager Creation with same ControlCIDR and DataCIDR
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                               
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
-                                    
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+                                                                 
 ###################################################################################################################################
 Network Manager Delete and Verify PCC
 ###################################################################################################################################

@@ -362,6 +362,8 @@ class NetworkManager(AaBase):
         else:
             print("--------------")
             print("Status we got from API as {} and heath as {}".format(response["deploy_status"],response['health']))
+            print("Health Summary:"+str(health['healthSummary']))
+            print("Health Info:"+str(health['info']))
             print("--------------")
             return "Error"
         print("Could not verify the health of network cluter "+str(self.name))
