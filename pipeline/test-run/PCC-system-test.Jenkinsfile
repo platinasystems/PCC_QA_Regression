@@ -65,6 +65,7 @@ pipeline {
                     body: """
                     Check console output at ${env.BUILD_URL}
                     """,
+                    emailext body: '''${SCRIPT,  template="robot_summary.groovy"}''',
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
                     from: "msuman@platinasystems.com",
                     attachmentsPattern: "output.zip"
