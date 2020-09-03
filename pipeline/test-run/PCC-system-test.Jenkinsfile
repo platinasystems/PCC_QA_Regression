@@ -64,7 +64,6 @@ pipeline {
                     subject: "Test Report: Job '${env.JOB_NAME} ${env.BUILD_NUMBER}'",
                     body: """
                     Check console output at ${env.BUILD_URL}
-                    ${class: 'RobotPublisher'}
                     """,
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
                     from: "msuman@platinasystems.com",
