@@ -22,36 +22,143 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-Monitor Data Availability Verify BE
-###################################################################################################################################                                    
+Monitor Data Availability Verify BE For CPU
+################################################################################################################################### 
+    [Documentation]                 *Monitor Data Availability Verify BE*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Data Availability BE
+                                   
         ${status}                   PCC.Monitor Verify Data Availability BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  category=["cpu","memory"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  category=["cpu"]
                                     Should Be Equal As Strings      ${status}    OK   
 
+###################################################################################################################################
+Monitor Data Availability Verify BE For Memory
+################################################################################################################################### 
+    [Documentation]                 *Monitor Data Availability Verify BE*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Data Availability BE
+                                   
+        ${status}                   PCC.Monitor Verify Data Availability BE
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  category=["memory"]
+                                    Should Be Equal As Strings      ${status}    OK  
+                                    
 ##################################################################################################################################
 Monitor Verify Nodes Health
-###################################################################################################################################                                    
+###################################################################################################################################   
+    [Documentation]                 *Monitor Verify Nodes Health*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Node Health
+                               
         ${status}                   PCC.Monitor Verify Node Health
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                     Should Be Equal As Strings      ${status}    OK  
+                                    
 ###################################################################################################################################
-Monitor Data Availability Verify PCC
-###################################################################################################################################                                    
+Monitor Data Availability Verify PCC for CPU
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
         ${status}                   PCC.Monitor Verify Data Availability
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  category=["cpu","memory","system","sensor","network","storage"]
-                                    Should Be Equal As Strings      ${status}    OK 
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["cpu"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for Memory
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["memory"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for System
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["system"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for Storage
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["storage"]
+                                    Should Be Equal As Strings      ${status}    OK     
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for Sensor
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["sensor"]
+                                    Should Be Equal As Strings      ${status}    OK       
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for Network
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["network"]
+                                    Should Be Equal As Strings      ${status}    OK      
+                                    
 ###################################################################################################################################
 Monitor Verify Services Back End (pccagent, systemCollector, frr)
 ###################################################################################################################################                                    
+    [Documentation]                 *Monitor Verify Services Back End (pccagent, systemCollector, frr)*
+                               ...  keywords:
+                               ...  PCC.Node Verify Back End
+
         ${status}                   PCC.Node Verify Back End
-                               ...  host_ips=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  host_ips=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Verify Interface Counts
+###################################################################################################################################                                    
+    [Documentation]                 *Monitor Verify Interface Counts*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Interface Counts
+
+        ${status}                   PCC.Monitor Verify Interface Counts
+                               ...  nodes_ip=["${SERVER_2_HOST_IP}"]
+                               ...  category=["network"]
+                               ...  nodes=["${SERVER_2_NAME}"]
+                                    Should Be Equal As Strings      ${status}    OK 
 
 ####################################################################################################################################
 Monitor Verify Model And Serial Number
 ##################################################################################################################################                                    
+    [Documentation]                 *Monitor Verify Model And Serial Number*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Model And Serial Number
+
         ${status}                   PCC.Node Verify Model And Serial Number
                                ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
                                     Should Be Equal As Strings      ${status}    OK
@@ -59,6 +166,10 @@ Monitor Verify Model And Serial Number
 ####################################################################################################################################
 Monitor Verify OS And Its Version Backend
 ###################################################################################################################################                                    
+    [Documentation]                 *Monitor Verify OS And Its Version Backend*
+                               ...  keywords:
+                               ...  PCC.Verify OS And Its Version Back End
+
         ${status}                   PCC.Verify OS And Its Version Back End
                                ...  Name=CentOS
                                ...  host_ip=${SERVER_2_HOST_IP}

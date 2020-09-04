@@ -240,3 +240,62 @@ class Monitor(AaBase):
         else:
             return "OK"                                                        
 
+    ###########################################################################
+    @keyword(name="PCC.Monitor Verify Interface Counts")
+    ###########################################################################
+    def monitor_verify_interface_counts(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
+        banner("PCC.Monitor Verify Interface Counts")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e                 
+        payload = {
+            "unit":"HOUR",
+            "value":1
+        }
+        if not self.nodes:
+            print("Node names can not be empty!!")
+            return "Error"            
+        tmp_node=[]        
+        failed_chk=[]
+        for node_name in eval(str(self.nodes)):
+            print("Getting Node Id for -"+str(node_name))
+            node_id=easy.get_node_id_by_name(conn,node_name)
+            print(" Node Id retrieved -"+str(node_id))
+            tmp_node.append(node_id)
+        self.nodes=tmp_node
+        for nodeId in self.nodes:
+            print("***********************************")
+            print("NodeID:"+str(nodeId))
+            for topic in eval(str(self.category)):
+                for ip in eval(str(self.nodes_ip)):
+                    if topic.lower()=='network':
+                        cmd="sudo ip link|cut -d' ' -f2|sed '/^$/d'|wc -l"
+                        print("#####################################")    
+                        print("Topic:"+str(topic))
+                        print("Topic Cmd:"+str(cmd))
+                        print("Host:"+str(ip))
+                        network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))['Result']['stdout']
+                        payload = {
+                                    "unit":"HOUR",
+                                    "value":1
+                                  }                    
+                        data=pcc.add_monitor_cache(conn, "network", str(nodeId), payload)  
+                        interfaces=data['Result']['metrics'][0]['interfaces']     
+                        print("Network Interfacea PCC:"+str(interfaces))               
+                        print("Interface Count Backend:"+str(network_check))
+                        print("Interface Count API:"+str(len(interfaces)))
+                        if len(interfaces)==int(network_check):
+                            continue
+                        else:
+                          failed_chk.append(nodeId) 
+                    else:
+                        print("Invalid Category:"+str(topic))   
+                        return "Error"                    
+        if failed_chk:
+            print("Could not verify the topics for Node ids: "+str())
+            return "Error"
+        else:
+            return "OK"                     
