@@ -954,6 +954,12 @@ Ceph Cluster Delete
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
+                               
+        ${status}              PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               Should Not Be Equal As Strings      ${status}    OK
 
 ####################################################################################################################################
 #Network Manager Delete and Verify PCC

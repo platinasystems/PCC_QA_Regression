@@ -25,7 +25,6 @@ Library                         aa.pcc.Cli
 Library                         aa.pcc.Kubernetes
 Library                         aa.pcc.OpenSSHKeys
 Library                         aa.pcc.Roles
-Library                         aa.pcc.Sites
 Library                         aa.pcc.RoleOperations
 Library                         aa.pcc.Interfaces
 Library                         aa.pcc.Alerting

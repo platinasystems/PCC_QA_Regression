@@ -597,22 +597,10 @@ Ceph Cluster Delete
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-
-###################################################################################################################################
-Network Manager Delete and Verify PCC
-###################################################################################################################################
-    [Documentation]                 *Network Manager Verification PCC*
-                               ...  keywords:
-                               ...  PCC.Network Manager Delete
-                               ...  PCC.Wait Until Network Manager Ready
-
-        ${response}                 PCC.Network Manager Delete
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Deleted
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-                                    Should Be Equal As Strings      ${status}    OK
+                               
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Not Be Equal As Strings      ${status}    OK
+                                    

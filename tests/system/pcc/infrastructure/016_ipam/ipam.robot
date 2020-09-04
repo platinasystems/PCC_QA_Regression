@@ -372,6 +372,12 @@ Ceph Cluster Delete
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
+                               
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Not Be Equal As Strings      ${status}    OK                               
 
 ###################################################################################################################################
 Delete K8 Cluster
@@ -395,6 +401,13 @@ Delete K8 Cluster
         ${status}                   PCC.K8s Wait Until Cluster Deleted
                                ...  cluster_id=${cluster_id}
                                     Should Be Equal As Strings    ${status}  OK     
+                                    
+        ${status}                   PCC.K8s Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                                    Should Not Be Equal As Strings      ${status}    OK
+                                    
 ###################################################################################################################################
 Network Manager Delete
 ###################################################################################################################################
@@ -411,6 +424,11 @@ Network Manager Delete
         ${status}                   PCC.Wait Until Network Manager Deleted
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Not Be Equal As Strings      ${status}  OK  
  
 ###################################################################################################################################
 Delete Multiple Subnet
@@ -420,6 +438,5 @@ Delete Multiple Subnet
                                ...  PCC.Ipam Subnet Delete All
 
         ${status}                   PCC.Ipam Subnet Delete All
-                               ...  name=subnet-pvt
-                               
+                               ...  name=subnet-pvt                             
                                     Should Be Equal As Strings      ${status}    OK

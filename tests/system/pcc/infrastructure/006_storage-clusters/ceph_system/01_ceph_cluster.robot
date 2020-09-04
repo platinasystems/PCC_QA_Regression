@@ -210,22 +210,14 @@ Ceph Cluster Create
 
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
-
                                     Should Be Equal As Strings      ${status}    OK
                                     
-###################################################################################################################################
-Ceph Cluster Verification Back End
-###################################################################################################################################
-    [Documentation]                 *Verifying Ceph cluster BE*
-                               ...  keywords:
-                               ...  PCC.Ceph Verify BE
-    
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK                                    
+                                    
                                     
 ###################################################################################################################################
 Ceph Cluster Creation With Nodes Which Are Part of Existing Cluster (Negative)
@@ -269,6 +261,11 @@ Ceph Cluster Update - Add Invader
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
                                     
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Be Equal As Strings      ${status}    OK                                   
 ##################################################################################################################################
 #Reboot Node And Verify Ceph is Intact
 ###################################################################################################################################

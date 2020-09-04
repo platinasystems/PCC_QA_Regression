@@ -385,9 +385,13 @@ Network Manager Delete (Interfaces For Server Falling in DataCIDR)
                                     
         ${status}                   PCC.Wait Until Network Manager Deleted
                                ...  name=${NETWORK_MANAGER_NAME}
-
                                     Should Be Equal As Strings      ${status}    OK
 
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Not Be Equal As Strings      ${status}  OK
+                                    
 ###################################################################################################################################
 Set Interfaces For Server Not Falling In DataCIDR
 ###################################################################################################################################
@@ -654,8 +658,12 @@ Network Manager Delete (Interfaces For Server Not Falling In DataCIDR)
                                     
         ${status}                   PCC.Wait Until Network Manager Deleted
                                ...  name=${NETWORK_MANAGER_NAME}
-
                                     Should Be Equal As Strings      ${status}    OK
+                                    
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Not Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
 Set Interfaces For Server Partially Falling In DataCIDR
@@ -792,7 +800,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Adding Mass To Invaders For Network Manager
+Adding Maas To Invaders For Network Manager
 ###################################################################################################################################
     [Documentation]                 *Adding Mass To Invaders*
                                ...  Keywords:
@@ -800,7 +808,7 @@ Adding Mass To Invaders For Network Manager
                                ...  PCC.Wait Until Roles Ready On Nodes
 
         ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  roles=["Baremetal Management Node"]
 
                                     Should Be Equal As Strings      ${response}  OK
@@ -809,9 +817,11 @@ Adding Mass To Invaders For Network Manager
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                     Should Be Equal As Strings      ${status_code}  OK
 
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_2_NAME}
-                                    Should Be Equal As Strings      ${status_code}  OK
+        ${response}                 PCC.Mass Verify BE
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                                    Should Be Equal As Strings      ${response}  OK    
 
 ###################################################################################################################################
 Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR)
@@ -954,7 +964,12 @@ Ceph Cluster Create
 
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
-
+                                    Should Be Equal As Strings      ${status}    OK
+                                    
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
@@ -983,6 +998,12 @@ Create Kubernetes cluster
         ${status}                   PCC.K8s Wait Until Cluster is Ready
                                ...  name=${K8S_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.K8s Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK         
                                     
 ###################################################################################################################################
 Delete Network Manager When Ceph And K8s Are Present (Negative)
@@ -1337,6 +1358,12 @@ Ceph Cluster Delete
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
 
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Not Be Equal As Strings      ${status}    OK
+                                    
 ###################################################################################################################################
 Delete K8 Cluster
 ###################################################################################################################################     
@@ -1360,6 +1387,12 @@ Delete K8 Cluster
                                ...  cluster_id=${cluster_id}
                                     Should Be Equal As Strings    ${status}  OK  
                                     
+        ${status}                   PCC.K8s Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                                    Should Not Be Equal As Strings      ${status}    OK   
+                                    
 ###################################################################################################################################
 Network Manager Delete and Verify PCC When (Interfaces For Server Partially Falling In DataCIDR)
 ###################################################################################################################################
@@ -1377,6 +1410,11 @@ Network Manager Delete and Verify PCC When (Interfaces For Server Partially Fall
         ${status}                   PCC.Wait Until Network Manager Deleted
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+                                    
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Not Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
 Network Manager Creation with same ControlCIDR and DataCIDR
@@ -1411,7 +1449,7 @@ Network Manager Creation with same ControlCIDR and DataCIDR
                                     Should Be Equal As Strings      ${status}    OK 
                                                                  
 ###################################################################################################################################
-Network Manager Delete and Verify PCC
+Network Manager Delete and Verify PCC and Backend
 ###################################################################################################################################
     [Documentation]                 *Network Manager Verification PCC*
                                ...  keywords:
@@ -1427,3 +1465,8 @@ Network Manager Delete and Verify PCC
         ${status}                   PCC.Wait Until Network Manager Deleted
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
+                                    
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Not Be Equal As Strings      ${status}  OK                                    

@@ -87,27 +87,6 @@ def get_node_role_id_by_name(conn:dict, Name:str)->dict:
     except Exception as e:
         return {"Error": str(e)}
 
-  
-## Sites
-def get_site_id_by_name(conn:dict, Name:str)->dict:
-    """
-    Get Id of Site with matching Name 
-    [Args]
-        (dict) conn: Connection dictionary obtained after logging in
-        (str) Name: Name of Site
-    [Returns]
-        (int) Id: Id of the matchining Site, or
-            None: if no match found, or
-        (dict) Error response: If Exception occured
-    """
-    site_list = pcc.get_sites(conn)['Result']['Data']
-    try:
-        for site in site_list:
-            if str(site['Name'].lower()) == str(Name).lower():
-                return site['Id']
-        return None
-    except Exception as e:
-        return {"Error": str(e)}
 
 ## Applications
 def get_app_id_by_name(conn:dict, Name:str)->dict:
