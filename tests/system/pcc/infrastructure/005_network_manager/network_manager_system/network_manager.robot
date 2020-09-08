@@ -21,6 +21,53 @@ Login
                                     
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
+
+###################################################################################################################################
+Create IPAM ControlCIDR Subnet 
+###################################################################################################################################
+    [Documentation]                 *Create IPAM Subnet*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Create
+                               ...  PCC.Wait Until Ipam Subnet Ready
+
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
+                               ...  subnet=${IPAM_CONTROL_SUBNET_IP}
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Create IPAM DataCIDR Subnet
+###################################################################################################################################
+    [Documentation]                 *Create IPAM Subnet*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Create
+                               ...  PCC.Wait Until Ipam Subnet Ready
+
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=${IPAM_DATA_SUBNET_NAME}
+                               ...  subnet=${IPAM_DATA_SUBNET_IP}
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=${IPAM_DATA_SUBNET_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
                                     
 ###################################################################################################################################
 #Create Kubernetes cluster without Network Manager (Negative)
@@ -74,49 +121,49 @@ Ceph Cluster Creation without Network Manager (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
 ###################################################################################################################################
-Create IPAM ControlCIDR Subnet 
-###################################################################################################################################
-    [Documentation]                 *Create IPAM Subnet*
-                               ...  keywords:
-                               ...  PCC.Ipam Subnet Create
-                               ...  PCC.Wait Until Ipam Subnet Ready
-
-        ${response}                 PCC.Ipam Subnet Create
-                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
-                               ...  subnet=${IPAM_CONTROL_SUBNET_IP}
-                               ...  pubAccess=False
-                               ...  routed=False
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Wait Until Ipam Subnet Ready
-                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
-
-                                    Should Be Equal As Strings      ${status}    OK
-
-###################################################################################################################################
-Create IPAM DataCIDR Subnet
-###################################################################################################################################
-    [Documentation]                 *Create IPAM Subnet*
-                               ...  keywords:
-                               ...  PCC.Ipam Subnet Create
-                               ...  PCC.Wait Until Ipam Subnet Ready
-
-        ${response}                 PCC.Ipam Subnet Create
-                               ...  name=${IPAM_DATA_SUBNET_NAME}
-                               ...  subnet=${IPAM_DATA_SUBNET_IP}
-                               ...  pubAccess=False
-                               ...  routed=False
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Wait Until Ipam Subnet Ready
-                               ...  name=${IPAM_DATA_SUBNET_NAME}
-
-                                    Should Be Equal As Strings      ${status}    OK
-
+#Create IPAM ControlCIDR Subnet 
+####################################################################################################################################
+#    [Documentation]                 *Create IPAM Subnet*
+#                               ...  keywords:
+#                               ...  PCC.Ipam Subnet Create
+#                               ...  PCC.Wait Until Ipam Subnet Ready
+#
+#        ${response}                 PCC.Ipam Subnet Create
+#                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
+#                               ...  subnet=${IPAM_CONTROL_SUBNET_IP}
+#                               ...  pubAccess=False
+#                               ...  routed=False
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Wait Until Ipam Subnet Ready
+#                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Create IPAM DataCIDR Subnet
+####################################################################################################################################
+#    [Documentation]                 *Create IPAM Subnet*
+#                               ...  keywords:
+#                               ...  PCC.Ipam Subnet Create
+#                               ...  PCC.Wait Until Ipam Subnet Ready
+#
+#        ${response}                 PCC.Ipam Subnet Create
+#                               ...  name=${IPAM_DATA_SUBNET_NAME}
+#                               ...  subnet=${IPAM_DATA_SUBNET_IP}
+#                               ...  pubAccess=False
+#                               ...  routed=False
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    
+#        ${status}                   PCC.Wait Until Ipam Subnet Ready
+#                               ...  name=${IPAM_DATA_SUBNET_NAME}
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
 ###################################################################################################################################
 Set Interfaces For Server Falling in DataCIDR
 ###################################################################################################################################
@@ -188,7 +235,7 @@ Set Interfaces For Server Falling in DataCIDR
                                ...  assign_ip=["192.168.150.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
                                     
- #################################################################################################################################
+#################################################################################################################################
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_1_NAME}
@@ -946,33 +993,33 @@ Ceph Cluster Creation with nodes which are not part of Network Manager (Negative
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
 ###################################################################################################################################
-Ceph Cluster Create 
-###################################################################################################################################
-    [Documentation]                 *Creating Ceph Cluster*
-                               ...  keywords:
-                               ...  PCC.Ceph Create Cluster
-                               ...  PCC.Ceph Wait Until Cluster Ready
-                               
-        ${response}                 PCC.Ceph Create Cluster
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=${CEPH_CLUSTER_NODES}
-                               ...  tags=${CEPH_CLUSTER_TAGS}
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
-###################################################################################################################################
+##Ceph Cluster Create 
+#####################################################################################################################################
+##    [Documentation]                 *Creating Ceph Cluster*
+##                               ...  keywords:
+##                               ...  PCC.Ceph Create Cluster
+##                               ...  PCC.Ceph Wait Until Cluster Ready
+##                               
+##        ${response}                 PCC.Ceph Create Cluster
+##                               ...  name=${CEPH_CLUSTER_NAME}
+##                               ...  nodes=${CEPH_CLUSTER_NODES}
+##                               ...  tags=${CEPH_CLUSTER_TAGS}
+##                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+##
+##        ${status_code}              Get Response Status Code        ${response}     
+##                                    Should Be Equal As Strings      ${status_code}  200
+##
+##        ${status}                   PCC.Ceph Wait Until Cluster Ready
+##                               ...  name=${CEPH_CLUSTER_NAME}
+##                                    Should Be Equal As Strings      ${status}    OK
+##                                    
+##        ${status}                   PCC.Ceph Verify BE
+##                               ...  user=${PCC_LINUX_USER}
+##                               ...  password=${PCC_LINUX_PASSWORD}
+##                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+##                                    Should Be Equal As Strings      ${status}    OK
+##                                    
+#####################################################################################################################################
 Create Kubernetes cluster
 ###################################################################################################################################
         [Documentation]             *Create Kubernetes cluster*
@@ -1039,53 +1086,53 @@ Reboot Node And Verify K8s Is Intact
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
-##################################################################################################################################
-Reboot Node And Verify Ceph Is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying Ceph cluster BE*
-                               ...  keywords:
-                               ...  Ceph Verify BE
-                               ...  Restart node
-                               
-    ${restart_status}               Restart node
-                               ...  hostip=${SERVER_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK  
-                                    
+####################################################################################################################################
+##Reboot Node And Verify Ceph Is Intact
+####################################################################################################################################
+##    [Documentation]                 *Verifying Ceph cluster BE*
+##                               ...  keywords:
+##                               ...  Ceph Verify BE
+##                               ...  Restart node
+##                               
+##    ${restart_status}               Restart node
+##                               ...  hostip=${SERVER_1_HOST_IP}
+##                               ...  time_to_wait=240
+##                                    Log to console    ${restart_status}
+##                                    Should Be Equal As Strings    ${restart_status}    OK
+##
+##        ${status}                   PCC.Ceph Verify BE
+##                               ...  user=${PCC_LINUX_USER}
+##                               ...  password=${PCC_LINUX_PASSWORD}
+##                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+##
+##                                    Should Be Equal As Strings      ${status}    OK  
+##                                    
 ###################################################################################################################################
-Down And Up The Interface And Check For Ceph
-###################################################################################################################################
-        [Documentation]             *Down And Up The Interface And Check For Ceph*
-                               ...  Keywords:
-                               ...  PCC.Set Interface Down
-                               ...  PCC.Set Interface Up
-                               ...  PCC.Ceph Verify BE
-                               
-        ${status}                   PCC.Set Interface Down
-                               ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
-                                    Should Be Equal As Strings      ${status}  OK
-
-        ${status}                   PCC.Set Interface Up
-                               ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
-                                    Should Be Equal As Strings      ${status}  OK
-                                    
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                                    Should Be Equal As Strings      ${status}    OK
-
+##Down And Up The Interface And Check For Ceph
+#####################################################################################################################################
+##        [Documentation]             *Down And Up The Interface And Check For Ceph*
+##                               ...  Keywords:
+##                               ...  PCC.Set Interface Down
+##                               ...  PCC.Set Interface Up
+##                               ...  PCC.Ceph Verify BE
+##                               
+##        ${status}                   PCC.Set Interface Down
+##                               ...  host_ip=${SERVER_1_HOST_IP}
+##                               ...  interface_name="enp130s0"
+##                                    Should Be Equal As Strings      ${status}  OK
+##
+##        ${status}                   PCC.Set Interface Up
+##                               ...  host_ip=${SERVER_1_HOST_IP}
+##                               ...  interface_name="enp130s0"
+##                                    Should Be Equal As Strings      ${status}  OK
+##                                    
+##        ${status}                   PCC.Ceph Verify BE
+##                               ...  user=${PCC_LINUX_USER}
+##                               ...  password=${PCC_LINUX_PASSWORD}
+##                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+##
+##                                    Should Be Equal As Strings      ${status}    OK
+##
 ###################################################################################################################################
 Down And Up The Interface And Check For K8s
 ###################################################################################################################################
@@ -1210,29 +1257,29 @@ Network Manager Try To Remove 2 Invaders (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Add Node to Ceph Cluster
-###################################################################################################################################
-    [Documentation]                 *Ceph Cluster Update - Add Invade*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
+##Add Node to Ceph Cluster
+#####################################################################################################################################
+##    [Documentation]                 *Ceph Cluster Update - Add Invade*
+##                               ...  keyword:
+##                               ...  PCC.Ceph Get Cluster Id
+##                               ...  PCC.Ceph Cluster Update
+##                               ...  PCC.Ceph Wait Until Cluster Ready
+##
+##        ${id}                       PCC.Ceph Get Cluster Id
+##                               ...  name=${CEPH_CLUSTER_NAME}
+##
+##        ${response}                 PCC.Ceph Cluster Update
+##                               ...  id=${id}
+##                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+##                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+##
+##        ${status_code}              Get Response Status Code        ${response}
+##                                    Should Be Equal As Strings      ${status_code}  200
+##
+##        ${status}                   PCC.Ceph Wait Until Cluster Ready
+##                               ...  name=${CEPH_CLUSTER_NAME}
+##                                    Should Be Equal As Strings      ${status}    OK
+##
 ###################################################################################################################################
 Add Node to Kubernetes Cluster
 ###################################################################################################################################
@@ -1330,40 +1377,40 @@ Remove Node From Network Manager Which Are Part Of Ceph and K8s (Negative)
 #                                   Should Be Equal As Strings      ${status}    OK   
 #
 ###################################################################################################################################
-Ceph Cluster Delete
-###################################################################################################################################
-    [Documentation]                 *Delete cluster if it exist*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Delete Cluster
-                               ...  PCC.Ceph Wait Until Cluster Deleted
-                               ...  PCC.Ceph Cleanup BE
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
-
-        ${response}                 PCC.Ceph Delete Cluster
-                               ...  id=${id}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Cluster Deleted
-                               ...  id=${id}
-                                    Should Be Equal As Strings     ${status}  OK
-
-        ${response}                 PCC.Ceph Cleanup BE
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-                                    Should Not Be Equal As Strings      ${status}    OK
-                                    
+##Ceph Cluster Delete
+#####################################################################################################################################
+##    [Documentation]                 *Delete cluster if it exist*
+##                               ...  keywords:
+##                               ...  PCC.Ceph Get Cluster Id
+##                               ...  PCC.Ceph Delete Cluster
+##                               ...  PCC.Ceph Wait Until Cluster Deleted
+##                               ...  PCC.Ceph Cleanup BE
+##
+##        ${id}                       PCC.Ceph Get Cluster Id
+##                               ...  name=${CEPH_CLUSTER_NAME}
+##                                    Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
+##
+##        ${response}                 PCC.Ceph Delete Cluster
+##                               ...  id=${id}
+##
+##        ${status_code}              Get Response Status Code        ${response}
+##                                    Should Be Equal As Strings      ${status_code}  200
+##
+##        ${status}                   PCC.Ceph Wait Until Cluster Deleted
+##                               ...  id=${id}
+##                                    Should Be Equal As Strings     ${status}  OK
+##
+##        ${response}                 PCC.Ceph Cleanup BE
+##                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
+##                               ...  user=${PCC_LINUX_USER}
+##                               ...  password=${PCC_LINUX_PASSWORD}
+##
+##        ${status}                   PCC.Ceph Verify BE
+##                               ...  user=${PCC_LINUX_USER}
+##                               ...  password=${PCC_LINUX_PASSWORD}
+##                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+##                                    Should Not Be Equal As Strings      ${status}    OK
+##                                    
 ###################################################################################################################################
 Delete K8 Cluster
 ###################################################################################################################################     

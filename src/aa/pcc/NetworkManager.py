@@ -333,7 +333,7 @@ class NetworkManager(AaBase):
             return "OK"
                                  
         if failed_chk:  
-            print("Nework is not properly set for {}".format(failed_chk))     
+            print("Network is not properly set for {}".format(failed_chk))     
             return "Error"
         else:
             return "OK"

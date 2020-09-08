@@ -74,30 +74,23 @@ Add Public Key
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-#Adding Mass+LLDP To Invaders
-####################################################################################################################################
-#    [Documentation]                 *Adding Mass+LLDP To Invaders*
-#                               ...  Keywords:
-#                               ...  PCC.Add and Verify Roles On Nodes
-#                               ...  PCC.Wait Until Roles Ready On Nodes
-#        
-#        
-#        ${response}                 PCC.Add and Verify Roles On Nodes
-#                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-#                               ...  roles=["Default","Baremetal Management Node"]
-#
-#                                    Should Be Equal As Strings      ${response}  OK
-#
-#        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-#                               ...  node_name=${CLUSTERHEAD_1_NAME}
-#
-#                                    Should Be Equal As Strings      ${status_code}  OK
-#
-#        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-#                               ...  node_name=${CLUSTERHEAD_2_NAME}
-#
-#                                    Should Be Equal As Strings      ${status_code}  OK
-#
+Adding Mass+LLDP To Invaders
+###################################################################################################################################
+    [Documentation]                 *Adding Mass+LLDP To Invaders*
+                               ...  Keywords:
+                               ...  PCC.Add and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes      
+        
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
+                               ...  roles=["Default","Baremetal Management Node"]
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+
 ###################################################################################################################################
 Create Subnet and Network Manager For OS Test Cases  
 ###################################################################################################################################

@@ -223,7 +223,6 @@ class Monitor(AaBase):
                     interfaces=data['Result']['metrics'][0]['interfaces']
                     print("################--NETWORK--##################")    
                     print("Network Data:"+str(data))
-                    print("interfaces:"+str(cpuMaxTemp))
                     trace("Network Data:"+str(data))
                     print("#####################################")                    
                     if interfaces:
