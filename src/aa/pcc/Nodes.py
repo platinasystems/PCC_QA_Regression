@@ -62,7 +62,8 @@ class Nodes(AaBase):
         self.host_ips = []
         self.user= "pcc"
         self.password= "cals0ft"
-
+        self.scopeId = None
+        
         self.interface_name = []
         self.interface_id = []
         self.interface_mac = []
@@ -115,7 +116,8 @@ class Nodes(AaBase):
             "standby": self.standby,
             "status": self.status,
             "tags": self.tags,
-            "tenants": self.tenants
+            "tenants": self.tenants,
+            "scopeId":self.scopeId
         }
         return pcc.add_node(conn, payload)
 
@@ -342,8 +344,10 @@ class Nodes(AaBase):
             "status": self.status,
             "tags": self.tags,
             "tenants": self.tenants,
-            "interfaces": self.interfaces
+            "interfaces": self.interfaces,
+            "scopeId":self.scopeId
         }
+        print("Payload in update node is :{}".format(payload))
         return pcc.modify_node(conn, payload)
     
     ###############################################################################################################

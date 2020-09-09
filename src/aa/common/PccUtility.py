@@ -552,3 +552,66 @@ def get_subnet_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)}
+
+## Policy driven management
+def get_scope_id_by_name(conn:dict, Name:str, ParentID = None)->int:
+    """
+    Get Id of Scope with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Scope
+    [Returns]
+        (int) Id: Id of the matchining scope name, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_scopes = pcc.get_all_scopes(conn)['Result']['Data']
+        a= True
+        print("Name: {} and parentID: {} in easy".format(Name,ParentID))
+        #### For tree structure of parent #####
+        # for scopes in list_of_scopes:
+        #     while a:
+        #         if type(scopes['parent']) == dict:
+        #             if scopes['name']== str(Name) and scopes['parentID'] == ParentID:
+        #                 return scopes['id']
+        #             else:
+        #                 scopes = scopes['parent']
+        #         elif str(scopes['name']) == str(Name):
+        #             return scopes['id']
+        #         else:
+        #             break
+        
+        #### For one-one structure of parent ####
+        for scopes in list_of_scopes:
+            if ParentID:
+                if scopes['name']== str(Name) and scopes['parentID'] == int(ParentID):
+                    print("Required id is: {}".format(scopes['id']))
+                    return scopes['id']
+            elif scopes['name'] == str(Name):
+                return scopes['id']
+        return "Id not found for scope: {}".format(Name)
+        
+    except Exception as e:
+        return {"Error": str(e)}
+        
+def get_policy_id(conn:dict, Desc:str, AppID:int)->int:
+    """
+    Get Id of Policy with matching Description and appID from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Desc: Description of Scope
+    [Returns]
+        (int) Id: Id of the matchining scope or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_policies = pcc.get_all_policies(conn)['Result']['Data']
+        for policy in list_of_policies:
+            if str(policy['appId'])== str(AppID):
+                if str(policy['description']) == str(Desc):
+                    return policy['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)} 
