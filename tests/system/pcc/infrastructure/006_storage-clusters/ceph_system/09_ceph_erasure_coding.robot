@@ -981,55 +981,55 @@ Ceph Cluster Delete
 #                               Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Re-assign default location to multiple nodes
-###################################################################################################################################
-
-        [Documentation]    *Re-assign default location to multiple nodes* test
-                           ...  keywords:
-                           ...  PCC.Apply scope to multiple nodes
-
-        ${parent1_Id}    PCC.Get Scope Id
-                        ...  scope_name=Default region
-                        Log To Console    ${parent1_Id}
-        
-        ${parent2_Id}    PCC.Get Scope Id
-                        ...  scope_name=Default zone
-                        ...  parentID=${parent1_Id}
-                        Log To Console    ${parent2_Id}
-        
-        ${parent3_Id}    PCC.Get Scope Id
-                        ...  scope_name=Default site
-                        ...  parentID=${parent2_Id}
-                        
-                        Log To Console    ${parent3_Id}
-                       
-        ${scope_id}    PCC.Get Scope Id
-                        ...  scope_name=Default rack
-                        ...  parentID=${parent3_Id}
-                        
-                        Log To Console    ${scope_id}
-                        
-        ${status}      PCC.Apply scope to multiple nodes
-                       ...  node_names=['${CLUSTERHEAD_1_NAME}','${CLUSTERHEAD_2_NAME}','${SERVER_2_NAME}','${SERVER_1_NAME}']
-                       ...  scopeId=${scope_id}
-                       
-                       Log to Console    ${status}
-                       Should Be Equal As Strings    ${status}    OK
-                       
-###################################################################################################################################
-Delete all locations related to CEPH
-###################################################################################################################################
-
-        [Documentation]    *Delete all locations related to CEPH* test
-                           ...  keywords:
-                           ...  PCC.Delete Scope             
-        [Tags]    delete          
-        ${response}    PCC.Delete Scope
-                       ...  scope_name=region-for-ceph
-                       
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
+#Re-assign default location to multiple nodes
+####################################################################################################################################
+#
+#        [Documentation]    *Re-assign default location to multiple nodes* test
+#                           ...  keywords:
+#                           ...  PCC.Apply scope to multiple nodes
+#
+#        ${parent1_Id}    PCC.Get Scope Id
+#                        ...  scope_name=Default region
+#                        Log To Console    ${parent1_Id}
+#        
+#        ${parent2_Id}    PCC.Get Scope Id
+#                        ...  scope_name=Default zone
+#                        ...  parentID=${parent1_Id}
+#                        Log To Console    ${parent2_Id}
+#        
+#        ${parent3_Id}    PCC.Get Scope Id
+#                        ...  scope_name=Default site
+#                        ...  parentID=${parent2_Id}
+#                        
+#                        Log To Console    ${parent3_Id}
+#                       
+#        ${scope_id}    PCC.Get Scope Id
+#                        ...  scope_name=Default rack
+#                        ...  parentID=${parent3_Id}
+#                        
+#                        Log To Console    ${scope_id}
+#                        
+#        ${status}      PCC.Apply scope to multiple nodes
+#                       ...  node_names=['${CLUSTERHEAD_1_NAME}','${CLUSTERHEAD_2_NAME}','${SERVER_2_NAME}','${SERVER_1_NAME}']
+#                       ...  scopeId=${scope_id}
+#                       
+#                       Log to Console    ${status}
+#                       Should Be Equal As Strings    ${status}    OK
+#                       
+####################################################################################################################################
+#Delete all locations related to CEPH
+####################################################################################################################################
+#
+#        [Documentation]    *Delete all locations related to CEPH* test
+#                           ...  keywords:
+#                           ...  PCC.Delete Scope             
+#        [Tags]    delete          
+#        ${response}    PCC.Delete Scope
+#                       ...  scope_name=region-for-ceph
+#                       
+#                       Log To Console    ${response}
+#                       ${result}    Get Result    ${response}
+#                       ${status}    Get From Dictionary    ${result}    status
+#                       ${message}    Get From Dictionary    ${result}    message
+#                       Log to Console    ${message}
+#                       Should Be Equal As Strings    ${status}    200
