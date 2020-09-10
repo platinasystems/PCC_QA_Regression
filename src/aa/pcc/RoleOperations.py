@@ -11,7 +11,7 @@ from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
 
-PCC_TIMEOUT = 60*10  # 10 min
+PCC_TIMEOUT = 60*15  # 15 min
 
 class RoleOperations(AaBase):
     """ 

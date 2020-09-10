@@ -117,22 +117,22 @@ Adding LLDP To Server
                                ...  password=${PCC_LINUX_PASSWORD}
                                     Should Be Equal As Strings      ${response}  OK                                      
 ###################################################################################################################################
-Adding Maas To Server (Negative)
-###################################################################################################################################
-    [Documentation]                 *Adding Maas To Server*
-                               ...  Keywords:
-                               ...  PCC.Add and Verify Roles On Nodes
-                               ...  PCC.Wait Until Roles Ready On Nodes
-
-        ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_2_NAME}"]
-                               ...  roles=["Baremetal Management Node"]
-                                    Should Be Equal As Strings      ${response}  OK
-
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_2_NAME}                                    
-                                    Should Not Be Equal As Strings      ${status_code}  OK
-
+#Adding Maas To Server (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Adding Maas To Server*
+#                               ...  Keywords:
+#                               ...  PCC.Add and Verify Roles On Nodes
+#                               ...  PCC.Wait Until Roles Ready On Nodes
+#
+#        ${response}                 PCC.Add and Verify Roles On Nodes
+#                               ...  nodes=["${SERVER_2_NAME}"]
+#                               ...  roles=["Baremetal Management Node"]
+#                                    Should Be Equal As Strings      ${response}  OK
+#
+#        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+#                               ...  node_name=${SERVER_2_NAME}                                    
+#                                    Should Not Be Equal As Strings      ${status_code}  OK
+#
 ###################################################################################################################################
 Deleting Mass From Nodes
 ###################################################################################################################################
