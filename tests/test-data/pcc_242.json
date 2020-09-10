@@ -314,7 +314,7 @@
      "node_roles":
         {
             "app_1":"LLDP",
-            "app_2":"MaaS",            
+            "app_2":"Baremetal Services",            
             "node_role1":"Test_NodeRole_1",
             "node_role2":"Test_NodeRole_2",
             "node_role3":"Test_NodeRole_3",

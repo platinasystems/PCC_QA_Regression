@@ -139,7 +139,7 @@ class NodeGroups(AaBase):
         cluster_list = pcc.get_clusters(conn)['Result']['Data']
         try:
             for cluster in cluster_list:
-                if str(cluster['Name']) == str(self.Name):
+                if str(cluster['name']) == str(self.Name):
                     return "OK"
             return "Node group not available"
         except Exception as e:
@@ -167,8 +167,8 @@ class NodeGroups(AaBase):
         cluster_list = pcc.get_clusters(conn)['Result']['Data']
         try:
             for cluster in cluster_list:
-                if str(cluster['Name']) == str(self.Name):
-                    if str(cluster['Description']) == str(self.Description):
+                if str(cluster['name']) == str(self.Name):
+                    if str(cluster['description']) == str(self.Description):
                         return "OK"
             return "Description does not match"
         except Exception as e:
@@ -374,7 +374,7 @@ class NodeGroups(AaBase):
                 return "OK"
             else:
                 for ids in get_response_data(response):
-                    list_id.append(ids['Id'])
+                    list_id.append(ids['id'])
                 print("list of id:{}".format(list_id))
                 for id_ in list_id:
                     response = pcc.delete_cluster_by_id(conn,str(id_))

@@ -118,7 +118,7 @@ class Alerting(AaBase):
     ###########################################################################
     def alert_get_rule_id(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Alert Get Id")
+        banner("PCC.Alert Get Rule Id")
         print("kwargs:-"+str(kwargs))        
 
         try:
@@ -134,7 +134,7 @@ class Alerting(AaBase):
     ###########################################################################
     def alert_update_rule(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Alert Update")
+        banner("PCC.Alert Update Rule")
 
         print("kwargs:-"+str(kwargs))        
 
@@ -173,7 +173,7 @@ class Alerting(AaBase):
     ###########################################################################
     def alert_delete_rule(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Alert Get Id")
+        banner("PCC.Alert Delete Rule")
 
         print("kwargs:-"+str(kwargs))        
 
@@ -192,24 +192,27 @@ class Alerting(AaBase):
     ###########################################################################
     def alert_delete_all_rule(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Alert Get Id")
-
+        banner("PCC.Alert Delete All Rule")
         print("kwargs:-"+str(kwargs))        
 
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e           
- 
+            
+        default_alerts=["memory high usage","cpu high temp"]
         response = pcc.get_alert_rules(conn)
         for data in get_response_data(response):
             self.id=data["id"]
             self.name=data["name"]
             print("Alert Rule Id:-"+str(self.id))
-            tmp=self.alert_delete_rule()
-            if self.alert_get_rule_id():
-                print("Alert is not deleted")
-                return "Error"  
+            print("Alert Rule Name:-"+str(self.name))
+            if self.id and data["name"].lower() not in default_alerts:
+                tmp=self.alert_delete_rule()
+                time.sleep(3)
+                if self.alert_get_rule_id(id=self.id):
+                    print("Alert {} and id {} is not deleted:".format(self.name,self.id))
+                    return "Error"  
         return "OK"
         
     ###########################################################################
@@ -241,7 +244,7 @@ class Alerting(AaBase):
     ###########################################################################
     def alert_verify_raw_rule(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Alert Verify Rule")
+        banner("PCC.Alert Verify Raw Rule")
 
         print("kwargs:-"+str(kwargs))        
 

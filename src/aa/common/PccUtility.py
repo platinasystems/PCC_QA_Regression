@@ -59,8 +59,8 @@ def get_node_group_id_by_name(conn:dict, Name:str)->int:
     cluster_list = pcc.get_clusters(conn)['Result']['Data']
     try:
         for cluster in cluster_list:
-            if str(cluster['Name']) == str(Name):
-                return cluster['Id']
+            if str(cluster['name']) == str(Name):
+                return cluster['id']
         return None
     except Exception as e:
         return {"Error": str(e)}

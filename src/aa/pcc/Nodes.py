@@ -95,7 +95,6 @@ class Nodes(AaBase):
             "Model": self.Model,
             "SN": self.SN,
             "Site_Id": self.Site_Id,
-            "Type_Id": self.Type_Id,
             "Vendor": self.Vendor,
             "adminUser": self.adminUser,
             "bmc": self.bmc,
@@ -322,14 +321,13 @@ class Nodes(AaBase):
             "Model": self.Model,
             "SN": self.SN,
             "Site_Id": self.Site_Id,
-            "Type_Id": self.Type_Id,
             "Vendor": self.Vendor,
             "adminUser": self.adminUser,
             "bmc": self.bmc,
             "bmcKey": self.bmcKey,
             "bmcPassword": self.bmcPassword,
             "bmcUser": self.bmcUser,
-            "bmcUsers": [self.bmcUser, "platina"],
+            "bmcUsers": self.bmcUsers,
             "console": self.console,
             "hardwareInventoryId": self.hardwareInventoryId,
             "hwAddr": self.hwAddr,
@@ -344,7 +342,6 @@ class Nodes(AaBase):
             "status": self.status,
             "tags": self.tags,
             "tenants": self.tenants,
-            "interfaces": self.interfaces,
             "scopeId":self.scopeId
         }
         print("Payload in update node is :{}".format(payload))

@@ -12,7 +12,7 @@ Login to PCC
                 
         
         [Documentation]    *Login to PCC* test
-        [Tags]    Only
+        [Tags]    onlydelete
         
         ${status}        Login To PCC    ${pcc_setup}
                          
@@ -535,5 +535,8 @@ Delete All Node Roles
         ${status}    PCC.Delete all Node roles
                        
                      Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node group still exists                          
+                     Should Be Equal As Strings    ${status}    OK    Node group still exists    
+                     
+
+                                               
         

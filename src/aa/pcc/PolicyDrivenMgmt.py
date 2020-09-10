@@ -374,6 +374,31 @@ class PolicyDrivenMgmt(AaBase):
         return pcc.delete_policy_by_id(conn, str(Id))
         
     ###########################################################################
+    @keyword(name="PCC.Delete All Policies")
+    ###########################################################################
+    
+    def delete_all_policies(self, *args, **kwargs):
+        banner("PCC.Delete All Policies")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        get_response = self.get_all_policies(**kwargs)['Result']['Data']
+        policy_ids= []
+        for data in get_response:
+            policy_ids.append(data['id'])
+        deletion_status = []
+        for id in policy_ids:
+            deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
+            deletion_status.append(deletion_resp['status'])
+            time.sleep(3)
+        result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
+        if result:
+            return "OK"  
+        else:
+            return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
+        
+        
+        
+    ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
     ###########################################################################
     def get_node_rsop(self,*args,**kwargs):
@@ -450,6 +475,7 @@ class PolicyDrivenMgmt(AaBase):
                 response = Nodes().update_node(conn, Id=node_id, Name=name, scopeId=self.scopeId)
                 print("Response from update node is: {}".format(response))
                 response_code_list.append(response['StatusCode'])
+                time.sleep(5)
             print("Response code list: {}".format(response_code_list))
             result = len(response_code_list) > 0 and all(elem == 200 for elem in response_code_list)
             if result:
