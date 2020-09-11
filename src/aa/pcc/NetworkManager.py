@@ -163,7 +163,8 @@ class NetworkManager(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-            
+        
+        time.sleep(30)    
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
         return pcc.refresh_network_cluster_by_id(conn, str(self.id))
@@ -316,12 +317,11 @@ class NetworkManager(AaBase):
         failed_chk=[]
         cmd="sudo vtysh -c 'sh ip ospf nei'  && ip addr sh control0"
         for ip in eval(str(self.nodes_ip)):
+            print("________________________")
             print("Network verification for {} is in progress ...".format(ip))
             trace("Network verification for {} is in progress ...".format(ip))
             network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))
-            print("________________________")
             print("Data Retrieve:"+str(network_check))
-            print("________________________")
             print("Word to search"+str(self.dataCIDR[0:11]))
             if re.search(self.dataCIDR[0:11],str(network_check)):
                 success_chk.append(ip)         
@@ -362,8 +362,8 @@ class NetworkManager(AaBase):
         else:
             print("--------------")
             print("Status we got from API as {} and heath as {}".format(response["deploy_status"],response['health']))
-            print("Health Summary:"+str(health['healthSummary']))
-            print("Health Info:"+str(health['info']))
+            print("Health Summary:"+str(response['healthSummary']))
+            print("Health Info:"+str(response['info']))
             print("--------------")
             return "Error"
         print("Could not verify the health of network cluter "+str(self.name))
