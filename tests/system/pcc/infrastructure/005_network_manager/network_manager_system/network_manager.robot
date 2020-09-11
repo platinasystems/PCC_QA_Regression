@@ -261,7 +261,7 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR)
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE   
 
-
+                                    Sleep    60s
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=${NETWORK_MANAGER_NODES}
@@ -535,6 +535,7 @@ Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE 
 
+                                    Sleep    60s
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=${NETWORK_MANAGER_NODES}
@@ -806,7 +807,8 @@ Adding Maas To Invaders For Network Manager
                                ...  Keywords:
                                ...  PCC.Add and Verify Roles On Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
-
+                               
+                                    Sleep    60s
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  roles=["Baremetal Management Node"]
