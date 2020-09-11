@@ -342,33 +342,33 @@ Network Manager Update (Interfaces For Server Falling in DataCIDR)
                                     Should Be Equal As Strings      ${status}    OK 
                                                                        
 ###################################################################################################################################
-Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
-###################################################################################################################################
-    [Documentation]                 *Network Manager Refresh Interfaces For Server Falling in DataCIDR*
-                               ...  keywords:
-                               ...  PCC.Network Manager Refresh
-                               ...  PCC.Wait Until Network Manager Ready
-                               ...  PCC.Network Manager Verify BE
-                               
-        ${response}                 PCC.Network Manager Refresh
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Ready
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-
-        ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
-                                    Should Be Equal As Strings      ${status}  OK
-
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                    
+#Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
+####################################################################################################################################
+#    [Documentation]                 *Network Manager Refresh Interfaces For Server Falling in DataCIDR*
+#                               ...  keywords:
+#                               ...  PCC.Network Manager Refresh
+#                               ...  PCC.Wait Until Network Manager Ready
+#                               ...  PCC.Network Manager Verify BE
+#                               
+#        ${response}                 PCC.Network Manager Refresh
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Wait Until Network Manager Ready
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#
+#        ${status}                   PCC.Network Manager Verify BE      
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+#                                    Should Be Equal As Strings      ${status}  OK
+#
+#        ${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#                                    
 ###################################################################################################################################
 Network Manager Delete (Interfaces For Server Falling in DataCIDR)
 ###################################################################################################################################
@@ -615,33 +615,33 @@ Network Manager Update (Interfaces For Server Not Falling In DataCIDR)
                                     Should Be Equal As Strings      ${status}    OK 
                                     
 ###################################################################################################################################
-Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
-###################################################################################################################################
-    [Documentation]                 *Network Manager Refresh Interfaces For Server Not Falling In DataCIDR*
-                               ...  keywords:
-                               ...  PCC.Network Manager Refresh
-                               ...  PCC.Wait Until Network Manager Ready
-                               ...  PCC.Network Manager Verify BE
-                               
-        ${response}                 PCC.Network Manager Refresh
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Ready
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-
-        ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
-                                    Should Be Equal As Strings      ${status}  OK
-                                    
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                     
+#Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
+####################################################################################################################################
+#    [Documentation]                 *Network Manager Refresh Interfaces For Server Not Falling In DataCIDR*
+#                               ...  keywords:
+#                               ...  PCC.Network Manager Refresh
+#                               ...  PCC.Wait Until Network Manager Ready
+#                               ...  PCC.Network Manager Verify BE
+#                               
+#        ${response}                 PCC.Network Manager Refresh
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Wait Until Network Manager Ready
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#
+#        ${status}                   PCC.Network Manager Verify BE      
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+#                                    Should Be Equal As Strings      ${status}  OK
+#                                    
+#        ${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#                                     
 ###################################################################################################################################
 Network Manager Delete (Interfaces For Server Not Falling In DataCIDR)
 ###################################################################################################################################
@@ -875,33 +875,33 @@ Interface Verification For Server Partially Falling in DataCIDR
                                     Should Not Be Equal As Strings      ${status}    OK
                                     
 ###################################################################################################################################
-Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
-###################################################################################################################################
-    [Documentation]                 *Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)*
-                               ...  keywords:
-                               ...  PCC.Network Manager Refresh
-                               ...  PCC.Wait Until Network Manager Ready
-                               ...  PCC.Network Manager Verify BE
-                               
-        ${response}                 PCC.Network Manager Refresh
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Ready
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
- 
-         ${status}                  PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
-                                    Should Be Equal As Strings      ${status}  OK
- 
-         ${status}                  PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                     
+#Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
+####################################################################################################################################
+#    [Documentation]                 *Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)*
+#                               ...  keywords:
+#                               ...  PCC.Network Manager Refresh
+#                               ...  PCC.Wait Until Network Manager Ready
+#                               ...  PCC.Network Manager Verify BE
+#                               
+#        ${response}                 PCC.Network Manager Refresh
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Wait Until Network Manager Ready
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+# 
+#         ${status}                  PCC.Network Manager Verify BE      
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+#                                    Should Be Equal As Strings      ${status}  OK
+# 
+#         ${status}                  PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#                                     
 ###################################################################################################################################
 #Create Kubernetes cluster with nodes which are not part of Network Manager (Negative)
 ####################################################################################################################################
