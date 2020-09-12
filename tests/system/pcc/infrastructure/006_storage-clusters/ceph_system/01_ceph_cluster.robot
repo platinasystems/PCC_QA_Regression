@@ -8,7 +8,8 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-        
+
+                                    Load Ipam Data    ${pcc_setup}
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -24,22 +25,36 @@ Login
 ###################################################################################################################################
 Network Manager Creation
 ###################################################################################################################################
-    [Documentation]                *Network Manager Creation*
-                              ...  keywords:
-                              ...  PCC.Network Manager Create
-                             
-        ${network_id}              PCC.Get Network Manager Id
-                              ...  name=${NETWORK_MANAGER_NAME}
-                                   Pass Execution If    ${network_id} is not ${None}    Network is already there
-                             
-        ${response}                PCC.Network Manager Create
-                              ...  name=${NETWORK_MANAGER_NAME}
-                              ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
-                              ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
-                              ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-                             
-        ${status_code}             Get Response Status Code        ${response}     
-                                   Should Be Equal As Strings      ${status_code}  200
+    [Documentation]                 *Network Manager Creation*
+                               ...  keywords:
+                               ...  PCC.Network Manager Create
+
+        ${network_id}               PCC.Get Network Manager Id
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Pass Execution If    ${network_id} is not ${None}    Network is already there
+
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+                                     
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
+                                    Should Be Equal As Strings      ${status}  OK
+                                    
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK  
                                     
 ###################################################################################################################################
 Ceph Cluster Creation with 2 nodes both servers (Negative)

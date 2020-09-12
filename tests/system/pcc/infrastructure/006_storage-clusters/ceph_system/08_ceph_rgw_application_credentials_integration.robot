@@ -84,26 +84,26 @@ Create Metadata Application credential profile without application For Rados
                                       Log to Console    ${profile_id}
                                       
 ###################################################################################################################################
-Ceph Create Certificate For Rgws
-###################################################################################################################################
-
-        [Documentation]              *Ceph Ceph Certificate For Rgws*
-        [Tags]    Only
-        ${cert_id}                   PCC.Get Certificate Id
-                                ...  Alias=rgw-cert
-                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
-                
-        ${response}                  PCC.Add Certificate
-                                ...  Alias=rgw-cert
-                                ...  Description=certificate-for-rgw
-                                ...  Private_key=rgw_key.key
-                                ...  Certificate_upload=rgw.pem
-  
-                                     Log To Console    ${response}
-        ${result}                    Get Result    ${response}
-        ${status}                    Get From Dictionary    ${result}    statusCodeValue
-                                     Should Be Equal As Strings    ${status}    200
-                                     
+#Ceph Create Certificate For Rgws
+####################################################################################################################################
+#
+#        [Documentation]              *Ceph Ceph Certificate For Rgws*
+#        [Tags]    Only
+#        ${cert_id}                   PCC.Get Certificate Id
+#                                ...  Alias=rgw-cert
+#                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
+#                
+#        ${response}                  PCC.Add Certificate
+#                                ...  Alias=rgw-cert
+#                                ...  Description=certificate-for-rgw
+#                                ...  Private_key=rgw_key.key
+#                                ...  Certificate_upload=rgw.pem
+#  
+#                                     Log To Console    ${response}
+#        ${result}                    Get Result    ${response}
+#        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+#                                     Should Be Equal As Strings    ${status}    200
+#                                     
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
