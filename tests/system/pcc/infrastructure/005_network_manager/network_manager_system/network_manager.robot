@@ -72,51 +72,7 @@ Ceph Cluster Creation without Network Manager (Negative)
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Not Be Equal As Strings      ${status_code}  200
-                                    
-###################################################################################################################################
-#Create IPAM ControlCIDR Subnet 
-####################################################################################################################################
-#    [Documentation]                 *Create IPAM Subnet*
-#                               ...  keywords:
-#                               ...  PCC.Ipam Subnet Create
-#                               ...  PCC.Wait Until Ipam Subnet Ready
-#
-#        ${response}                 PCC.Ipam Subnet Create
-#                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
-#                               ...  subnet=${IPAM_CONTROL_SUBNET_IP}
-#                               ...  pubAccess=False
-#                               ...  routed=False
-#
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
-#        ${status}                   PCC.Wait Until Ipam Subnet Ready
-#                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
-#
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-####################################################################################################################################
-#Create IPAM DataCIDR Subnet
-####################################################################################################################################
-#    [Documentation]                 *Create IPAM Subnet*
-#                               ...  keywords:
-#                               ...  PCC.Ipam Subnet Create
-#                               ...  PCC.Wait Until Ipam Subnet Ready
-#
-#        ${response}                 PCC.Ipam Subnet Create
-#                               ...  name=${IPAM_DATA_SUBNET_NAME}
-#                               ...  subnet=${IPAM_DATA_SUBNET_IP}
-#                               ...  pubAccess=False
-#                               ...  routed=False
-#
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
-#        ${status}                   PCC.Wait Until Ipam Subnet Ready
-#                               ...  name=${IPAM_DATA_SUBNET_NAME}
-#
-#                                    Should Be Equal As Strings      ${status}    OK
-#
+
 ###################################################################################################################################
 Set Interfaces For Server Falling in DataCIDR
 ###################################################################################################################################
@@ -836,7 +792,7 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR)
 
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=${NETWORK_MANAGER_NODES}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -849,7 +805,7 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR)
                                     Should Be Equal As Strings      ${status}    OK
                                      
         ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
                                     Should Be Equal As Strings      ${status}  OK
                                     
@@ -954,6 +910,15 @@ Ceph Cluster Create
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
+                               ...  PCC.Health Check Network Manager
+                               
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy Created
                                
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -980,7 +945,7 @@ Create Kubernetes cluster
         [Documentation]             *Create Kubernetes cluster*
                                ...  Keywords:
                                ...  PCC.K8s Create Cluster
-                               
+                                                                   
         ${cluster_id}               PCC.K8s Get Cluster Id
                                ...  name=${K8s_NAME}
                                     Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
@@ -1153,42 +1118,42 @@ Down And Up The Interface And Check For K8s
 #                                    Should Be Equal As Strings      ${status}    OK 
 #                                   
 ###################################################################################################################################
-Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Add Node)
-###################################################################################################################################
-    [Documentation]                 *Network Manager Update (Interfaces For Server Partially Falling In DataCIDR)*
-                               ...  keywords:
-                               ...  PCC.Get Network Manager Id
-                               ...  PCC.Network Manager Update
-                               ...  PCC.Wait Until Network Manager Ready
-                               ...  PCC.Network Manager Verify BE
-
-        ${network_id}               PCC.Get Network Manager Id
-                               ...  name=${NETWORK_MANAGER_NAME}
-                               
-        ${response}                 PCC.Network Manager Update
-                               ...  id=${network_id}
-                               ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
-                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
-                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Ready
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
-                                    Should Be Equal As Strings      ${status}  OK
-
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-                                    
+#Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Add Node)
+####################################################################################################################################
+#    [Documentation]                 *Network Manager Update (Interfaces For Server Partially Falling In DataCIDR)*
+#                               ...  keywords:
+#                               ...  PCC.Get Network Manager Id
+#                               ...  PCC.Network Manager Update
+#                               ...  PCC.Wait Until Network Manager Ready
+#                               ...  PCC.Network Manager Verify BE
+#
+#        ${network_id}               PCC.Get Network Manager Id
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                               
+#        ${response}                 PCC.Network Manager Update
+#                               ...  id=${network_id}
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+#                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+#                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
+#                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Wait Until Network Manager Ready
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Network Manager Verify BE      
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+#                                    Should Be Equal As Strings      ${status}  OK
+#
+#        ${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK 
+#                                    
 ###################################################################################################################################
 Network Manager Try To Remove 2 Invaders (Negative)
 ###################################################################################################################################
@@ -1219,6 +1184,11 @@ Add Node to Ceph Cluster
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
+                               ...  PCC.Health Check Network Manager
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}

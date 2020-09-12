@@ -60,6 +60,10 @@ Ceph Cluster Creation
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Pass Execution If    ${id} is not ${None}    Cluster is alredy Created
 
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
                                ...  nodes=${CEPH_CLUSTER_NODES}
@@ -552,6 +556,9 @@ Ceph Cluster Update - Add Invader
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
 
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}

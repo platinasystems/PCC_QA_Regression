@@ -27,7 +27,7 @@ Create scoping objects
                            ...  keywords:
                            ...  PCC.Create Scope
         
-        ##### Creating Region #####
+        ###### Creating Region ######
         ${response}    PCC.Create Scope
                        ...  type=region
                        ...  scope_name=region-for-ceph
@@ -248,11 +248,25 @@ Network Manager Create Verification PCC
 ###################################################################################################################################
 Network Manager Create Verification Backend
 ###################################################################################################################################
+    [Documentation]                 *Network Manager Create Verification Backend*
+                               ...  keywords:
+                               ...  PCC.Network Manager Verify BE 
 
         ${status}                   PCC.Network Manager Verify BE      
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
                                     Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Network Manager Create Health Check
+###################################################################################################################################
+    [Documentation]                 *Network Manager Create Health Check*
+                               ...  keywords:
+                               ...  PCC.Health Check Network Manager
+                                    
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
                                     
 ###################################################################################################################################
 Network Manager Update
@@ -285,6 +299,38 @@ Network Manager Update
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
+                                    
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+
+###################################################################################################################################
+Network Manager Re-deploy
+###################################################################################################################################
+    [Documentation]                 *Network Manager Re-deploy*
+                               ...  keywords:
+                               ...  PCC.Network Manager Refresh
+                               ...  PCC.Wait Until Network Manager Ready
+                               ...  PCC.Network Manager Verify BE
+                               
+        ${response}                 PCC.Network Manager Refresh
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
 
 ###################################################################################################################################
 Network Manager Delete
