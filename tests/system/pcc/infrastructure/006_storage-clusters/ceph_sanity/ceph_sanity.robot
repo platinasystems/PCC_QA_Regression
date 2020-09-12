@@ -42,6 +42,19 @@ Network Manager Creation
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+                                     
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
+                                    Should Be Equal As Strings      ${status}  OK
+                                    
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK                                     
                                     
 ###################################################################################################################################
 Ceph Cluster Creation
