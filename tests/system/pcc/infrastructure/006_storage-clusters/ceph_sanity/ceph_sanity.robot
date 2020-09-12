@@ -36,6 +36,7 @@ Network Manager Creation
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 

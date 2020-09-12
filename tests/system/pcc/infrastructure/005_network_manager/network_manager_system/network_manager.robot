@@ -884,25 +884,25 @@ Interface Verification For Server Partially Falling in DataCIDR
 #                                    Should Not Be Equal As Strings      ${status_code}  200
 #                                    
 ###################################################################################################################################
-Ceph Cluster Creation with nodes which are not part of Network Manager (Negative)
-###################################################################################################################################
-    [Documentation]                 *Creating Ceph Cluster*
-                               ...  keywords:
-                               ...  PCC.Ceph Create Cluster
-                               
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Pass Execution If    ${id} is not ${None}    Ceph Cluster is already there
-                                    
-        ${response}                 PCC.Ceph Create Cluster
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  tags=${CEPH_CLUSTER_TAGS}
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200
-                                    
+#Ceph Cluster Creation with nodes which are not part of Network Manager (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Creating Ceph Cluster*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Create Cluster
+#                               
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                                    Pass Execution If    ${id} is not ${None}    Ceph Cluster is already there
+#                                    
+#        ${response}                 PCC.Ceph Create Cluster
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+#                               ...  tags=${CEPH_CLUSTER_TAGS}
+#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#                                    
 #################################################################################################################################
 Ceph Cluster Create 
 ###################################################################################################################################
