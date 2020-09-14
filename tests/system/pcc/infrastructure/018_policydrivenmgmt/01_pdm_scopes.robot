@@ -479,7 +479,7 @@ Create scope with invalid/non existing parentID (Negative)
                        ...  type=rack
                        ...  scope_name=invalid-rack-1
                        ...  description=invalid-rack-description
-                       ...  parentID=89803
+                       ...  parentID=99999
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}

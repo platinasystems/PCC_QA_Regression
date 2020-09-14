@@ -11,7 +11,7 @@
 ####################################################################################################################################
 #
 #        [Documentation]    *Login to PCC* test
-#        [Tags]    OS_Verify
+#        [Tags]    Only
 #        ${status}        Login To PCC    ${pcc_setup}
 #                         Should Be Equal    ${status}  OK
 #
@@ -35,7 +35,7 @@
 ######################################################################################################################################
 #
 #    [Documentation]    *Add Nodes* test
-#    [Tags]    add
+#    [Tags]    Only
 #    ${status}    PCC.Add mutliple nodes and check online
 #                 ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}']
 #                 ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}']
@@ -47,27 +47,33 @@
 #Update OS Images
 ####################################################################################################################################
 #
-#    [Documentation]    *Update OS Images* test
-#    [Tags]    Greenfield
-#    ${result}    PCC.Update OS Images
-#                 ...    host_ip=${PCC_HOST_IP}
-#                 ...    username=${PCC_LINUX_USER}
-#                 ...    password=${PCC_LINUX_PASSWORD}
-#
-#                 Log To Console    ${result}
+#        [Documentation]    *Update OS Images* test
+#                           ...  keywords:
+#                           ...  PCC.Update OS Images
+#        [Tags]    Only
+#        
+#                             
+#        ${result}      PCC.Update OS Images
+#                       ...    setup_password=${PCC_SETUP_PWD}
+#                       ...    host_ip=${PCC_HOST_IP}
+#                       ...    username=${PCC_LINUX_USER}
+#                       ...    password=${PCC_LINUX_PASSWORD}
+#      
+#                       Log To Console    ${result}
+#                       Should Be Equal As Strings      ${result}  OK
 #
 ####################################################################################################################################
 #Add Public Key
 ####################################################################################################################################
-#                
-#        
+#
+#
 #        [Documentation]    *Add Public Key* test
-#        
+#        [Tags]    Only
 #        ${response}    PCC.Add OpenSSH Key
 #                       ...  Alias=${PUBLIC_KEY_ALIAS}
 #                       ...  Description=${PUBLIC_KEY_DESCRIPTION}
 #                       ...  Filename=${PUBLIC_KEY}
-#  
+#
 #                       Log To Console    ${response}
 #                       ${result}    Get Result    ${response}
 #                       ${status}    Get From Dictionary    ${result}    statusCodeValue
@@ -80,7 +86,7 @@
 #                               ...  Keywords:
 #                               ...  PCC.Add and Verify Roles On Nodes
 #                               ...  PCC.Wait Until Roles Ready On Nodes      
-#        
+#        [Tags]    Only
 #        ${response}                 PCC.Add and Verify Roles On Nodes
 #                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
 #                               ...  roles=["Default","Baremetal Management Node"]
@@ -98,7 +104,7 @@
 #                               ...  keywords:
 #                               ...  PCC.Ipam Subnet Create
 #                               ...  PCC.Wait Until Ipam Subnet Ready
-#
+#        [Tags]    Only
 #        ${response}                 PCC.Ipam Subnet Create
 #                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
 #                               ...  subnet=${IPAM_CONTROL_SUBNET_IP}
@@ -107,7 +113,7 @@
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
+#
 #        ${status}                   PCC.Wait Until Ipam Subnet Ready
 #                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
 #
@@ -121,7 +127,7 @@
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
+#
 #        ${status}                   PCC.Wait Until Ipam Subnet Ready
 #                               ...  name=${IPAM_DATA_SUBNET_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK
@@ -135,26 +141,26 @@
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                  
+#
 #        ${status}                   PCC.Wait Until Network Manager Ready
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK
-#                                    
+#
 #        ${status}                   PCC.Health Check Network Manager
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK 
-#                               
+#
 #        ${status}                   PCC.Network Manager Verify BE      
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
 #                                    Should Be Equal As Strings      ${status}  OK          
-#                                    
+#
 ####################################################################################################################################
 #Verify Provision Ready Status and update node, if not ready (TC-1)
 ####################################################################################################################################
 #
 #    [Documentation]    *Verify Provision Ready Status and update node, if not ready* test
-#    [Tags]    OS
+#    [Tags]    Only
 #    ${response}    PCC.Update Node for OS Deployment
 #
 #                   ...    Id=${server1_id}
@@ -176,11 +182,11 @@
 #                   Should Be Equal As Strings    ${status}    200
 #
 ####################################################################################################################################
-#Update OS details (centos76) - Brownfield
+#Update OS details (centos78) - Brownfield
 ####################################################################################################################################
 #
-#    [Documentation]    *Update OS details (centos76) - Brownfield* test
-#    [Tags]    OS
+#    [Documentation]    *Update OS details (centos78) - Brownfield* test
+#    [Tags]    Only
 #    ${response}           PCC.Update OS details
 #
 #                          ...    Id=[${server1_id}]
@@ -202,11 +208,11 @@
 #                          Log To Console    Done sleeping
 #
 ####################################################################################################################################
-#Wait Until Node Ready (centos76) - Brownfield
+#Wait Until Node Ready (centos78) - Brownfield
 ####################################################################################################################################
 #
-#    [Documentation]    *Wait Until Node Ready (centos76) - Brownfield* test
-#    [Tags]    OS
+#    [Documentation]    *Wait Until Node Ready (centos78) - Brownfield* test
+#    [Tags]    Only
 #    ${status}    PCC.Wait Until Node Ready
 #                 ...    Name=${SERVER_1_NAME}
 #                 Log To Console    ${status}
@@ -219,7 +225,7 @@
 ####################################################################################################################################
 #
 #    [Documentation]    *Verify OS details from PCC* test
-#    [Tags]    OS_Verify
+#    [Tags]    Only
 #    ${status}    PCC.Verify OS details from PCC
 #                 ...  Name=${SERVER_1_NAME}
 #                 ...  image_name=${IMAGE_1_NAME}
@@ -234,7 +240,7 @@
 ###################################################################################################################################
 #
 #    [Documentation]    *Set Password on Server* test
-#    [Tags]    Password
+#    [Tags]    Only
 #    ${status}    PCC.Set password on Server
 #                 ...  key_name=${KEY_NAME}
 #                 ...  admin_user=${ADMIN_USER}
@@ -246,16 +252,16 @@
 #
 #                 Log To Console    ${status}
 #                 Should be equal as strings    ${status}    OK
-#                 
+#
 ####################################################################################################################################
-#Network Manager Refresh and Verify After Brownfield OS Deployment(centos76)
+#Network Manager Refresh and Verify After Brownfield OS Deployment(centos78)
 ####################################################################################################################################
 #    [Documentation]                 *Network Manager Refresh Interfaces For Server Falling in DataCIDR*
 #                               ...  keywords:
 #                               ...  PCC.Network Manager Refresh
 #                               ...  PCC.Wait Until Network Manager Ready
 #                               ...  PCC.Network Manager Verify BE
-#                               
+#        [Tags]    Only
 #        ${response}                 PCC.Network Manager Refresh
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #
@@ -269,14 +275,14 @@
 #        ${status}                   PCC.Health Check Network Manager
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK 
-# 
+#
 #        ${status}                   PCC.Network Manager Verify BE      
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK      
 #
 ####################################################################################################################################
-#Network Manager Update After Brownfield OS Deployment(centos76)
+#Network Manager Update After Brownfield OS Deployment(centos78)
 ####################################################################################################################################
 #    [Documentation]                 *Network Manager Update Interfaces For Server Not Falling In DataCIDR*
 #                               ...  keywords:
@@ -284,10 +290,10 @@
 #                               ...  PCC.Network Manager Update
 #                               ...  PCC.Wait Until Network Manager Ready
 #                               ...  PCC.Network Manager Verify BE
-#
+#        [Tags]    Only
 #        ${network_id}               PCC.Get Network Manager Id
 #                               ...  name=${NETWORK_MANAGER_NAME}
-#                               
+#
 #        ${response}                 PCC.Network Manager Update
 #                               ...  id=${network_id}
 #                               ...  name=${NETWORK_MANAGER_NAME}
@@ -311,7 +317,7 @@
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
-#                                    
+#
 ####################################################################################################################################
 #Verify Provision Ready Status and update node, if not ready (TC-2)
 ####################################################################################################################################
@@ -337,12 +343,12 @@
 #                   ${message}    Get From Dictionary    ${result}    message
 #                   Log to Console    ${message}
 #                   Should Be Equal As Strings    ${status}    200
-#                   
+#
 ####################################################################################################################################
-#Update OS details (ubuntu-bionic) - Brownfield
+#Update OS details (ubuntu-focal) - Brownfield
 ####################################################################################################################################
 #
-#    [Documentation]    *Update OS details (ubuntu-bionic) - Brownfield* test
+#    [Documentation]    *Update OS details (ubuntu-focal) - Brownfield* test
 #    [Tags]    OS
 #    ${response}           PCC.Update OS details
 #
@@ -366,10 +372,10 @@
 #
 #
 ####################################################################################################################################
-#Wait Until Node Ready (ubuntu-bionic) - Brownfield
+#Wait Until Node Ready (ubuntu-focal) - Brownfield
 ####################################################################################################################################
 #
-#    [Documentation]    *Wait Until Node Ready (ubuntu-bionic) - Brownfield* test
+#    [Documentation]    *Wait Until Node Ready (ubuntu-focal) - Brownfield* test
 #    [Tags]    OS
 #    ${status}    PCC.Wait Until Node Ready
 #                 ...    Name=${SERVER_1_NAME}
@@ -379,10 +385,10 @@
 #
 #
 ####################################################################################################################################
-#Verify OS details from PCC (ubuntu-bionic) - Brownfield
+#Verify OS details from PCC (ubuntu-focal) - Brownfield
 ####################################################################################################################################
 #
-#    [Documentation]    *Verify OS details from PCC (ubuntu-bionic)* test
+#    [Documentation]    *Verify OS details from PCC (ubuntu-focal)* test
 #    [Tags]    OS_Verify
 #    ${status}    PCC.Verify OS details from PCC
 #                 ...  Name=${SERVER_1_NAME}
@@ -408,16 +414,16 @@
 #
 #                 Log To Console    ${status}
 #                 Should be equal as strings    ${status}    OK
-#                 
+#
 ####################################################################################################################################
-#Network Manager Refresh and Verify After Brownfield OS Deployment(ubuntu-bionic)
+#Network Manager Refresh and Verify After Brownfield OS Deployment(ubuntu-focal)
 ####################################################################################################################################
 #    [Documentation]                 *Network Manager Refresh Interfaces For Server Falling in DataCIDR*
 #                               ...  keywords:
 #                               ...  PCC.Network Manager Refresh
 #                               ...  PCC.Wait Until Network Manager Ready
 #                               ...  PCC.Network Manager Verify BE
-#                               
+#
 #        ${response}                 PCC.Network Manager Refresh
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #
@@ -431,14 +437,14 @@
 #        ${status}                   PCC.Health Check Network Manager
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK 
-# 
+#
 #        ${status}                   PCC.Network Manager Verify BE      
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK      
 #
 ####################################################################################################################################
-#Network Manager Update After Brownfield OS Deployment(ubuntu-bionic)
+#Network Manager Update After Brownfield OS Deployment(ubuntu-focal)
 ####################################################################################################################################
 #    [Documentation]                 *Network Manager Update Interfaces For Server Not Falling In DataCIDR*
 #                               ...  keywords:
@@ -449,7 +455,7 @@
 #
 #        ${network_id}               PCC.Get Network Manager Id
 #                               ...  name=${NETWORK_MANAGER_NAME}
-#                               
+#
 #        ${response}                 PCC.Network Manager Update
 #                               ...  id=${network_id}
 #                               ...  name=${NETWORK_MANAGER_NAME}
@@ -473,7 +479,7 @@
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
-#                                    
+#
 ####################################################################################################################################
 #Network Manager Delete and Verify PCC After Brownfield OS Deployment
 ####################################################################################################################################
@@ -481,7 +487,7 @@
 #                               ...  keywords:
 #                               ...  PCC.Network Manager Delete
 #                               ...  PCC.Wait Until Network Manager Ready
-#                               
+#
 #        ${response}                 PCC.Network Manager Delete
 #                               ...  name=${NETWORK_MANAGER_NAME}
 #

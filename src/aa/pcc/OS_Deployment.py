@@ -49,6 +49,7 @@ class OS_Deployment(AaBase):
         self.i28_username = None
         self.i28_password = None
         self.version=None
+        self.setup_password = None
         
         super().__init__()
 
@@ -401,28 +402,50 @@ class OS_Deployment(AaBase):
     
     def update_OS_images(self, *args, **kwargs):
         banner("PCC.Update OS Images")
-        self._load_kwargs(kwargs)             
-        
+        self._load_kwargs(kwargs)                 
         try:
-            cmd = "sudo chown -R pcc:pcc /srv/pcc; curl http://172.17.2.253/bugbits/baremetal/update-prod | bash"
+            cmd_1= """sudo platina-cli-ws/platina-cli os-media list-local -p {}| awk {}|sed -e '1,4d'""".format(self.setup_password, "'{print $2}'")
+            logger.console("Command1 is: {}".format(cmd_1))
+            image_in_local_repo_cmd_output = cli_run(cmd=cmd_1, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
+            print("image_in_local_repo_cmd_output : {}".format(image_in_local_repo_cmd_output))
+            time.sleep(10)
+            serialised_op = self._serialize_response(time.time(), image_in_local_repo_cmd_output)
+            image_in_local_repo = str(serialised_op['Result']['stdout']).strip().split('\n')
+            print(image_in_local_repo)
             
-            update_OS_images = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+            cmd_2= """sudo platina-cli-ws/platina-cli os-media list -p {} --skipVerifySignature|awk {}|sed -e '1,3d'""".format(self.setup_password, "'{print $1}'")
+            logger.console("Command1 is: {}".format(cmd_2))
+            image_in_platina_cli_cmd_output = cli_run(cmd=cmd_2, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
+            print("image_in_platina_cli_cmd_output : {}".format(image_in_platina_cli_cmd_output))
+            time.sleep(10)
+            serialised_op = self._serialize_response(time.time(), image_in_platina_cli_cmd_output)
+            image_in_platina_cli = str(serialised_op['Result']['stdout']).strip().split('\n')
+            print(image_in_platina_cli)
             
-            serialised_update_OS_images = self._serialize_response(time.time(), update_OS_images)
-            print("serialised_update_OS_images is:{}".format(serialised_update_OS_images))
-            
-            cmd_output = str(serialised_update_OS_images['Result']['stdout']).replace('\n', '').strip()
-            
-            print("output of serialised_update_OS_images:{}".format(cmd_output))
-            if "Failed" in self.cmd_output:
-                return "Image updation command failed to update the images: Please check the output"
-            elif "Finished" in self.cmd_output:
+            os_image_not_in_pcc = list(list(set(image_in_platina_cli)-set(image_in_local_repo)) + list(set(image_in_local_repo)-set(image_in_platina_cli)))
+            if not os_image_not_in_pcc: # If all images exists in PCC, returns OK
+                print("All images already updated")
                 return "OK"
             else:
-                return "Error"
+                updated_images = []
+                for image in os_image_not_in_pcc:
+                    print("=========== Updating image: {} ===========".format(image))
+                    cmd= """sudo platina-cli-ws/platina-cli os-media download --media {} -p {} --skipVerifySignature""".format(image,self.setup_password)
+                    logger.console("Command is: {}".format(cmd))
+                    update_img_cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
+                    print("update_img_cmd_output : {}".format(update_img_cmd_output))
+                    time.sleep(5*60) ##Image updation takes 5 minutes, sleeping for 5 minutes 
+                    if re.search("Download source media: OK",str(update_img_cmd_output)):
+                        updated_images.append("OK")
+                    else:
+                        updated_images.append("Failed: {}".format(image))
+                result = len(updated_images) > 0 and all(elem == "OK" for elem in updated_images)
+                if result:
+                    return "OK"  
+                else:
+                    return "Error: while updating images- {}".format(updated_images)
         except Exception as e:
-            print("Error in Update OS Images: " + str(e))    
-                 
+            return "Error: Exception encountered while updating OS images- {}".format(e)
         
     ###########################################################################
     @keyword(name="PCC.Verify OS And Its Version Back End")

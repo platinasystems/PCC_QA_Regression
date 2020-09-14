@@ -230,6 +230,7 @@ class Ipam(AaBase):
         except Exception as e:
             raise e
         
+        failed_del=[]
         response = pcc.get_subnet_objs(conn)
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
@@ -237,17 +238,14 @@ class Ipam(AaBase):
             self.id=data['id']
             del_response=pcc.delete_subnet_obj_by_id(conn, str(self.id))
             if del_response['Result']['status']==200:
-                del_check=self.wait_until_ipam_subnet_deleted()
-                if del_check=="OK":
-                    print("Subnet {} is deleted sucessfully".format(data['name']))
-                    return "OK"
-                else:
-                    print("Subnet {} unable to delete".format(data['name']))
-                    return "Error"
+                continue
             else:
                 print("Delete Response:"+str(del_response))
-                print("Issue: Not getting 200 response back")
-                return "Error"
+                failed_del.append(data['name'])
+                continue
+        if failed_del:
+            print("Could not delete following Subnets: "+str(failed_del))
+            return "Error"
         return "OK"
 
 

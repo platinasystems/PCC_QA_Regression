@@ -439,7 +439,15 @@ Check if a zone can be deleted if its child rack does not have nodes assigned
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
-                       
+
+###################################################################################################################################
+Delete default zone under default region
+###################################################################################################################################                       
+        
+        [Documentation]    *Check if a zone can be deleted if its child rack does not have nodes assigned* test
+                           ...  keywords:
+                           ...  PCC.Delete Scope             
+        [Tags]    delete
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=Default region
                         Log To Console    ${parent2_Id}

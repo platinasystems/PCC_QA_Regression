@@ -601,40 +601,40 @@ Update scopeIDs of an existing policy
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
+##################################################################################################################################
+Update inputs name and value of policy must not be allowed (Negative)
 ###################################################################################################################################
-#Update inputs name and value of policy must not be allowed (Negative)
-####################################################################################################################################
-#
-#        [Documentation]    *Update inputs name and value of policy must not be allowed* test
-#                           ...  keywords:
-#                           ...  PCC.Update Policy
-#
-#        ${policy_id}    PCC.Get Policy Id
-#                        ...  Name=dns
-#                        ...  description=updated-policy-description    
-#
-#        ${app_id}    PCC.Get App Id from Policies
-#                     ...  Name=dns
-#
-#        ${parent1_id}    PCC.Get Scope Id
-#                         ...  scope_name=region-1     
-#                         Log To Console    ${parent1_id}
-#        
-#        ${scope1_id}    PCC.Get Scope Id
-#                         ...  scope_name=zone-updated
-#                         ...  parentID=${parent1_id}
-#                         Log To Console    ${scope1_id}
-#
-#        ${response}    PCC.Update Policy
-#                       ...  Id=${policy_id} 
-#                       ...  appId=${app_id}
-#                       ...  scopeIds=[${scope1_id}]
-#                       ...  description=updated-policy-description
-#                       ...  inputs=[{"name": "parameter1_updated","value": "value1_updated"},{"name": "parameter2_updated","value": "value2_updated"}]
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal As Strings    ${status}    200
+
+        [Documentation]    *Update inputs name and value of policy must not be allowed* test
+                           ...  keywords:
+                           ...  PCC.Update Policy
+
+        ${policy_id}    PCC.Get Policy Id
+                        ...  Name=dns
+                        ...  description=updated-policy-description    
+
+        ${app_id}    PCC.Get App Id from Policies
+                     ...  Name=dns
+
+        ${parent1_id}    PCC.Get Scope Id
+                         ...  scope_name=region-1     
+                         Log To Console    ${parent1_id}
+
+        ${scope1_id}    PCC.Get Scope Id
+                         ...  scope_name=zone-updated
+                         ...  parentID=${parent1_id}
+                         Log To Console    ${scope1_id}
+
+        ${response}    PCC.Update Policy
+                       ...  Id=${policy_id} 
+                       ...  appId=${app_id}
+                       ...  scopeIds=[${scope1_id}]
+                       ...  description=updated-policy-description
+                       ...  inputs=[{"name": "parameter1_updated","value": "value1_updated"},{"name": "parameter2_updated","value": "value2_updated"}]
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
