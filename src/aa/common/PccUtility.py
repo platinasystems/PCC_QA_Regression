@@ -59,8 +59,8 @@ def get_node_group_id_by_name(conn:dict, Name:str)->int:
     cluster_list = pcc.get_clusters(conn)['Result']['Data']
     try:
         for cluster in cluster_list:
-            if str(cluster['Name']) == str(Name):
-                return cluster['Id']
+            if str(cluster['name']) == str(Name):
+                return cluster['id']
         return None
     except Exception as e:
         return {"Error": str(e)}
@@ -87,27 +87,6 @@ def get_node_role_id_by_name(conn:dict, Name:str)->dict:
     except Exception as e:
         return {"Error": str(e)}
 
-  
-## Sites
-def get_site_id_by_name(conn:dict, Name:str)->dict:
-    """
-    Get Id of Site with matching Name 
-    [Args]
-        (dict) conn: Connection dictionary obtained after logging in
-        (str) Name: Name of Site
-    [Returns]
-        (int) Id: Id of the matchining Site, or
-            None: if no match found, or
-        (dict) Error response: If Exception occured
-    """
-    site_list = pcc.get_sites(conn)['Result']['Data']
-    try:
-        for site in site_list:
-            if str(site['Name'].lower()) == str(Name).lower():
-                return site['Id']
-        return None
-    except Exception as e:
-        return {"Error": str(e)}
 
 ## Applications
 def get_app_id_by_name(conn:dict, Name:str)->dict:
@@ -435,9 +414,13 @@ def get_os_label_by_name(conn:dict, Name:str)->str:
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
+    print("Name in get_os_label_by_name: {}".format(Name))
     OS_list = pcc.get_images(conn)['Result']['Data']
+    print("OS list: {}".format(OS_list))
     try:
         for OS in OS_list:
+            print("OS found: {}".format(OS['name']))
+            print("OS looking for : {}".format(Name))
             if str(OS['name']) == str(Name):
                 return OS['label']
         return None
@@ -548,3 +531,87 @@ def get_alert_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)}
+
+## IPAM
+def get_subnet_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get Id of Subnet with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Subnet
+    [Returns]
+        (int) Id: Id of the matchining subnet name, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_subnets = pcc.get_subnet_objs(conn)['Result']['Data']
+        for subnet in list_of_subnets:
+            if str(subnet['name']) == str(Name):
+                return subnet['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
+
+## Policy driven management
+def get_scope_id_by_name(conn:dict, Name:str, ParentID = None)->int:
+    """
+    Get Id of Scope with matching Name from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of Scope
+    [Returns]
+        (int) Id: Id of the matchining scope name, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_scopes = pcc.get_all_scopes(conn)['Result']['Data']
+        a= True
+        print("Name: {} and parentID: {} in easy".format(Name,ParentID))
+        #### For tree structure of parent #####
+        # for scopes in list_of_scopes:
+        #     while a:
+        #         if type(scopes['parent']) == dict:
+        #             if scopes['name']== str(Name) and scopes['parentID'] == ParentID:
+        #                 return scopes['id']
+        #             else:
+        #                 scopes = scopes['parent']
+        #         elif str(scopes['name']) == str(Name):
+        #             return scopes['id']
+        #         else:
+        #             break
+        
+        #### For one-one structure of parent ####
+        for scopes in list_of_scopes:
+            if ParentID:
+                if scopes['name']== str(Name) and scopes['parentID'] == int(ParentID):
+                    print("Required id is: {}".format(scopes['id']))
+                    return scopes['id']
+            elif scopes['name'] == str(Name):
+                return scopes['id']
+        return "Id not found for scope: {}".format(Name)
+        
+    except Exception as e:
+        return {"Error": str(e)}
+        
+def get_policy_id(conn:dict, Desc:str, AppID:int)->int:
+    """
+    Get Id of Policy with matching Description and appID from PCC
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Desc: Description of Scope
+    [Returns]
+        (int) Id: Id of the matchining scope or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    try:
+        list_of_policies = pcc.get_all_policies(conn)['Result']['Data']
+        for policy in list_of_policies:
+            if str(policy['appId'])== str(AppID):
+                if str(policy['description']) == str(Desc):
+                    return policy['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)} 

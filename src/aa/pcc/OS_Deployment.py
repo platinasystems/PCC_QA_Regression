@@ -1,5 +1,6 @@
 import time
 import ast
+import re
 from robot.api.deco import keyword
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
@@ -47,6 +48,7 @@ class OS_Deployment(AaBase):
         self.i28_hostip = None
         self.i28_username = None
         self.i28_password = None
+        self.version=None
         
         super().__init__()
 
@@ -192,14 +194,16 @@ class OS_Deployment(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         
         label_name = easy.get_os_label_by_name(conn, Name=self.image_name)
+        print("label name is: {}".format(label_name))
         logger.console("label_name: {}".format(label_name))
         OS_version = self.get_OS_version_by_node_name(**kwargs)
+        print("OS version is: {}".format(OS_version))
         logger.console("OS_version: {}".format(OS_version))
         if str(OS_version) in str(label_name):
             print("OS deployed successfully")
             return True
         else:
-            print("Error in deploying OS")
+            print("Error in deploying OS: {} not in {}".format(str(OS_version), str(label_name)))
             return False
         
         
@@ -361,29 +365,36 @@ class OS_Deployment(AaBase):
     ###########################################################################
     @keyword(name="PCC.Set password on Server")
     ###########################################################################
-    
+ 
     def set_password_on_server(self, *args, **kwargs):
         banner("PCC.Set password on Server")
         self._load_kwargs(kwargs)             
         
         try:
             cmd = r"""ssh -i {} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)
-            print("Command is {}".format(cmd))
+            cmd1='ssh-keygen -f "/home/pcc/.ssh/known_hosts" -R {}'.format(self.host_ip)
+            cmd2='ssh-keyscan -H {} >> ~/.ssh/known_hosts'.format(self.host_ip)
+            print("******************")
+            print("Command for setting password is {}".format(cmd))
+            print("Command for accessing server is {}".format(cmd1))
+            print("Command for copying key {}".format(cmd2))
+            print("******************")
             password_reset = cli_run(cmd=cmd, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
-            
-            serialised_password_reset = self._serialize_response(time.time(), password_reset)
-            print("serialised_password_reset is:{}".format(serialised_password_reset))
-            
-            cmd_output = str(serialised_password_reset['Result']['stdout']).replace('\n', '').strip()
-            
-            print("output of set_password_on_server:{}".format(cmd_output))
-            if "updated successfully" in cmd_output:
+            access_output = cli_run(cmd=cmd1, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
+            copy_output = cli_run(cmd=cmd2, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)            
+            print("******************")
+            print("Output is:{}".format(str(copy_output)))
+            print("******************")
+            if re.search(self.host_ip,str(cmd_output)):
                 return "OK"
             else:
                 return "Error"
         except Exception as e:
             logger.console("Error in set password on server: " + str(e))
-            
+        return "OK"
+                
+
+          
     ###########################################################################
     @keyword(name="PCC.Update OS Images")
     ###########################################################################
@@ -403,15 +414,43 @@ class OS_Deployment(AaBase):
             cmd_output = str(serialised_update_OS_images['Result']['stdout']).replace('\n', '').strip()
             
             print("output of serialised_update_OS_images:{}".format(cmd_output))
-            if "Finished" in self.cmd_output:
+            if "Failed" in self.cmd_output:
+                return "Image updation command failed to update the images: Please check the output"
+            elif "Finished" in self.cmd_output:
                 return "OK"
             else:
                 return "Error"
         except Exception as e:
-            logger.console("Error in Update OS Images: " + str(e))    
+            print("Error in Update OS Images: " + str(e))    
                  
         
+    ###########################################################################
+    @keyword(name="PCC.Verify OS And Its Version Back End")
+    ###########################################################################
+ 
+    def verify_os_and_version(self, *args, **kwargs):
+        banner("PCC.Verify OS And Its Version Back End")
+        self._load_kwargs(kwargs)   
+        print("Kwargs:"+str(kwargs))          
         
+        try:
+            if self.Name and self.version:
+                cmd = "sudo cat /etc/os-release | grep 'NAME\|VERSION'"
+                print("******************")
+                print("Command for Verifying OS and its version {}".format(cmd))
+                print("******************")
+                os_verify = cli_run(self.host_ip,self.username,self.password,cmd)        
+                print("Backend Data:"+str(os_verify)) 
+                if re.search(self.Name,str(os_verify)) and re.search(self.version,str(os_verify)):
+                    return "OK"
+                else:
+                    return "Error"
+            else:
+                prinr("Name and Version OS is Empty, Please Provide ...")
+                return "Error"
+        except Exception as e:
+            logger.console("Error in set password on server: " + str(e))
+        return "OK"      
         
         
         

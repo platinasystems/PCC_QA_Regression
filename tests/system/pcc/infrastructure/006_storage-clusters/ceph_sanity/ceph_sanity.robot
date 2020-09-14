@@ -9,6 +9,7 @@ ${pcc_setup}                 pcc_212
 Login
 ###################################################################################################################################
 
+                                    Load Ipam Data    ${pcc_setup}
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Fs Data    ${pcc_setup}
@@ -36,11 +37,25 @@ Network Manager Creation
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+                                     
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
+                                    Should Be Equal As Strings      ${status}  OK
+                                    
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK                                     
                                     
 ###################################################################################################################################
 Ceph Cluster Creation
@@ -59,6 +74,10 @@ Ceph Cluster Creation
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Pass Execution If    ${id} is not ${None}    Cluster is alredy Created
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -552,6 +571,9 @@ Ceph Cluster Update - Add Invader
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
 
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -597,22 +619,10 @@ Ceph Cluster Delete
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}    
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-
-###################################################################################################################################
-Network Manager Delete and Verify PCC
-###################################################################################################################################
-    [Documentation]                 *Network Manager Verification PCC*
-                               ...  keywords:
-                               ...  PCC.Network Manager Delete
-                               ...  PCC.Wait Until Network Manager Ready
-
-        ${response}                 PCC.Network Manager Delete
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Deleted
-                               ...  name=${NETWORK_MANAGER_NAME}
-
-                                    Should Be Equal As Strings      ${status}    OK
+                               
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Not Be Equal As Strings      ${status}    OK
+                                    

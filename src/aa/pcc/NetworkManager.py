@@ -28,7 +28,11 @@ class NetworkManager(AaBase):
         self.id=None
         self.name=None
         self.nodes=[]
+        self.nodes_ip=[]
         self.controlCIDR=None
+        self.controlCIDRId=None
+        self.dataCIDR=None
+        self.dataCIDRId=None
         self.igwPolicy=None
         self.user="pcc"
         self.password="cals0ft"
@@ -55,7 +59,11 @@ class NetworkManager(AaBase):
         banner("PCC.Create Network Manager")
         self._load_kwargs(kwargs)
 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+            
         tmp_node=[]
         for node_name in eval(str(self.nodes)):
             print("Getting Node Id for -"+str(node_name))
@@ -64,10 +72,17 @@ class NetworkManager(AaBase):
             tmp_node.append({"id":node_id})
         self.nodes=tmp_node
         
+        if self.controlCIDR:
+            self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
+
+        if self.dataCIDR:
+            self.dataCIDRId=easy.get_subnet_id_by_name(conn,self.dataCIDR)
+       
         payload = {
             "name": self.name,
             "nodes": self.nodes,
-            "controlCIDR":self.controlCIDR,
+            "controlCIDRId":self.controlCIDRId,
+            "dataCIDRId":self.dataCIDRId,
             "igwPolicy":self.igwPolicy
         }
 
@@ -81,31 +96,38 @@ class NetworkManager(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
         banner("PCC.Network Manager Update")
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
- 
+        
         try:
-            tmp_node=[]
-            for node_name in eval(str(self.nodes)):
-                print("Getting Node Id for -"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print(" Node Id retrieved -"+str(node_id))
-                tmp_node.append({"id":node_id})
-            self.nodes=tmp_node
-         
-            payload = {
-                "id":self.id,
-                "name": self.name,
-                "nodes": self.nodes,
-                "controlCIDR":self.controlCIDR,
-                "igwPolicy":self.igwPolicy
-            }
-
-            print("Payload:-"+str(payload))
-
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             print("[update_cluster] EXCEPTION: %s" % str(e))
             raise Exception(e)
+ 
+        tmp_node=[]
+        for node_name in eval(str(self.nodes)):
+            print("Getting Node Id for -"+str(node_name))
+            node_id=easy.get_node_id_by_name(conn,node_name)
+            print(" Node Id retrieved -"+str(node_id))
+            tmp_node.append({"id":node_id})
+        self.nodes=tmp_node
+        
+        if self.controlCIDR:
+            self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
 
+        if self.dataCIDR:
+            self.dataCIDRId=easy.get_subnet_id_by_name(conn,self.dataCIDR)
+       
+        payload ={
+            "id":self.id,
+            "name": self.name,
+            "nodes": self.nodes,
+            "controlCIDRId":self.controlCIDRId,
+            "dataCIDRId":self.dataCIDRId,
+            "igwPolicy":self.igwPolicy
+            }
+            
+        print("Payload:"+str(payload))
+   
         return pcc.modify_network_cluster(conn, payload)
     
     ###########################################################################
@@ -128,6 +150,26 @@ class NetworkManager(AaBase):
         return pcc.delete_network_cluster_by_id(conn, str(self.id))
 
     ###########################################################################
+    @keyword(name="PCC.Network Manager Refresh")
+    ###########################################################################
+    def refresh_network_cluster_by_id(self, *args, **kwargs):
+        banner("PCC.Network Manager Refresh")
+        self._load_kwargs(kwargs)
+
+        if self.name == None:
+            return {"Error": "[PCC.Network Manager Delete]: Name of the Network Manager is not specified."}
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        
+        time.sleep(30)    
+        self.id=easy.get_network_clusters_id_by_name(conn,self.name)
+
+        return pcc.refresh_network_cluster_by_id(conn, str(self.id))
+
+    ###########################################################################
     @keyword(name="PCC.Wait Until Network Manager Ready")
     ###########################################################################
     def wait_until_network_manager_ready(self, *args, **kwargs):
@@ -148,15 +190,17 @@ class NetworkManager(AaBase):
             response = pcc.get_network_clusters(conn)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
-                    print("Response To Look :-"+str(data))
-                    if data['progressPercentage'] == 100:
+                    response_data=data
+                    if data['deploy_status'].lower()=='completed' and data['progressPercentage'] == 100:
                         network_ready = True
                     elif re.search("failed",str(data['deploy_status'])):
+                        print("Response To Look :-"+str(response_data))
                         return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Wait Until Network Manager Ready] Timeout")
             trace("  Waiting until network manager: %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
+        print("Response To Look :-"+str(response_data))
         return "OK"
 
 
@@ -261,3 +305,66 @@ class NetworkManager(AaBase):
                 return "Error"
             
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Network Manager Verify BE")
+    ###########################################################################
+    def network_manager_verify_be(self,**kwargs):
+        banner("PCC.Network Manager Verify BE")
+        self._load_kwargs(kwargs)
+        
+        success_chk=[]
+        failed_chk=[]
+        cmd="sudo vtysh -c 'sh ip ospf nei'  && ip addr sh control0"
+        for ip in eval(str(self.nodes_ip)):
+            print("________________________")
+            print("Network verification for {} is in progress ...".format(ip))
+            trace("Network verification for {} is in progress ...".format(ip))
+            network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))
+            print("Data Retrieve:"+str(network_check))
+            print("Word to search"+str(self.dataCIDR[0:11]))
+            if re.search(self.dataCIDR[0:11],str(network_check)):
+                success_chk.append(ip)         
+            else:
+                failed_chk.append(ip)
+                    
+        if len(success_chk)==len(eval(str(self.nodes_ip))):
+            print("Backend verification successfuly done for : {}".format(success_chk))
+            return "OK"
+                                 
+        if failed_chk:  
+            print("Network is not properly set for {}".format(failed_chk))     
+            return "Error"
+        else:
+            return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Health Check Network Manager")
+    ###########################################################################
+    def health_check_network_manager(self, *args, **kwargs):
+        banner("PCC.Health Check Network Manager")
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(self.name))
+
+        if self.name == None:
+            return None
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        self.id=easy.get_network_clusters_id_by_name(conn,self.name)  
+        time.sleep(30) 
+        response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
+        print("Response:"+str(response))
+        if response["deploy_status"].lower()=="completed" and (response['health']=="OK" or response['health']=="Warning"):
+            return "OK"
+        else:
+            print("--------------")
+            print("Status we got from API as {} and heath as {}".format(response["deploy_status"],response['health']))
+            print("Health Summary:"+str(response['healthSummary']))
+            print("Health Info:"+str(response['info']))
+            print("--------------")
+            return "Error"
+        print("Could not verify the health of network cluter "+str(self.name))
+        return "Error"

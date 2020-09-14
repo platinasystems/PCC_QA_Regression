@@ -220,22 +220,6 @@ Creating RGW without pool name (Negative)
 #
 #
 ###################################################################################################################################
-#Creating RGW without name (Negative)
-######################################################################################################################################
-#
-#     [Documentation]                 *Ceph Rados Gateway Creation*
-#              
-#        ${response}                 PCC.Ceph Create Rgw
-#                               ...  name=
-#                               ...  poolName=${CEPH_RGW_POOLNAME}
-#                               ...  targetNodes=${CEPH_RGW_NODES}
-#                               ...  port=${CEPH_RGW_PORT}
-#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
-#                           
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Not Be Equal As Strings      ${status_code}  200   
-#
-###################################################################################################################################
 Creating RGW without certificate (Negative)
 #####################################################################################################################################
 

@@ -164,13 +164,22 @@
             "private_type":"Private", 
             "private_key":"Temp_private.ppk"
         },
-        
+
+    "ipam":
+        {
+            "controlName":"control-pvt",
+            "dataName":"data-pvt",
+            "controlSubnet":"10.0.202.0/24",
+            "dataSubnet":"192.168.150.0/24"
+        },
+
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-11"],
-            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.11"],
-            "controlCIDR":"10.0.202.0/24",
+            "nodes":["qa-clusterhead-11","qa-server-101","qa-server-100"],
+            "nodes_ip":["172.17.10.11","172.17.10.101","172.17.10.100"],
+            "controlCIDR":"control-pvt",
+            "dataCIDR":"data-pvt",
             "igwPolicy":"default"
         },
         
@@ -305,7 +314,7 @@
      "node_roles":
         {
             "app_1":"LLDP",
-            "app_2":"MaaS",            
+            "app_2":"Baremetal Services",            
             "node_role1":"Test_NodeRole_1",
             "node_role2":"Test_NodeRole_2",
             "node_role3":"Test_NodeRole_3",

@@ -106,7 +106,7 @@ PCC Tenant creation without name
         
         
         ${response}    PCC.Add Tenant
-                       ...    Name=''
+                       ...    Name=
                        ...    Parent_id=${parent_id}
                        ...    Description=${TENANT2_DESC}
                        

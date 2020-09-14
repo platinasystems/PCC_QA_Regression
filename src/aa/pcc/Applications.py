@@ -51,3 +51,19 @@ class Applications(AaBase):
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return easy.get_app_id_by_name(conn, self.Name)
+        
+    ###########################################################################
+    @keyword(name="PCC.Get Policy Enabled Apps")
+    ###########################################################################
+    def get_policy_enabled_apps(self, *args, **kwargs):
+        """
+        Get Policy Enabled Apps
+        [Args]
+            None
+        [Returns]
+            (dict) List of Policy Enabled Apps from PCC
+        """
+        banner("PCC.Get Policy Enabled Apps")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.get_policy_enabled_apps(conn)

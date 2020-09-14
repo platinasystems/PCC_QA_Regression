@@ -12,7 +12,7 @@ Login to PCC
                 
         
         [Documentation]    *Login to PCC* test
-        [Tags]    Delete
+        [Tags]    Only
         
         ${status}        Login To PCC    ${pcc_setup}
                          
@@ -43,7 +43,7 @@ PCC Node Group - Verify if user can access node group
         [Documentation]    *PCC Node Group - Verify if user can access node group* test
                            ...  keywords:
                            ...  PCC.Get Node Groups
-
+        
         ${response}    PCC.Get Node Groups
                        
                        Log To Console    ${response}
@@ -61,7 +61,7 @@ PCC Node Group Creation and Verification
                            ...  keywords:
                            ...  PCC.Add Node Group
                            ...  PCC.Validate Node Group
-
+        
         ${owner}       PCC.Get Tenant Id       Name=ROOT
         
         ${response}    PCC.Add Node Group
@@ -632,7 +632,7 @@ Delete All Node Groups
                            ...  PCC.Get Tenant Id
                            ...  PCC.Add Node Group
                            ...  PCC.Validate Node Group
-        [Tags]    Delete
+        [Tags]    Only
 
         ${status}    PCC.Delete all Node groups
                        

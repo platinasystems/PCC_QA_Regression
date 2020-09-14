@@ -83,7 +83,7 @@ K8s Cluster Verification Back End
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["172.17.2.43"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -260,6 +260,13 @@ Delete K8 Cluster
         ${status}                   PCC.K8s Wait Until Cluster Deleted
                                ...  cluster_id=${cluster_id}
                                     Should Be Equal As Strings    ${status}  OK
+                                    
+        ${status}                   PCC.K8s Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+
+                                    Should Not Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Network Manager Delete and Verify PCC
@@ -279,3 +286,5 @@ Network Manager Delete and Verify PCC
                                ...  name=${NETWORK_MANAGER_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
+                                    
+                                    
