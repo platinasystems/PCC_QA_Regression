@@ -177,3 +177,17 @@ Monitor Verify OS And Its Version Backend
                                ...  username=pcc
                                ...  password=cals0ft
                                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Node Verify Via Kafka Container
+###################################################################################################################################
+
+    [Documentation]                 *Monitor Node Verify Via Kafka Container*
+                               ...  keywords:
+                               ...  PCC.Node Verify Kafka Container
+
+        ${status}                   PCC.Node Verify Kafka Container
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  Host=${PCC_HOST_IP}
+
+                                    Should Be Equal As Strings      ${status}    OK

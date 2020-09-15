@@ -547,4 +547,37 @@ class Nodes(AaBase):
             print("Couldn't verify Serial and Model Number for {}".format(failed_host))     
             return "Error"
         else:
-            return "OK"        
+            return "OK" 
+            
+    ###########################################################################
+    @keyword(name="PCC.Node Verify Kafka Container")
+    ###########################################################################
+    def verify_node_kafka_container(self, *args, **kwargs):
+        banner("PCC.Node Verify Kafka Container")
+        self._load_kwargs(kwargs)
+        print("Kwargs:{}".format(kwargs))
+    
+        cmd="sudo timeout -s SIGKILL 60s docker exec kafka /usr/local/bin/kafka-avro-console-consumer --topic summary --bootstrap-server localhost:9092"
+        failed_name=[]
+
+        if self.Names and self.Host:
+            logger.console("Verifying nodes info in Kafka container ....")
+            output=cli_run(self.Host,self.user,self.password,cmd)
+            logger.console("Kafka container output: {}".format(output))
+            for name in eval(str(self.Names)):
+                print("Verifying {} ...".format(name))
+                if re.search(name,str(output)):
+                    continue
+                else:
+                    
+                    failed_host.append(name)
+                    continue                
+        else:
+            print("Either Host or Names are empty!!")
+            return "Error"
+                     
+        if failed_name:  
+            print("Host not verified in Kafka container: {}".format(failed_name))     
+            return "Error"
+        else:
+            return "OK"       

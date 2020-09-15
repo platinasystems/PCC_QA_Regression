@@ -398,37 +398,37 @@ Create CephFS - with multiple metadata pools (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200    
 
 ####################################################################################################################################
-Create CephFS - where name contains only special characters (Negative)
-###################################################################################################################################
-    [Documentation]                 *Create CephFS - where name contains only special characters*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Details For FS
-                               ...  PCC.Ceph Create Fs
-
-
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${meta}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_META}
-
-        ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DATA}
-
-        ${default}                  PCC.Ceph Get Pool Details For FS
-                               ...  name=${CEPH_FS_DEFAULT}
-
-        ${response}                 PCC.Ceph Create Fs
-                               ...  name=!@#$%^^
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  metadata_pool=${meta}
-                               ...  data_pool=[${data}]
-                               ...  default_pool=${default}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Not Be Equal As Strings      ${status_code}  200    
-                                    
+#Create CephFS - where name contains only special characters (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Create CephFS - where name contains only special characters*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Details For FS
+#                               ...  PCC.Ceph Create Fs
+#
+#
+#        ${cluster_id}               PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#
+#        ${meta}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_META}
+#
+#        ${data}                     PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DATA}
+#
+#        ${default}                  PCC.Ceph Get Pool Details For FS
+#                               ...  name=${CEPH_FS_DEFAULT}
+#
+#        ${response}                 PCC.Ceph Create Fs
+#                               ...  name=!@#$%^^
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  metadata_pool=${meta}
+#                               ...  data_pool=[${data}]
+#                               ...  default_pool=${default}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Not Be Equal As Strings      ${status_code}  200    
+#                                    
 ###################################################################################################################################
 Ceph Fs Creation and Verify
 ###################################################################################################################################
