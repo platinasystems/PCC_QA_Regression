@@ -114,6 +114,24 @@ class Monitor(AaBase):
                     else:
                         failed_chk.append(ip)
                     print("#####################################")
+                elif topic.lower()=='file system':
+                    cmd="sudo df -ih"
+                    cmd1="sudo df -Th"
+                    print("#####################################")    
+                    print("Topic:"+str(topic))
+                    print("Topic Second Cmd:"+str(cmd1))
+                    print("Host:"+str(ip))
+                    fs_check_cmd=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))['Result']['stdout']
+                    fs_check_cmd1=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))['Result']['stdout']
+                    print("Topic first Cmd:"+str(cmd))
+                    print("Command Output"+str(fs_check_cmd))
+                    print("Topic Second Cmd:"+str(cmd1))
+                    print("Command Output"+str(fs_check_cmd1))                   
+                    if re.search("tmpfs",str(fs_check_cmd)) and re.search("tmpfs",str(fs_check_cmd1)):
+                        continue
+                    else:
+                        failed_chk.append(ip)
+                    print("#####################################")
         if failed_chk:
             print("Could not verify the topics for "+str())
             return "Error"
@@ -173,11 +191,11 @@ class Monitor(AaBase):
                     print("totalMem:"+str(totalMem))
                     trace("Memory Data:"+str(data))
                     print("#####################################")                    
-
                     if totalMem:
                         continue
                     else:
-                        failed_chk.append(nodeId)                    
+                        failed_chk.append(nodeId) 
+                                           
                 elif topic.lower()=='storage':
                     data=pcc.add_monitor_cache(conn, "storage", str(nodeId), payload)  
                     storageControllers=data['Result']['metrics'][0]['storageControllers']
@@ -229,6 +247,13 @@ class Monitor(AaBase):
                         continue
                     else:
                         failed_chk.append(nodeId) 
+                        
+                elif topic.lower()=='file system':
+                    data=pcc.add_monitor_cache(conn, "partitions", str(nodeId), payload)  
+                    print("################--FILE SYSTEM--##################")    
+                    print("File System Data:"+str(data))
+                    trace("File System:"+str(data))
+                    print("#####################################")                    
                 else:
                     print("Invalid Category:"+str(topic))   
                     return "Error"

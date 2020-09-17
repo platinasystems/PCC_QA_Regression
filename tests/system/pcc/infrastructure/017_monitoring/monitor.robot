@@ -179,6 +179,30 @@ Monitor Verify OS And Its Version Backend
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
+Monitor Data Availability Verify BE For File System
+################################################################################################################################### 
+    [Documentation]                 *Monitor Data Availability Verify BE*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Data Availability BE
+                                   
+        ${status}                   PCC.Monitor Verify Data Availability BE
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["file system"]
+                                    Should Be Equal As Strings      ${status}    OK 
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for File System
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["file system"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
 Monitor Node Verify Via Kafka Container
 ###################################################################################################################################
 
@@ -191,3 +215,4 @@ Monitor Node Verify Via Kafka Container
                                ...  Host=${PCC_HOST_IP}
 
                                     Should Be Equal As Strings      ${status}    OK
+
