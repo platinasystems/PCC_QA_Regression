@@ -232,6 +232,11 @@ class Ipam(AaBase):
         
         failed_del=[]
         response = pcc.get_subnet_objs(conn)
+        
+        if not get_response_data(response):
+            print("No subnet found for delete !!")
+            return "OK"
+            
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
             print("Subnet {} and id {} is deleting....".format(data['name'],data['id']))

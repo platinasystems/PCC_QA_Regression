@@ -252,6 +252,10 @@ class CephRgw(AaBase):
             raise e
         
         response = pcc.get_ceph_rgws(conn)
+        print("Rgw Response:"+str(response))
+        if not get_response_data(response):
+            print("No Rgw found for delete")
+            return "OK"
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
             print("Rados Gateway {} and id {} is deleting....".format(data['name'],data['id']))
