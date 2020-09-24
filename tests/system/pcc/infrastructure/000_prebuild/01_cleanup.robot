@@ -42,6 +42,16 @@ Ceph Rbd Delete Multiple
 
         ${status}                   PCC.Ceph Delete All Rbds
                                     Should Be Equal     ${status}  OK
+
+###################################################################################################################################
+Ceph Rgw Delete Multiple
+###################################################################################################################################
+    [Documentation]                 *Ceph Rbd Delete Multiple*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Rgw
+
+        ${status}                   PCC.Ceph Delete All Rgw
+                                    Should Be Equal     ${status}  OK
                                     
 ###################################################################################################################################
 Ceph Pool Multiple Delete
@@ -91,3 +101,13 @@ Network Manager Delete
    
         ${status}                   PCC.Network Manager Delete All
                                     Should Be Equal     ${status}  OK
+                                    
+###################################################################################################################################
+Delete Multiple Subnet
+###################################################################################################################################
+    [Documentation]                 *Delete IPAM Subnet*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Delete All
+
+        ${status}                   PCC.Ipam Subnet Delete All                          
+                                    Should Be Equal As Strings      ${status}    OK

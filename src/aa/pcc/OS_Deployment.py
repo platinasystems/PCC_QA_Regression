@@ -434,8 +434,11 @@ class OS_Deployment(AaBase):
                     logger.console("Command is: {}".format(cmd))
                     update_img_cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
                     print("update_img_cmd_output : {}".format(update_img_cmd_output))
-                    time.sleep(5*60) ##Image updation takes 5 minutes, sleeping for 5 minutes 
-                    if re.search("Download source media: OK",str(update_img_cmd_output)):
+                    time.sleep(2*60) ##Image updation takes 2 minutes, sleeping for 2 minutes 
+                    print("======== Checking {} is updated in local-repo or not ==========".format(image))
+                    check_img_updated_cmd = """sudo platina-cli-ws/platina-cli os-media list-local -p {}| awk {}|sed -e '1,4d'""".format(self.setup_password, "'{print $2}'")
+                    check_img_updated_cmd_output = cli_run(cmd=check_img_updated_cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+                    if re.search(image,str(check_img_updated_cmd_output)):
                         updated_images.append("OK")
                     else:
                         updated_images.append("Failed: {}".format(image))
