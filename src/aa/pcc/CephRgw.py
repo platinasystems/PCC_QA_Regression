@@ -244,7 +244,7 @@ class CephRgw(AaBase):
     def delete_all_rgws(self, *args, **kwargs):
         banner("PCC.Rados Gateway Delete All")
         self._load_kwargs(kwargs)
-        print("Kwargs:"+str(Kwargs))
+        print("Kwargs:"+str(kwargs))
 
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
