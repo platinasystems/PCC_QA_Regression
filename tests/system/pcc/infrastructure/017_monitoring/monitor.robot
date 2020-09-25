@@ -198,7 +198,7 @@ Monitor Data Availability Verify PCC for File System
                                ...  PCC.Monitor Data Availability Verify PCC
                                
         ${status}                   PCC.Monitor Verify Data Availability
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  category=["file system"]
                                     Should Be Equal As Strings      ${status}    OK
 

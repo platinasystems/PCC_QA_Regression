@@ -386,7 +386,7 @@ class OS_Deployment(AaBase):
             print("******************")
             print("Output is:{}".format(str(copy_output)))
             print("******************")
-            if re.search(self.host_ip,str(cmd_output)):
+            if re.search(self.host_ip,str(copy_output)):
                 return "OK"
             else:
                 return "Error"
