@@ -671,65 +671,65 @@ A policyID must be integer (Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
                        
-####################################################################################################################################
-#Associate policies with scope - Bugid - PCC2697
-####################################################################################################################################
-#
-#        [Documentation]    *Check if parentID is never null for a rack* test
-#                           ...  keywords:
-#                           ...  PCC.Create Policy
-#        [Tags]    Run                   
-#        ${app_id}    PCC.Get App Id from Policies
-#                     ...  Name=dns
-#                     Log To Console    ${app_id}
-#
-#
-#        ${response}    PCC.Create Policy
-#                       ...  appId=${app_id}
-#                       ...  description=policy-for-scope
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Be Equal As Strings    ${status}    200
-#                       
-#        ${policy_id}    PCC.Get Policy Id
-#                        ...  Name=dns
-#                        ...  description=policy-for-scope
-#                        
-#                        Log To Console    ${policy_id}
-#                       
-#        
-#        ${parent_Id}    PCC.Get Scope Id
-#                        ...  scope_name=region-1
-#                        Log To Console    ${parent_Id}
-#                        
-#        ${scope_id}     PCC.Get Scope Id
-#                        ...  scope_name=Default zone
-#                        ...  parentID=${parent_Id}
-#                           
-#        ${response}    PCC.Update Scope
-#                       ...  Id=${scope_id}
-#                       ...  type=zone
-#                       ...  scope_name=Default zone
-#                       ...  description=Default zone scope
-#                       ...  parentID=${parent_Id}
-#                       ...  policyIDs=[${policy_id}]
-#                       
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Be Equal As Strings    ${status}    200
-#                       
-#        ${status}      PCC.Check Scope Creation From PCC
-#                       ...  scope_name=Default zone
-#                       
-#                       Log To Console    ${status}
-#                       Should Be Equal As Strings    ${status}    OK
+###################################################################################################################################
+Associate policies with scope
+###################################################################################################################################
+
+        [Documentation]    *Check if parentID is never null for a rack* test
+                           ...  keywords:
+                           ...  PCC.Create Policy
+        [Tags]    Run                   
+        ${app_id}    PCC.Get App Id from Policies
+                     ...  Name=dns
+                     Log To Console    ${app_id}
+
+
+        ${response}    PCC.Create Policy
+                       ...  appId=${app_id}
+                       ...  description=policy-for-scope
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+        ${policy_id}    PCC.Get Policy Id
+                        ...  Name=dns
+                        ...  description=policy-for-scope
+
+                        Log To Console    ${policy_id}
+
+
+        ${parent_Id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+                        Log To Console    ${parent_Id}
+
+        ${scope_id}     PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${parent_Id}
+
+        ${response}    PCC.Update Scope
+                       ...  Id=${scope_id}
+                       ...  type=zone
+                       ...  scope_name=Default zone
+                       ...  description=Default zone scope
+                       ...  parentID=${parent_Id}
+                       ...  policyIDs=[${policy_id}]
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}      PCC.Check Scope Creation From PCC
+                       ...  scope_name=Default zone
+
+                       Log To Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK
                        
                    
 ###################################################################################################################################
@@ -873,44 +873,44 @@ Update parentID of a scoping object (considered Site)
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK
                        
-###################################################################################################################################
-Update parentID of a default scoping object must not be supported (considered Default Site)
-###################################################################################################################################
-
-        [Documentation]    *Update parentID of a default scoping object must not be supported (considered Default Site)* test
-                           ...  keywords:
-                           ...  PCC.Update Scope
-                           
-        ## Updating default site with new parentID ##
-        ${parent1_Id}    PCC.Get Scope Id
-                        ...  scope_name=region-1
-        
-        ${parent2_Id}    PCC.Get Scope Id
-                        ...  scope_name=zone-2
-                        ...  parentID=${parent1_Id}
-                        
-        ${parent3_Id}    PCC.Get Scope Id
-                        ...  scope_name=zone-updated
-                        ...  parentID=${parent1_Id} 
-        
-        
-        ${scope_id}    PCC.Get Scope Id
-                       ...  scope_name=Default site
-                       ...  parentID=${parent2_Id}
-                           
-        ${response}    PCC.Update Scope
-                       ...  Id=${scope_id}
-                       ...  type=site
-                       ...  scope_name=Default site
-                       ...  description=Default description
-                       ...  parentID=${parent3_Id}
-                       
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Not Be Equal As Strings    ${status}    200
+####################################################################################################################################
+#Update parentID of a default scoping object must not be supported (considered Default Site) - Bug ID -2730
+####################################################################################################################################
+#
+#        [Documentation]    *Update parentID of a default scoping object must not be supported (considered Default Site)* test
+#                           ...  keywords:
+#                           ...  PCC.Update Scope
+#                           
+#        ## Updating default site with new parentID ##
+#        ${parent1_Id}    PCC.Get Scope Id
+#                        ...  scope_name=region-1
+#        
+#        ${parent2_Id}    PCC.Get Scope Id
+#                        ...  scope_name=zone-2
+#                        ...  parentID=${parent1_Id}
+#                        
+#        ${parent3_Id}    PCC.Get Scope Id
+#                        ...  scope_name=zone-updated
+#                        ...  parentID=${parent1_Id} 
+#        
+#        
+#        ${scope_id}    PCC.Get Scope Id
+#                       ...  scope_name=Default site
+#                       ...  parentID=${parent2_Id}
+#                           
+#        ${response}    PCC.Update Scope
+#                       ...  Id=${scope_id}
+#                       ...  type=site
+#                       ...  scope_name=Default site
+#                       ...  description=Default description
+#                       ...  parentID=${parent3_Id}
+#                       
+#                       Log To Console    ${response}
+#                       ${result}    Get Result    ${response}
+#                       ${status}    Get From Dictionary    ${result}    status
+#                       ${message}    Get From Dictionary    ${result}    message
+#                       Log to Console    ${message}
+#                       Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
 Check if a default region can be deleted
@@ -955,31 +955,31 @@ Check if a default zone can be deleted
                        Log to Console    ${message}
                        Should Not Be Equal As Strings    ${status}    200
                        
-####################################################################################################################################
-#Check if a default site can be deleted
-####################################################################################################################################
-#
-#        [Documentation]    *Check if a default site can be deleted* test
-#                           ...  keywords:
-#                           ...  PCC.Delete Scope             
-#        [Tags]    delete                
-#        ${parent1_Id}    PCC.Get Scope Id
-#                        ...  scope_name=region-1
-#        
-#        ${parent2_Id}    PCC.Get Scope Id
-#                        ...  scope_name=zone-2
-#                        ...  parentID=${parent1_Id}
-#        
-#        ${response}    PCC.Delete Scope
-#                       ...  scope_name=Default site
-#                       ...  parentID=${parent2_Id}
-#                       
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal As Strings    ${status}    200
+###################################################################################################################################
+Check if a default site can be deleted
+###################################################################################################################################
+
+        [Documentation]    *Check if a default site can be deleted* test
+                           ...  keywords:
+                           ...  PCC.Delete Scope             
+        [Tags]    delete                
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=zone-2
+                        ...  parentID=${parent1_Id}
+
+        ${response}    PCC.Delete Scope
+                       ...  scope_name=Default site
+                       ...  parentID=${parent2_Id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
 
 
                        

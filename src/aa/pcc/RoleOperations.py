@@ -101,15 +101,19 @@ class RoleOperations(AaBase):
         while not ready:
             ready = False
             node_list = pcc.get_nodes(conn)['Result']['Data']
+            tmp_response=None
             for node in node_list:
                 if str(node['Name']).lower() == str(self.node_name).lower():
-                    print("Node Response:-"+str(node))
+                    tmp_response=node
                     status=node['provisionStatus']
                     if node['provisionStatus'] == 'Ready':
+                        print("Node Response:-"+str(node))
                         ready = True
                     elif re.search("failed",str(node['provisionStatus'])):
+                        print("Node Response:-"+str(node))
                         return "Failed"
             if time.time() > timeout:
+                print("Node Response:"+str(tmp_response))
                 return {"Error": "Timeout"}
             if not ready:
                 trace("  Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
@@ -168,12 +172,12 @@ class RoleOperations(AaBase):
     ###########################################################################
     @keyword(name="PCC.Mass Verify BE")
     ###########################################################################
-    def verify_mass_be(self, *args, **kwargs):
-        mass_cmd="ps -aef | grep ROOT"
+    def verify_mass_be(self, *args, **kwargs):  
         banner("PCC.Mass Verify BE")
         self._load_kwargs(kwargs)
-        print("Kwargs:-"+str(kwargs))
-
+        print("Kwargs:-"+str(kwargs))    
+        mass_cmd="ps -aef | grep ROOT"        
+        time.sleep(10)
         for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,mass_cmd)
             print("Output:"+str(output))
@@ -187,11 +191,11 @@ class RoleOperations(AaBase):
     @keyword(name="PCC.Lldp Verify BE")
     ###########################################################################
     def verify_lldp_be(self, *args, **kwargs):
-        lldp_cmd="sudo service lldpd status"
         banner("PCC.Lldp Verify BE")
         self._load_kwargs(kwargs)
-        print("Kwargs:-"+str(kwargs))
-        
+        print("Kwargs:-"+str(kwargs))    
+        lldp_cmd="sudo service lldpd status"       
+        time.sleep(10)
         for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,lldp_cmd)
             print("Output:"+str(output))

@@ -170,7 +170,7 @@ class PolicyDrivenMgmt(AaBase):
                 }
        
         print("payload:-"+str(payload)) 
-        return pcc.modify_policy_by_id(conn, id=str(self.Id), data=payload)
+        return pcc.modify_scope_by_id(conn, id=str(self.Id), data=payload)
         
     
     ###########################################################################
@@ -183,7 +183,7 @@ class PolicyDrivenMgmt(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         
         Id = easy.get_scope_id_by_name(conn, Name=self.scope_name, ParentID=self.parentID)
-        return pcc.delete_policy_by_id(conn, str(Id))
+        return pcc.delete_scope_by_id(conn, str(Id))
         
     ###########################################################################
     @keyword(name="PCC.Apply Policy To Scope")
