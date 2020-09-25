@@ -372,6 +372,8 @@ class OS_Deployment(AaBase):
         self._load_kwargs(kwargs)             
         
         try:
+            print("######################  i28 #######################")
+            ######################  i28 #######################
             cmd = r"""ssh -i {} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)
             cmd1='ssh-keygen -f "/home/pcc/.ssh/known_hosts" -R {}'.format(self.host_ip)
             cmd2='ssh-keyscan -H {} >> ~/.ssh/known_hosts'.format(self.host_ip)
@@ -390,12 +392,29 @@ class OS_Deployment(AaBase):
                 return "OK"
             else:
                 return "Error"
-        except Exception as e:
-            logger.console("Error in set password on server: " + str(e))
-        return "OK"
-                
 
-          
+            #####################  Jenkins  ####################### 
+            print("#####################  Jenkins  #######################")               
+            cmd1='ssh-keygen -f "/home/jenkins/.ssh/known_hosts" -R {}'.format(self.host_ip)
+            cmd2='ssh-keyscan -H {} >> /home/jenkins/.ssh/known_hosts'.format(self.host_ip)
+            print("******************")
+            print("Command for setting password is {}".format(cmd))
+            print("Command for accessing server is {}".format(cmd1))
+            print("Command for copying key {}".format(cmd2))
+            print("******************")
+            access_output = cli_run(cmd=cmd1, host_ip="172.17.3.225", linux_user=jenkins ,linux_password=jenkins)
+            copy_output = cli_run(cmd=cmd2, host_ip="172.17.3.225", linux_user=jenkins ,linux_password=jenkins)            
+            print("******************")
+            print(" Jenkins Output is:{}".format(str(copy_output)))
+            print("******************")
+            if re.search(self.host_ip,str(copy_output)):
+                return "OK"
+            else:
+                return "Error"
+        except Exception as e:
+            logger.console("Error in set password on Jenkins server: " + str(e))
+        return "OK"
+                         
     ###########################################################################
     @keyword(name="PCC.Update OS Images")
     ###########################################################################
