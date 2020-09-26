@@ -1,6 +1,7 @@
 import time
 import ast
 import re
+import os
 from robot.api.deco import keyword
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
@@ -371,6 +372,7 @@ class OS_Deployment(AaBase):
         banner("PCC.Set password on Server")
         self._load_kwargs(kwargs)             
         
+        count=0
         try:
             print("######################  i28 #######################")
             ######################  i28 #######################
@@ -389,25 +391,30 @@ class OS_Deployment(AaBase):
             print("Output is:{}".format(str(copy_output)))
             print("******************")
             if re.search(self.host_ip,str(copy_output)):
-                return "OK"
+                count+=1
             else:
                 return "Error"
 
             #####################  Jenkins  ####################### 
             print("#####################  Jenkins  #######################")               
-            cmd1='ssh-keygen -f "/home/jenkins/.ssh/known_hosts" -R {}'.format(self.host_ip)
-            cmd2='ssh-keyscan -H {} >> /home/jenkins/.ssh/known_hosts'.format(self.host_ip)
+            cmd1='sudo ssh-keygen -f "/home/jenkins/.ssh/known_hosts" -R {}'.format(self.host_ip)
+            cmd2='sudo ssh-keyscan -H {} >> /home/jenkins/.ssh/known_hosts'.format(self.host_ip)
             print("******************")
             print("Command for setting password is {}".format(cmd))
             print("Command for accessing server is {}".format(cmd1))
             print("Command for copying key {}".format(cmd2))
             print("******************")
-            access_output = cli_run(cmd=cmd1, host_ip="172.17.3.225", linux_user=jenkins ,linux_password=jenkins)
-            copy_output = cli_run(cmd=cmd2, host_ip="172.17.3.225", linux_user=jenkins ,linux_password=jenkins)            
+            access_output = os.system(cmd1)
+            copy_output = os.system(cmd2)            
             print("******************")
             print(" Jenkins Output is:{}".format(str(copy_output)))
             print("******************")
             if re.search(self.host_ip,str(copy_output)):
+                count+=1
+            else:
+                return "Error"
+            
+            if count==2:
                 return "OK"
             else:
                 return "Error"
