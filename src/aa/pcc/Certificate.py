@@ -42,7 +42,7 @@ class Certificate(AaBase):
         if self.Private_key:
             private_key_path = os.path.join("tests/test-data", self.Private_key)
             certificate_path = os.path.join("tests/test-data", self.Certificate_upload)
-            multipart_data = {'file': open(private_key_path, 'rb'),'file': open(certificate_path, 'rb'),  'description':(None, self.Description)}
+            multipart_data = {'key': open(private_key_path, 'rb'),'file': open(certificate_path, 'rb'),  'description':(None, self.Description)}
             print("multipart data: {}".format(multipart_data))
         else:
             certificate_path = os.path.join("tests/test-data", self.Certificate_upload)

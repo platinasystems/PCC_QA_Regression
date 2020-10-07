@@ -98,7 +98,7 @@ Network Manager Delete
     [Documentation]                 *Delete Network Manager if it exist*
                                ...  keywords:
                                ...  PCC.Network Manager Delete All
-   
+
         ${status}                   PCC.Network Manager Delete All
                                     Should Be Equal     ${status}  OK
                                     

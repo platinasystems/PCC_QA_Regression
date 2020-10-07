@@ -279,3 +279,29 @@ class Cli(AaBase):
             return "Error"   
         return "OK"
 
+
+    ###########################################################################
+    @keyword(name="CLI.Pcc Add Iscsi Drives")
+    ###########################################################################
+    def cli_pcc_add_iscsi_drives(self, *args, **kwargs):
+        """
+        [Args]
+            (str) host_ip:
+            (str) linux_password:
+            (str) linux_user:
+
+        [Returns]
+            (str) OK if command successful, stderr output if there's an error
+        """
+        self._load_kwargs(kwargs)
+        print("kwargs:-"+str(kwargs))
+        banner("CLI.Pcc Add Iscsi Drives")
+        cmd="sudo ansible-playbook -i ./pcc-inventory ./site.yml"
+        print("Command:"+str(cmd))
+        output=cli_run(self.host_ip, self.linux_user, self.linux_password, cmd)
+        print("Output:"+str(output))
+        trace("Output:"+str(output))
+        if re.search("no tasks failed",str(output)):
+            return "OK"
+        else:
+            return "Error"

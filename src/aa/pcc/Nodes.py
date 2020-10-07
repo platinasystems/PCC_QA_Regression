@@ -87,7 +87,8 @@ class Nodes(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Add Node [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        
+        if "roles" in kwargs:
+            self.roles = ast.literal_eval(self.roles)
         payload = {
             "Name": self.Name,
             "ClusterId": self.ClusterId,
@@ -118,6 +119,7 @@ class Nodes(AaBase):
             "tenants": self.tenants,
             "scopeId":self.scopeId
         }
+        print("Payload is : {}".format(payload))
         return pcc.add_node(conn, payload)
 
     ###########################################################################
@@ -312,7 +314,9 @@ class Nodes(AaBase):
         self._load_kwargs(kwargs)
         banner("PCC.Update Node [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        
+        print("Kwargs are: {}".format(kwargs))
+        if "roles" in kwargs:
+            self.roles = ast.literal_eval(self.roles)
         payload = {
             "Id": self.Id,
             "Name": self.Name,
@@ -342,7 +346,8 @@ class Nodes(AaBase):
             "status": self.status,
             "tags": self.tags,
             "tenants": self.tenants,
-            "scopeId":self.scopeId
+            "scopeId":self.scopeId,
+            "interfaces": self.interfaces
         }
         print("Payload in update node is :{}".format(payload))
         return pcc.modify_node(conn, payload)

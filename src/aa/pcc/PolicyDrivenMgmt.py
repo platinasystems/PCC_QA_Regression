@@ -44,9 +44,19 @@ class PolicyDrivenMgmt(AaBase):
         self.policyIDs = []
         self.node_names = []
         self.targetNodeIp = []
+        self.host_ip= None
         self.user="pcc"
         self.password="cals0ft"
         self.roles_id = None
+        self.snmp_version = None
+        self.community_string = None
+        self.snmp_encryption = None
+        self.snmp_username = None
+        self.snmp_password = None
+        self.search_list = []
+        self.dns_server_ip = None
+        self.time_zone = None
+        self.scope_from_user = None
         super().__init__()
 
     ###########################################################################
@@ -288,9 +298,17 @@ class PolicyDrivenMgmt(AaBase):
             else:
                 self.appId = int(kwargs['appId'])
         if 'inputs' in kwargs:
-            self.inputs = ast.literal_eval(kwargs['inputs'])
+            user_inputs = ast.literal_eval(kwargs['inputs'])
+            default_inputs = self.get_policy_inputs_from_apps(**kwargs)
+            
+            for user_input in user_inputs:
+                for default_input in default_inputs:
+                    if user_input['name'] == default_input['name']:
+                        default_input['value'] = user_input['value']
+            
+            self.inputs = default_inputs
         else:
-            self.inputs = self.get_policy_inputs_from_apps(kwargs)
+            self.inputs = self.get_policy_inputs_from_apps(**kwargs)
             
         if 'scopeIds' in kwargs:
             self.scopeIds =  ast.literal_eval(self.scopeIds)
@@ -341,7 +359,15 @@ class PolicyDrivenMgmt(AaBase):
             else:
                 self.appId = int(kwargs['appId'])
         if 'inputs' in kwargs:
-            self.inputs = ast.literal_eval(kwargs['inputs'])
+            user_inputs = ast.literal_eval(kwargs['inputs'])
+            default_inputs = self.get_policy_inputs_from_apps(**kwargs)
+            
+            for user_input in user_inputs:
+                for default_input in default_inputs:
+                    if user_input['name'] == default_input['name']:
+                        default_input['value'] = user_input['value']
+            
+            self.inputs = default_inputs
         else:
             self.inputs = self.get_policy_inputs_from_apps(**kwargs)       
         if 'scopeIds' in kwargs:
@@ -372,31 +398,6 @@ class PolicyDrivenMgmt(AaBase):
         Id = easy.get_policy_id(conn, Desc=self.description, AppID=appId)
         
         return pcc.delete_policy_by_id(conn, str(Id))
-        
-    ###########################################################################
-    @keyword(name="PCC.Delete All Policies")
-    ###########################################################################
-    
-    def delete_all_policies(self, *args, **kwargs):
-        banner("PCC.Delete All Policies")
-        self._load_kwargs(kwargs)
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        get_response = self.get_all_policies(**kwargs)['Result']['Data']
-        policy_ids= []
-        for data in get_response:
-            policy_ids.append(data['id'])
-        deletion_status = []
-        for id in policy_ids:
-            deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
-            deletion_status.append(deletion_resp['status'])
-            time.sleep(3)
-        result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
-        if result:
-            return "OK"  
-        else:
-            return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
-        
-        
         
     ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
@@ -475,7 +476,6 @@ class PolicyDrivenMgmt(AaBase):
                 response = Nodes().update_node(conn, Id=node_id, Name=name, scopeId=self.scopeId)
                 print("Response from update node is: {}".format(response))
                 response_code_list.append(response['StatusCode'])
-                time.sleep(5)
             print("Response code list: {}".format(response_code_list))
             result = len(response_code_list) > 0 and all(elem == 200 for elem in response_code_list)
             if result:
@@ -488,9 +488,9 @@ class PolicyDrivenMgmt(AaBase):
             
             
     ###########################################################################
-    @keyword(name="PCC.Check SNMP from backend")
+    @keyword(name="PCC.Check SNMP services from backend")
     ###########################################################################
-    def check_snmp_backend(self,**kwargs):
+    def check_snmp_services_backend(self,**kwargs):
         banner("PCC.Check SNMP from backend")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -527,12 +527,52 @@ class PolicyDrivenMgmt(AaBase):
             return "Error: SNMP service are down for {}".format(failed_chk)
         else:
             return "OK"
+    
+    ###########################################################################
+    @keyword(name="PCC.Validate SNMP from backend")
+    ###########################################################################
+    def validate_snmp_from_backend(self,**kwargs):
+        banner("PCC.Validate SNMP from backend")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        if self.snmp_version == "snmpv2":
+            cmd_snmp = "snmpwalk -v2c -c {} {}".format(self.community_string, self.host_ip)
+            print("SNMPv2 validation command: {}".format(cmd_snmp))
+            
+            snmp_validate = cli_run(self.host_ip,self.user,self.password,cmd_snmp)
+            
+            if re.search("Timeout: No Response from {}".format(self.host_ip),str(snmp_validate)):
+                return "SNMPv2 validation failed, please provide valid community string"
+            elif re.search("{}".format(self.node_name),str(snmp_validate)):
+                return "OK"
+            else:
+                return "Unknown error encountered, please check the community string"
+            
+        elif self.snmp_version == "snmpv3":
+            cmd_snmp = "snmpwalk -v3 -l authPriv -u {} -a SHA -A {} -x AES -X {} {}:161".format(self.snmp_username, self.snmp_password, self.snmp_encryption, self.host_ip) 
+            snmp_validate = cli_run(self.host_ip,self.user,self.password,cmd_snmp)
+            
+            if re.search("snmpwalk: Unknown user name", str(snmp_validate)):
+                return "Error: Please provide a valid username"
+            elif re.search("snmpwalk: Authentication failure (incorrect password, community or key)", str(snmp_validate)):
+                return "Error: Please provide a valid password"
+            elif re.search("Timeout: No Response from {}".format(self.host_ip), str(snmp_validate)):
+                return "Error: Please provide a valid encryption"
+            elif re.search("The supplied password length is too short", str(snmp_validate)):
+                return "Error: Please provide a valid password/encryption and check the length"
+            elif re.search("{}".format(self.node_name),str(snmp_validate)):
+                return "OK"
+            else:
+                return "Unknown error encountered, please check the inputs"
+            
+        else:
+            return "Please provide a valid SNMP version: SNMPv2 or SNMPv3"
             
     ###########################################################################
-    @keyword(name="PCC.Check NTP from backend")
+    @keyword(name="PCC.Check NTP services from backend")
     ###########################################################################
-    def check_ntp_backend(self,**kwargs):
-        banner("PCC.Check NTP from backend")
+    def check_ntp_services_backend(self,**kwargs):
+        banner("PCC.Check NTP services from backend")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         cmd_ntp1="sudo systemctl status ntp"
@@ -579,9 +619,36 @@ class PolicyDrivenMgmt(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         node_id = Nodes().get_node_id(conn, Name=self.node_name)
         get_node_response = Nodes().get_node(conn, Id=str(node_id))['Result']['Data']
-        if str(self.scopeId) == str(get_node_response['scopeId']):
+        if (str(self.scopeId) == str(get_node_response['scope']['id'])) and (str(self.parentID)==str(get_node_response['scope']['parentID'])) and (str(self.scope_name)==str(get_node_response['scope']['name'])):
             return "OK"
         return "Error: Scope Id {} is not assigned on node {}".format(self.scopeId, self.node_name)
+        
+    ###########################################################################
+    @keyword(name="PCC.Check scope hierarchy on node")
+    ###########################################################################
+    def check_scope_hierarchy_on_node(self,**kwargs):
+        banner("PCC.Check scope hierarchy on node")
+        self._load_kwargs(kwargs)
+        logger.console("Kwargs are: {}".format(kwargs))
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        node_id = Nodes().get_node_id(conn, Name=self.node_name)
+        scope_tree = Nodes().get_node(conn, Id=str(node_id))['Result']['Data']['scope']
+        scope_ids = []
+        while type(scope_tree['parent']) == dict:
+            scope_ids.append(scope_tree['id'])
+            scope_tree = scope_tree['parent']
+            if scope_tree['parentID'] == None:
+                scope_ids.append(scope_tree['id'])
+                break
+        scope_ids.sort()
+        scope_from_user = ast.literal_eval(self.scope_from_user)
+        scope_from_user.sort()
+        print("Scope from PCC: {}".format(scope_ids))
+        print("Scope from User: {}".format(scope_from_user))
+        if scope_ids == scope_from_user:
+            return "OK"
+        else:
+            return "Error: Scope hierarchy doesn't match, scope from user: {} and scope from PCC: {}".format(scope_from_user,scope_ids)
         
     ###########################################################################
     @keyword(name="PCC.Check policy assignment on node")
@@ -657,9 +724,11 @@ class PolicyDrivenMgmt(AaBase):
         print("Kwargs are: {}".format(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         node_id = Nodes().get_node_id(conn, Name=self.node_name)
+        print("Node id is: {}".format(node_id))
         get_node_response = Nodes().get_node(conn, Id=str(node_id))['Result']['Data']
         
         roles_from_node = get_node_response['roles']
+        print("roles from node is: {}".format(roles_from_node))
         if self.roles_id:
             flag = 0
             user_role_id = ast.literal_eval(self.roles_id)
@@ -691,6 +760,85 @@ class PolicyDrivenMgmt(AaBase):
             return roles_from_node
         else:
             return "No roles assigned to node"
+            
+    ###########################################################################
+    @keyword(name="PCC.Validate RSOP of a node")
+    ###########################################################################
+    def validate_rsop_of_node(self,**kwargs):
+        banner("PCC.Validate RSOP of a node")
+        self._load_kwargs(kwargs)
+        print("Kwargs are: {}".format(kwargs))
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        get_node_rsop_response = self.get_node_rsop(conn,Name=self.node_name)['Result']['Data']
+        applied_policy_ids = []
+        for policy in get_node_rsop_response['appliedPolicies']:
+            applied_policy_ids.append(policy['id'])
+        flag = 0    
+        user_policy_id = ast.literal_eval(self.policyIDs)
+        print("policy ids by user is : {}".format(user_policy_id))
+        print("policy id from rsop is : {}".format(applied_policy_ids))
+        if(set(user_policy_id).issubset(set(applied_policy_ids))): 
+            flag = 1
+        if (flag): 
+            return "OK"
+        else: 
+            return "Error: Policy Ids {} are not assigned on node {}".format(self.policyIDs, self.node_name)
+        
+        
+        
+            
+    ###########################################################################
+    @keyword(name="PCC.Validate DNS From Backend")
+    ###########################################################################
+    def validate_dns_backend(self,**kwargs):
+        banner("PCC.Validate DNS From Backend")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        if "search_list" in kwargs:
+            self.search_list = ast.literal_eval(kwargs["search_list"])
+            found_result = []
+            for search_item in self.search_list:
+                print("============ Search item : {} ===========".format(search_item))
+                cmd1="sudo cat /etc/resolv.conf"
+                print(" ========= Command_1 is: {} ==========".format(cmd1))
+                cmd1_op=cli_run(self.host_ip,self.user,self.password,cmd1)
+                print("cmd1 op: {}".format(cmd1_op))
+                
+                cmd2="sudo systemd-resolve --status"
+                print(" ========= Command_2 is: {} ==========".format(cmd2))
+                cmd2_op=cli_run(self.host_ip,self.user,self.password,cmd2)
+                print("cmd2 op: {}".format(cmd2_op))
+                
+                if (re.search("{}".format(search_item),str(cmd1_op)) and re.search("{}".format(search_item),str(cmd2_op))) and re.search("{}".format(self.dns_server_ip),str(cmd2_op)) :
+                    found_result.append("OK")
+                else:
+                    found_result.append("Not found: {}".format(search_item)) 
+            print("Found result: {}".format(found_result))
+            result = len(found_result) > 0 and all(elem == "OK" for elem in found_result)
+            if result:
+                return "OK"  
+            else:
+                return "Error: validation unsuccessful: Check result list: {}".format(found_result)   
+        else:
+            return "Error: Please provide valid search list"
+            
+    ###########################################################################
+    @keyword(name="PCC.Validate NTP From Backend")
+    ###########################################################################
+    def validate_ntp_backend(self,**kwargs):
+        banner("PCC.Validate NTP From Backend")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        cmd1="sudo timedatectl | grep 'Time zone'"
+        cmd1_op=cli_run(self.host_ip,self.user,self.password,cmd1)
+        print("cmd1 op: {}".format(cmd1_op))
+        if re.search("{}".format(self.time_zone),str(cmd1_op)):
+            return "OK"
+        else:
+            return "Error: validation unsuccessful, time zone {} not found".format(self.time_zone)   
+        
+        
+          
             
         
     

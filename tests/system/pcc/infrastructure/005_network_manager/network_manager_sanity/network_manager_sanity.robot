@@ -8,7 +8,6 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
                                     Load Ipam Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -26,7 +25,7 @@ Create scoping objects
         [Documentation]    *Create scoping object - Region* test
                            ...  keywords:
                            ...  PCC.Create Scope
-        
+
         ###### Creating Region ######
         ${response}    PCC.Create Scope
                        ...  type=region
@@ -130,7 +129,7 @@ Apply rack on multiple nodes
         [Documentation]    *Apply location on multiple nodes - considered rack* test
                            ...  keywords:
                            ...  PCC.Update Node
-        
+
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-for-ceph
                         Log To Console    ${parent1_Id}
