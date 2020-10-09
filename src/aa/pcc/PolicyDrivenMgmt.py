@@ -398,6 +398,29 @@ class PolicyDrivenMgmt(AaBase):
         Id = easy.get_policy_id(conn, Desc=self.description, AppID=appId)
         
         return pcc.delete_policy_by_id(conn, str(Id))
+    
+    ###########################################################################
+    @keyword(name="PCC.Delete All Policies")
+    ###########################################################################
+    
+    def delete_all_policies(self, *args, **kwargs):
+        banner("PCC.Delete All Policies")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        get_response = self.get_all_policies(**kwargs)['Result']['Data']
+        policy_ids= []
+        for data in get_response:
+            policy_ids.append(data['id'])
+        deletion_status = []
+        for id in policy_ids:
+            deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
+            deletion_status.append(deletion_resp['status'])
+            time.sleep(3)
+        result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
+        if result:
+            return "OK"  
+        else:
+            return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
         
     ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
