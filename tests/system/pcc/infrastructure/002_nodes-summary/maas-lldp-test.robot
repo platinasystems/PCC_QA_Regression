@@ -112,7 +112,7 @@ Adding LLDP To Server
                                     Should Be Equal As Strings      ${status_code}  OK     
 
         ${response}                 PCC.Lldp Verify BE
-                               ...  nodes_ip=["${SERVER_2_NAME}"]
+                               ...  nodes_ip=["${SERVER_2_HOST_IP}"]
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                     Should Be Equal As Strings      ${response}  OK                                      

@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+        
                                             Load Ceph Rgw Data    ${pcc_setup}
                                             Load Ceph Pool Data    ${pcc_setup}
                                             Load Ceph Cluster Data    ${pcc_setup}
@@ -132,27 +132,27 @@ Create Application credential profile without application For Rados
                                       Log to Console    ${message}
                                       Should Be Equal As Strings    ${status}    200
                        
+##################################################################################################################################
+Ceph Ceph Certificate For Rgws
 ###################################################################################################################################
-#Ceph Ceph Certificate For Rgws
-####################################################################################################################################
-#
-#        [Documentation]              *Ceph Ceph Certificate For Rgws*
-#        
-#        ${cert_id}                   PCC.Get Certificate Id
-#                                ...  Alias=rgw-cert
-#                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
-#                
-#        ${response}                  PCC.Add Certificate
-#                                ...  Alias=rgw-cert
-#                                ...  Description=certificate-for-rgw
-#                                ...  Private_key=rgw_key.key
-#                                ...  Certificate_upload=rgw.crt
-#  
-#                                     Log To Console    ${response}
-#        ${result}                    Get Result    ${response}
-#        ${status}                    Get From Dictionary    ${result}    statusCodeValue
-#                                     Should Be Equal As Strings    ${status}    200
-#
+
+        [Documentation]              *Ceph Ceph Certificate For Rgws*
+          
+        ${cert_id}                   PCC.Get Certificate Id
+                                ...  Alias=rgw-certificate
+                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
+
+        ${response}                  PCC.Add Certificate
+                                ...  Alias=rgw-certificate
+                                ...  Description=certificate-for-rgw
+                                ...  Private_key=domain.key
+                                ...  Certificate_upload=domain.crt
+
+                                     Log To Console    ${response}
+        ${result}                    Get Result    ${response}
+        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+                                     Should Be Equal As Strings    ${status}    200
+
 ###################################################################################################################################
 Creating RGW using a pool that is used by other Ceph front-ends (Negative)
 #####################################################################################################################################

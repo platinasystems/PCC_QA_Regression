@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_242
+${pcc_setup}    pcc_212
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -12,7 +12,7 @@ Login to PCC
                 
         
         [Documentation]    *Login to PCC* test
-        [Tags]    Cert
+        
         
         ${status}        Login To PCC    ${pcc_setup}
                          Load Certificate Data    ${pcc_setup}

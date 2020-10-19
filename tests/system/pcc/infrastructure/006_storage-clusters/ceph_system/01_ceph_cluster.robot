@@ -77,47 +77,37 @@ Ceph Cluster Creation with 2 nodes both servers (Negative)
                                    Should Not Be Equal As Strings  ${status_code}  200
 
 ###################################################################################################################################
-#Ceph Cluster Creation without name (Negative)
-####################################################################################################################################
-#    [Documentation]                *Creating a cluster - without name*
-#                              ...  keywords:
-#                              ...  PCC.Ceph Create Cluster
-#
-#        ${id}                      PCC.Ceph Get Cluster Id
-#                              ...  name=${CEPH_CLUSTER_NAME}
-#                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
-#                              
-#        ${response}                PCC.Ceph Create Cluster
-#                              ...  name=""
-#                              ...  nodes=${CEPH_CLUSTER_NODES}
-#                              ...  tags=${CEPH_CLUSTER_TAGS}
-#                              ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-#
-#        ${status_code}             Get Response Status Code  ${response}
-#                                   Should Not Be Equal As Strings  ${status_code}  200
-#
-#
-####################################################################################################################################
-#Ceph Cluster Creation with invalid name (Negative)
-####################################################################################################################################
-#    [Documentation]                *Creating a cluster - with invalid name*
-#                              ...  keywords:
-#                              ...  PCC.Ceph Create Cluster
-#
-#        ${id}                      PCC.Ceph Get Cluster Id
-#                              ...  name=${CEPH_CLUSTER_NAME}
-#                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there  
-#                    
-#        ${response}                PCC.Ceph Create Cluster
-#                              ...  name="!@#$%^"
-#                              ...  nodes=${CEPH_CLUSTER_NODES}
-#                              ...  tags=${CEPH_CLUSTER_TAGS}
-#                              ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-#
-#        ${status_code}             Get Response Status Code  ${response}
-#                                   Should Not Be Equal As Strings  ${status_code}  200
-#
-#
+Ceph Cluster Creation without name (Negative)
+###################################################################################################################################
+    [Documentation]                *Creating a cluster - without name*
+                              ...  keywords:
+                              ...  PCC.Ceph Create Cluster
+                              
+        ${response}                 PCC.Ceph Create Cluster
+                               ...  nodes=${CEPH_CLUSTER_NODES}
+                               ...  tags=${CEPH_CLUSTER_TAGS}
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
+Ceph Cluster Creation with invalid name (Negative)
+###################################################################################################################################
+    [Documentation]                *Creating a cluster - with invalid name*
+                              ...  keywords:
+                              ...  PCC.Ceph Create Cluster
+                    
+        ${response}                PCC.Ceph Create Cluster
+                              ...  name=!@#$%^
+                              ...  nodes=${CEPH_CLUSTER_NODES}
+                              ...  tags=${CEPH_CLUSTER_TAGS}
+                              ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}             Get Response Status Code  ${response}
+                                   Should Not Be Equal As Strings  ${status_code}  200
+
 ###################################################################################################################################
 Ceph Cluster Creation without selecting any nodes (Negative)
 ###################################################################################################################################

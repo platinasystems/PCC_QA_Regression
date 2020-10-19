@@ -37,6 +37,7 @@ class CephCluster(AaBase):
         self.password=""
         self.data1=None
         self.data2=None
+        self.forceRemove=None
         super().__init__()
 
     ###########################################################################
@@ -164,12 +165,17 @@ class CephCluster(AaBase):
         if self.id == None:
             return {"Error": "[PCC.Ceph Delete Cluster]: Id of the cluster is not specified."}
 
+        if str(self.forceRemove).lower()=="true":
+            payload={"forceRemove":True}
+        else:
+            payload={"forceRemove":False}
+            
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-
-        return pcc.delete_ceph_cluster_by_id(conn, str(self.id))
+        print("Payoad:"+str(payload))
+        return pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload)
 
     ###########################################################################
     @keyword(name="PCC.Ceph Wait Until Cluster Ready")
@@ -294,13 +300,16 @@ class CephCluster(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
+  
+        payload={"forceRemove":False}
+        print("Payload:"+str(payload))
         
         response = pcc.get_ceph_clusters(conn)
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
             print("Ceph Cluster {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
-            del_response=pcc.delete_ceph_cluster_by_id(conn, str(self.id))
+            del_response=pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload)
             if del_response['Result']['status']==200:
                 del_check=self.wait_until_cluster_deleted()
                 if del_check=="OK":

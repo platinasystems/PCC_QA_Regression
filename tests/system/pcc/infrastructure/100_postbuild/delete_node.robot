@@ -31,7 +31,7 @@ Delete Nodes
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
-                              ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
+                              ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}']
 
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK

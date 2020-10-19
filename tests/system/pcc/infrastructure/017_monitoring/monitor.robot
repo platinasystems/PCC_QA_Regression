@@ -177,3 +177,42 @@ Monitor Verify OS And Its Version Backend
                                ...  username=pcc
                                ...  password=cals0ft
                                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Data Availability Verify BE For File System
+################################################################################################################################### 
+    [Documentation]                 *Monitor Data Availability Verify BE*
+                               ...  keywords:
+                               ...  PCC.Monitor Verify Data Availability BE
+                                   
+        ${status}                   PCC.Monitor Verify Data Availability BE
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  category=["file system"]
+                                    Should Be Equal As Strings      ${status}    OK 
+
+###################################################################################################################################
+Monitor Data Availability Verify PCC for File System
+###################################################################################################################################    
+    [Documentation]                 *Monitor Data Availability Verify PCC*
+                               ...  keywords:
+                               ...  PCC.Monitor Data Availability Verify PCC
+                               
+        ${status}                   PCC.Monitor Verify Data Availability
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  category=["file system"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Monitor Node Verify Via Kafka Container
+###################################################################################################################################
+
+    [Documentation]                 *Monitor Node Verify Via Kafka Container*
+                               ...  keywords:
+                               ...  PCC.Node Verify Kafka Container
+
+        ${status}                   PCC.Node Verify Kafka Container
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  Host=${PCC_HOST_IP}
+
+                                    Should Be Equal As Strings      ${status}    OK
+

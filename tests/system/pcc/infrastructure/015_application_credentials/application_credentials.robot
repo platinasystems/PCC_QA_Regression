@@ -311,7 +311,7 @@ Creating App-credential profile without user-name(Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Creating App-credential profile with invalid username (Negative)
+Creating App-credential profile with invalid username
 ###################################################################################################################################
 
         [Documentation]    *Create Metadata Profile* test
@@ -333,7 +333,7 @@ Creating App-credential profile with invalid username (Negative)
                        ${status}    Get From Dictionary    ${result}    status
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
-                       Should Not Be Equal As Strings    ${status}    200
+                       Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
 Creating App-credential profile with invalid email (Negative)
