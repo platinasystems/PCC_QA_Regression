@@ -181,19 +181,19 @@ class ErasureCodedPool(AaBase):
             self.Codingchunks = None
         
         if self.pool_type == "erasure" and self.Datachunks and self.Codingchunks:
-            payload = {
-                      "name":self.name,
+            print("I am in 1")
+            payload = {"name":self.name,
                       "pool_type":self.pool_type,
                       "size":self.size,
-                      "quota":str(self.quota),
+                      "quota":self.quota,
                       "quota_unit":self.quota_unit,
                       "ceph_cluster_id":self.ceph_cluster_id,
                       "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)}
                       }
                       
         elif self.pool_type == "erasure" and self.ErasureCodeProfileID:
-            payload = {
-                      "name":self.name,
+            print("I am in 2")
+            payload = {"name":self.name,
                       "pool_type":self.pool_type,
                       "size":self.size,
                       "quota":str(self.quota),
@@ -204,8 +204,8 @@ class ErasureCodedPool(AaBase):
         
           
         else:
-            payload = {
-                "name":self.name,
+            print("I am in 3")
+            payload = {"name":self.name,
                 "size":self.size,
                 "tags":self.tags,
                 "ceph_cluster_id":self.ceph_cluster_id,
@@ -215,7 +215,7 @@ class ErasureCodedPool(AaBase):
             }
             
         
-
+        #payload = json.dumps(payload)
         print(payload)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return pcc.add_erasure_ceph_pool(conn, payload)
@@ -258,8 +258,8 @@ class ErasureCodedPool(AaBase):
             name=str(name_bkup)+"-"+str(i)
             
             if self.pool_type == "erasure" and self.Datachunks and self.Codingchunks:
-                payload = {
-                          "name":name,
+                print("I am in 1")
+                payload = {"name":name,
                           "pool_type":self.pool_type,
                           "size":self.size,
                           "quota":self.quota,
@@ -269,8 +269,8 @@ class ErasureCodedPool(AaBase):
                           }
             
             if self.pool_type == "erasure" and self.ErasureCodeProfileID:
-                payload = {
-                          "name":name,
+                print("I am in 2")
+                payload = {"name":name,
                           "pool_type":self.pool_type,
                           "size":self.size,
                           "quota":self.quota,
@@ -280,8 +280,8 @@ class ErasureCodedPool(AaBase):
                           }
             
             else:
-                payload = {
-                    "name":name,
+                print("I am in 3")
+                payload = {"name":name,
                     "size":self.size,
                     "tags":self.tags,
                     "ceph_cluster_id":self.ceph_cluster_id,
@@ -289,7 +289,7 @@ class ErasureCodedPool(AaBase):
                     "quota":self.quota,
                     "quota_unit":self.quota_unit
                     }
-                    
+            #payload = json.dumps(payload)        
             print(payload)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             if self.count==i:
@@ -442,7 +442,8 @@ class ErasureCodedPool(AaBase):
             
             
             if self.pool_type == "erasure" and self.Datachunks and self.Codingchunks:
-                payload = {
+                print("I am in 1")
+                payload = {"id":self.id,
                           "name":self.name,
                           "pool_type":self.pool_type,
                           "size":self.size,
@@ -453,8 +454,8 @@ class ErasureCodedPool(AaBase):
                           }
                           
             elif self.pool_type == "erasure" and self.ErasureCodeProfileID:
-                payload = {
-                          "id":self.id,  
+                print("I am in 2")
+                payload = {"id":self.id,  
                           "name":self.name,
                           "pool_type":self.pool_type,
                           "size":self.size,
@@ -465,8 +466,8 @@ class ErasureCodedPool(AaBase):
                           }
                           
             else:
-                payload = {
-                "id":self.id,
+                print("I am in 3")
+                payload = {"id":self.id,
                 "name":self.name,
                 "size":self.size,
                 "tags":self.tags,
@@ -475,9 +476,9 @@ class ErasureCodedPool(AaBase):
                 "quota":self.quota,
                 "quota_unit":self.quota_unit
                  }
-
+            #payload = json.dumps(payload)
+            print("Payload in update is : {}".format(payload))
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            print(str(payload))
         except Exception as e:
             trace("[update_erasure_pool] EXCEPTION: %s" % str(e))
             raise Exception(e)

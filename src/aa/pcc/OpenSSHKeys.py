@@ -21,6 +21,7 @@ class OpenSSHKeys(AaBase):
         self.Filename = None
         self.Description = None
         self.Type = None
+        self.Name = None
         super().__init__()  
         
         
@@ -48,7 +49,29 @@ class OpenSSHKeys(AaBase):
         print("Filename_path is {}".format(filename_path))
         return pcc.add_keys(conn, alias = self.Alias, description=self.Description,multipart_data=multipart_data )
         
-            
+    ###########################################################################
+    @keyword(name="PCC.Get OpenSSH Key Id")
+    ###########################################################################
+    
+    def get_openssh_key_id(self, *args, **kwargs):
+        
+        """
+        Get OpenSSH Key Id
+    
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the OpenSSH Key who's id is required (name=<Name>)
+    
+        [Returns]
+            (int) Id: Id of the OpenSSH Key, or
+                None: if no match found, or
+            (dict) Error response: If Exception occured
+        """
+        
+        banner("PCC.Get OpenSSH Key Id")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return easy.get_openssh_keys_id_by_name(conn, self.Name)         
 
     ###########################################################################
     @keyword(name="PCC.Delete OpenSSH Key")

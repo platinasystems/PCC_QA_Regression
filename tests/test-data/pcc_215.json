@@ -9,7 +9,8 @@
             "pcc_password":"admin",
             "tenant_user_username":"Abinash.Patnaik@calsoftinc.com",
             "tenant_user_password":"calsoft@123",
-            "setup_password":"veTvvV5JISJpUlip"
+            "setup_password":"veTvvV5JISJpUlip",
+            "setup_username":"Marvin_the_Martian"
         },
         
     "i28":	
@@ -37,8 +38,57 @@
             "ssh_keys": "pcc"
         },
 
-        
+    "clusterhead-2":
+        {
+            "server_name":"sv16",
+            "pcc_url": "https://172.17.2.116:9999",
+            "pcc_host_ip": "172.17.2.116",
+            "pcc_linux_password": "cals0ft",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft",
+            "bmc": "172.17.3.116",
+            "bmc_user": "ADMIN",
+            "bmc_pwd": "ADMIN",
+            "console": "ttyS1",
+            "managed_by_pcc": "true",
+            "ssh_keys": "pcc"           
+        },
+                
     "server-1":
+        {
+            "server_name":"sv19",
+            "pcc_url": "https://172.17.2.119:9999",
+            "pcc_host_ip": "172.17.2.119",
+            "pcc_linux_password": "cals0ft",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft",
+            "bmc": "172.17.3.119",
+            "mgmt_ip": "172.17.2.119/23",
+            "bmc_user": "ADMIN",
+            "bmc_pwd": "ADMIN",
+            "console": "ttyS1",
+            "managed_by_pcc": "true",
+            "ssh_keys": "pcc"
+        },
+
+    "server-2":
+        {
+            "server_name":"sv27",
+            "pcc_url": "https://172.17.2.127:9999",
+            "pcc_host_ip": "172.17.2.127",
+            "pcc_linux_password": "cals0ft",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft",
+            "bmc": "172.17.3.127",
+            "mgmt_ip": "172.17.2.127/23",
+            "bmc_user": "ADMIN",
+            "bmc_pwd": "ADMIN",
+            "console": "ttyS1",
+            "managed_by_pcc": "true",
+            "ssh_keys": "pcc"
+        },
+
+    "server-3":
         {  
             "server_name":"sv18",
             "pcc_url": "https://172.17.2.118:9999",
@@ -56,7 +106,7 @@
             
         },
         
-    "server-2":
+    "server-4":
         {
             "server_name":"sv16",
             "pcc_url": "https://172.17.2.116:9999",
@@ -72,23 +122,6 @@
             "managed_by_pcc": "true",
             "ssh_keys": "pcc"
             
-        },
-        
-    "server-3":
-        {
-            "server_name":"sv19",
-            "pcc_url": "https://172.17.2.119:9999",
-            "pcc_host_ip": "172.17.2.119",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.119",
-            "mgmt_ip": "172.17.2.119/23",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
         },
         
     "container-registry":
@@ -167,26 +200,42 @@
             "private_type":"Private", 
             "private_key":"Temp_private.ppk"
         },
-        
+
+    "ipam":
+        {
+            "controlName":"control-pvt",
+            "dataName":"data-pvt",
+            "controlSubnet":"10.0.202.0/24",
+            "dataSubnet":"192.168.150.0/24"
+        },
+  
+    "network_manager":
+        {
+            "name":"network-pvt",
+            "nodes":["sv27","sv19","i-61"],
+            "nodes_ip":"nodes_ip":["172.17.2.127","172.17.2.119","172.17.2.61"],
+            "controlCIDR":"control-pvt",
+            "dataCIDR":"data-pvt",
+            "igwPolicy":"default"
+        },
+  
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["sv27","sv16","i-61"],
-            "nodes_ip":["172.17.2.127","172.17.2.116","172.17.2.61"],
-            "tags":["All"],
-            "config":{"cluster_network":"192.168.23.0/27","public_network":"192.168.22.0/27"},
-            "controlCIDR":"",
-            "igwPolicy":"default"
+            "nodes":["sv27","sv19","i-61"],
+            "nodes_ip":["172.17.2.127","172.17.2.119","172.17.2.61"],
+            "tags":["SATA/SAS"],
+            "networkClusterName":"network-pvt"
         },
   
     "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":"3",
+            "size":2,
             "tags":[],
             "pool_type":"replicated",
-            "quota":1,
-            "quota_unit":"TiB"
+            "quota":"1",
+            "quota_unit":"MiB"
         },
 
     "ceph_rbd":
@@ -205,6 +254,16 @@
             "data_pool":"pool2",       
             "default_pool":"pool3" 
         },
+        
+    "ceph_rgw":
+        {
+            "name":"rados-pvt",
+            "poolName":"rgw-pool",
+            "targetNodes":["sv119"],
+            "port":443,
+            "certificateName":"rgw-certificate",
+            "S3Accounts":"rgw-app"
+        },
 
     "k8s":
         {
@@ -212,8 +271,9 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["sv27","sv16","i-61"],
+            "nodes":["sv27","sv19","i-61"],
             "pools":[],
+            "networkClusterName":"network-pvt",
             "appName":"nginxapp",
             "appNamespace":"nginxapp",
             "gitUrl":"https://github.com/platinasystems/devops",

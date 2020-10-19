@@ -403,6 +403,24 @@ class ApplicationCredentialManager(AaBase):
         return pcc.describe_metadata_profiles(conn)
         
     ###########################################################################
+    @keyword(name="PCC.Get Profile Id")
+    ###########################################################################
+    def get_profile_id(self, *args, **kwargs):
+        """
+        Get Profile Id
+        [Args]
+            (str) Name
+        [Returns]
+            (int) Id: Profile Id if there is one, 
+                None: If not found
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Get Profile Id [Name=%s]" % self.Name)
+
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return easy.get_metadata_profile_id_by_name(conn, self.Name)
+        
+    ###########################################################################
     @keyword(name="PCC.Delete Profile By Id")
     ###########################################################################
     def delete_application_credential_profile_by_id(self, *args, **kwargs):

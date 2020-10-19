@@ -258,6 +258,7 @@ class NetworkManager(AaBase):
             print("Response To Look :-"+str(data))
             print("Network Manager {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
+            self.name=data['name']
             del_response=pcc.delete_network_cluster_by_id(conn, str(self.id))
             if del_response['Result']['status']==200:
                 del_check=self.wait_until_network_manager_deleted()
@@ -354,7 +355,8 @@ class NetworkManager(AaBase):
             raise e
 
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)  
-        time.sleep(30) 
+        time.sleep(30)
+        print("Network Manager ID: "+str(self.id)) 
         response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
         print("Response:"+str(response))
         if response["deploy_status"].lower()=="completed" and (response['health']=="OK" or response['health']=="Warning"):

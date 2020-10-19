@@ -244,7 +244,7 @@ class CephRgw(AaBase):
     def delete_all_rgws(self, *args, **kwargs):
         banner("PCC.Rados Gateway Delete All")
         self._load_kwargs(kwargs)
-        print("Kwargs:"+str(Kwargs))
+        print("Kwargs:"+str(kwargs))
 
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -252,10 +252,15 @@ class CephRgw(AaBase):
             raise e
         
         response = pcc.get_ceph_rgws(conn)
+        print("Rgw Response:"+str(response))
+        if not get_response_data(response):
+            print("No Rgw found for delete")
+            return "OK"
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
-            print("Rados Gateway {} and id {} is deleting....".format(data['name'],data['id']))
-            self.ID=data['id']
+            print("Rados Gateway {} and id {} is deleting....".format(data['name'],data['ID']))
+            self.ID=data['ID']
+            self.name=data['name']
             del_response=pcc.delete_ceph_rgw_by_id(conn, str(self.ID))
             if del_response['Result']['status']==200:
                 del_check=self.wait_until_rados_deleted()

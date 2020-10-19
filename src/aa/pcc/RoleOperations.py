@@ -27,6 +27,7 @@ class RoleOperations(AaBase):
         self.user="pcc"
         self.password="cals0ft"
         self.nodes_ip=[]
+        self.tags=None
 
     ###########################################################################
     @keyword(name="PCC.Add and Verify Roles On Nodes")
@@ -75,6 +76,43 @@ class RoleOperations(AaBase):
         
         return "OK"
                       
+    ###########################################################################
+    @keyword(name="PCC.Add and Verify Tags On Nodes")
+    ###########################################################################
+    def add_and_verify_tags_on_nodes(self, *args, **kwargs):
+        """
+        Add Roles and Verify Tags to Nodes
+        [Args]
+            (list) nodes: name of pcc nodes
+            (list) tags: name of tags
+        [Returns]
+            (dict) Response: Add Node tags response (includes any errors)
+        """
+        self._load_kwargs(kwargs)
+        print("kwargs:-"+str(kwargs))
+        banner("PCC.Add and Verify Tags On Nodes")
+        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        for node in eval(str(self.nodes)):
+            response = pcc.get_nodes(conn)
+            for data in get_response_data(response):
+                self.Id=data['Id']
+                self.Host=data['Host']
+                if str(data['Name']).lower() == str(node).lower():
+                    payload={
+                             "Id":self.Id,
+                             "Host":self.Host,
+                             "tags":eval(str(self.tags))
+                             }
+                    print("Payload:-"+str(payload))
+                    api_response=pcc.modify_node(conn, payload)
+                    print("API Response:-"+str(api_response))
+                    if api_response['Result']['status']==200:
+                        continue
+                    else:
+                        return api_response       
+        return "OK"                      
 
     ###########################################################################
     @keyword(name="PCC.Wait Until Roles Ready On Nodes")
@@ -101,15 +139,19 @@ class RoleOperations(AaBase):
         while not ready:
             ready = False
             node_list = pcc.get_nodes(conn)['Result']['Data']
+            tmp_response=None
             for node in node_list:
                 if str(node['Name']).lower() == str(self.node_name).lower():
-                    print("Node Response:-"+str(node))
+                    tmp_response=node
                     status=node['provisionStatus']
                     if node['provisionStatus'] == 'Ready':
+                        print("Node Response:-"+str(node))
                         ready = True
                     elif re.search("failed",str(node['provisionStatus'])):
+                        print("Node Response:-"+str(node))
                         return "Failed"
             if time.time() > timeout:
+                print("Node Response:"+str(tmp_response))
                 return {"Error": "Timeout"}
             if not ready:
                 trace("  Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
@@ -166,14 +208,14 @@ class RoleOperations(AaBase):
         return "OK"
         
     ###########################################################################
-    @keyword(name="PCC.Mass Verify BE")
+    @keyword(name="PCC.Maas Verify BE")
     ###########################################################################
-    def verify_mass_be(self, *args, **kwargs):
-        mass_cmd="ps -aef | grep ROOT"
+    def verify_maas_be(self, *args, **kwargs):  
         banner("PCC.Mass Verify BE")
         self._load_kwargs(kwargs)
-        print("Kwargs:-"+str(kwargs))
-
+        print("Kwargs:-"+str(kwargs))    
+        mass_cmd="ps -aef | grep ROOT"        
+        time.sleep(30)
         for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,mass_cmd)
             print("Output:"+str(output))
@@ -187,11 +229,11 @@ class RoleOperations(AaBase):
     @keyword(name="PCC.Lldp Verify BE")
     ###########################################################################
     def verify_lldp_be(self, *args, **kwargs):
-        lldp_cmd="sudo service lldpd status"
         banner("PCC.Lldp Verify BE")
         self._load_kwargs(kwargs)
-        print("Kwargs:-"+str(kwargs))
-        
+        print("Kwargs:-"+str(kwargs))    
+        lldp_cmd="sudo service lldpd status"       
+        time.sleep(30)
         for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,lldp_cmd)
             print("Output:"+str(output))

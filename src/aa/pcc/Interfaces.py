@@ -69,16 +69,21 @@ class Interfaces(AaBase):
                 print("---------------------")
                 if str(data['interface']["name"])==str(self.interface_name):
                     count=1
-                    print("inside")
                     ifname = data['interface']["name"]
                     interfaceId = data['interface']["id"]
+                    mac=data['interface']["macAddress"]
                     ipv4=data['interface']["ipv4AddressesDesired"]
                     if str(self.cleanUp).lower()=="yes":
-                        ipv4=eval(str(self.assign_ip))
+                        if eval(str(self.assign_ip)):
+                            ipv4=eval(str(self.assign_ip))
+                        else:
+                            ipv4=[""]
                     else:
-                        ipv4.extend(eval(str(self.assign_ip)))
-                    mac=data['interface']["macAddress"]
+                        if self.assign_ip:
+                            ipv4.extend(eval(str(self.assign_ip)))
+
                     payload={"ifName":ifname ,"nodeId":node_id,"interfaceId":interfaceId,"speed":self.speed,"ipv4Addresses":ipv4 ,"gateway":"","fecType":"","mediaType":"","macAddress":mac, "adminStatus":self.adminstatus,"management":"","managedByPcc":self.managedbypcc,"mtu":"1500","autoneg":self.autoneg}
+
                     print("Payload:-"+str(payload))
                     trace("Payload Data :- %s" % (payload))
                     break
@@ -112,12 +117,19 @@ class Interfaces(AaBase):
             print("--------------------------")
             if str(data['interface']['name'])==str(self.interface_name):
                 ipv4=data['interface']["ipv4AddressesDesired"]
-                print("IPV4:"+str(ipv4))
-                for ip in ipv4:
-                     for assign_ip in eval(str(self.assign_ip)):
-                         if assign_ip==ip:
-                             count+=1
-                        
+                if ipv4:
+                    print("IPV4:"+str(ipv4))
+                    for ip in ipv4:
+                        for assign_ip in eval(str(self.assign_ip)):
+                            if assign_ip==ip:
+                                count+=1
+                else:
+                    if self.cleanUp=='yes':
+                        print("Interfaces are in clean state")
+                        return "OK"
+                    else:
+                        print("IP are not assigned to interface")
+                        return "Error"                        
         if count==len(eval(str(self.assign_ip))):
             print("Interface are set !!")
             return "OK"

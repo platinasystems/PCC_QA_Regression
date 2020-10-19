@@ -9,7 +9,8 @@
             "pcc_password":"admin",
             "tenant_user_username":"Abinash.Patnaik@calsoftinc.com",
             "tenant_user_password":"calsoft@123",
-            "setup_password":"vRcek8jqNBOtYKqA"
+            "setup_password":"vRcek8jqNBOtYKqA",
+            "setup_username":"Road_Runner"
         },
     
     "i28":	
@@ -91,7 +92,7 @@
         
     "server-3":
         {
-            "server_name":"sr0",
+            "server_name":"sv110",
             "pcc_url":"https://172.17.2.110:9999",
             "pcc_host_ip":"172.17.2.110",
             "pcc_linux_password":"cals0ft",
@@ -243,7 +244,7 @@
             "poolName":"rgw-pool",
             "targetNodes":["sv124"],
             "port":443,
-            "certificateName":"rgw-cert",
+            "certificateName":"rgw-crt",
             "S3Accounts":"rgw-app"
         },
 
@@ -266,9 +267,9 @@
         
     "os_deployment":
         {
-            "image1_name":"centos76",            
+            "image1_name":"centos78",            
             "image2_name":"ubuntu-bionic",       
-            "image3_name":"ubuntu-disco",
+            "image3_name":"ubuntu-focal",
             "locale":"en-US",       
             "time_zone":"PDT",
             "admin_user":"admin",
