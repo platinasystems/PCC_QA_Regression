@@ -28,7 +28,7 @@ Cli PCC Pull Code
                             ...  host_ip=${PCC_HOST_IP}
                             ...  linux_user=${PCC_LINUX_USER}
                             ...  linux_password=${PCC_LINUX_PASSWORD}
-                            ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli pull --configRepo master -p vRcek8jqNBOtYKqA
+                            ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli pull --configRepo master -p ${PCC_SETUP_PWD}
 
                                  Should Be Equal     ${result}       OK
                                  
