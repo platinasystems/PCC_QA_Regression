@@ -37,6 +37,8 @@ class CephCluster(AaBase):
         self.password=""
         self.data1=None
         self.data2=None
+        self.state=None
+        self.state_status=None
         self.forceRemove=None
         super().__init__()
 
@@ -324,3 +326,40 @@ class CephCluster(AaBase):
                 return "Error"
 
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get State Nodes")
+    ###########################################################################
+    def get_ceph_mons_node(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get State Nodes: {}".format(self.state))
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e 
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn,self.name)
+        print("Cluster Name: {} Id: {}".format(self.name,cluster_id))
+        nodes=[]  
+        nodes_name=[]
+        response = pcc.get_ceph_clusters_state(conn,str(cluster_id),str(self.state))
+        trace("Response:"+str(response))
+        if self.state.lower()=='mds':
+            for val in get_response_data(response)['nodes']:
+                if self.state_status:
+                    if re.search(self.state_status,val['state']):
+                        nodes_name.append(val['name'])
+                        nodes.append(easy.get_hostip_by_name(conn,val['name']))                        
+                else:
+                    nodes_name.append(val['name'])
+                    nodes.append(easy.get_hostip_by_name(conn,val['name']))
+        else:
+            for data in get_response_data(response):
+                print("Data:"+str(data))
+                nodes_name.append(data['server'])
+                nodes.append(easy.get_hostip_by_name(conn,data['server']))   
+        nodes=list(set(nodes))
+        print("{} Nodes Host IP's: {}".format(self.state,str(nodes)))
+        print("{} Nodes Name: {}".format(self.state,str(nodes_name)))
+        trace("{} Nodes: {}".format(self.state,str(nodes)))
+        return nodes 
