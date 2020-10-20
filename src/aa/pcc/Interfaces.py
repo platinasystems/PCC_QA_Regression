@@ -15,7 +15,7 @@ from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
 
-PCCSERVER_TIMEOUT = 60*8
+PCCSERVER_TIMEOUT = 60*10
 
 class Interfaces(AaBase):
 
@@ -177,8 +177,10 @@ class Interfaces(AaBase):
             node_id=easy.get_node_id_by_name(conn,self.node_name)
             response=pcc.get_node_by_id(conn,str(node_id))['Result']['Data']
             interfaces = eval(str(response))['interfaces']
+            timeout_response=None
             for data in interfaces:
                 if str(data['interface']["name"])==str(self.interface_name):
+                    timeout_response=data
                     if str(data['interface']["intfState"]).lower() == "ready":
                         print(str(data))
                         inf_ready = True
@@ -186,6 +188,7 @@ class Interfaces(AaBase):
                         print(str(data))
                         return "Error"
             if time.time() > timeout:
+                print("Response Before Time Out: "+str(timeout_response))
                 raise Exception("[PCC.Wait Until Interface Ready] Timeout")
             trace("  Waiting until Interface : is Ready .....")
             time.sleep(5)

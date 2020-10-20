@@ -188,23 +188,25 @@ class RoleOperations(AaBase):
                 role_ids=data['roles']          
                 if str(data['Name']).lower() == str(node).lower():
                     print("Role_Ids_On_Node:-"+str(role_ids))
-                    for role in eval(str(self.roles)):
-                        tmp_id=easy.get_node_role_id_by_name(conn,str(role))
-                        print("Role-Id to Remove:-"+str(role)+"-"+str(tmp_id))
-                        if tmp_id in eval(str(role_ids)):
-                            role_ids.remove(tmp_id)
-                    payload={
-                             "Id":self.Id,
-                             "roles":role_ids
-                             }
-                    print("Payload:-"+str(payload))
-                    api_response=pcc.modify_node(conn, payload)
-                    print("API Response:-"+str(api_response))
-                    if api_response['Result']['status']==200:
-                        continue
-                    else:
-                        return api_response
-        
+                    if role_ids:
+                        for role in eval(str(self.roles)):
+                            tmp_id=easy.get_node_role_id_by_name(conn,str(role))
+                            print("Role-Id to Remove:-"+str(role)+"-"+str(tmp_id))
+                            if tmp_id in eval(str(role_ids)):
+                                role_ids.remove(tmp_id)
+                        payload={
+                                 "Id":self.Id,
+                                 "roles":role_ids
+                                 }
+                        print("Payload:-"+str(payload))
+                        api_response=pcc.modify_node(conn, payload)
+                        print("API Response:-"+str(api_response))
+                        if api_response['Result']['status']==200:
+                            continue
+                        else:
+                            return api_response
+                     else:
+                         return "OK"       
         return "OK"
         
     ###########################################################################
