@@ -205,8 +205,8 @@ class RoleOperations(AaBase):
                             continue
                         else:
                             return api_response
-                     else:
-                         return "OK"       
+                    else:
+                        return "OK"       
         return "OK"
         
     ###########################################################################
