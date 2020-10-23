@@ -31,7 +31,9 @@ Ceph Fs Creation
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
-        
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK        
         
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -95,6 +97,10 @@ Create CephFS - with mutiple data pools
                                ...  PCC.Ceph Wait Until Fs Deleted
                                ...  PCC.Ceph Get Fs Id
                                ...  PCC.Ceph Fs Verify BE
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -167,6 +173,10 @@ Create CephFS - without selecting data pool
                                ...  PCC.Ceph Get Fs Id
                                ...  PCC.Ceph Fs Verify BE   
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -223,6 +233,9 @@ Create CephFS - without pool creation (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -243,6 +256,9 @@ Create CephFS - without selecting metadata pool (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -271,6 +287,9 @@ Create CephFS - without selecting default pool (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -299,6 +318,9 @@ Create CephFS - without CephFS name (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -330,6 +352,9 @@ Create CephFS - with multiple default pools (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -368,6 +393,9 @@ Create CephFS - with multiple metadata pools (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -439,6 +467,9 @@ Ceph Fs Creation and Verify
                                ...  PCC.Ceph Create Fs
                                ...  PCC.Ceph Wait Until Fs Ready                       
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -471,6 +502,10 @@ Update CephFS – when it is in deploying state (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready 
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
@@ -551,6 +586,10 @@ Ceph Fs Update with multiple pool data
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
 
@@ -603,6 +642,10 @@ Ceph Fs Update Data Pool with One pool data
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
 
@@ -649,6 +692,10 @@ Update CephFS - add_default_pool (Negative)
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
 
@@ -688,6 +735,10 @@ Update CephFS - add_metadata_pool (Negative)
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
@@ -730,6 +781,10 @@ Update CephFS - remove_default_pool (Negative)
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
 
@@ -764,6 +819,10 @@ Update CephFS - remove_data_pools
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
@@ -803,6 +862,10 @@ Update CephFS - remove_data_pool_along_with_default_data_pool
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
 
@@ -832,6 +895,9 @@ Ceph Cluster Delete when Ceph FS is present (Negative)
                                ...  PCC.Ceph Wait Until Cluster Deleted
                                ...  PCC.Ceph Cleanup BE
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -851,6 +917,10 @@ Ceph Fs Delete To Create Another
                                ...  PCC.Ceph Get Fs Id
                                ...  PCC.Ceph Delete Fs
                                ...  PCC.Ceph Wait Until Fs Deleted
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
@@ -883,6 +953,10 @@ Pool released from RBD is used for creating/updating CephFS
                                ...  PCC.Ceph Wait Until Fs Ready
                                ...  PCC.Ceph Create Fs
                                ...  PCC.Ceph Wait Until Fs Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}

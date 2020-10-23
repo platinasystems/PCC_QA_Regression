@@ -30,6 +30,10 @@ Ceph Pool For Rgws
                                       ...  PCC.Ceph Get Cluster Id
                                       ...  PCC.Ceph Create Pool
                                       ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
                                       
         ${cluster_id}                      PCC.Ceph Get Cluster Id
                                       ...  name=${CEPH_CLUSTER_NAME}
@@ -58,6 +62,10 @@ Ceph Pool For Rgws (For Pool Update)
                                       ...  PCC.Ceph Get Cluster Id
                                       ...  PCC.Ceph Create Pool
                                       ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
                                       
         ${cluster_id}                      PCC.Ceph Get Cluster Id
                                       ...  name=${CEPH_CLUSTER_NAME}
@@ -158,6 +166,10 @@ Creating RGW using a pool that is used by other Ceph front-ends (Negative)
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
               
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
@@ -190,6 +202,10 @@ Creating RGW without pool name (Negative)
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
               
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
@@ -224,6 +240,10 @@ Creating RGW without certificate (Negative)
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
               
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
@@ -272,6 +292,10 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
               
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
@@ -316,6 +340,10 @@ Ceph Rados Add S3Account
 #####################################################################################################################################
      [Documentation]                *Ceph Rados Gateway Update*
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
      
@@ -344,6 +372,10 @@ Ceph Rados Update Port
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
      
@@ -371,6 +403,10 @@ Ceph Rados Update Port
 Ceph Rados Update Nodes (Add Node)
 #####################################################################################################################################
      [Documentation]                *Ceph Rados Gateway Update*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
@@ -448,7 +484,11 @@ Ceph Rados Gateway Delete
 ####################################################################################################################################
 
     [Documentation]                 *Ceph Rados Gateway Delete*
-                             
+  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
 
@@ -468,7 +508,11 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
-              
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+             
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=${CEPH_RGW_POOLNAME}
@@ -491,7 +535,11 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 Create Rgw Configuration File
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
-    
+  
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+                                    
                                            Sleep    5 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
@@ -512,7 +560,11 @@ Create Rgw Configuration File
 Create Rgw Bucket
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Bucket*
-                                     
+ 
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+ 
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
 
@@ -533,6 +585,9 @@ List Rgw Bucket
 ###################################################################################################################################
     [Documentation]                        *List Rgw Bucket*
                                      
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
                                       
         ${status}                          PCC.Ceph Rgw List Buckets
                                       ...  pcc=${PCC_HOST_IP}
@@ -542,7 +597,11 @@ List Rgw Bucket
 Uplaod A File To Rgw Bucket
 ###################################################################################################################################
     [Documentation]                        *Uplaod a file to Rgw Bucket*
-                                   
+  
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+  
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
 
@@ -562,7 +621,11 @@ Uplaod A File To Rgw Bucket
 Verify File Is Upload on Pool
 ###################################################################################################################################
     [Documentation]                        *Verify File Is Uploaded on Pool*
-                                                                           
+ 
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+ 
         ${status}                          PCC.Ceph Rgw Verify File Upload To Pool                              
                                       ...  poolName=${CEPH_RGW_POOLNAME}
                                       ...  targetNodeIp=${SERVER_1_HOST_IP}
@@ -573,6 +636,10 @@ Verify File Is Upload on Pool
 Get A File From Rgw Bucket
 ###################################################################################################################################
     [Documentation]                        *Get a file from Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
                                      
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
@@ -593,7 +660,11 @@ Get A File From Rgw Bucket
 Delete Rgw Bucket When Bucket Is Not Empty (Negative)
 ###################################################################################################################################
       [Documentation]                      *Delete Rgw Bucket When Bucket Is Not Empty*
-                                      
+ 
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+ 
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
 
@@ -613,7 +684,11 @@ Delete Rgw Bucket When Bucket Is Not Empty (Negative)
 Delete A File From Rgw Bucket
 ####################################################################################################################################
     [Documentation]                        *Delete a file from Rgw Bucket*
-                                      
+ 
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+ 
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
 
@@ -633,6 +708,10 @@ Delete A File From Rgw Bucket
 Delete Rgw Bucket
 ###################################################################################################################################
       [Documentation]                      *Delete Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
                                       
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
@@ -653,6 +732,10 @@ Delete Rgw Bucket
 Ceph Rados Remove S3Account 
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
@@ -681,7 +764,11 @@ Ceph Rados Gateway Delete
 ####################################################################################################################################
 
     [Documentation]                 *Ceph Rados Gateway Delete*
-                             
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
 
@@ -775,7 +862,10 @@ Ceph Rados Create with Multiple Nodes
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Create*
 
-    
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK  
+  
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=${CEPH_RGW_POOLNAME}
@@ -799,6 +889,10 @@ Ceph Rados Create with Multiple Nodes
 Ceph Rados Remove One Node
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
@@ -828,6 +922,10 @@ Ceph Rados Gateway Delete
 #####################################################################################################################################
 
     [Documentation]                 *Ceph Rados Gateway Delete*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                              
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}

@@ -202,6 +202,10 @@ Ceph Cluster Creation With Nodes Which Are Part of Existing Cluster (Negative)
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
                                ...  nodes=${CEPH_CLUSTER_NODES}
@@ -219,6 +223,10 @@ Ceph Cluster Update - Add Invader
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
@@ -252,7 +260,11 @@ Reboot Node And Verify Ceph Is Intact
                                ...  keywords:
                                ...  Ceph Verify BE
                                ...  Restart node
-                               
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK 
+ 
     ${restart_status}               Restart node
                                ...  hostip=${SERVER_1_HOST_IP}
                                ...  time_to_wait=240
@@ -274,6 +286,10 @@ Down And Up The Interface And Check For Ceph
                                ...  PCC.Set Interface Down
                                ...  PCC.Set Interface Up
                                ...  PCC.Ceph Verify BE
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${status}                   PCC.Set Interface Down
                                ...  host_ip=${SERVER_1_HOST_IP}
@@ -299,6 +315,10 @@ Delete Network Manager When Ceph Is Present (Negative)
                                ...  keywords:
                                ...  PCC.Network Manager Delete
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.Network Manager Delete
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -313,6 +333,10 @@ TCP-1012 Update Cluster(2 Invader setup) - Remove - Remove TWO OSD nodes from cl
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -357,6 +381,10 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}

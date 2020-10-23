@@ -34,7 +34,9 @@ Ceph Pool For Rgws
                                       ...  PCC.Ceph Create Pool
                                       ...  PCC.Ceph Wait Until Pool Ready
         
-        [Tags]    Only
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
                                       
         ${cluster_id}                      PCC.Ceph Get Cluster Id
                                       ...  name=${CEPH_CLUSTER_NAME}
@@ -62,8 +64,11 @@ Create Metadata Application credential profile without application For Rados
         [Documentation]               *Create Metadata Profile* test
                                       ...  keywords:
                                       ...  PCC.Add Metadata Profile
-                       
-        [Tags]    Only               
+
+        ${status}                     PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                      Should Be Equal As Strings      ${status}    OK
+             
         ${response}                   PCC.Add Metadata Profile
                                       ...    Name=test_app_credential
                                       ...    Type=ceph
@@ -109,7 +114,11 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
-        [Tags]    Only      
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=pool-for-app-credentials
@@ -128,7 +137,11 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 Ceph Rados Add S3Account 
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
-        [Tags]    Only
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
      
@@ -156,6 +169,11 @@ Create Application credential profile with application
                            ...  keywords:
                            ...  PCC.Add Metadata Profile
 
+
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
+
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
 
@@ -182,6 +200,9 @@ Get Application credentials Profile by Id
                            ...  keywords:
                            ...  PCC.Get Profile by Id
         
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
         
         
         ${response}    PCC.Get Profile by Id
@@ -202,7 +223,11 @@ Get Application credential Profile By Type
                            ...  keywords:
                            ...  PCC.Get Profile By Type
         
-        
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
+ 
         
         ${response}    PCC.Get Profile By Type
                        ...    Type=ceph
@@ -222,7 +247,10 @@ Get Application credential Profiles
                            ...  keywords:
                            ...  PCC.Get Profiles
         
-        
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK        
         
         ${response}    PCC.Get Profiles
                        
@@ -240,6 +268,11 @@ Get the Application credential profiles with additional data for a specific appl
         [Documentation]    *Get the profiles with additional data for a specific application* test
                            ...  keywords:
                            ...  PCC.Get Profiles with additional data for specific application
+
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
@@ -263,7 +296,9 @@ Describe Application credential Profile By Id
                            ...  keywords:
                            ...  PCC.Describe Profile By Id
         
-        
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
         
         ${response}    PCC.Describe Profile By Id
                        ...    Name=profile_with_app 
@@ -283,7 +318,10 @@ Describe Application credential Profile per Type
                            ...  keywords:
                            ...  PCC.Describe Profile per Type
         
-        
+  
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK       
         
         ${response}    PCC.Describe Profile per Type
                        ...    Type=ceph
@@ -302,6 +340,11 @@ Describe Application credential Profiles per type and application
         [Documentation]    *Describe Profiles per type and application* test
                            ...  keywords:
                            ...  PCC.Describe Profiles per type and application
+
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
@@ -325,7 +368,10 @@ Describe Application credential Profiles
                            ...  keywords:
                            ...  PCC.Describe Profiles
         
-        
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK        
         
         ${response}    PCC.Describe Profiles
                        
@@ -343,8 +389,10 @@ Get Application credentials Profile Types
         [Documentation]    *Get Profile Types* test
                            ...  keywords:
                            ...  PCC.Get Profile Types
-        
-        
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK        
         
         ${response}    PCC.Get Profile Types
                        
@@ -363,7 +411,10 @@ Get Application credentials Profile Template Per Type
                            ...  keywords:
                            ...  PCC.Get Profile Template Per Type
         
-        
+  
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK       
         
         ${response}    PCC.Get Profile Template Per Type
                        ...    Type=ceph   
@@ -382,6 +433,11 @@ Create multiple Application credential profile with same application
         [Documentation]    *Create Metadata Profile* test
                            ...  keywords:
                            ...  PCC.Add Metadata Profile
+
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
@@ -414,6 +470,11 @@ Create Application credential profile with same application using duplicate user
                            ...  keywords:
                            ...  PCC.Add Metadata Profile
 
+ 
+        ${status}      PCC.Ceph Get Pcc Status
+                       ...  name=ceph-pvt
+                       Should Be Equal As Strings      ${status}    OK
+
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
 
@@ -435,6 +496,11 @@ Create Application credential profile with same application using duplicate user
 ###################################################################################################################################
 Fetching RGW ID before backup
 ###################################################################################################################################   
+
+ 
+        ${status}                       PCC.Ceph Get Pcc Status
+                                        ...  name=ceph-pvt
+                                        Should Be Equal As Strings      ${status}    OK
 
          ${RGW_id_before_backup}        PCC.Ceph Get Rgw Id
                                         ...    name=${CEPH_RGW_NAME}                           

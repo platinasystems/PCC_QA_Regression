@@ -31,7 +31,10 @@ Ceph Pool Creation without name (Negative)
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
-                               
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK                               
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -129,6 +132,10 @@ Ceph Pool Creation without providing quota (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -153,7 +160,11 @@ Ceph Pool Creation without quota unit (Negative)
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
-                               
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+                              
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -178,6 +189,10 @@ Ceph Pool Creation with decimal quota size (Negative)
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -203,7 +218,11 @@ Ceph Pool Creation with zero quota size (Negative)
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
-                               
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+                              
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -228,6 +247,10 @@ Ceph Pool Creation with negative quota size (Negative)
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -254,6 +277,10 @@ Ceph Pool Creation with quota size greater than 5 digit number
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -278,10 +305,12 @@ Ceph Pool Creation with quota size greater than 5 digit number
 ###################################################################################################################################
 Ceph Pool Creation with quota size greater than 16 EiB (Negative)
 ####################################################################################################################################
-
     [Documentation]                 *Ceph Pool Creation with quota size greater than 16 EiB*
 
-                               
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -301,13 +330,16 @@ Ceph Pool Creation with quota size greater than 16 EiB (Negative)
 ###################################################################################################################################
 Ceph Pool Creation and Verification with quota unit MiB
 ###################################################################################################################################
-
     [Documentation]                 *Ceph Pool Creation and Verification with quota unit MiB*
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -337,7 +369,11 @@ Ceph Pool Creation and Verification with quota unit GiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -367,6 +403,10 @@ Ceph Pool Creation and Verification with quota unit TiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -397,7 +437,11 @@ Ceph Pool Creation and Verification with quota unit PiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -427,6 +471,10 @@ Ceph Pool Creation and Verification with quota unit EiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -457,7 +505,11 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -487,7 +539,11 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -517,6 +573,10 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -535,7 +595,6 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool7
-
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -547,7 +606,11 @@ Ceph Pool Creation for Fs
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -610,7 +673,11 @@ Ceph Pool Update Pool Name with existing Pool Name (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -640,6 +707,10 @@ Ceph Pool Edit Name
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready        
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -675,6 +746,10 @@ Ceph Pool Ugrade Quota Unit
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -692,7 +767,6 @@ Ceph Pool Ugrade Quota Unit
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=PiB
                                
-
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
 
@@ -710,6 +784,10 @@ Ceph Pool Downgrade Quota Unit
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -745,7 +823,11 @@ Ceph Pool Ugrade Quota Size
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready
-        
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -781,6 +863,10 @@ Ceph Pool Update Pool No of Copies
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -814,6 +900,10 @@ Ceph Pool Update Quota Size and Quota Unit together
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -850,7 +940,10 @@ Ceph Pool Creation with pool size contain alphabets/ special characters (Negativ
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
 
-                               
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK 
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -877,7 +970,10 @@ Ceph Pool Creation Duplicate (Negative)
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
 
-                               
+         ${status}                  PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+                                    
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 

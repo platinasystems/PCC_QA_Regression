@@ -89,6 +89,12 @@ Ceph Pool Creation And PCC Verification
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
+                               ...  PCC.Ceph Get Pcc Status
+                               
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -195,6 +201,11 @@ Ceph Pool Verification Back End
     [Documentation]                 *Verifying Ceph Pool BE*
                                ...  keywords:
                                ...  PCC.Ceph Pool Verify BE
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK                               
+                               
         ${status}                   PCC.Ceph Pool Verify BE
                                ...  name=${CEPH_POOL_NAME}
                                ...  user=${PCC_LINUX_USER}
@@ -210,7 +221,11 @@ Ceph Rbd Creation
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -235,7 +250,11 @@ Ceph Rbd Verification
     [Documentation]                 *Verifying Ceph RBD*
                                ...  keywords:
                                ...  PCC.Ceph Wait Until Rbd Ready
-                               
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+ 
         ${status}                   PCC.Ceph Wait Until Rbd Ready
                                ...  name=${CEPH_RBD_NAME}
 
@@ -250,6 +269,10 @@ Ceph Pool Update Size
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -286,6 +309,9 @@ Ceph Rbd Update Size
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Get Cluster Id
  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -320,6 +346,11 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 
      [Documentation]                 *Ceph Rados Gateway Creation*
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=${CEPH_RGW_POOLNAME}
@@ -346,7 +377,10 @@ Ceph Fs Creation
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Create Fs
-    
+ 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK 
     
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -377,6 +411,10 @@ Ceph Fs Verification
     [Documentation]                 *Verifying Ceph FS*
                                ...  keywords:
                                ...  PCC.Ceph Wait Until Fs Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                
         ${status}                   PCC.Ceph Wait Until Fs Ready
                                ...  name=${CEPH_FS_NAME}
@@ -390,6 +428,10 @@ Ceph Fs Verification Back End
     [Documentation]                 *Verifying the Fs from BE*
                                 ...  keywords:
                                 ...  PCC.Ceph Fs Verify BE
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                 
         ${status}                    PCC.Ceph Fs Verify BE
                                 ...  name=${CEPH_FS_NAME}
@@ -409,6 +451,10 @@ Ceph Fs Update
                                ...  PCC.Ceph Get Pool Details For FS
                                ...  PCC.Ceph Update Fs
                                ...  PCC.Ceph Wait Until Fs Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
                                 
         ${id}                       PCC.Ceph Get Fs Id
                                ...  name=${CEPH_FS_NAME}
@@ -450,6 +496,10 @@ Ceph Cluster Update - Add Invader
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Cluster Update
                                ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}

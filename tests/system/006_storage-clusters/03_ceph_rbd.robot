@@ -30,6 +30,10 @@ Ceph Rbd Creation with decimal RBD size (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
 
@@ -56,8 +60,12 @@ Ceph Rbd Creation with negative RBD size (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
+                               ...  name=${CEPH_CLUSTER_NAME}
 
         ${pool_id}                  PCC.Ceph Get Pool Id
                                ...  name=${CEPH_POOL_NAME}
@@ -82,8 +90,12 @@ Ceph Rbd Creation with zero RBD size (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
+                               ...  name=${CEPH_CLUSTER_NAME}
 
         ${pool_id}                  PCC.Ceph Get Pool Id
                                ...  name=${CEPH_POOL_NAME}
@@ -108,8 +120,12 @@ Ceph Rbd Creation with alphabet or special charaters RBD size (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
+                               ...  name=${CEPH_CLUSTER_NAME}
 
         ${pool_id}                  PCC.Ceph Get Pool Id
                                ...  name=${CEPH_POOL_NAME}
@@ -133,6 +149,10 @@ Ceph Rbd Creation without image size (Negative)
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -160,6 +180,10 @@ Ceph 2 RBDs with same name (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -204,6 +228,10 @@ Ceph Rbd Creation without rdb name (Negative)
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -286,6 +314,10 @@ Ceph Rbd without pool(Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -312,6 +344,10 @@ Create RBD and when it is in deploying state then try to delete it (Negative)
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -347,6 +383,10 @@ Ceph Rbd where size unit is in MiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -498,6 +538,9 @@ Ceph 2 RBDs using same pool
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -619,6 +662,9 @@ Ceph 2 RBDs with same pool, size, size unit and tags
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -671,6 +717,10 @@ Ceph Rbd Multiple Creation
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -784,6 +834,10 @@ Ceph Rbd Update - Edit name - Remove name (Negative)
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -836,6 +890,10 @@ Ceph Rbd Update - Remove pool (Negative)
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -869,6 +927,10 @@ Ceph Rbd Update Name - Rename
                                ...  PCC.Ceph Rbd Update
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -1061,7 +1123,11 @@ Ceph Rbd Resize_decrease
                                ...  PCC.Ceph Rbd Update
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
-                               
+  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -1117,6 +1183,10 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                ...  PCC.Ceph Rbd Update
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -1184,6 +1254,10 @@ Ceph Rbd Resize_increase - equal to pool quota
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
                                ...  PCC.Ceph Rbd Update
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
@@ -1258,6 +1332,10 @@ Ceph Rbd Resize_increase
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
                                ...  PCC.Ceph Rbd Update
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}

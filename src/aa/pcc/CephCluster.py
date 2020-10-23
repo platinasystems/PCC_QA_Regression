@@ -363,3 +363,26 @@ class CephCluster(AaBase):
         print("{} Nodes Name: {}".format(self.state,str(nodes_name)))
         trace("{} Nodes: {}".format(self.state,str(nodes)))
         return nodes 
+        
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get Pcc Status")
+    ###########################################################################
+    def ceph_get_pcc_status(self, *args, **kwargs):
+        banner("PCC.Ceph Get UI Status")
+        self._load_kwargs(kwargs)
+        if self.name == None:
+            return None
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        response = pcc.get_ceph_clusters(conn)
+        for data in get_response_data(response):
+            if str(data['name']).lower() == str(self.name).lower():
+                if data['progressPercentage'] == 100 or data['deploy_status'].lower() == "completed":
+                    print("Response:"+str(data))
+                    return "OK"
+                else:
+                    print("Response:"+str(data))
+                    return "Error"
+        return "OK"
