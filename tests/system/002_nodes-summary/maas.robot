@@ -28,7 +28,7 @@ Adding Maas To Invaders
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Baremetal Management Node"]
+                               ...  roles=["Baremetal Management Node", "Default"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -37,6 +37,12 @@ Adding Maas To Invaders
                                     Should Be Equal As Strings      ${status_code}  OK     
 
         ${response}                 PCC.Maas Verify BE
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                                    Should Be Equal As Strings      ${response}  OK   
+
+        ${response}                 PCC.Lldp Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
