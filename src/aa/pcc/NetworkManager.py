@@ -36,6 +36,7 @@ class NetworkManager(AaBase):
         self.igwPolicy=None
         self.user="pcc"
         self.password="cals0ft"
+        self.forceRemove=None
         super().__init__()
 
     ###########################################################################
@@ -139,7 +140,12 @@ class NetworkManager(AaBase):
 
         if self.name == None:
             return {"Error": "[PCC.Network Manager Delete]: Name of the Network Manager is not specified."}
-
+            
+        if str(self.forceRemove).lower()=="true":
+            payload={"forceRemove":True}
+        else:
+            payload={"forceRemove":False}
+            
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
@@ -147,7 +153,7 @@ class NetworkManager(AaBase):
             
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
-        return pcc.delete_network_cluster_by_id(conn, str(self.id))
+        return pcc.delete_network_cluster_by_id(conn, str(self.id), payload)
 
     ###########################################################################
     @keyword(name="PCC.Network Manager Refresh")
@@ -227,6 +233,8 @@ class NetworkManager(AaBase):
         while Id_found_in_list_of_networks == True:
             Id_found_in_list_of_networks = False
             response = pcc.get_network_clusters(conn)
+            if not get_response_data(response):
+                return "OK"
             for data in get_response_data(response):
                 if str(data['id']) == str(self.id):
                     Id_found_in_list_of_networks = True
@@ -254,12 +262,18 @@ class NetworkManager(AaBase):
             raise e
         
         response = pcc.get_network_clusters(conn)
+        if not get_response_data(response):
+            return "OK"
+
+        payload={"forceRemove":False}
+        print("Payload:"+str(payload))
+            
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
             print("Network Manager {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
             self.name=data['name']
-            del_response=pcc.delete_network_cluster_by_id(conn, str(self.id))
+            del_response=pcc.delete_network_cluster_by_id(conn, str(self.id), payload)
             if del_response['Result']['status']==200:
                 del_check=self.wait_until_network_manager_deleted()
                 if del_check=="OK":
