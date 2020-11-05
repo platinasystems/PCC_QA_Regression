@@ -172,8 +172,13 @@ class Interfaces(AaBase):
 
         inf_ready = False
         timeout = time.time() + PCCSERVER_TIMEOUT
-
+        counter=0
         while inf_ready == False:
+            counter+=1
+            if counter==15 or counter==20 or counter==26:
+                print("Interface stucked in updating state, Refreshing interface UI ...")
+                refresh=self.interface_apply()
+                print("Refresh:"+str(refresh))
             node_id=easy.get_node_id_by_name(conn,self.node_name)
             response=pcc.get_node_by_id(conn,str(node_id))['Result']['Data']
             interfaces = eval(str(response))['interfaces']
@@ -191,7 +196,7 @@ class Interfaces(AaBase):
                 print("Response Before Time Out: "+str(timeout_response))
                 raise Exception("[PCC.Wait Until Interface Ready] Timeout")
             trace("  Waiting until Interface : is Ready .....")
-            time.sleep(5)
+            time.sleep(20)
         return "OK"
 
     ###########################################################################
