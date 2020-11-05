@@ -521,36 +521,17 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  pool_type=${CEPH_POOL_TYPE}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool5
-
                                     Should Be Equal As Strings      ${status}    OK
                                     
-###################################################################################################################################
-Ceph Pool Creation and Verification with No. of Copies 2
-###################################################################################################################################
-
-    [Documentation]                 *Ceph Pool Creation and Verification with No. of Copies 2*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Pool
-                               ...  PCC.Ceph Wait Until Pool Ready
- 
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
- 
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool6
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  size=2
+                               ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
                                ...  quota=${CEPH_POOL_QUOTA}
@@ -561,30 +542,12 @@ Ceph Pool Creation and Verification with No. of Copies 2
                                     
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool6
-
                                     Should Be Equal As Strings      ${status}    OK
-                                    
-###################################################################################################################################
-Ceph Pool Creation and Verification with No. of Copies 2
-###################################################################################################################################
-
-    [Documentation]                 *Ceph Pool Creation and Verification with No. of Copies 3*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Pool
-                               ...  PCC.Ceph Wait Until Pool Ready
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-                               
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool7
                                ...  ceph_cluster_id=${cluster_id}
-                               ...  size=2
+                               ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
                                ...  quota=${CEPH_POOL_QUOTA}

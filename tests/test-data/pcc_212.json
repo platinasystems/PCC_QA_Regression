@@ -214,7 +214,7 @@
     "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":2,
+            "size":1,
             "tags":[],
             "pool_type":"replicated",
             "quota":"1",
