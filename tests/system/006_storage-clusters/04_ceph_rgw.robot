@@ -44,8 +44,8 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
-                                      ...  quota=1
-                                      ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+                                      ...  quota=2
+                                      ...  quota_unit=GiB
                                       
         ${status_code}                     Get Response Status Code        ${response}     
                                            Should Be Equal As Strings      ${status_code}  200
@@ -76,8 +76,8 @@ Ceph Pool For Rgws (For Pool Update)
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
-                                      ...  quota=1
-                                      ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+                                      ...  quota=2
+                                      ...  quota_unit=GiB
                                       
         ${status_code}                     Get Response Status Code        ${response}     
                                            Should Be Equal As Strings      ${status_code}  200

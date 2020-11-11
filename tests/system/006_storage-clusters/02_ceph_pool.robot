@@ -881,8 +881,8 @@ Ceph Pool Update Quota Size and Quota Unit together
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  quota=4
-                               ...  quota_unit=EiB
+                               ...  quota=1
+                               ...  quota_unit=GiB
                                
 
         ${status_code}              Get Response Status Code        ${response}     

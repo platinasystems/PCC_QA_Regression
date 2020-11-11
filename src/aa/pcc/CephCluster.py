@@ -33,11 +33,12 @@ class CephCluster(AaBase):
         self.networkClusterId=None
         self.networkClusterName=None
         self.nodes_ip=[]
-        self.user=""
-        self.password=""
+        self.user="pcc"
+        self.password="cals0ft"
         self.data1=None
         self.data2=None
         self.state=None
+        self.limit=None
         self.state_status=None
         self.forceRemove=None
         super().__init__()
@@ -330,7 +331,7 @@ class CephCluster(AaBase):
     ###########################################################################
     @keyword(name="PCC.Ceph Get State Nodes")
     ###########################################################################
-    def get_ceph_mons_node(self, *args, **kwargs):
+    def get_ceph_state_nodes(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Ceph Get State Nodes: {}".format(self.state))
         print("Kwargs:"+str(kwargs))
@@ -363,7 +364,123 @@ class CephCluster(AaBase):
         print("{} Nodes Name: {}".format(self.state,str(nodes_name)))
         trace("{} Nodes: {}".format(self.state,str(nodes)))
         return nodes 
-        
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Make Osds Down")
+    ###########################################################################
+    def make_ceph_osds_down(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Make Osds Down: {}".format(self.name))
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e 
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn,self.name)
+        print("Cluster Name: {} Id: {}".format(self.name,cluster_id))  
+        response = pcc.get_ceph_clusters_state(conn,str(cluster_id),'osds')
+        host_ip=None
+        count=0
+        if self.limit:
+            for data in get_response_data(response):
+                print("Count:"+str(count))
+                print("Limit:"+str(self.limit))
+                print("Data:"+str(data))
+                trace("Data:"+str(data))
+                print("Server:"+str(data['server']))
+                print("Osd Id:"+str(data['osd']))
+                if count==int(self.limit):
+                    print("Limit reached, exiting the loop !!!")
+                    break
+                count+=1    
+                host_ip=easy.get_hostip_by_name(conn,data['server'])
+                print("Host Ip:"+str(host_ip))
+                cmd="sudo systemctl stop ceph-osd@{}".format(data['osd'])
+                cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
+                print("cmd:"+str(cmd))
+                print("cmd output:"+str(cmd_exec))
+                time.sleep(10)
+                cmd_verify="sudo ceph osd tree|grep osd.{} |grep down|wc -l".format(data['osd'])
+                cmd_verify_exec= cli_run(host_ip,self.user,self.password,cmd_verify)
+                serialise_output=self._serialize_response(time.time(), cmd_verify_exec )['Result']['stdout']
+                print("cmd:"+str(cmd_verify))
+                print("cmd output:"+str(cmd_verify_exec))
+                print("Serialise Output:"+str(serialise_output))  
+                if int(serialise_output)==1:
+                    print("{} ods id {} down sucessfully !!!".format(data['server'],data['osd']))
+                    continue
+                else:
+                    print("Command execution could not make osd id {} down".format(data['osd']))
+                    return "Error"
+
+        else:
+            for data in get_response_data(response):
+                print("Data:"+str(data))
+                trace("Data:"+str(data))
+                print("Server:"+str(data['server']))
+                print("Osd Id:"+str(data['osd']))
+                host_ip=easy.get_hostip_by_name(conn,data['server'])
+                print("Host Ip:"+str(host_ip))
+                cmd="sudo systemctl stop ceph-osd@{}".format(data['osd'])
+                cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
+                print("cmd:"+str(cmd))
+                print("cmd output:"+str(cmd_exec))          
+                time.sleep(10)      
+                cmd_verify="sudo ceph osd tree|grep osd.{} |grep down|wc -l".format(data['osd'])
+                cmd_verify_exec= cli_run(host_ip,self.user,self.password,cmd_verify)
+                serialise_output=self._serialize_response(time.time(), cmd_verify_exec )['Result']['stdout']
+                print("cmd:"+str(cmd_verify))
+                print("cmd output:"+str(cmd_verify_exec))   
+                print("Serialise Output:"+str(serialise_output))               
+                if int(serialise_output)==1:
+                    print("{} ods id {} down sucessfully !!!".format(data['server'],data['osd']))
+                    continue
+                else:
+                    print("Command execution could not make osd id {} down".format(data['osd']))
+                    return "Error"        
+        return "OK"  
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Make Osds Up")
+    ###########################################################################
+    def make_ceph_osds_up(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Make Osds Down : {}".format(self.name))
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e 
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn,self.name)
+        print("Cluster Name: {} Id: {}".format(self.name,cluster_id))  
+        response = pcc.get_ceph_clusters_state(conn,str(cluster_id),'osds')
+        host_ip=None
+        for data in get_response_data(response):
+            print("Data:"+str(data))
+            trace("Data:"+str(data))
+            print("Server:"+str(data['server']))
+            print("Osd Id:"+str(data['osd']))
+            host_ip=easy.get_hostip_by_name(conn,data['server'])
+            print("Host Ip:"+str(host_ip))
+            cmd="sudo systemctl restart ceph-osd@{}".format(data['osd'])
+            cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
+            print("cmd:"+str(cmd))
+            print("cmd output:"+str(cmd_exec))    
+            time.sleep(10)            
+            cmd_verify="sudo ceph osd tree|grep osd.{} |grep up|wc -l".format(data['osd'])
+            cmd_verify_exec= cli_run(host_ip,self.user,self.password, cmd_verify)
+            serialise_output=self._serialize_response(time.time(), cmd_verify_exec )['Result']['stdout']
+            print("cmd:"+str(cmd_verify))
+            print("cmd output:"+str(cmd_verify_exec))    
+            print("Serialise Output:"+str(serialise_output))            
+            if int(serialise_output)==1:
+                print("{} ods id {} up sucessfully !!!".format(data['server'],data['osd']))
+                continue
+            else:
+                print("Command execution could not make osd id {} up".format(data['osd']))
+                return "Error"        
+        return "OK" 
+     
     ###########################################################################
     @keyword(name="PCC.Ceph Get Pcc Status")
     ###########################################################################

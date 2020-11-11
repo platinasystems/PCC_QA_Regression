@@ -217,7 +217,7 @@
             "size":1,
             "tags":[],
             "pool_type":"replicated",
-            "quota":"1",
+            "quota":"100",
             "quota_unit":"MiB"
         },
 

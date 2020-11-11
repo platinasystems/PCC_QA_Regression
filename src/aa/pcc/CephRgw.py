@@ -42,6 +42,7 @@ class CephRgw(AaBase):
         self.accessKey=None
         self.user="pcc"
         self.password="cals0ft"
+        self.fileName="rgwFile"
 
 
     ###########################################################################
@@ -67,7 +68,10 @@ class CephRgw(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
 
         if  self.cephPoolID==None:
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
@@ -112,7 +116,10 @@ class CephRgw(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
 
         if  self.cephPoolID==None:
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
@@ -378,14 +385,15 @@ class CephRgw(AaBase):
     def ceph_rgw_upload_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Upload File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo echo "Platina Systems" > rgwFile'
+        cmd='sudo dd if=/dev/zero of={} bs=10MiB count=1'.format(self.fileName)
         file_create=cli_run(self.pcc,self.user,self.password,cmd)
-        cmd='sudo s3cmd put rgwFile s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd put {} s3://BUCKET/{} --access_key={} --secret_key={} --host={}:{}'.format(self.fileName,self.fileName,self.accessKey,self.secretKey,self.targetNodeIp,self.port)
         print("Command:"+str(cmd))
+        trace("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("upload",str(data)):
             print("File is uploaded to bucket")
-            cmd='sudo rm rgwFile'
+            cmd='sudo rm {}'.format(self.fileName)
             file_del=cli_run(self.pcc,self.user,self.password,cmd)
             return "OK"
         else:
@@ -399,12 +407,12 @@ class CephRgw(AaBase):
     def ceph_rgw_get_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Get File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd get s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd get s3://BUCKET/{} --access_key={} --secret_key={} --host={}:{}'.format(self.fileName,self.accessKey,self.secretKey,self.targetNodeIp,self.port)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("download",str(data)):
             print("File is exracted from Bucket")
-            cmd='sudo rm rgwData'
+            cmd='sudo rm {}'.format(self.fileName)
             data=cli_run(self.pcc,self.user,self.password,cmd)
             return "OK"
         else:
@@ -451,7 +459,7 @@ class CephRgw(AaBase):
     def ceph_rgw_delete_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete File To Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd del s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd del s3://BUCKET/{} --access_key={} --secret_key={} --host={}:{}'.format(self.fileName,self.accessKey,self.secretKey,self.targetNodeIp,self.port)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("delete",str(data)):
@@ -486,11 +494,15 @@ class CephRgw(AaBase):
         banner("PCC.Ceph Rgw Verify BE Creation")
         self._load_kwargs(kwargs)
         
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e        
+
         ceph_be_cmd="sudo ceph -s"
-        cmd_rgw="sudo systemctl status ceph-radosgw@rgw*"
-        wait_time=600
+        wait_time=400
         
-        for i in range(30):
+        for i in range(20):
             time.sleep(20)
             wait_time-=20
             print("wait time left for RGW backend check {}s".format(wait_time))
@@ -498,6 +510,8 @@ class CephRgw(AaBase):
             failed_chk=[]
             success_chk=[]
             for ip in eval(str(self.targetNodeIp)):
+                host_name=easy.get_host_name_by_ip(conn,ip)
+                cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)
                 ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
                 rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
                 if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
@@ -525,10 +539,13 @@ class CephRgw(AaBase):
     def ceph_rgw_verify_be_deletion(self,**kwargs):
         banner("PCC.Ceph Rgw Verify BE Deletion")
         self._load_kwargs(kwargs)
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
         
         ceph_be_cmd="sudo ceph -s"
-        cmd_rgw="sudo systemctl status ceph-radosgw@rgw*"
-
         wait_time=300
         
         for i in range(15):
@@ -539,6 +556,8 @@ class CephRgw(AaBase):
             failed_chk=[]
             success_chk=[]
             for ip in eval(str(self.targetNodeIp)):
+                host_name=easy.get_host_name_by_ip(conn,ip)
+                cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)            
                 ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
                 rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
                 if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
