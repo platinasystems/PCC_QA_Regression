@@ -7,8 +7,10 @@
             "pcc_linux_password":"cals0ft",
             "pcc_username":"admin",
             "pcc_password":"admin",
-            "tenant_user_username":"Abinash.Patnaik@calsoftinc.com",
+            "tenant_user_username":"platinasystems@gmail.com",
             "tenant_user_password":"calsoft@123",
+            "read_only_username":"calsoftplatina@gmail.com",
+            "read_only_password":"readonly@123",
             "setup_password":"vRcek8jqNBOtYKqA",
             "setup_username":"Road_Runner"
         },
@@ -217,7 +219,7 @@
             "size":1,
             "tags":[],
             "pool_type":"replicated",
-            "quota":"20",
+            "quota":"1",
             "quota_unit":"MiB"
         },
 
