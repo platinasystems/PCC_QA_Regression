@@ -217,7 +217,7 @@
             "size":1,
             "tags":[],
             "pool_type":"replicated",
-            "quota":"50",
+            "quota":"20",
             "quota_unit":"MiB"
         },
 
@@ -225,7 +225,7 @@
         {
             "name":"rbd-pvt",
             "image_feature":"layering",
-            "size":"3",
+            "size":"1",
             "tags":[],
             "size_units":"MiB"
         },
