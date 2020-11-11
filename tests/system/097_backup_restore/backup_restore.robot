@@ -86,8 +86,7 @@ Prune Volumes And Perform Fresh Install
                             ...  host_ip=${PCC_HOST_IP}
                             ...  linux_user=${PCC_LINUX_USER}
                             ...  linux_password=${PCC_LINUX_PASSWORD}
-                            ...  pcc_version_cmd=/home/pcc/platina-cli-ws/platina-cli run -u Road_Runner -p vRcek8jqNBOtYKqA --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Road_Runner --rp vRcek8jqNBOtYKqA --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release v1.6.1-rc2 --pruneVolumes
-
+                            ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u Road_Runner -p vRcek8jqNBOtYKqA --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Road_Runner --rp vRcek8jqNBOtYKqA --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release v1.6.1 --pruneVolumes
                                  Should Be Equal     ${result}       OK
                                  
         ${result}            CLI.Pcc Set Keys
