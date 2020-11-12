@@ -216,10 +216,10 @@
     "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":1,
+            "size":2,
             "tags":[],
             "pool_type":"replicated",
-            "quota":"1",
+            "quota":"10",
             "quota_unit":"MiB"
         },
 
