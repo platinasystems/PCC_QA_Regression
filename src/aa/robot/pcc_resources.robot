@@ -100,6 +100,12 @@ Load PCC Test Data
         ${TENANT_USER_PCC_PWD}    Evaluate    $pcc_server_dict.get("tenant_user_password", None)
                                   Set Suite Variable      ${TENANT_USER_PCC_PWD}
         
+        ${READONLY_USER_PCC_USERNAME}    Evaluate    $pcc_server_dict.get("read_only_username", None)
+                                       Set Suite Variable      ${READONLY_USER_PCC_USERNAME}
+                                       
+        ${READONLY_USER_PCC_PWD}    Evaluate    $pcc_server_dict.get("read_only_password", None)
+                                  Set Suite Variable      ${READONLY_USER_PCC_USERNAME}
+        
         ${PCC_SETUP_PWD}          Evaluate    $pcc_server_dict.get("setup_password", None)
                                   Set Suite Variable      ${PCC_SETUP_PWD}
         

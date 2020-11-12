@@ -117,8 +117,8 @@ Login to PCC using Tenant User with Read Only Access
         
         ${PCC_CONN}             PCC.Login
                                 ...    url=${PCC_URL}
-                                ...    username=patnaikabinash07@gmail.com    
-                                ...    password=readonly@123
+                                ...    username=${READONLY_USER_PCC_USERNAME}    
+                                ...    password=${READONLY_USER_PCC_PWD}
                                 
                                 Set Suite Variable      ${PCC_CONN}
                                 
@@ -327,8 +327,8 @@ Login to PCC using Tenant User with Read Only Access after creation of CR using 
         
         ${PCC_CONN}             PCC.Login
                                 ...    url=${PCC_URL}
-                                ...    username=patnaikabinash07@gmail.com    
-                                ...    password=readonly@123
+                                ...    username=${READONLY_USER_PCC_USERNAME}    
+                                ...    password=${READONLY_USER_PCC_PWD}
                                 
                                 Set Suite Variable      ${PCC_CONN}
                                 
