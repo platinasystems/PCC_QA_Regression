@@ -104,7 +104,7 @@ Load PCC Test Data
                                        Set Suite Variable      ${READONLY_USER_PCC_USERNAME}
                                        
         ${READONLY_USER_PCC_PWD}    Evaluate    $pcc_server_dict.get("read_only_password", None)
-                                  Set Suite Variable      ${READONLY_USER_PCC_USERNAME}
+                                  Set Suite Variable      ${READONLY_USER_PCC_PWD}
         
         ${PCC_SETUP_PWD}          Evaluate    $pcc_server_dict.get("setup_password", None)
                                   Set Suite Variable      ${PCC_SETUP_PWD}
