@@ -84,6 +84,7 @@ class CephPool(AaBase):
         for data in get_response_data(response):
             response=pcc.delete_ceph_pool_by_id(conn,str(data['id']))
             status=self.wait_until_pool_deleted(id=data['id'])
+            time.sleep(10)
             if status!="OK":
                 print("{} deletion failed".format(data['name']))
                 return "Error"
@@ -154,7 +155,7 @@ class CephPool(AaBase):
     def add_ceph_pool(self, *args, **kwargs):
         banner("PCC.Ceph Create Pool")
         self._load_kwargs(kwargs)
-
+        time.sleep(30)
         if self.size:
             try:
                 self.size= ast.literal_eval(str(self.size))
@@ -186,7 +187,7 @@ class CephPool(AaBase):
     def create_pool_multiple(self, *args, **kwargs):
         banner("PCC.Ceph Create Pool")
         self._load_kwargs(kwargs)
-
+        time.sleep(30)
         if self.size:
             try:
                 self.size= ast.literal_eval(str(self.size))
@@ -201,6 +202,7 @@ class CephPool(AaBase):
 
         name_bkup = self.name
         for i in range(1,self.count+1):
+            time.sleep(5)
             name=str(name_bkup)+"-"+str(i)
             payload = {
                 "name":name,
@@ -228,7 +230,7 @@ class CephPool(AaBase):
     def delete_ceph_pool_by_id(self, *args, **kwargs):
         banner("PCC.Ceph Delete Pool")
         self._load_kwargs(kwargs)
-
+        time.sleep(30)
         if self.id == None:
             return {"Error": "[PCC.Ceph Delete Pool]: Id of the Pool is not specified."}
         try:
