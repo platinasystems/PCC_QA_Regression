@@ -445,7 +445,7 @@ class CephCluster(AaBase):
     ###########################################################################
     def make_ceph_osds_up(self, *args, **kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Ceph Make Osds Down : {}".format(self.name))
+        banner("PCC.Ceph Make Osds Up : {}".format(self.name))
         print("Kwargs:"+str(kwargs))
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -462,7 +462,7 @@ class CephCluster(AaBase):
             print("Osd Id:"+str(data['osd']))
             host_ip=easy.get_hostip_by_name(conn,data['server'])
             print("Host Ip:"+str(host_ip))
-            cmd="sudo systemctl restart ceph-osd@{}".format(data['osd'])
+            cmd="sudo systemctl -f restart ceph-osd@{}".format(data['osd'])
             cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
             print("cmd:"+str(cmd))
             print("cmd output:"+str(cmd_exec))    
@@ -478,6 +478,46 @@ class CephCluster(AaBase):
                 continue
             else:
                 print("Command execution could not make osd id {} up".format(data['osd']))
+                return "Error"        
+        return "OK" 
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Make Mons Restart")
+    ###########################################################################
+    def make_ceph_mons_restart(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Make Mons Restart : {}".format(self.name))
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e 
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn,self.name)
+        print("Cluster Name: {} Id: {}".format(self.name,cluster_id))  
+        response = pcc.get_ceph_clusters_state(conn,str(cluster_id),'mons')
+        host_ip=None
+        for data in get_response_data(response):
+            print("Data:"+str(data))
+            trace("Data:"+str(data))
+            print("Server:"+str(data['server']))
+            host_ip=easy.get_hostip_by_name(conn,data['server'])
+            print("Host Ip:"+str(host_ip))
+            cmd="sudo systemctl -f restart ceph-mon@{}".format(data['server'])
+            cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
+            print("cmd:"+str(cmd))
+            print("cmd output:"+str(cmd_exec))    
+            time.sleep(10)            
+            cmd_verify="sudo systemctl status ceph-mon@{} |grep running |wc -l".format(data['server'])
+            cmd_verify_exec= cli_run(host_ip,self.user,self.password, cmd_verify)
+            serialise_output=self._serialize_response(time.time(), cmd_verify_exec )['Result']['stdout']
+            print("cmd:"+str(cmd_verify))
+            print("cmd output:"+str(cmd_verify_exec))    
+            print("Serialise Output:"+str(serialise_output))            
+            if int(serialise_output)==1:
+                print("{} restarted sucessfully !!!".format(data['server']))
+                continue
+            else:
+                print("Command execution could not restart mon {}".format(data['server']))
                 return "Error"        
         return "OK" 
      

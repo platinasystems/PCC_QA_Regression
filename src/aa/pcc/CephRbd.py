@@ -80,7 +80,6 @@ class CephRbd(AaBase):
         for data in get_response_data(response):
             response=self.delete_ceph_rbd_by_id(id=data['id'])
             status=self.wait_until_rbd_deleted(id=data['id'])
-            time.sleep(10)
             if status!="OK":
                 print("{} deletion failed".format(data['name']))
                 return "Error"
@@ -92,7 +91,7 @@ class CephRbd(AaBase):
     def add_ceph_rbds(self, *args, **kwargs):
         banner("PCC.Ceph Create Rbd")
         self._load_kwargs(kwargs)
-        time.sleep(30)
+
         if self.tags:
             self.tags=eval(self.tags)
 
@@ -126,7 +125,6 @@ class CephRbd(AaBase):
             self.count=int(self.count)
 
         for i in range(1, self.count + 1):
-            time.sleep(5)
             name = str(self.name) + "-" + str(i)
             payload = {
                 "ceph_pool_id":self.ceph_pool_id,
@@ -156,7 +154,7 @@ class CephRbd(AaBase):
     def delete_ceph_rbd_by_id(self, *args, **kwargs):
         banner("PCC.Ceph Delete Rbd")
         self._load_kwargs(kwargs)
-        time.sleep(30)
+
         if self.id == None:
             return {"Error": "[PCC.Ceph Delete Rbd]: Id of the Rbd is not specified."}
         try:
@@ -196,6 +194,7 @@ class CephRbd(AaBase):
                 trace("  Waiting until rbd: %s is deleted. Timeout in %.1f seconds." % 
                        (data['name'], timeout-time.time()))
                 time.sleep(5)
+        time.sleep(10)
         return "OK"
 
 
@@ -230,6 +229,7 @@ class CephRbd(AaBase):
                 raise Exception("[PCC.Ceph Wait Until Rbd Ready] Timeout")
             trace("  Waiting until rbd : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
+        time.sleep(10)
         return "OK"
 
     ###########################################################################
