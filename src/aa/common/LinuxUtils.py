@@ -172,6 +172,39 @@ class LinuxUtils(AaBase):
             logger.console("Error in Restart node: " + e)
             
     ###################################################################################################
+    @keyword(name="Force Restart node")
+    ###################################################################################################
+    
+    # returns OK if Node is Restarted successfully
+    # <usage> restart_node(hostip=<hostip>)
+    
+    def force_restart_node(self,*args, **kwargs):
+        self._load_kwargs(kwargs)
+        try:
+            cmd = "sudo reboot -f"
+            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                                          linux_password=self.password)
+            banner("Sleeping")
+            time.sleep(int(self.time_to_wait))
+            banner("Done sleeping")
+            cmd = "ping {} -c 4".format(self.hostip)
+            
+            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                                     linux_password=self.password)
+            
+            serialised_restart_up_status = self._serialize_response(time.time(), restart_up_status)
+            print("serialised_restart_up_status is:{}".format(serialised_restart_up_status))
+            
+            cmd_output = str(serialised_restart_up_status['Result']['stdout']).replace('\n', '').strip()
+            
+            if ", 0% packet loss" in cmd_output:
+                return "OK"
+            else:
+                return "Error"
+        except Exception as e:
+            logger.console("Error in Force Restart node: " + e)
+            
+    ###################################################################################################
     @keyword(name="Install net-tools command")
     ###################################################################################################
     

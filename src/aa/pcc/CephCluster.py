@@ -9,7 +9,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
 
-from aa.common.Utils import banner, trace, pretty_print, cmp_json
+from aa.common.Utils import banner, trace, pretty_print, cmp_json, midtext
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
@@ -41,6 +41,13 @@ class CephCluster(AaBase):
         self.limit=None
         self.state_status=None
         self.forceRemove=None
+        self.hostip= None
+        self.mount_path=None
+        self.mount_folder_name= None
+        self.dummy_file_name = None
+        self.dummy_file_size = None
+        self.operation_to_perform = None
+        
         super().__init__()
 
     ###########################################################################
@@ -543,3 +550,165 @@ class CephCluster(AaBase):
                     print("Response:"+str(data))
                     return "Error"
         return "OK"
+        
+    ###############################################################################################################
+    @keyword(name="PCC.Get CEPH Inet IP")
+    ###############################################################################################################
+    
+    def get_ceph_inet_ip(self, *args, **kwargs):
+        banner("Get CEPH Inet IP")
+        self._load_kwargs(kwargs)
+        try:
+            cmd= "sudo ip addr | grep control0"
+            print("Command is: {}".format(cmd))
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            
+            serialised_status = self._serialize_response(time.time(), status)
+            print("serialised_inet_ip_status is:{}".format(serialised_status))
+            
+            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+            re_match = re.findall("inet (.*) scope", cmd_output)
+            inet_ip = str(re_match).split("/")[0]
+            print("Inet ip is : {}".format(inet_ip))
+            return inet_ip.replace("['","")
+        except Exception as e:
+            trace("Error in get_ceph_inet_ip: {}".format(e))
+    
+    ###############################################################################################################
+    @keyword(name="Create mount folder")
+    ###############################################################################################################
+    
+    def create_mount_folder(self, *args, **kwargs):
+        banner("Create mount folder")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            #Creating mount folder
+            cmd= "sudo mkdir /mnt/{}".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd: {} executed successfully and status is: {}".format(cmd, status))            
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in creating mount folder: {}".format(e))
+    
+    
+        
+    ###############################################################################################################
+    @keyword(name="Create dummy file and copy to mount path")
+    ###############################################################################################################
+    
+    def create_dummy_file_copy_to_mount_path(self, *args, **kwargs):
+        banner("Create dummy file and copy to mount path")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            #Creating dummy file
+            cmd= "sudo dd if=/dev/zero of={} bs={} count=1".format(self.dummy_file_name, self.dummy_file_size)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd4: {} executed successfully and status is: {}".format(cmd, status))
+            
+            time.sleep(2)
+            
+            #Copying sample 2mb file to mount folder
+            cmd= "sudo cp /home/pcc/{} /mnt/{}".format(self.dummy_file_name, self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd5: {} executed successfully and status is:{}".format(cmd,status))
+            
+            time.sleep(2)
+            
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in create_dummy_file_copy_to_mount_path : {}".format(e))
+            
+    ###############################################################################################################
+    @keyword(name="Remove dummy file")
+    ###############################################################################################################
+    
+    def remove_dummy_file(self, *args, **kwargs):
+        banner("Remove dummy file")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            print("username is '{}' and password is: '{}'".format(self.user,self.password))
+            cmd= "sudo rm -rf /home/pcc/{}".format(self.dummy_file_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd3: {} executed successfully and status is : {}".format(cmd,status))
+            
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in removing dummy file: {}".format(e))
+            
+    ###############################################################################################################
+    @keyword(name="PCC.Operation to perform on all CEPH daemons")
+    ###############################################################################################################
+    
+    def operation_to_perform_on_all_ceph_daemons(self, *args, **kwargs):
+        banner("PCC.Operation to perform on all CEPH daemons")
+        self._load_kwargs(kwargs)
+        print("Kwargs are: {}".format(kwargs))
+        try:
+            try:
+                conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            except Exception as e:
+                raise e
+            host_name = easy.get_host_name_by_ip(conn,self.hostip)
+            if "operation_to_perform" not in kwargs:
+                self.operation_to_perform = None
+            
+            if self.operation_to_perform:    
+                cmd_list = ["sudo systemctl {} ceph-mon@{}","sudo systemctl {} ceph-mds@{}","sudo systemctl {} ceph-mgr@{}"]
+                cmd_with_host_name = [x.format(self.operation_to_perform.lower(), host_name) for x in cmd_list]
+            else:
+                return "Please provide a valid operation to perform. Choose from 'Start', 'Stop', 'Status'" 
+            for cmd_run in cmd_with_host_name:
+                print("Command is: {}".format(cmd_run))
+                status = cli_run(cmd=cmd_run, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+                print("status: {}".format(status))
+                time.sleep(2)
+                trace("Command: {} executed successfully".format(cmd_run))
+                
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in Operation to perform on_all_ceph_daemons: {}".format(e))
+            
+            
+    ###############################################################################################################
+    @keyword(name="PCC.Operation to perform on All OSD Daemons Of Node")
+    ###############################################################################################################
+    
+    def operation_to_perform_on_all_osds_daemons_of_node(self, *args, **kwargs):
+        banner("PCC.Operation to perform on All OSD Daemons Of Node")
+        self._load_kwargs(kwargs)
+        print("Kwargs are: {}".format(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        try:
+            if "operation_to_perform" not in kwargs:
+                self.operation_to_perform = None
+            
+            cluster_id = easy.get_ceph_cluster_id_by_name(conn,self.name)
+            print("Cluster Name: {} Id: {}".format(self.name,cluster_id))  
+            response = pcc.get_ceph_clusters_state(conn,str(cluster_id),'osds')
+            host_name = easy.get_hostname_by_ip(conn,Hostip=self.hostip)
+            osd_ids= [data['osd'] for data in get_response_data(response) if data['server']==host_name]
+            
+            for osd_id in osd_ids:
+                if self.operation_to_perform:
+                    cmd =  "sudo systemctl {} ceph-osd@{}".format(self.operation_to_perform.lower(), osd_id)
+                    status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+                    print("Status is: {}".format(status))
+                    time.sleep(2)
+                    trace("Command: {} executed successfully".format(cmd))   
+                else:
+                    return "Please provide a valid operation to perform. Choose from 'Start', 'Stop', 'Status'" 
+            
+            return "OK"
+                       
+        except Exception as e:
+            trace("Error in stop_all_osds_daemons_of_node: {}".format(e))

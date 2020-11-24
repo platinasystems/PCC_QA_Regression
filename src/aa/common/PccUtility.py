@@ -31,6 +31,8 @@ def get_hostip_by_name(conn:dict, Name:str)->str:
         (dict) conn: Connection dictionary obtained after logging in
         (str) Name: Name of the Node 
     [Returns]
+        (str) HostIP: HostIP of the matchining Node, or
+            None: if no match found, or
         (dict) Error response: If Exception occured
     """
     node_list = pcc.get_nodes(conn)['Result']['Data']

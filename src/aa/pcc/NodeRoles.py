@@ -18,6 +18,7 @@ class NodeRoles(AaBase):
 
     def __init__(self):
         self.Name = None
+        self.nodes = None
         self.Id = None
         self.Description = None
         self.owners = []
@@ -139,6 +140,35 @@ class NodeRoles(AaBase):
             return "Node role not available"
         except Exception as e:
             return {"Error": str(e)}
+            
+    ###########################################################################
+    @keyword(name="PCC.Verify Node Role On Nodes")
+    ###########################################################################
+    def verify_node_roles_on_nodes(self, *args, **kwargs):
+        """
+        Verify node role on Nodes
+        [Args]
+            (list) nodes: name of pcc nodes
+            (list) roles: name of roles
+        [Returns]
+            (dict) Response: OK if node role exists on the node (includes any errors)
+        """
+        self._load_kwargs(kwargs)
+        print("kwargs:-"+str(kwargs))
+        banner("PCC.Verify Node Role On Nodes")
+        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        node_role_id = self.get_node_role_id(conn,Name= self.Name)
+        for node in ast.literal_eval(self.nodes):
+            response = pcc.get_nodes(conn)
+            for data in get_response_data(response):
+                self.Id=data['Id']
+                self.Host=data['Host']
+                if str(data['Name']).lower() == str(node).lower():
+                    if node_role_id in data['roles']:
+                        return "OK"
+                    else:
+                        return "Node role {} not present on node: {}".format(self.Name, node)
             
     ###########################################################################
     @keyword(name="PCC.Delete Node Role")

@@ -30,6 +30,8 @@ class Cli(AaBase):
         self.pcc_version_cmd = None
         self.backup_hostip = None
         self.restore_hostip = None
+        self.backup_params = None
+        self.backup_type = None
         super().__init__()
 
     ###########################################################################
@@ -317,7 +319,17 @@ class Cli(AaBase):
         self._load_kwargs(kwargs)
         trace("Kwargs are: " + str(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        cmd="sudo ./platina-cli-ws/platina-cli backup -p {} --storageUrl http://{}:9000 --storageUsername minio --storagePassword miniominio".format(self.pcc_password,self.backup_hostip)
+        #cmd = ./platina-cli backup -p <password> -t monitordata --url http://<ip address>:<port> --id <username> --secret <password>
+         
+        if (self.backup_type = "local" and self.backup_params = "all"):
+            cmd = "sudo ./platina-cli-ws/platina-cli backup -p {}".format(self.pcc_password)
+        
+        if (self.backup_type = "local" and self.backup_params != "all"):
+            cmd = "sudo ./platina-cli-ws/platina-cli backup -p {} -t {}".format(self.pcc_password, self.backup_params)
+        
+        if (self.backup_type = "remote"):
+            cmd = "sudo ./platina-cli-ws/platina-cli backup -p {} -t {} --url http://{}:9001 --id minio --secret minio123".format(self.pcc_password,self.backup_params, self.backup_hostip)
+            
         trace("Command: " + str(cmd) + " is getting executed")
         cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
         print("cmd op: {}".format(str(cmd_op)))
@@ -335,7 +347,16 @@ class Cli(AaBase):
         self._load_kwargs(kwargs)
         trace("Kwargs are: " + str(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        cmd="sudo ./platina-cli-ws/platina-cli restore -p {} --storageUrl http://{}:9000 --storageUsername minio --storagePassword miniominio".format(self.pcc_password,self.restore_hostip)
+        
+        if (self.backup_type = "remote"):
+            cmd="sudo ./platina-cli-ws/platina-cli restore -p {} -t {} --url http://{}:9001 --id minio --secret minio123 --privateKey master.gpg".format(self.pcc_password, self.backup_params, self.restore_hostip)
+            
+        if (self.backup_type = "local" and self.backup_params = "all"):
+            cmd = "sudo ./platina-cli-ws/platina-cli restore -p {} --privateKey master.gpg".format(self.pcc_password)
+        
+        if (self.backup_type = "local" and self.backup_params != "all"):
+            cmd = "sudo ./platina-cli-ws/platina-cli backup -p {} -t {} --privateKey master.gpg".format(self.pcc_password, self.backup_params)
+        
         trace("Command" + str(cmd) + "is getting executed")
         cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
         print("cmd op: {}".format(str(cmd_op)))
@@ -344,3 +365,20 @@ class Cli(AaBase):
             return "Error: Failed to backup"
         else:
             return "OK"
+            
+    ###########################################################################
+    @keyword(name="CLI.Reboot Node")
+    ###########################################################################
+    def reboot_node(self,*args,**kwargs):
+        banner("CLI.Reboot Node")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        cmd="sudo reboot -f"
+        trace("Command" + str(cmd) + "is getting executed")
+        cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
+        print("cmd op: {}".format(str(cmd_op)))
+        trace("Reboot undergoing - Sleeping for 5 minutes")
+        time.sleep(5*60) # Sleeping 5 mins
+        trace("Done sleeping")
+        return "OK"

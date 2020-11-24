@@ -10,7 +10,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
 
-from aa.common.Utils import banner, trace, pretty_print
+from aa.common.Utils import banner, trace, pretty_print, convert
 from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
@@ -39,29 +39,7 @@ class ErasureCoded(AaBase):
         self.rbd_name = None
         
         
-        super().__init__()
-        
-    ## Size converter function
-    def convert(self,value, size):
-        converter = {'B':1 * value,
-                     'KiB':10 * value,
-                     'MiB':100 * value,
-                     'GiB':1000 * value,
-                     'TiB':10000 * value,
-                     'PiB':100000 * value,
-                     'EiB':1000000 * value,
-                     'KB': 10 * value,
-                     'MB': 100 * value,
-                     'GB': 1000 * value,
-                     'TB': 10000 * value,
-                     'PB': 100000 * value,
-                     'EB': 1000000 * value
-                     }
-        if size in converter:
-            return converter[size]
-        else:
-            return "Size not found in the list"
-    
+        super().__init__()   
     
     ###########################################################################
     @keyword(name="PCC.Ceph Get All Erasure Coded Profiles")
@@ -373,67 +351,6 @@ class ErasureCoded(AaBase):
             
         except Exception as e:
             trace("Error in get_stored_size: {}".format(e))
-            
-    ###############################################################################################################
-    @keyword(name="PCC.Mount RBD to Mount Point")
-    ###############################################################################################################
-    
-    def mount_rbd(self, *args, **kwargs):
-        banner("Mount RBD to Mount Point")
-        self._load_kwargs(kwargs)
-        try:
-            print("Kwargs are: {}".format(kwargs))
-            
-            inet_ip = self.get_ceph_inet_ip(**kwargs)
-            print("Inet IP is : {}".format(inet_ip))
-            
-            #Maps rbd0
-            cmd= "sudo rbd map {} --pool {} --name client.admin -m {} -k /etc/ceph/ceph.client.admin.keyring".format(self.rbd_name, self.erasure_pool_name, inet_ip)
-            
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            #mkfs.ext4 rbd0 command execution
-            cmd= "sudo mkfs.ext4 -m0 /dev/rbd0"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd2: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            #creating test_rbd_mnt folder
-            cmd= "sudo mkdir /mnt/test_rbd_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd3: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            #Mounting to test_rbd_mnt to rbd0
-            cmd= "sudo mount /dev/rbd0 /mnt/test_rbd_mnt".format(self.erasure_pool_name, self.rbd_name)
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd4: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            #Creating sample 10mb file
-            cmd= "sudo dd if=/dev/zero of=test_rbd_mnt_10mb.bin bs=10MiB count=1"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd5: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            #Copying sample 10mb file to test_rbd_mnt folder
-            cmd= "sudo cp /home/pcc/test_rbd_mnt_10mb.bin /mnt/test_rbd_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd6: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            return "OK"
-            
-        except Exception as e:
-            trace("Error in mount_rbd: {}".format(e))
     
     ###############################################################################################################
     @keyword(name="PCC.Flush replicated pool storage to erasure coded pool")
@@ -455,161 +372,4 @@ class ErasureCoded(AaBase):
         except Exception as e:
             trace("Error in flush_storage: {}".format(e))
             
-    ###############################################################################################################
-    @keyword(name="PCC.Mount FS to Mount Point")
-    ###############################################################################################################
     
-    def mount_fs(self, *args, **kwargs):
-        banner("Mount FS to Mount Point")
-        self._load_kwargs(kwargs)
-        try:
-            print("Kwargs are: {}".format(kwargs))
-            
-            inet_ip = self.get_ceph_inet_ip(**kwargs)
-            print("Inet IP is: {}".format(inet_ip))
-            
-            #creating test_rbd_mnt folder
-            cmd= "sudo mkdir /mnt/test_fs_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is: {}".format(cmd, status))
-            
-            #Maps fs
-            cmd= "sudo mount -t ceph {}:/ /mnt/test_fs_mnt -o name=admin,secret='ceph-authtool -p /etc/ceph/ceph.client.admin.keyring'".format(inet_ip)
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd2: {} executed successfully and status is: {}".format(cmd, status))
-            
-            time.sleep(1)
-            
-            cmd= "sudo mount| grep test_fs_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd3: {} executed successfully and status is: {}".format(cmd, status))
-            serialised_status = self._serialize_response(time.time(), status)
-            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
-            
-            if '/mnt/test_fs_mnt' in cmd_output:
-                print("Found in string") 
-            else:
-                return "Error: test_fs_mnt file not found"
-            
-            #Creating sample 10mb file
-            cmd= "sudo dd if=/dev/zero of=test_fs_mnt_10mb.bin bs=10MiB count=1"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd4: {} executed successfully and status is: {}".format(cmd, status))
-            
-            time.sleep(2)
-            
-            #Copying sample 10mb file to test_fs_mnt folder
-            cmd= "sudo cp /home/pcc/test_fs_mnt_10mb.bin /mnt/test_fs_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd5: {} executed successfully and status is:{}".format(cmd,status))
-            
-            time.sleep(2)
-            
-            return "OK"
-            
-        except Exception as e:
-            trace("Error in mount_fs: {}".format(e))
-            
-    ###############################################################################################################
-    @keyword(name="PCC.Check FS Mount on other server")
-    ###############################################################################################################
-    
-    def check_fs_mount(self, *args, **kwargs):
-        banner("PCC.Check FS Mount on other server")
-        self._load_kwargs(kwargs)
-        try:
-            print("Kwargs are: {}".format(kwargs))
-            print("username is '{}' and password is: '{}'".format(self.username,self.password))
-            inet_ip = self.get_ceph_inet_ip(**kwargs)
-            
-            cmd= "sudo mkdir /mnt/test_fs_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is: {}".format(cmd, status))
-            
-            cmd= "sudo mount -t ceph {}:/ /mnt/test_fs_mnt -o name=admin,secret='ceph-authtool -p /etc/ceph/ceph.client.admin.keyring'".format(inet_ip)
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd2: {} executed successfully and status is: {}".format(cmd, status))
-            
-            cmd= "sudo ls /mnt/test_fs_mnt".format(self.erasure_pool_name, self.rbd_name)
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd3: {} executed successfully and status is: {}".format(cmd, status))
-            
-            serialised_status = self._serialize_response(time.time(), status)
-            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
-            
-            if 'test_fs_mnt_10mb.bin' in cmd_output:
-                print("Data Found in output") 
-            else:
-                return "Error: 'test_fs_mnt_10mb.bin' file not found"
-            
-            return "OK"
-            
-        except Exception as e:
-            trace("Error in check_fs_mount: {}".format(e))
-    
-    ###############################################################################################################
-    @keyword(name="PCC.Unmount FS")
-    ###############################################################################################################
-    
-    def unmount_fs(self, *args, **kwargs):
-        banner("PCC.Unmount FS")
-        self._load_kwargs(kwargs)
-        try:
-            print("Kwargs are: {}".format(kwargs))
-            print("username is '{}' and password is: '{}'".format(self.username,self.password))
-            cmd= "sudo umount /mnt/test_fs_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is : {}".format(cmd,status))
-        
-            cmd= "sudo rm -rf /mnt/test_fs_mnt/"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd2: {} executed successfully and status is : {}".format(cmd,status))
-            
-            cmd= "sudo rm test_fs_mnt_10mb.bin"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd3: {} executed successfully and status is : {}".format(cmd,status))
-            
-            return "OK"
-            
-        except Exception as e:
-            trace("Error in unmount_and_unmap_rbd: {}".format(e))
-    
-    
-    
-    ###############################################################################################################
-    @keyword(name="PCC.Unmount and Unmap RBD")
-    ###############################################################################################################
-    
-    def unmount_and_unmap_rbd(self, *args, **kwargs):
-        banner("PCC.Unmount and Unmap RBD")
-        self._load_kwargs(kwargs)
-        try:
-            print("Kwargs are: {}".format(kwargs))
-            cmd= "sudo umount /mnt/test_rbd_mnt"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd1: {} executed successfully and status is : {}".format(cmd,status))
-            time.sleep(60*1) # Sleep for 2 minutes
-            
-            cmd= "sudo rbd unmap /dev/rbd0"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd2: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd2: {} executed successfully and status is : {}".format(cmd,status))
-            time.sleep(60*1) # Sleep for 2 minutes
-            
-            cmd= "sudo rm -rf /mnt/test_rbd_mnt/"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd3: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd3: {} executed successfully and status is : {}".format(cmd,status))
-            time.sleep(60*1) # Sleep for 2 minutes
-            
-            cmd= "sudo rm test_rbd_mnt_10mb.bin"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd4: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd4: {} executed successfully and status is : {}".format(cmd,status))
-            time.sleep(60*1) # Sleep for 2 minutes
-            
-            return "OK"
-            
-        except Exception as e:
-            trace("Error in unmount_and_unmap_rbd: {}".format(e))
