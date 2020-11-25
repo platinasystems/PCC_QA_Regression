@@ -266,12 +266,14 @@ class Nodes(AaBase):
             for node in node_list:
                 if str(node['Name']) == str(self.Name):
                     if node['provisionStatus'] == 'Ready':
+                        trace("Node:{} is ready".format(self.Name))
                         return "OK"
                     if "fail" in node['provisionStatus']:
                         return "Wait until node ready status - Failed. Node Status is {}".format(node['provisionStatus'])
             if time.time() > timeout:
                 return {"Error": "Timeout"}
             if not ready:
+                trace("Node:{} is not yet ready".format(self.Name))
                 time.sleep(5)
                 time_waited += 5
         
