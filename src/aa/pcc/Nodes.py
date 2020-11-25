@@ -256,6 +256,7 @@ class Nodes(AaBase):
         banner("PCC.Wait Until Node Ready")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         ready = False
+        time.sleep(10)
         time_waited = 0
         PCC_TIMEOUT = 60*10 #10 minutes
         timeout = time.time() + PCC_TIMEOUT
@@ -265,13 +266,15 @@ class Nodes(AaBase):
             for node in node_list:
                 if str(node['Name']) == str(self.Name):
                     if node['provisionStatus'] == 'Ready':
-                        ready = True
+                        return "OK"
+                    if "fail" in node['provisionStatus']:
+                        return "Wait until node ready status - Failed. Node Status is {}".format(node['provisionStatus'])
             if time.time() > timeout:
                 return {"Error": "Timeout"}
             if not ready:
                 time.sleep(5)
                 time_waited += 5
-        return "OK"
+        
         
     ###########################################################################
     @keyword(name="PCC.Check node exists")

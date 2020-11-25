@@ -321,10 +321,10 @@ class Cli(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         #cmd = ./platina-cli backup -p <password> -t monitordata --url http://<ip address>:<port> --id <username> --secret <password>
          
-        if (self.backup_type = "local" and self.backup_params = "all"):
+        if (self.backup_type = "local") and (self.backup_params = "all"):
             cmd = "sudo ./platina-cli-ws/platina-cli backup -p {}".format(self.pcc_password)
         
-        if (self.backup_type = "local" and self.backup_params != "all"):
+        if (self.backup_type = "local") and (self.backup_params != "all"):
             cmd = "sudo ./platina-cli-ws/platina-cli backup -p {} -t {}".format(self.pcc_password, self.backup_params)
         
         if (self.backup_type = "remote"):
@@ -351,10 +351,10 @@ class Cli(AaBase):
         if (self.backup_type = "remote"):
             cmd="sudo ./platina-cli-ws/platina-cli restore -p {} -t {} --url http://{}:9001 --id minio --secret minio123 --privateKey master.gpg".format(self.pcc_password, self.backup_params, self.restore_hostip)
             
-        if (self.backup_type = "local" and self.backup_params = "all"):
+        if (self.backup_type = "local") and (self.backup_params = "all"):
             cmd = "sudo ./platina-cli-ws/platina-cli restore -p {} --privateKey master.gpg".format(self.pcc_password)
         
-        if (self.backup_type = "local" and self.backup_params != "all"):
+        if (self.backup_type = "local") and (self.backup_params != "all"):
             cmd = "sudo ./platina-cli-ws/platina-cli backup -p {} -t {} --privateKey master.gpg".format(self.pcc_password, self.backup_params)
         
         trace("Command" + str(cmd) + "is getting executed")
