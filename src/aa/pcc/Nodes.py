@@ -296,12 +296,17 @@ class Nodes(AaBase):
         banner("PCC.Check node exists")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         node_list = pcc.get_nodes(conn)['Result']['Data']
+        print("node_list_status: {}".format(node_list))
         try:
+            if node_list == None:
+                return False
             for node in node_list:
+                print("Node in check node exists: {}".format(node))
                 if (str(node['Host']) == str(self.IP)) and (str(node['provisionStatus']) == 'Ready'):
                     return True
             return False
         except Exception as e:
+            print("In exception of check node exists"+ str(e))
             return {"Error": str(e)}
 
     ###########################################################################
@@ -379,12 +384,16 @@ class Nodes(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             wait_for_node_addition_status = []
             node_not_exists=[]
+            print("Kwargs are: {}".format(kwargs))
             for hostip in ast.literal_eval(self.host_ips):
+                print("Host ip: {}".format(hostip))
                 exists = self.check_node_exists(IP=hostip)
+                print("exists status: {}".format(exists))
                 if exists == False:
                     node_not_exists.append(hostip)
-                    
+            print("node_not_exists:{}".format(node_not_exists))    
             for node_hostip in node_not_exists:
+                trace("adding node: {}".format(node_hostip))
                 add_node_status = self.add_node(Host=node_hostip, managed= self.managed, standby = self.standby)
                 
             for name in ast.literal_eval(self.Names):
