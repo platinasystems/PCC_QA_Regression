@@ -135,7 +135,7 @@ class RoleOperations(AaBase):
 
         timeout = time.time() + PCC_TIMEOUT
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        time.sleep(20)
+        time.sleep(10)
         while not ready:
             ready = False
             node_list = pcc.get_nodes(conn)['Result']['Data']
@@ -147,6 +147,7 @@ class RoleOperations(AaBase):
                     if node['provisionStatus'] == 'Ready':
                         print("Node Response:-"+str(node))
                         ready = True
+                        return "OK"
                     elif re.search("failed",str(node['provisionStatus'])):
                         print("Node Response:-"+str(node))
                         return "Failed"
@@ -154,10 +155,10 @@ class RoleOperations(AaBase):
                 print("Node Response:"+str(tmp_response))
                 return {"Error": "Timeout"}
             if not ready:
-                trace("  Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
+                trace("Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
                 time.sleep(5)
 
-        return "OK"
+        
 
     ###########################################################################
     @keyword(name="PCC.Delete and Verify Roles On Nodes")

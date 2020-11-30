@@ -335,23 +335,27 @@ class NodeRoles(AaBase):
             list_node_roles = []
             
             for node_role in get_response_data(response):
-                if node_role['name']== "Default" or node_role['name']== "Baremetal Management Node" or node_role['name']== "Cluster Head":
+                if node_role['name']== "Default" or node_role['name']== "Baremetal Management Node" or node_role['name']== "Cluster Head" or node_role['name']== "Ceph Resource" or node_role['name']== "Kubernetes Resource" or node_role['name']== "Network Resource":
                     continue
                 list_node_roles.append(node_role['name'])
             print("list of node roles: {}".format(list_node_roles))
             response_status = []
+            
             try:
-                for node in list_node_roles:
-                    print("Node is : " + node)
-                    Id = self.get_node_role_id(Name=node)
-                    response = pcc.delete_role_by_id(conn, str(Id))
-                    print("Response: {}".format(response))
-                    response_status.append(response["StatusCode"])
-                response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
-                if response_result:
+                if list_node_roles == []:
                     return "OK"
                 else:
-                    return response_status  
+                    for node in list_node_roles:
+                        print("Node is : " + node)
+                        Id = self.get_node_role_id(Name=node)
+                        response = pcc.delete_role_by_id(conn, str(Id))
+                        print("Response: {}".format(response))
+                        response_status.append(response["StatusCode"])
+                    response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
+                    if response_result:
+                        return "OK"
+                    else:
+                        return response_status  
             except Exception as e:
                 return {"Error":str(e)}     
         except Exception as e:

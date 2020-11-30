@@ -508,6 +508,7 @@ Delete All Policies
         ${status}    PCC.Delete All Policies
                        
                      Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
                      
 
                        

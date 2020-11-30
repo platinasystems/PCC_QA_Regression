@@ -51,7 +51,12 @@ class NetworkManager(AaBase):
             raise e
 
         network_id = easy.get_network_clusters_id_by_name(conn,self.name)
+        print("Network_id is: {}".format(network_id))
+        if re.search("Error",str(network_id)):
+            print("Unable to get response")
+            return None
         return network_id
+        
 
     ###########################################################################
     @keyword(name="PCC.Network Manager Create")
