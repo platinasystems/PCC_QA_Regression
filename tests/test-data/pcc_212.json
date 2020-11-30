@@ -58,7 +58,7 @@
         
     "server-1":
         {
-            "server_name":"sv124.platinasystems.com",
+            "server_name":"sv-124.platinasystems.com",
             "pcc_url":"https://172.17.2.124:9999",
             "pcc_host_ip":"172.17.2.124",
             "pcc_linux_password":"cals0ft",
