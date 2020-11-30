@@ -160,10 +160,12 @@ class NodeRoles(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         node_role_id = self.get_node_role_id(conn,Name= self.Name)
         for node in ast.literal_eval(self.nodes):
+            print("Node from user is: {}".format(node))
             response = pcc.get_nodes(conn)
             for data in get_response_data(response):
                 self.Id=data['Id']
                 self.Host=data['Host']
+                print("node name from pcc: {}".format(data['Name']).lower())
                 if str(data['Name']).lower() == str(node).lower():
                     if node_role_id in data['roles']:
                         return "OK"

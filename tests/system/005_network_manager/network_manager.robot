@@ -294,7 +294,18 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR)
                                     
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
+                                    Should Be Equal As Strings      ${status}    OK
+
+########################################################################################################################################
+Check if PCC assign the Network Resource node role to the nodes on successful deployment of Network Routing on a set of nodes (TCP-1590)
+########################################################################################################################################                       
+  
+        ${status}    PCC.Verify Node Role On Nodes
+                     ...    Name=Network Resource
+                     ...    nodes=["${SERVER_1_NAME}","${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK 
                                
 ###################################################################################################################################
 Interface Verification For Server Falling In DataCIDR
