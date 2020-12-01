@@ -197,7 +197,7 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["sv125","sv124","i43"],
+            "nodes":["sv125.platinasystems.com","sv-124.platinasystems.com","i43"],
             "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
@@ -207,7 +207,7 @@
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["sv125","sv124","i43"],
+            "nodes":["sv125.platinasystems.com","sv-124.platinasystems.com","i43"],
             "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
             "tags":["SATA/SAS"],
             "networkClusterName":"network-pvt"
@@ -244,7 +244,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "targetNodes":["sv124"],
+            "targetNodes":["sv-124.platinasystems.com"],
             "port":443,
             "certificateName":"rgw-crt",
             "S3Accounts":"rgw-app"
@@ -256,7 +256,7 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["i43","sv124","sv125"],
+            "nodes":["i43","sv-124.platinasystems.com","sv125.platinasystems.com"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
