@@ -42,7 +42,7 @@
     
     "clusterhead-2":
         {
-            "invader_name":"i-42.platinasystems.com",
+            "invader_name":"i42",
             "pcc_url":"https://172.17.2.42:9999",
             "pcc_host_ip":"172.17.2.42",
             "pcc_linux_password":"cals0ft",
