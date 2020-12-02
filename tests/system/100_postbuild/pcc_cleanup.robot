@@ -310,8 +310,8 @@ Ceph Cluster Delete
 ###################################################################################################################################
 BE Ceph Cleanup
 ###################################################################################################################################
-
-        ${response}                 PCC.Ceph Cleanup BE
+ 
+        ${status}                   PCC.Ceph Cleanup BE
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
