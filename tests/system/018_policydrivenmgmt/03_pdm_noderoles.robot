@@ -148,37 +148,17 @@ Associate DNS, NTP, SNMPv2 client node role with a node
                                     
                                     Should Be Equal As Strings      ${response}  OK
 
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_1_NAME}
-                                     
-                                    Should Be Equal As Strings      ${status_code}  OK
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${CLUSTERHEAD_1_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
                                     
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_2_NAME}
-                                     
-                                    Should Be Equal As Strings      ${status_code}  OK
-                                    
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
 
-
-####################################################################################################################################
-#Check DNS, NTP, SNMPv2 client node role from backend
-####################################################################################################################################
-#    [Documentation]                 *Check DNS, NTP, SNMPv2 client node role from backend*
-#                               ...  Keywords:
-#                               ...  PCC.Check SNMP from backend
-#                             
-#        [Tags]    Only
-#
-#        ${status}                 PCC.Check SNMP from backend
-#                                  ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}','${SERVER_2_HOST_IP}']
-#                               
-#                                  Should Be Equal As Strings      ${status}  OK
-#                                    
-#        ${status}                 PCC.Check NTP from backend
-#                                  ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}','${SERVER_2_HOST_IP}']
-#                               
-#                                  Should Be Equal As Strings      ${status}  OK
-
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
                                       
 ###################################################################################################################################
 Filter all policy-enabled apps
@@ -213,15 +193,17 @@ Removing Node Roles From Nodes
                                     Should Be Equal As Strings      ${response}  OK
 
 
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_1_NAME}
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
-                                    Should Be Equal As Strings      ${status_code}  OK
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                                    
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
 
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_2_NAME}
-
-                                    Should Be Equal As Strings      ${status_code}  OK
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
 
         
                                     
