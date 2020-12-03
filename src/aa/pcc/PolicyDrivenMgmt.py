@@ -313,7 +313,9 @@ class PolicyDrivenMgmt(AaBase):
         print("app id is: {}".format(self.appId))
         if 'inputs' in kwargs:
             user_inputs = ast.literal_eval(kwargs['inputs'])
+            print("User inputs: {}".format(user_inputs))
             default_inputs = self.get_policy_inputs_from_apps(**kwargs)
+            print("Default inputs: {}".format(default_inputs))
             if default_inputs == "Provide a valid appName/appId to create policy":
                 return "Provide a valid appName/appId to create policy"
             for user_input in user_inputs:
