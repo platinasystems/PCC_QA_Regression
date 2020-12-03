@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_242
+${pcc_setup}    pcc_212
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -540,7 +540,7 @@ Create Policies
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=DNS_SITE
-                       ...  inputs=[{"name":"domain","value":"www.site.com"},{"name":"nameserver_0","value":"8.9.8.9"},{"name":"search_0","value":"dns_site1.com"},{"name":"search_1","value":"dns_site2.com"}]
+                       ...  inputs=[{"name":"domain","value":"www.site.com"},{"name":"nameserver_0","value":"8.8.8.8"},{"name":"search_0","value":"dns_site1.com"},{"name":"search_1","value":"dns_site2.com"}]
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
                        ${status}    Get From Dictionary    ${result}    status
@@ -1236,7 +1236,7 @@ Check if the node inherit its relationship with the parents object and policies 
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
@@ -1411,7 +1411,7 @@ Check if the node inherit its relationship with the parents object and policies 
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
@@ -1597,7 +1597,7 @@ Update parent of a zone
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
@@ -1791,7 +1791,7 @@ Update parent of a site
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
@@ -1992,7 +1992,7 @@ Update parent of a rack
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
@@ -2166,7 +2166,7 @@ Update rack of a node
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
@@ -2332,7 +2332,7 @@ Update site of a node
         ${status}    PCC.Validate DNS From Backend
                      ...  host_ip=${SERVER_1_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
-                     ...  dns_server_ip=8.9.8.9
+                     ...  dns_server_ip=8.8.8.8
 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
