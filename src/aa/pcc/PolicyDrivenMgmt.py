@@ -232,9 +232,7 @@ class PolicyDrivenMgmt(AaBase):
                 return "Provide a valid appName/appId to create policy"
             data = pcc.get_policy_enabled_apps(conn)['Result']['Data']
             for i in eval(str(data)):
-                print("****************  "+str(i)+ "  ******************")
                 app_list = [str(x).lower() for x in i.values() if type(x)!= int]
-                print("Applist in get_policy_inputs_from_apps is: {}".format(str(app_list)))
                 if self.Name.lower() in app_list:
                     values= i['actions'][0]['inputs']
             required_data = []
@@ -257,12 +255,9 @@ class PolicyDrivenMgmt(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             logger.console("kwargs are : {}".format(kwargs))
             data = pcc.get_policy_enabled_apps(conn)['Result']['Data']
-            print("Data is :{}".format(data))
             
             for i in eval(str(data)):
-                print("****************  "+str(i)+ "  ******************")
                 app_list = [str(x).lower() for x in i.values() if type(x)!= int]
-                print("Applist in get_app_id_from_policies is: {}".format(str(app_list)))
                 if self.Name.lower() in app_list:
                     app_id_from_policy =  i['id']
                     logger.console("app_id_from_policy: {}".format(app_id_from_policy))
@@ -316,9 +311,7 @@ class PolicyDrivenMgmt(AaBase):
         print("app id is: {}".format(self.appId))
         if 'inputs' in kwargs:
             user_inputs = ast.literal_eval(kwargs['inputs'])
-            print("User inputs: {}".format(user_inputs))
             default_inputs = self.get_policy_inputs_from_apps(**kwargs)
-            print("Default inputs: {}".format(default_inputs))
             if default_inputs == "Provide a valid appName/appId to create policy":
                 return "Provide a valid appName/appId to create policy"
             for user_input in user_inputs:
