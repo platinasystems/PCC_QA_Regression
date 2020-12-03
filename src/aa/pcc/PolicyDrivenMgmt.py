@@ -254,7 +254,9 @@ class PolicyDrivenMgmt(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             logger.console("kwargs are : {}".format(kwargs))
             data = pcc.get_policy_enabled_apps(conn)['Result']['Data']
+            app_id_from_policy = None
             for i in data:
+                print("****************  "+str(i)+ "  ******************")
                 if self.Name.lower() in i.values():
                     app_id_from_policy =  i['id']
                     logger.console("app_id_from_policy: {}".format(app_id_from_policy))

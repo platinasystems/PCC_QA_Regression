@@ -12,7 +12,7 @@ Login to PCC
 
 
         [Documentation]    *Login to PCC* test
-        
+        [Tags]    Jenkins
         
         ${status}        Login To PCC    ${pcc_setup}
 
@@ -451,7 +451,7 @@ Create Policies
         [Documentation]    *Create Policies* test
                            ...  keywords:
                            ...  PCC.Create Policy
-
+        [Tags]    Jenkins
         
         #### Creating NTP policies ####
         ${app_id}    PCC.Get App Id from Policies
@@ -473,7 +473,7 @@ Create Policies
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=NTP_ZONE
-                       ...  inputs=[{"name":"ntp_timezone","value":"Asia/Gaza"},{"name":"ntp_server_1","value":"1.pool.ntp.org new"}]
+                       ...  inputs=[{"name":"ntp_timezone","value":"Asia/Gaza"},{"name":"ntp_SERVER_2","value":"1.pool.ntp.org new"}]
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -708,7 +708,7 @@ Delete Node
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
-                              ...  Names=['${SERVER_1_NAME}']
+                              ...  Names=['${SERVER_2_NAME}']
 
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
@@ -727,7 +727,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
 
         ######  Adding Node  ######
         ${add_node_response}    PCC.Add Node
-                                ...    Host=${SERVER_1_HOST_IP}
+                                ...    Host=${SERVER_2_HOST_IP}
 
                                 Log To Console    ${add_node_response}
                                 ${result}    Get Result    ${add_node_response}
@@ -739,7 +739,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
                                 Sleep    2s
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -747,17 +747,16 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Adding Node Role on Node  #####
 
         ${response}            PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}"]
                                ...  roles=["DNS", "SNMP","NTP"]
 
                                Should Be Equal As Strings      ${response}  OK
 
         ${status_code}         PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
 
                                Should Be Equal As Strings      ${status_code}  OK
 
-                               Sleep    5s
 
         ######  Updating Region with Policy  ######
 
@@ -847,12 +846,10 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
                                     Log to Console    ${message}
                                     Should Be Equal As Strings    ${status}    200
 
-                                    Sleep    5 minutes
-
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${default_rack_Id}
                      ...  parentID=${default_site_Id}
                      ...  scope_name=Default rack
@@ -863,7 +860,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${default_rack_Id},${default_site_Id},${default_zone_Id},${default_region_Id}]
 
                      Log To Console    ${status}
@@ -872,7 +869,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Validate Node Role Assignment on Node ##########
 
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -881,7 +878,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Validate RSOP on Node ##########
 
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_rack_policy_id},${ntp_region_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -892,13 +889,13 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Validate DNS from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.rack.com','dns_rack1.com', 'dns_rack2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -908,13 +905,13 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Check NTP services from backend #####
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -922,13 +919,13 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
         
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Australia/Currie
 
                       Should Be Equal As Strings      ${status}  OK
@@ -936,13 +933,13 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Check SNMP services from backend #####
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -950,7 +947,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ##### Validate SNMPv2 from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -958,8 +955,8 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -986,18 +983,18 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
                                     Log to Console    ${message}
                                     Should Be Equal As Strings    ${status}    200
 
-                                    Sleep    5 minutes
+                                    
 
         ##### Validate RSOP on Node ##########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_rack_policy_id},${ntp_region_policy_id},${snmpv3_policy_id}]
 
                      Log To Console    ${status}
@@ -1007,8 +1004,8 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
         
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv3
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
                       ...  snmp_username=testuser
                       ...  snmp_password=testuserpwd
                       ...  snmp_encryption=testuser
@@ -1025,12 +1022,12 @@ Check if the node inherit its relationship with the parents object and policies 
 #### Checked #######
         
         ${node_id}    PCC.Get Node Id
-                      ...  Name=${SERVER_1_NAME}
+                      ...  Name=${SERVER_2_NAME}
                       Log To Console    ${node_id}
 
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
-                       ...  Name=${SERVER_1_NAME}
+                       ...  Name=${SERVER_2_NAME}
                        ...  scopeId=${rack-1_Id}
                        ...  roles=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
@@ -1140,12 +1137,12 @@ Check if the node inherit its relationship with the parents object and policies 
                                     Log to Console    ${message}
                                     Should Be Equal As Strings    ${status}    200
 
-                                    Sleep    5 minutes
+                                    
 
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${rack-1_Id}
                      ...  parentID=${site-1_Id}
                      ...  scope_name=rack-1
@@ -1156,7 +1153,7 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${rack-1_Id},${site-1_Id},${zone-1_Id},${region-1_Id}]
 
                      Log To Console    ${status}
@@ -1165,13 +1162,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -1180,13 +1177,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_site_policy_id},${ntp_zone_policy_id},${snmpv3_policy_id}]
 
                      Log To Console    ${status}
@@ -1195,13 +1192,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1209,15 +1206,15 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv3
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
                       ...  snmp_username=testuser
                       ...  snmp_password=testuserpwd
                       ...  snmp_encryption=testuser
@@ -1228,13 +1225,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -1244,13 +1241,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1258,13 +1255,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -1277,12 +1274,12 @@ Check if the node inherit its relationship with the parents object and policies 
 
         
         ${node_id}    PCC.Get Node Id
-                      ...  Name=${SERVER_1_NAME}
+                      ...  Name=${SERVER_2_NAME}
                       Log To Console    ${node_id}
 
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
-                       ...  Name=${SERVER_1_NAME}
+                       ...  Name=${SERVER_2_NAME}
                        ...  scopeId=${site-1_Id}
                        ...  roles=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
@@ -1293,7 +1290,7 @@ Check if the node inherit its relationship with the parents object and policies 
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-                       Sleep    5 minutes
+                       
 
 
         ${scope_id}    PCC.Get Scope Id
@@ -1305,7 +1302,7 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${site-1_Id}
                      ...  scope_name=Default rack
@@ -1316,7 +1313,7 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${site-1_Id},${zone-1_Id},${region-1_Id}]
 
                      Log To Console    ${status}
@@ -1325,13 +1322,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -1340,13 +1337,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_site_policy_id},${ntp_zone_policy_id}]
 
                      Log To Console    ${status}
@@ -1355,13 +1352,13 @@ Check if the node inherit its relationship with the parents object and policies 
         #### Negative test of keeping previous policy and verify if it still exists ######
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_site_policy_id},${ntp_zone_policy_id},${snmpv3_policy_id}]
 
                      Log To Console    ${status}
@@ -1370,13 +1367,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1384,15 +1381,15 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv3
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
                       ...  snmp_username=testuser
                       ...  snmp_password=testuserpwd
                       ...  snmp_encryption=testuser
@@ -1403,13 +1400,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -1419,13 +1416,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1433,13 +1430,13 @@ Check if the node inherit its relationship with the parents object and policies 
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -1491,7 +1488,7 @@ Update parent of a zone
                                     Log to Console    ${message}
                                     Should Be Equal As Strings    ${status}    200
 
-                                    Sleep    5 minutes
+                                    
 
         ${scope_id}    PCC.Get Scope Id
                        ...  scope_name=Default rack
@@ -1508,7 +1505,7 @@ Update parent of a zone
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${site-1_Id}
                      ...  scope_name=Default rack
@@ -1519,7 +1516,7 @@ Update parent of a zone
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${site-1_Id},${zone-1_Id},${region-2_Id}]
 
                      Log To Console    ${status}
@@ -1528,13 +1525,13 @@ Update parent of a zone
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -1543,13 +1540,13 @@ Update parent of a zone
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_site_policy_id},${ntp_zone_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -1558,13 +1555,13 @@ Update parent of a zone
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1572,7 +1569,7 @@ Update parent of a zone
         ##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -1580,8 +1577,8 @@ Update parent of a zone
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1589,13 +1586,13 @@ Update parent of a zone
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -1605,13 +1602,13 @@ Update parent of a zone
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1619,13 +1616,13 @@ Update parent of a zone
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -1702,7 +1699,7 @@ Update parent of a site
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${site-1_Id}
                      ...  scope_name=Default rack
@@ -1713,7 +1710,7 @@ Update parent of a site
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${site-1_Id},${zone-2_Id},${region-2_Id}]
 
                      Log To Console    ${status}
@@ -1722,13 +1719,13 @@ Update parent of a site
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -1737,13 +1734,13 @@ Update parent of a site
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${dns_site_policy_id},${ntp_zone_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -1752,13 +1749,13 @@ Update parent of a site
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1766,7 +1763,7 @@ Update parent of a site
         ##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -1774,8 +1771,8 @@ Update parent of a site
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1783,13 +1780,13 @@ Update parent of a site
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -1799,13 +1796,13 @@ Update parent of a site
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1813,13 +1810,13 @@ Update parent of a site
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -1830,7 +1827,7 @@ Update parent of a rack
 
         
         ${node_id}    PCC.Get Node Id
-                      ...  Name=${SERVER_1_NAME}
+                      ...  Name=${SERVER_2_NAME}
                       Log To Console    ${node_id}
 
         #### Updating parent ID of rack ####
@@ -1878,7 +1875,7 @@ Update parent of a rack
 
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
-                       ...  Name=${SERVER_1_NAME}
+                       ...  Name=${SERVER_2_NAME}
                        ...  scopeId=${rack-1_Id}
                        ...  roles=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
@@ -1889,7 +1886,7 @@ Update parent of a rack
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-                       Sleep    5 minutes
+                       
 
 
         ${scope_Id}    PCC.Get Scope Id
@@ -1901,7 +1898,7 @@ Update parent of a rack
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${site-2_Id}
                      ...  scope_name=rack-1
@@ -1912,7 +1909,7 @@ Update parent of a rack
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${site-2_Id},${zone-2_Id},${region-2_Id}]
 
                      Log To Console    ${status}
@@ -1921,13 +1918,13 @@ Update parent of a rack
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -1936,13 +1933,13 @@ Update parent of a rack
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${ntp_zone_policy_id},${snmpv3_policy_id}]
 
                      Log To Console    ${status}
@@ -1951,13 +1948,13 @@ Update parent of a rack
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -1965,15 +1962,15 @@ Update parent of a rack
         ##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv3
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
                       ...  snmp_username=testuser
                       ...  snmp_password=testuserpwd
                       ...  snmp_encryption=testuser
@@ -1984,13 +1981,13 @@ Update parent of a rack
         ##### Validate DNS from backend (Negative Testing) #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -2000,13 +1997,13 @@ Update parent of a rack
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2014,13 +2011,13 @@ Update parent of a rack
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -2033,7 +2030,7 @@ Update rack of a node
         
         
         ${node_id}    PCC.Get Node Id
-                      ...  Name=${SERVER_1_NAME}
+                      ...  Name=${SERVER_2_NAME}
                       Log To Console    ${node_id}
         
         ${site-2_Id}    PCC.Get Scope Id
@@ -2054,7 +2051,7 @@ Update rack of a node
 
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
-                       ...  Name=${SERVER_1_NAME}
+                       ...  Name=${SERVER_2_NAME}
                        ...  scopeId=${rack-2_Id}
                        ...  roles=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
@@ -2065,7 +2062,7 @@ Update rack of a node
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-                       Sleep    5 minutes
+                       
 
 
         ${scope_Id}    PCC.Get Scope Id
@@ -2077,7 +2074,7 @@ Update rack of a node
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${site-2_Id}
                      ...  scope_name=rack-2
@@ -2088,7 +2085,7 @@ Update rack of a node
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${site-2_Id},${zone-2_Id},${region-2_Id}]
 
                      Log To Console    ${status}
@@ -2097,13 +2094,13 @@ Update rack of a node
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -2112,13 +2109,13 @@ Update rack of a node
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${ntp_zone_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -2127,13 +2124,13 @@ Update rack of a node
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2141,7 +2138,7 @@ Update rack of a node
         ##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -2149,8 +2146,8 @@ Update rack of a node
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2158,13 +2155,13 @@ Update rack of a node
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -2174,13 +2171,13 @@ Update rack of a node
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2188,13 +2185,13 @@ Update rack of a node
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -2206,7 +2203,7 @@ Update site of a node
 
         
         ${node_id}    PCC.Get Node Id
-                      ...  Name=${SERVER_1_NAME}
+                      ...  Name=${SERVER_2_NAME}
                       Log To Console    ${node_id}
 
         ${site-1_Id}    PCC.Get Scope Id
@@ -2220,7 +2217,7 @@ Update site of a node
 
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
-                       ...  Name=${SERVER_1_NAME}
+                       ...  Name=${SERVER_2_NAME}
                        ...  scopeId=${site-1_Id}
                        ...  roles=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
@@ -2231,7 +2228,7 @@ Update site of a node
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-                       Sleep    5 minutes
+                       
 
 
         ${scope_Id}    PCC.Get Scope Id
@@ -2243,7 +2240,7 @@ Update site of a node
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${site-1_Id}
                      ...  scope_name=Default rack
@@ -2254,7 +2251,7 @@ Update site of a node
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${site-1_Id},${zone-2_Id},${region-2_Id}]
 
                      Log To Console    ${status}
@@ -2263,13 +2260,13 @@ Update site of a node
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${dns_node_role_id},${ntp_node_role_id},${snmp_node_role_id}]
 
                      Log To Console    ${status}
@@ -2278,13 +2275,13 @@ Update site of a node
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${ntp_zone_policy_id},${dns_site_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -2293,13 +2290,13 @@ Update site of a node
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2307,7 +2304,7 @@ Update site of a node
         ##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -2315,8 +2312,8 @@ Update site of a node
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2324,13 +2321,13 @@ Update site of a node
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.site.com','dns_site1.com', 'dns_site2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -2340,26 +2337,26 @@ Update site of a node
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
 
         ##### Validate NTP from backend #########
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
                       Should Be Equal As Strings      ${status}  OK
@@ -2376,14 +2373,14 @@ Delete an existing node from the PCC and add it back
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
-                              ...  Names=['${SERVER_1_NAME}']
+                              ...  Names=['${SERVER_2_NAME}']
 
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
 
         ######  Adding Node  ######
         ${add_node_response}    PCC.Add Node
-                                ...    Host=${SERVER_1_HOST_IP}
+                                ...    Host=${SERVER_2_HOST_IP}
 
                                 Log To Console    ${add_node_response}
                                 ${result}    Get Result    ${add_node_response}
@@ -2395,7 +2392,7 @@ Delete an existing node from the PCC and add it back
                                 Sleep    2s
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -2413,7 +2410,7 @@ Delete an existing node from the PCC and add it back
         ##### Validate Scope Assignment on Node ##########
 
         ${status}    PCC.Check scope assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scopeId=${scope_id}
                      ...  parentID=${default_site_Id}
                      ...  scope_name=Default rack
@@ -2424,7 +2421,7 @@ Delete an existing node from the PCC and add it back
         ##### Validate Scope Hierarchy on Node ##########
 
         ${status}    PCC.Check scope hierarchy on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  scope_from_user=[${scope_id},${default_site_Id},${default_zone_Id},${default_region_Id}]
 
                      Log To Console    ${status}
@@ -2433,28 +2430,28 @@ Delete an existing node from the PCC and add it back
         ##### Adding Node Role on Node  #####
 
         ${response}            PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}"]
                                ...  roles=["MIXED"]
 
                                Should Be Equal As Strings      ${response}  OK
 
         ${status_code}         PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
 
                                Should Be Equal As Strings      ${status_code}  OK
 
-                               Sleep    5 minutes
+                               
 
         ##### Validate Node Role Assignment on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Check roles assignment on node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  roles_id=[${mixed_node_role_id}]
 
                      Log To Console    ${status}
@@ -2463,13 +2460,13 @@ Delete an existing node from the PCC and add it back
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${ntp_region_policy_id},${dns_rack_policy_id},${snmpv3_policy_id}]
 
                      Log To Console    ${status}
@@ -2478,13 +2475,13 @@ Delete an existing node from the PCC and add it back
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2492,15 +2489,15 @@ Delete an existing node from the PCC and add it back
         ##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv3
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
                       ...  snmp_username=testuser
                       ...  snmp_password=testuserpwd
                       ...  snmp_encryption=testuser
@@ -2511,13 +2508,13 @@ Delete an existing node from the PCC and add it back
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.rack.com','dns_rack1.com', 'dns_rack2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -2527,13 +2524,13 @@ Delete an existing node from the PCC and add it back
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2541,13 +2538,13 @@ Delete an existing node from the PCC and add it back
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Australia/Currie
 
                       Should Be Equal As Strings      ${status}  OK
@@ -2584,13 +2581,13 @@ Check if policies can be applied by policy update
         ##### Validate RSOP on Node ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${ntp_region_policy_id},${dns_rack_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -2599,13 +2596,13 @@ Check if policies can be applied by policy update
         ##### Check SNMP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2613,7 +2610,7 @@ Check if policies can be applied by policy update
         ##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -2621,8 +2618,8 @@ Check if policies can be applied by policy update
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2630,13 +2627,13 @@ Check if policies can be applied by policy update
         ##### Validate DNS from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.rack.com','dns_rack1.com', 'dns_rack2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -2646,13 +2643,13 @@ Check if policies can be applied by policy update
         ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
@@ -2660,13 +2657,13 @@ Check if policies can be applied by policy update
         ##### Validate NTP from backend #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Australia/Currie
 
                       Should Be Equal As Strings      ${status}  OK
@@ -2680,14 +2677,14 @@ Check if policies can be applied by node Role delete
         
         ####### Removing node role #######
         ${response}                 PCC.Delete and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}"]
                                ...  roles=["MIXED"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
 
         ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
 
                                     Should Be Equal As Strings      ${status_code}  OK
 
@@ -2700,13 +2697,13 @@ Check if policies can be applied by node Role delete
         ##### Validate RSOP on Node(Should not be present - Negative) ##########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate RSOP of a node
-                     ...  node_name=${SERVER_1_NAME}
+                     ...  node_name=${SERVER_2_NAME}
                      ...  policyIDs=[${ntp_region_policy_id},${dns_rack_policy_id},${snmpv2_policy_id}]
 
                      Log To Console    ${status}
@@ -2715,13 +2712,13 @@ Check if policies can be applied by node Role delete
         ##### Check SNMP services from backend (Negative) #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Not Be Equal As Strings      ${status}  OK
@@ -2729,7 +2726,7 @@ Check if policies can be applied by node Role delete
         ##### Validate SNMPv2 from backend (Negative) #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
@@ -2737,8 +2734,8 @@ Check if policies can be applied by node Role delete
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
                       ...  community_string=snmpv2_community_string
-                      ...  host_ip=${SERVER_1_HOST_IP}
-                      ...  node_name=${SERVER_1_NAME}
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
 
                       Log To Console    ${status}
                       Should Not Be Equal As Strings      ${status}  OK
@@ -2746,13 +2743,13 @@ Check if policies can be applied by node Role delete
         ##### Validate DNS from backend (Negative)#########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}    PCC.Validate DNS From Backend
-                     ...  host_ip=${SERVER_1_HOST_IP}
+                     ...  host_ip=${SERVER_2_HOST_IP}
                      ...  search_list=['www.rack.com','dns_rack1.com', 'dns_rack2.com']
                      ...  dns_server_ip=8.8.8.8
 
@@ -2762,13 +2759,13 @@ Check if policies can be applied by node Role delete
         ##### Check NTP services from backend (Negative) #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
 
                       Log To Console    ${status}
                       Should Not Be Equal As Strings      ${status}  OK
@@ -2776,13 +2773,13 @@ Check if policies can be applied by node Role delete
         ##### Validate NTP from backend (Negative) #########
         
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_1_HOST_IP}
+                      ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Australia/Currie
 
                       Should Not Be Equal As Strings      ${status}  OK
