@@ -234,7 +234,7 @@ class PolicyDrivenMgmt(AaBase):
             for i in eval(str(data)):
                 print("****************  "+str(i)+ "  ******************")
                 app_list = [str(x).lower() for x in i.values() if type(x)!= int]
-                print("Applist in get_policy_inputs_from_apps is: ()".format(str(app_list)))
+                print("Applist in get_policy_inputs_from_apps is: {}".format(str(app_list)))
                 if self.Name.lower() in app_list:
                     values= i['actions'][0]['inputs']
             required_data = []
@@ -262,7 +262,7 @@ class PolicyDrivenMgmt(AaBase):
             for i in eval(str(data)):
                 print("****************  "+str(i)+ "  ******************")
                 app_list = [str(x).lower() for x in i.values() if type(x)!= int]
-                print("Applist in get_app_id_from_policies is: ()".format(str(app_list)))
+                print("Applist in get_app_id_from_policies is: {}".format(str(app_list)))
                 if self.Name.lower() in app_list:
                     app_id_from_policy =  i['id']
                     logger.console("app_id_from_policy: {}".format(app_id_from_policy))
