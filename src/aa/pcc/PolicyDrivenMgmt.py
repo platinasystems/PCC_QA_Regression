@@ -258,7 +258,8 @@ class PolicyDrivenMgmt(AaBase):
             
             for i in eval(str(data)):
                 print("****************  "+str(i)+ "  ******************")
-                if self.Name.lower() in i.values():
+                app_list = [str(x).lower() for x in i.values()]
+                if self.Name.lower() in app_list:
                     app_id_from_policy =  i['id']
                     logger.console("app_id_from_policy: {}".format(app_id_from_policy))
         except Exception as e:
