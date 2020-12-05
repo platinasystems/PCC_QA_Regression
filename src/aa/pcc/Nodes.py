@@ -589,7 +589,7 @@ class Nodes(AaBase):
                     continue
                 else:
                     
-                    failed_host.append(name)
+                    failed_name.append(name)
                     continue                
         else:
             print("Either Host or Names are empty!!")
