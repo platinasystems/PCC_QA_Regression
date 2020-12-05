@@ -276,7 +276,7 @@ class CephCluster(AaBase):
         for ip in self.nodes_ip:
             data=cli_run(ip,self.user,self.password,cmd)
         time.sleep(30)
-        return
+        return "OK"
 
     ###########################################################################
     @keyword(name="PCC.Ceph Cleanup BE Tables")
