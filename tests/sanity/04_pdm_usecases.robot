@@ -718,7 +718,7 @@ Delete Node
 
         [Documentation]    *Delete Nodes* test
 
-		
+		[Tags]    Jenkins
         ${network_id}              PCC.Get Network Manager Id
                               ...  name=${NETWORK_MANAGER_NAME}
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted

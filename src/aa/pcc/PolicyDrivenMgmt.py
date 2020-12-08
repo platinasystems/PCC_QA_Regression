@@ -640,7 +640,7 @@ class PolicyDrivenMgmt(AaBase):
             ntp_check3=cli_run(ip,self.user,self.password,cmd_ntp3)
             print("Command_3 is: {}".format(cmd_ntp3))
             print("=========== NTP_Check3 output ==========\n{}".format(ntp_check3))
-            if (re.search("ntpd",str(ntp_check1)) or re.search("ntpd",str(ntp_check3))) and re.search("running",str(ntp_check1)) and re.search("ntpd",str(ntp_check2)):
+            if (re.search("ntpd",str(ntp_check1)) or re.search("ntpd",str(ntp_check3))) and (re.search("running",str(ntp_check1)) or re.search("running",str(ntp_check3)))  and re.search("ntpd",str(ntp_check2)):
                 print("NTP Found")
                 success_chk.append(ip)
                     
@@ -877,11 +877,4 @@ class PolicyDrivenMgmt(AaBase):
             return "OK"
         else:
             return "Error: validation unsuccessful, time zone {} not found".format(self.time_zone)   
-        
-        
-          
-            
-        
-    
-    
-    
+
