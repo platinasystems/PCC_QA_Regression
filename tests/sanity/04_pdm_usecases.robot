@@ -24,6 +24,19 @@ Login to PCC
                          Load Tenant Data    ${pcc_setup}
                          Load Node Roles Data    ${pcc_setup}
 
+#####################################################################################################################################
+Install net-tools on nodes
+#####################################################################################################################################
+
+    [Documentation]    *Install net-tools on nodes* test                 
+    [Tags]    Jenkins
+    
+    ${status}    Install net-tools command
+                 ...  node_names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}']
+
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    OK
+				 
 ###################################################################################################################################
 Create scoping objects
 ###################################################################################################################################
@@ -31,8 +44,9 @@ Create scoping objects
         [Documentation]    *Create scoping objects* test
                            ...  keywords:
                            ...  PCC.Create Scope
-
-        [Tags]    Jenkins
+		
+		[Tags]    Jenkins
+        
 
         #### Creating Regions ####
         ${response}    PCC.Create Scope
@@ -242,7 +256,8 @@ Getting Ids of Default locations and user-created locations
         [Documentation]    *Get Scope Ids* test
                            ...  keywords:
                            ...  PCC.Get Scope Id
-
+		
+		[Tags]    Jenkins
         #### Getting Ids of Default locations and regions ####
 
 
@@ -451,8 +466,9 @@ Create Policies
         [Documentation]    *Create Policies* test
                            ...  keywords:
                            ...  PCC.Create Policy
-
+		
 		[Tags]    Jenkins
+		
         #### Creating NTP policies ####
         ${app_id}    PCC.Get App Id from Policies
                      ...  Name=ntp
@@ -598,8 +614,8 @@ Getting Ids of All Node Roles
       [Documentation]    *Getting Ids of All Node Roles* test
                            ...  keywords:
                            ...  PCC.Get Node Role Id
-
-
+		
+		[Tags]    Jenkins
 
         ${dns_node_role_id}     PCC.Get Node Role Id
                                 ...  Name=DNS
@@ -633,7 +649,7 @@ Getting Ids of All Policies
                            ...  keywords:
                            ...  PCC.Get Policy Id
 
-
+		[Tags]    Jenkins
 
         ${ntp_region_policy_id}     PCC.Get Policy Id
                                     ...  Name=ntp
@@ -702,7 +718,7 @@ Delete Node
 
         [Documentation]    *Delete Nodes* test
 
-
+		
         ${network_id}              PCC.Get Network Manager Id
                               ...  name=${NETWORK_MANAGER_NAME}
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
@@ -718,12 +734,12 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
 ###################################################################################################################################
 ## Checked ###
 
-
+		
         [Documentation]    *Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) and policies are applied on the node* test
                            ...  keywords:
                            ...  PCC.Add Node
 
-
+		[Tags]    Jenkins
 
         ######  Adding Node  ######
         ${add_node_response}    PCC.Add Node
@@ -911,7 +927,21 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+        
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -925,7 +955,21 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
 
                       Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend #########
+        ##### Check SNMP services from backend #####
+        
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -983,7 +1027,13 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
 
         ##### Validate SNMPv3 from backend #########
 
-        ${status}     PCC.Validate SNMP from backend
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+							   
+		${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv3
                       ...  host_ip=${SERVER_2_HOST_IP}
                       ...  node_name=${SERVER_2_NAME}
@@ -1174,7 +1224,21 @@ Check if the node inherit its relationship with the parents object and policies 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv3 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1209,7 +1273,21 @@ Check if the node inherit its relationship with the parents object and policies 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1325,7 +1403,21 @@ Check if the node inherit its relationship with the parents object and policies 
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv3 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1360,7 +1452,21 @@ Check if the node inherit its relationship with the parents object and policies 
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1494,7 +1600,21 @@ Update parent of a zone
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1527,7 +1647,21 @@ Update parent of a zone
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1668,7 +1802,21 @@ Update parent of a site
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+			
+		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1701,7 +1849,21 @@ Update parent of a site
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1847,25 +2009,6 @@ Update parent of a rack
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv3 from backend #########
-
-        ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
-
-                               Log To Console    ${node_wait_status}
-                               Should Be Equal As Strings    ${node_wait_status}    OK
-
-        ${status}     PCC.Validate SNMP from backend
-                      ...  snmp_version=snmpv3
-                      ...  host_ip=${SERVER_2_HOST_IP}
-                      ...  node_name=${SERVER_2_NAME}
-                      ...  snmp_username=testuser
-                      ...  snmp_password=testuserpwd
-                      ...  snmp_encryption=testuser
-
-                      Log To Console    ${status}
-                      Should Be Equal As Strings      ${status}  OK
-
         ##### Validate DNS from backend (Negative Testing) #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
@@ -1882,7 +2025,21 @@ Update parent of a rack
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -1894,6 +2051,39 @@ Update parent of a rack
                       ...  host_ip=${SERVER_2_HOST_IP}
                       ...  time_zone=Asia/Gaza
 
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv3 from backend #########
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}     PCC.Validate SNMP from backend
+                      ...  snmp_version=snmpv3
+                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  node_name=${SERVER_2_NAME}
+                      ...  snmp_username=testuser
+                      ...  snmp_password=testuserpwd
+                      ...  snmp_encryption=testuser
+
+                      Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
@@ -1999,7 +2189,21 @@ Update rack of a node
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+					  
+		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2032,7 +2236,21 @@ Update rack of a node
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2141,7 +2359,21 @@ Update site of a node
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2174,7 +2406,21 @@ Update site of a node
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend #########
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
 
@@ -2291,7 +2537,21 @@ Delete an existing node from the PCC and add it back
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv3 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv3 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2326,7 +2586,21 @@ Delete an existing node from the PCC and add it back
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2390,7 +2664,21 @@ Check if policies can be applied by policy update
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend #########
+        ##### Check SNMP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2423,7 +2711,21 @@ Check if policies can be applied by policy update
                      Log To Console    ${status}
                      Should Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend #########
+        ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2478,7 +2780,21 @@ Check if policies can be applied by node Role delete
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
 
-        ##### Validate SNMPv2 from backend (Negative) #########
+        ##### Check SNMP services from backend (Negative) #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check SNMP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Not Be Equal As Strings      ${status}  OK
+		
+		##### Validate SNMPv2 from backend (Negative) #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
@@ -2511,7 +2827,21 @@ Check if policies can be applied by node Role delete
                      Log To Console    ${status}
                      Should Not Be Equal As Strings      ${status}  OK
 
-        ##### Validate NTP from backend (Negative) #########
+        ##### Check NTP services from backend (Negative) #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+                               
+        ${status}     PCC.Check NTP services from backend
+                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+
+                      Log To Console    ${status}
+                      Should Not Be Equal As Strings      ${status}  OK
+		
+		##### Validate NTP from backend (Negative) #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_2_NAME}
