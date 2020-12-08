@@ -15,7 +15,7 @@ from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
 
-PCCSERVER_TIMEOUT = 60*5
+PCCSERVER_TIMEOUT = 60*8
 
 class CephRgw(AaBase):
 
@@ -200,13 +200,15 @@ class CephRgw(AaBase):
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print("Response To Look :-"+str(data))
-                    if data['progressPercentage'] == 100:
-                        gateway_ready = True
-                    elif re.search("failed",str(data['deploy_status'])):
+                    if data['deploy_status'] == "completed":
+                        return "OK"
+                    elif re.search("failed", str(data['deploy_status'])):
                         return "Error"
+                    else:
+                        break
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Rgw Ready] Timeout")
-            trace("  Waiting until cluster: %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
+            trace("  Waiting until %s is Ready, current status: %s" % (str(data['name']),str(data['deploy_status'])))
             time.sleep(5)
         return "OK"
 
@@ -502,9 +504,9 @@ class CephRgw(AaBase):
         ceph_be_cmd="sudo ceph -s"
         wait_time=400
         
-        for i in range(20):
-            time.sleep(20)
-            wait_time-=20
+        for i in range(5):
+            time.sleep(10)
+            wait_time-=100
             print("wait time left for RGW backend check {}s".format(wait_time))
             trace("wait time left for RGW backend check {}s".format(wait_time))
             failed_chk=[]
@@ -523,7 +525,7 @@ class CephRgw(AaBase):
                 if len(success_chk)==len(eval(str(self.targetNodeIp))):
                     print("Backend verification successfuly done for : {}".format(success_chk))
                     return "OK"
-        if wait_time==0:
+        if wait_time<=0:
             print("Rgw Check: "+str(rgw_check)) 
             print("Ceph Rgw Check: "+str(ceph_check))     
                               
@@ -546,11 +548,11 @@ class CephRgw(AaBase):
             raise e
         
         ceph_be_cmd="sudo ceph -s"
-        wait_time=300
+        wait_time=400
         
-        for i in range(15):
-            time.sleep(20)
-            wait_time-=20
+        for i in range(4):
+            time.sleep(10)
+            wait_time-=100
             print("wait time left for RGW backend check {}s".format(wait_time))
             trace("wait time left for RGW backend check {}s".format(wait_time))
             failed_chk=[]
@@ -568,9 +570,14 @@ class CephRgw(AaBase):
                 if len(success_chk)==len(eval(str(self.targetNodeIp))):
                     print("Backend verification successfuly done for : {}".format(success_chk))
                     return "OK"
-                                              
+
+        if wait_time<=0:
+            print("Rgw Check: "+str(rgw_check)) 
+            print("Ceph Rgw Check: "+str(ceph_check))
+                                                        
         if failed_chk:  
             print("Rgw service are not down for {}".format(failed_chk))     
             return "Error"
         else:
             return "OK"
+
