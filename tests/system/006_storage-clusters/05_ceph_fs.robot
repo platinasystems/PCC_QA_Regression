@@ -1038,6 +1038,93 @@ Pool released from RBD is used for creating/updating CephFS
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
+Mount FS test case
+################################################################################################################################### 
+
+        ###  Get INET IP  ###
+        ${inet_ip}     PCC.Get CEPH Inet IP
+                       ...    hostip=${SERVER_2_HOST_IP}
+
+                       Log To Console    ${inet_ip}
+                       Set Global Variable    ${inet_ip}
+
+        ###  Get Stored size before mount  ###
+        ${size_replicated_pool_before_mount}      PCC.Get Stored Size for Replicated Pool
+                                                  ...    hostip=${SERVER_2_HOST_IP}
+                                                  ...    pool_name=fs-3
+
+                                                  Log To Console    ${size_replicated_pool_before_mount}
+                                                  Set Suite Variable    ${size_replicated_pool_before_mount}
+
+        ###  Mount FS to Mount Point  ###
+
+
+        ${status}    Create mount folder
+                     ...    mount_folder_name=test_fs_mnt
+                     ...    hostip=${SERVER_2_HOST_IP}
+                     ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+
+                     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
+        ${status}      PCC.Mount FS to Mount Point
+                       ...    mount_folder_name=test_fs_mnt
+                       ...    hostip=${SERVER_2_HOST_IP}
+                       ...    user=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK
+
+                       Sleep    1 minutes 
+
+        ${status}      Create dummy file and copy to mount path
+                       ...    dummy_file_name=test_fs_mnt_1mb.bin
+                       ...    dummy_file_size=1MiB
+                       ...    mount_folder_name=test_fs_mnt
+                       ...    hostip=${SERVER_2_HOST_IP}
+                       ...    user=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}  
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK     
+
+                       Sleep    2 minutes  
+
+
+        ###  Get Stored size after mount  ###
+        ${size_replicated_pool_after_mount}     PCC.Get Stored Size for Replicated Pool
+						...    hostip=${SERVER_2_HOST_IP}
+                                                ...    pool_name=fs-3
+
+                                                Log To Console    ${size_replicated_pool_after_mount}
+                                                Set Suite Variable    ${size_replicated_pool_after_mount}
+                                                Should Be True    ${size_replicated_pool_after_mount} > ${size_replicated_pool_before_mount}
+
+        
+
+        ###  Unmount FS and removing file created while FS mount ###                                            
+        ${status}      PCC.Unmount FS
+                       ...    hostip=${SERVER_2_HOST_IP} 
+                       ...    user=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}
+                       ...    mount_folder_name=test_fs_mnt
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK    
+
+         ${status}    Remove dummy file
+                     ...    dummy_file_name=test_fs_mnt_1mb.bin
+                     ...    hostip=${SERVER_2_HOST_IP} 
+                     ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}         
+
+		     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
+
+###################################################################################################################################
 Fetching Ceph FS ID before backup
 ###################################################################################################################################   
 
