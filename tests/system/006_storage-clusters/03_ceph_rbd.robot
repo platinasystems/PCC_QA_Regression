@@ -1383,6 +1383,106 @@ Ceph Rbd Resize_increase
 
                                     Should Be Equal As Strings      ${status}    OK
 
+###################################################################################################################################
+Ceph Rbd Mount Test
+###################################################################################################################################
+    [Documentation]                 *Ceph Rbd Mount Test*
+                               ...  keywords:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Create Pool
+                               ...  PCC.Ceph Wait Until Pool Ready
+                               ...  PCC.Ceph Create Rbd
+                               ...  PCC.Ceph Wait Until Rbd Ready
+                               ...  PCC.Ceph Rbd Update
+							   
+							   
+        ###  Get INET IP  ###
+        ${inet_ip}     PCC.Get CEPH Inet IP
+                       ...    hostip=${SERVER_1_HOST_IP}
+
+                       Log To Console    ${inet_ip}
+                       Set Global Variable    ${inet_ip}
+
+        ###  Get Stored size before mount  ###
+        ${size_replicated_pool_before_mount}      PCC.Get Stored Size for Replicated Pool
+                                                  ...    hostip=${SERVER_1_HOST_IP}
+                                                  ...    pool_name=${CEPH_POOL_NAME}
+
+                                                  Log To Console    ${size_replicated_pool_before_mount}
+                                                  Set Suite Variable    ${size_replicated_pool_before_mount}
+
+        ###  Mount RBD to Mount Point  ###
+
+
+        ${status}    Create mount folder
+                     ...    mount_folder_name=test_rbd_mnt
+                     ...    hostip=${SERVER_1_HOST_IP}
+                     ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+
+                     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
+        ${status}    PCC.Map RBD
+					 ...    name=rbd-5
+					 ...    pool_name=${CEPH_POOL_NAME}
+					 ...    inet_ip=${inet_ip}
+					 
+					 Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+		
+		
+		${status}      PCC.Mount RBD to Mount Point
+                       ...    mount_folder_name=test_rbd_mnt
+                       ...    hostip=${SERVER_1_HOST_IP}
+                       ...    username=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK
+
+                       Sleep    1 minutes 
+
+        ${status}      Create dummy file and copy to mount path
+                       ...    dummy_file_name=test_rbd_mnt_4mb.bin
+                       ...    dummy_file_size=4MiB
+                       ...    mount_folder_name=test_rbd_mnt
+                       ...    hostip=${SERVER_1_HOST_IP}
+                       ...    user=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}  
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK     
+
+                       Sleep    2 minutes  
+
+
+        ###  Get Stored size after mount  ###
+        ${size_replicated_pool_after_mount}     PCC.Get Stored Size for Replicated Pool
+                                                ...    hostip=${SERVER_1_HOST_IP}
+                                                ...    pool_name=${CEPH_POOL_NAME}
+
+                                                Log To Console    ${size_replicated_pool_after_mount}
+                                                Set Suite Variable    ${size_replicated_pool_after_mount}
+                                                Should Be True    ${size_replicated_pool_after_mount} > ${size_replicated_pool_before_mount}
+		
+		###  Unmount and unmap RBD  ###
+		${status}		PCC.Unmount and Unmap RBD
+						...    mount_folder_name=test_rbd_mnt
+						...    hostip=${SERVER_1_HOST_IP}
+                        ...    user=${PCC_LINUX_USER}
+                        ...    password=${PCC_LINUX_PASSWORD}
+						
+						Log To Console    ${status}
+                        Should be equal as strings    ${status}    OK
+						
+		${status}    Remove dummy file
+                     ...    dummy_file_name=test_rbd_mnt_4mb.bin
+                     ...    hostip=${SERVER_1_HOST_IP} 
+					 ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+					 Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 #Ceph Rbd Change pool (Negative)
