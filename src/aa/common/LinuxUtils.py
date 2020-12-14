@@ -12,6 +12,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, debug, pretty_print
 from aa.common.Cli import cli_run
+from aa.common.Result import get_response_data
 
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
@@ -211,6 +212,7 @@ class LinuxUtils(AaBase):
     def install_nettools(self,*args, **kwargs):
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
         print("Kwargs are: {}".format(kwargs))
         try:
             host_ips = []

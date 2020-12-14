@@ -32,7 +32,6 @@ Install net-tools on nodes
     [Tags]    Jenkins
     
     ${status}    Install net-tools command
-                 ...  node_names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}']
 
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
@@ -2830,7 +2829,7 @@ Check if policies can be applied by node Role delete
         ##### Check NTP services from backend (Negative) #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+			       ...  Name=${SERVER_2_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
