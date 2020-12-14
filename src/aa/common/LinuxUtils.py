@@ -15,7 +15,7 @@ from aa.common.Cli import cli_run
 
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
-
+from aa.pcc.Nodes import Nodes
 
 class LinuxUtils(AaBase):
     
@@ -215,9 +215,8 @@ class LinuxUtils(AaBase):
         try:
             host_ips = []
             status = []
-            for node_name in ast.literal_eval(self.node_names):
-                host_ip = easy.get_hostip_by_name(conn, Name=node_name)
-                host_ips.append(host_ip)
+            get_nodes_response = Nodes().get_nodes(**kwargs)
+            host_ips = [str(node['Host']) for node in get_response_data(get_nodes_response)]
             print("host_ips_list : {}".format(host_ips))
             for ip in host_ips:    
                 cmd = "sudo cat /etc/os-release|grep PRETTY_NAME"
