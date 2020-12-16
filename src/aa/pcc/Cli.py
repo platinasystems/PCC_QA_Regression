@@ -437,6 +437,9 @@ class Cli(AaBase):
                 return "{} Package not installed".format(self.package_name)
             else:
                 return "Error while checking {} package installation".format(self.package_name)
+        
+        else:
+            return "Check package install failed"
 
     ###########################################################################
     @keyword(name="CLI.Remove a package from machine")
@@ -475,3 +478,5 @@ class Cli(AaBase):
                 return "{} Package is not installed".format(self.package_name)
             else:
                 return "Error while removing {} package".format(self.package_name)
+        else:
+            return "Check package remove failed"
