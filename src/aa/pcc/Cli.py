@@ -32,6 +32,7 @@ class Cli(AaBase):
         self.restore_hostip = None
         self.backup_params = None
         self.backup_type = None
+        self.package_name = None
         super().__init__()
 
     ###########################################################################
@@ -380,3 +381,97 @@ class Cli(AaBase):
         time.sleep(5*60) # Sleeping 5 mins
         trace("Done sleeping")
         return "OK"
+
+    ###########################################################################
+    @keyword(name="CLI.Get OS Version")
+    ###########################################################################
+    def get_OS_version(self,*args,**kwargs):
+        banner("CLI.Get OS Version")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        cmd="sudo cat /etc/os-release| grep PRETTY_NAME"
+        trace("Command" + str(cmd) + "is getting executed")
+        cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
+        trace("cmd_op in CLI.Get OS Version is :{}".format(cmd_op))
+        #serialised_output = self._serialize_response(time.time(), cmd_op)
+
+        #output = str(serialised_output['Result']['stdout']).replace('\n', '').strip()
+
+        return cmd_op
+    
+    ###########################################################################
+    @keyword(name="CLI.Check package installed")
+    ###########################################################################
+    def check_package_installed(self,*args,**kwargs):
+        banner("CLI.Check package installed")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        OS_type = self.get_OS_version(host_ip= self.host_ip, linux_user= self.linux_user, linux_password = self.linux_password)
+
+        if re.search("Ubuntu",str(OS_type)) or re.search("Debian",str(OS_type)):
+            cmd = "sudo dpkg -s {}".format(self.package_name)
+            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.linux_user,linux_password=self.linux_password)
+
+            serialised_status = self._serialize_response(time.time(), cmd_output)
+            serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+            if re.search("install ok",serialised_cmd_output):
+                return "{} Package installed".format(self.package_name)
+            elif re.search("deinstall ok",serialised_cmd_output):
+                return "{} Package not installed".format(self.package_name)
+            else:
+                return "Error while checking {} package installation".format(self.package_name)
+
+        elif re.search("Red Hat",str(OS_type)) or re.search("CentOS",str(OS_type)):
+            cmd = "sudo rpm -qa|grep {}|wc -l".format(self.package_name)
+            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.linux_user,linux_password=self.linux_password)
+
+            serialised_status = self._serialize_response(time.time(), cmd_output)
+            serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+            if int(serialised_cmd_output)>0:
+                return "{} Package installed".format(self.package_name)
+            elif serialised_cmd_output == None:
+                return "{} Package not installed".format(self.package_name)
+            else:
+                return "Error while checking {} package installation".format(self.package_name)
+
+    ###########################################################################
+    @keyword(name="CLI.Remove a package from machine")
+    ###########################################################################
+    def remove_package_from_machine(self,*args,**kwargs):
+        banner("CLI.Remove a package from machine")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        OS_type = self.get_OS_version(host_ip= self.host_ip, linux_user= self.linux_user, linux_password = self.linux_password)
+
+        if re.search("Ubuntu",str(OS_type)) or re.search("Debian",str(OS_type)):
+            cmd = "sudo apt-get --assume-yes remove {}".format(self.package_name)
+            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.linux_user,linux_password=self.linux_password)
+
+            serialised_status = self._serialize_response(time.time(), cmd_output)
+            serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+            if re.search("Removing rsyslog",serialised_cmd_output):
+                return "{} Package removed".format(self.package_name)
+            elif re.search("is not installed",serialised_cmd_output):
+                return "{} Package is not installed".format(self.package_name)
+            else:
+                return "Error while removing {} package".format(self.package_name)
+
+        elif re.search("Red Hat",str(OS_type)) or re.search("CentOS",str(OS_type)):
+            cmd = "sudo yum -y remove {}".format(self.package_name)
+            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.linux_user,linux_password=self.linux_password)
+
+            serialised_status = self._serialize_response(time.time(), cmd_output)
+            serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+            if re.search("Complete!",serialised_cmd_output):
+                return "{} Package removed".format(self.package_name)
+            elif re.search("No Match for argument: {}".format(self.package_name),serialised_cmd_output):
+                return "{} Package is not installed".format(self.package_name)
+            else:
+                return "Error while removing {} package".format(self.package_name)
