@@ -244,12 +244,7 @@ Delete Certificate
         
         [Documentation]    *Delete Certificate* test
         [Tags]    Cert
-        ${response}    PCC.Delete Certificate
-                       ...  Alias=Cert_without_pvt_cert
-  
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
+        
                        
         ${response}    PCC.Delete Certificate
                        ...  Alias=Cert_with_pvt_cert
@@ -349,10 +344,104 @@ PCC Multiple Tenant deletion
         [Tags]    Delete
                            
         ${status}    PCC.Delete Multiple Tenants
-                       ...    Tenant_list=['Test_Tenant_4','Test_Tenant_5'] 
+                       ...    Tenant_list=["${TENANT1}"] 
                        
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK    Not Deleted
+					   
+###################################################################################################################################
+Policy driven management cleanup
+###################################################################################################################################
+		
+		[Documentation]    *Policy driven management cleanup* test
+                           ...  keywords:
+                           ...  PCC.Delete Multiple Tenants
+		
+		####  Removing Node roles from node ####
+		${response}                 PCC.Delete and Verify Roles On Nodes
+								    ...  nodes=["${SERVER_2_NAME}"]
+								    ...  roles=["DNS_NODE_ROLE"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                                    ...  node_name=${SERVER_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK				   
+						   
+		####  Deleting Node role from PCC  ####
+		${status}    PCC.Delete all Node roles
+                       
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node role still exists
+					 
+		####  Removing policies from Scope  ####
+		
+		${parent1_Id}    PCC.Get Scope Id
+                         ...  scope_name=region-1
+                         Log To Console    ${parent1_Id}
+        
+		${response}    PCC.Update Scope
+                       ...  Id=${parent1_Id}
+                       ...  type=region
+                       ...  scope_name=region-1
+                       ...  description=region-description
+                       ...  parentID=
+                       ...  policyIDs=[]
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+					   
+		####  Assigning Default rack to node  ####
+		${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default region
+                        Log To Console    ${parent1_Id}
+        
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${parent1_Id}
+                        Log To Console    ${parent2_Id}
+        
+        ${parent3_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default site
+                        ...  parentID=${parent2_Id}
+                        
+                        Log To Console    ${parent3_Id}
+                       
+        ${scope_id}    PCC.Get Scope Id
+                        ...  scope_name=Default rack
+                        ...  parentID=${parent3_Id}
+                        
+                        Log To Console    ${scope_id}
+                        
+        ${status}      PCC.Apply scope to multiple nodes
+                       ...  node_names=['${SERVER_2_NAME}']
+                       ...  scopeId=${scope_id}
+                       
+                       Log to Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK
+		
+		####  Delete All Locations  ####
+		${response}    PCC.Delete Scope
+                       ...  scope_name=region-1
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+		
+		####  Delete All Policies  ####
+		${status}    PCC.Delete All Policies
+                       
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
                                                                                                                                           
 #####################################################################################################################################
 Delete Nodes

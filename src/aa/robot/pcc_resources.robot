@@ -112,6 +112,8 @@ Load PCC Test Data
         ${PCC_SETUP_USERNAME}          Evaluate    $pcc_server_dict.get("setup_username", None)
                                   Set Suite Variable      ${PCC_SETUP_USERNAME}
 
+        ${PCC_SETUP_UPGRADE_CMD}          Evaluate    $pcc_server_dict.get("setup_upgrade_cmd", None)
+                                  Set Suite Variable      ${PCC_SETUP_UPGRADE_CMD}
 ###################################################################################################################################
 Load Clusterhead 1 Test Data
 ###################################################################################################################################
