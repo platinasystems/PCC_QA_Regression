@@ -429,6 +429,7 @@ Policy driven management cleanup
 		####  Delete All Locations  ####
 		${response}    PCC.Delete Scope
                        ...  scope_name=region-1
+		       ...  parentID=	
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
