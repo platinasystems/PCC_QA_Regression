@@ -321,13 +321,13 @@ class Cli(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         if (self.backup_type == "local") and (self.backup_params == "all"):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {}".format(self.pcc_password)
-        
+
         if (self.backup_type == "local") and (self.backup_params != "all"):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} -t {}".format(self.pcc_password, self.backup_params)
-        
+
         if (self.backup_type == "remote"):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} --url http://{}:9001 --id minio --secret minio123".format(self.pcc_password, self.backup_hostip)
-            
+
         trace("Command: " + str(cmd) + " is getting executed")
         cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
         print("cmd op: {}".format(str(cmd_op)))
@@ -335,8 +335,42 @@ class Cli(AaBase):
             print("Failed to backup, result is: \n {}".format(str(cmd_op)))
             return "Error: Failed to backup"
         else:
+            cmd_file="sudo test -f /home/pcc/platina-cli-ws/master.gpg && echo 'True'"
+            cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd_file)
+            print("Checking if keys folder exist or not:"+str(cmd_out))
+            if re.search("True",str(cmd_out)):
+                if self.backup_type=="local":
+                    cmd_local_file="sudo test -d /home/pcc/platina-cli-ws/keys/local && echo 'True' || echo 'False'"
+                    cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd_local_file)
+                    print("Checking if keys folder exist or not:"+str(cmd_out))
+                    if re.search("False",str(cmd_out)):
+                        folder_cmd="sudo mkdir -p /home/pcc/platina-cli-ws/keys/local"
+                        cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,folder_cmd)
+                        print("Folder check:"+str(cmd_out))
+                        move_cmd="sudo mv /home/pcc/platina-cli-ws/*.gpg /home/pcc/platina-cli-ws/keys/local/."
+                        cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,move_cmd)
+                        print("Key moving:"+str(cmd_out))
+                    else:
+                        move_cmd="sudo mv /home/pcc/platina-cli-ws/*.gpg /home/pcc/platina-cli-ws/keys/local/."
+                        cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,move_cmd)
+                        print("Key moving:"+str(cmd_out))
+                elif self.backup_type=="remote":
+                    cmd="sudo test -d /home/pcc/platina-cli-ws/keys/remote && echo 'True' || echo 'False'"
+                    cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
+                    print("Checking if keys folder exist or not:"+str(cmd_out))
+                    if re.search("False",str(cmd_out)):
+                        folder_cmd="sudo mkdir -p /home/pcc/platina-cli-ws/keys/local"
+                        cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,folder_cmd)
+                        move_cmd="sudo mv /home/pcc/platina-cli-ws/*.gpg /home/pcc/platina-cli-ws/keys/remote/."
+                        print("Folder check:"+str(cmd_out))
+                        cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,move_cmd)
+                        print("Key moving:"+str(cmd_out))
+                    else:
+                        move_cmd="sudo mv /home/pcc/platina-cli-ws/*.gpg /home/pcc/platina-cli-ws/keys/remote/."
+                        cmd_out=cli_run(self.host_ip,self.linux_user,self.linux_password,move_cmd)
+                        print("Key moving:"+str(cmd_out))
             return "OK"
-            
+
     ###########################################################################
     @keyword(name="CLI.Restore PCC Instance")
     ###########################################################################
@@ -347,13 +381,13 @@ class Cli(AaBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         
         if (self.backup_type == "remote"):
-            cmd="sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} -t {} --url http://{}:9001 --id minio --secret minio123 --privateKey /home/pcc/platina-cli-ws/master.gpg".format(self.pcc_password, self.backup_params, self.restore_hostip)
+            cmd="sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} -t {} --url http://{}:9001 --id minio --secret minio123 --privateKey /home/pcc/platina-cli-ws/keys/remote/master.gpg".format(self.pcc_password, self.backup_params, self.restore_hostip)
             
         if (self.backup_type == "local") and (self.backup_params == "all"):
-            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} --privateKey /home/pcc/platina-cli-ws/master.gpg".format(self.pcc_password)
+            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password)
         
         if (self.backup_type == "local") and (self.backup_params != "all"):
-            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} -t {} --privateKey /home/pcc/platina-cli-ws/master.gpg".format(self.pcc_password, self.backup_params)
+            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} -t {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password, self.backup_params)
         
         trace("Command" + str(cmd) + "is getting executed")
         cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)

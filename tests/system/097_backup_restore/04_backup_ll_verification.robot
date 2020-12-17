@@ -409,7 +409,7 @@ Verifying Policy assignment from backend
 
         ${dns_rack_policy_id}       PCC.Get Policy Id
                                     ...  Name=dns
-                                    ...  description=DNS_RACK
+                                    ...  description=dns-policy-description
                                     Log To Console    ${dns_rack_policy_id}
                                     Set Global Variable    ${dns_rack_policy_id}
 								  

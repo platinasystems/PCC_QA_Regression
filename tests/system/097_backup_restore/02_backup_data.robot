@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+	[Tags]	This
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -628,12 +628,12 @@ Create a policy using DNS app, assigning it to Node and Scope
 ###################################################################################################################################
 Verifying Policy assignment from backend
 ###################################################################################################################################
-		
+	[Tags]	This		
 		##### Validate RSOP on Node ##########
 
         ${dns_rack_policy_id}                PCC.Get Policy Id
                                              ...  Name=dns
-                                             ...  description=DNS_RACK
+                                             ...  description=dns-policy-description
                                              Log To Console    ${dns_rack_policy_id}
                                              Set Global Variable    ${dns_rack_policy_id}
                                              

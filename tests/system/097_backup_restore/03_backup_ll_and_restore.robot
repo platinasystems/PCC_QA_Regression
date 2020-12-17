@@ -54,6 +54,7 @@ Backup PCC Instance Locally
                               ...   linux_user=${PCC_LINUX_USER}
                               ...   linux_password=${PCC_LINUX_PASSWORD}
                               ...   backup_params=all
+                              ...   backup_type=local
 
 
                                     Log to Console    ${status}
