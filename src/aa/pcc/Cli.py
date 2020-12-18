@@ -240,8 +240,8 @@ class Cli(AaBase):
             print("Output:"+str(pull_output))
             trace("Output:"+str(pull_output))
             if re.search("FAIL",str(pull_output)):
-                 print(str(pull_output))
-                 return "Error"
+                print(str(pull_output))
+                return "Error"
             else:
                 return "OK"
         else:
