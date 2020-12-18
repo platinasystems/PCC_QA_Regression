@@ -30,7 +30,8 @@ Add Nodes
                                     ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}']
 
                                     Log To Console    ${status}
-                                    Should be equal as strings    ${status}    OK
+                                    Run Keyword If  "${status}" != "OK"  Fatal Error
+				    Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Nodes Verification Back End (Services should be running and active)
@@ -41,6 +42,8 @@ Nodes Verification Back End (Services should be running and active)
 
         ${status}                   PCC.Node Verify Back End
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Log To Console    ${status}
+                                    Run Keyword If  "${status}" != "OK"  Fatal Error
+				    Should Be Equal As Strings      ${status}    OK
 
 
