@@ -159,13 +159,13 @@ Ceph Validation after restoring PCC
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK
 
-#        ${status}                   PCC.Ceph Wait Until Rgw Ready
-#                               ...  name=rgw
-#                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=rgw
+                                    Should Be Equal As Strings      ${status}    OK
 
-#        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-#                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
-#                                    Should Be Equal As Strings      ${backend_status}    OK
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                                    Should Be Equal As Strings      ${backend_status}    OK
 
         ${status}                   PCC.Ceph Wait Until Rbd Ready
                                ...  name=${CEPH_RBD_NAME}
