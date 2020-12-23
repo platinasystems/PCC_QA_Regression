@@ -42,7 +42,7 @@
 
     "clusterhead-2":
         {
-            "server_name":"sv16",
+            "invader_name":"sv16",
             "pcc_url": "https://172.17.2.116:9999",
             "pcc_host_ip": "172.17.2.116",
             "pcc_linux_password": "cals0ft",
@@ -92,7 +92,7 @@
 
     "server-3":
         {  
-            "server_name":"sv18",
+            "server_name":"sv-18",
             "pcc_url": "https://172.17.2.118:9999",
             "pcc_host_ip": "172.17.2.118",
             "pcc_linux_password": "cals0ft",
@@ -215,7 +215,7 @@
         {
             "name":"network-pvt",
             "nodes":["sv27","sv19","i-61"],
-            "nodes_ip":"nodes_ip":["172.17.2.127","172.17.2.119","172.17.2.61"],
+            "nodes_ip":["172.17.2.127","172.17.2.119","172.17.2.61"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
             "igwPolicy":"default"
