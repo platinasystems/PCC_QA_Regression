@@ -41,7 +41,7 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-Backup PCC Instance Remotely 
+Backup PCC Instance Locally
 ####################################################################################################################################
 
         [Documentation]            *Backup PCC instance* test
@@ -69,13 +69,6 @@ Prune Volumes And Perform Fresh Install
 
 
         ${result}                  CLI.Pcc Down
-                              ...  host_ip=172.17.2.215
-                              ...  linux_user=${PCC_LINUX_USER}
-                              ...  linux_password=${PCC_LINUX_PASSWORD}
-                              ...  pcc_password=veTvvV5JISJpUlip
-                                   Should Be Equal     ${result}       OK
-
-        ${result}                  CLI.Pcc Down
                               ...  host_ip=172.17.2.242
                               ...  linux_user=${PCC_LINUX_USER}
                               ...  linux_password=${PCC_LINUX_PASSWORD}
@@ -90,12 +83,19 @@ Prune Volumes And Perform Fresh Install
                                    Should Be Equal     ${result}       OK
 
 ###################################################################################################################################
-Restore PCC Instance Remotely
+Restore PCC Instance Local To Remote
 ###################################################################################################################################
 
         [Documentation]            *Restore PCC instance* test
                                ...  keywords:
                                ...  CLI.Restore PCC Instance
+
+        ${result}                   CLI.Pcc Down
+                               ...  host_ip=${PCC_HOST_IP}
+                               ...  linux_user=${PCC_LINUX_USER}
+                               ...  linux_password=${PCC_LINUX_PASSWORD}
+                               ...  pcc_password=${PCC_SETUP_PWD}
+                                    Should Be Equal     ${result}       OK
 
         ${status}                   CLI.Restore PCC Instance
                                ...  pcc_password=1m1pAscj0O3IaKRN
