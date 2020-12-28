@@ -30,7 +30,7 @@ Add Nodes
                                     ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
 
                                     Log To Console    ${status}
-                                    Run Keyword If  "${status}" != "OK"  Fatal Error
+                                    Run Keyword If    ${status} is not OK    Fatal Error
 				    Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
