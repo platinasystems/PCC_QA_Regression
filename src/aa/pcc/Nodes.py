@@ -521,7 +521,8 @@ class Nodes(AaBase):
             print("Host list is empty, please provide the host ip in a list for eg. host_ips=['000.00.0.00']")
             
         if failed_host:  
-            print("Service are down for {}".format(failed_host))     
+            print("Service are down for {}".format(failed_host))
+            BuiltIn().fatal_error('Stoping the exectuion, Nodes are not properly added please check !!!')
             return "Error"
         else:
             return "OK"
