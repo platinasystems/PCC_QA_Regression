@@ -31,6 +31,7 @@ Add Nodes
 
                                     Log To Console    ${status}
 				    Should be equal as strings    ${status}    OK
+				    Sleep    180s
 
 ###################################################################################################################################
 Nodes Verification Back End (Services should be running and active)
