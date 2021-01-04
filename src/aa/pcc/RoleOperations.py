@@ -158,8 +158,6 @@ class RoleOperations(AaBase):
                 trace("Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
                 time.sleep(5)
 
-        
-
     ###########################################################################
     @keyword(name="PCC.Delete and Verify Roles On Nodes")
     ###########################################################################
@@ -180,14 +178,16 @@ class RoleOperations(AaBase):
 
         payload=None
         tmp_id=None
-        
+        response_code_list = []
         for node in eval(str(self.nodes)):
-            role_ids=[]
+            print("*****************  On node from user: {} ********************".format(node))
             response = pcc.get_nodes(conn)
             for data in get_response_data(response):
                 self.Id=data['Id']
                 role_ids=data['roles']          
+                print("***************** node from pcc: {} ********************".format(data['Name'].lower()))
                 if str(data['Name']).lower() == str(node).lower():
+                    
                     print("Role_Ids_On_Node:-"+str(role_ids))
                     if role_ids:
                         for role in eval(str(self.roles)):
@@ -202,13 +202,19 @@ class RoleOperations(AaBase):
                         print("Payload:-"+str(payload))
                         api_response=pcc.modify_node(conn, payload)
                         print("API Response:-"+str(api_response))
-                        if api_response['Result']['status']==200:
+                        if api_response['StatusCode']==200:
+                            print("Required roles deleted for {}".format(node))
+                            response_code_list.append(str(api_response['StatusCode']))
                             continue
                         else:
                             return api_response
                     else:
-                        return "OK"       
-        return "OK"
+                        print("No roles present of node: {}".format(node))
+        result = len(response_code_list) > 0 and all(elem == "200" for elem in response_code_list)
+        if result:
+            return "OK"
+        else:
+            return "Error in removing node roles: {}".format(response_code_list)
         
     ###########################################################################
     @keyword(name="PCC.Maas Verify BE")

@@ -444,7 +444,36 @@ class PolicyDrivenMgmt(AaBase):
             return "OK"  
         else:
             return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
+
+    ###########################################################################
+    @keyword(name="PCC.Unassign Locations Assigned from All Policies")
+    ###########################################################################
+    def unassign_locations_from_all_policies(self, *args, **kwargs):
+        banner("PCC.Unassign Locations Assigned from All Policies")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        get_response = self.get_all_policies(**kwargs)['Result']['Data']
         
+        location_unassign_status = []
+        for data in get_response:
+            payload= {  "id":data['id'],
+                        "appId": data['appId'],
+                        "scopeIDs": [],
+                        "description": data['description'],
+                        "inputs":data['inputs'],
+                        "owner":data['owner']
+                     }
+            response  = pcc.modify_policy_by_id(conn, str(data['id']), payload)
+            print("Response is {}".format(response))
+            location_unassign_status.append(response['StatusCode'])
+            time.sleep(1)
+            
+        result = len(location_unassign_status) > 0 and all(elem == 200 for elem in location_unassign_status)
+        if result:
+            return "OK"  
+        else:
+            return "Error: while unassignment of locations from all policies: {}".format(location_unassign_status)
+
     ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
     ###########################################################################

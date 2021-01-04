@@ -37,6 +37,7 @@ Library                         aa.pcc.ApplicationCredentialManager
 Library                         aa.pcc.Ipam
 Library                         aa.pcc.PolicyDrivenMgmt
 Library                         aa.pcc.Monitor
+Library                         aa.pcc.SystemPackageUpdates
 Library                         Collections
 
 *** Keywords ***

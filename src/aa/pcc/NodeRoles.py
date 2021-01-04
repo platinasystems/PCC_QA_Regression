@@ -167,6 +167,8 @@ class NodeRoles(AaBase):
                 self.Host=data['Host']
                 print("node name from pcc: {}".format(data['Name']).lower())
                 if str(data['Name']).lower() == str(node).lower():
+                    if data['roles'] == None:
+                        return "No roles present on node"
                     if node_role_id in data['roles']:
                         return "OK"
                     else:
