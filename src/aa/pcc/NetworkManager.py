@@ -37,6 +37,7 @@ class NetworkManager(AaBase):
         self.user="pcc"
         self.password="cals0ft"
         self.forceRemove=None
+        self.bgp_neighbors=None
         super().__init__()
 
     ###########################################################################
@@ -69,14 +70,28 @@ class NetworkManager(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-            
+        
         tmp_node=[]
-        for node_name in eval(str(self.nodes)):
-            print("Getting Node Id for -"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print(" Node Id retrieved -"+str(node_id))
-            tmp_node.append({"id":node_id})
-        self.nodes=tmp_node
+        if self.igwPolicy.lower()=="upstream":
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                bgp_data=eval(str(self.bgp_neighbors))
+                if node_name in bgp_data:
+                    data=bgp_data[node_name]
+                    data["id"]=node_id
+                    tmp_node.append(data)
+                else:
+                    tmp_node.append({"id": node_id, "bgp_neighbors":[]})
+        else:
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                tmp_node.append({"id":node_id})
+
+        self.nodes=tmp_node        
         
         if self.controlCIDR:
             self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
@@ -110,13 +125,27 @@ class NetworkManager(AaBase):
             raise Exception(e)
  
         tmp_node=[]
-        for node_name in eval(str(self.nodes)):
-            print("Getting Node Id for -"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print(" Node Id retrieved -"+str(node_id))
-            tmp_node.append({"id":node_id})
-        self.nodes=tmp_node
-        
+        if self.igwPolicy.lower()=="upstream":
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                bgp_data=eval(str(self.bgp_neighbors))
+                if node_name in bgp_data:
+                    data=bgp_data[node_name]
+                    data["id"]=node_id
+                    tmp_node.append(data)
+                else:
+                    tmp_node.append({"id": node_id, "bgp_neighbors":[]})
+        else:
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                tmp_node.append({"id":node_id})
+
+        self.nodes=tmp_node       
+
         if self.controlCIDR:
             self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
 

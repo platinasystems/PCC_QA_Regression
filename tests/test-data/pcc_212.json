@@ -202,7 +202,8 @@
             "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
-            "igwPolicy":"default"
+            "igwPolicy":"default",
+	    "bgp_neighbors":{"i42":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.8","remote_as":64600},{"neighbor_ip":"10.0.10.12","remote_as":64601}]},"i43":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.10","remote_as":64600},{"neighbor_ip":"10.0.10.14","remote_as":64601}]}}
         },
         
     "ceph_cluster":

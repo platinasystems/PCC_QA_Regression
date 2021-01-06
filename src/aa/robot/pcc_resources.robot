@@ -1154,6 +1154,10 @@ Load Network Manager Data
         ${NETWORK_MANAGER_IGWPOLICY}    Evaluate    $pcc_server_dict.get("igwPolicy", None)
                                         Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY}
 
+        ${NETWORK_MANAGER_BGP_NEIGHBORS}    Evaluate    $pcc_server_dict.get("bgp_neighbors", None)
+                                        Set Suite Variable    ${NETWORK_MANAGER_BGP_NEIGHBORS}
+
+
 ###################################################################################################################################
 Load Ipam Data
 ###################################################################################################################################
