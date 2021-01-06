@@ -66,8 +66,7 @@ pipeline {
                     Check console output at ${env.BUILD_URL}
                     """,
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
-                    from: "msuman@platinasystems.com",
-                    attachmentsPattern: "output.zip"
+                    from: "msuman@platinasystems.com"
                 )
             }
         }        
