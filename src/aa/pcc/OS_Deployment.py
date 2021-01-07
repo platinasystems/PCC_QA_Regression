@@ -2,6 +2,7 @@ import time
 import ast
 import re
 import os
+import subprocess
 from robot.api.deco import keyword
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
@@ -372,14 +373,14 @@ class OS_Deployment(AaBase):
         banner("PCC.Set password on Server")
         self._load_kwargs(kwargs)             
         try: 
-            cmd=r"""ssh -i $HOME/{} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)             
-            cmd1='sudo ssh-keygen -f "$HOME/.ssh/known_hosts" -R {}'.format(self.host_ip)
+            cmd='ssh-keygen -R {}'.format(self.host_ip)
+            cmd1='ssh-keyscan {} >> ~/.ssh/known_hosts'.format(self.host_ip)
             print("******************")
-            print("Command for setting password is {}".format(cmd))
-            print("Command for accessing server is {}".format(cmd1))
+            print("Command for removing server from host file {}".format(cmd))
+            print("Command for addinging server in host file {}".format(cmd1))
             print("******************")
-            password_reset = os.system(cmd)
-            access_output = os.system(cmd1)
+            access_output = os.system(cmd)
+            accss_output1 = os.system(cmd1)
             print("******************")
             print("Output is:{}".format(str(access_output)))
             print("******************")
