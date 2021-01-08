@@ -60,6 +60,76 @@ Login
                                                 Set Global Variable    ${invader2_id}
 
 ###################################################################################################################################
+Create Kubernetes cluster
+###################################################################################################################################
+        [Documentation]             *Create Kubernetes cluster*
+                               ...  Keywords:
+                               ...  PCC.K8s Create Cluster
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8s_NAME}
+                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
+
+        ${response}                 PCC.K8s Create Cluster
+                               ...  id=${K8S_ID}
+                               ...  k8sVersion=${K8S_VERSION}
+                               ...  name=${K8S_NAME}
+                               ...  cniPlugin=${K8S_CNIPLUGIN}
+                               ...  nodes=${K8S_NODES}
+                               ...  pools=${K8S_POOL}
+                               ...  networkClusterName=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+        
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.K8s Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph Cluster Create
+###################################################################################################################################
+    [Documentation]                 *Creating Ceph Cluster*
+                               ...  keywords:
+                               ...  PCC.Ceph Create Cluster
+                               ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                              ...   name=${CEPH_CLUSTER_NAME}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Ceph Create Cluster
+                               ...  name=${CEPH_CLUSTER_NAME}
+                               ...  nodes=${CEPH_CLUSTER_NODES}
+                               ...  tags=${CEPH_CLUSTER_TAGS}
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
 Ceph Pools For Backup
 ###################################################################################################################################
 
