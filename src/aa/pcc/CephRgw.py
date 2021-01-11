@@ -504,8 +504,8 @@ class CephRgw(AaBase):
         ceph_be_cmd="sudo ceph -s"
         wait_time=400
         
-        for i in range(5):
-            time.sleep(10)
+        for i in range(4):
+            time.sleep(100)
             wait_time-=100
             print("wait time left for RGW backend check {}s".format(wait_time))
             trace("wait time left for RGW backend check {}s".format(wait_time))
