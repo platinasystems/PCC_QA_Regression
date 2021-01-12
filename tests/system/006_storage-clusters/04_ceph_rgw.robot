@@ -51,6 +51,7 @@ Ceph Pool For Rgws
                                       
         ${status_code}                     Get Response Status Code        ${response}     
                                            Should Be Equal As Strings      ${status_code}  200
+        ${message}                         Get Response Message        ${response}
                                            
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=${CEPH_RGW_POOLNAME}
@@ -67,7 +68,8 @@ Ceph Pool For Rgws
                                       
         ${status_code}                     Get Response Status Code        ${response}     
                                            Should Be Equal As Strings      ${status_code}  200
-                                           
+         ${message}                         Get Response Message        ${response}
+
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=rgw-pool-upd
                                            Should Be Equal As Strings      ${status}    OK       
@@ -83,7 +85,8 @@ Ceph Pool For Rgws
                                       
         ${status_code}                     Get Response Status Code        ${response}     
                                            Should Be Equal As Strings      ${status_code}  200
-                                           
+        ${message}                         Get Response Message        ${response}
+
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=rgw-non-ceph
                                            Should Be Equal As Strings      ${status}    OK    
@@ -182,6 +185,7 @@ Creating RGW using a pool that is used by other Ceph front-ends (Negative)
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Not Be Equal As Strings      ${status_code}  200
+        ${message}                         Get Response Message        ${response}
                                     
 ###################################################################################################################################
 #Creating RGW without name (Negative)
@@ -218,7 +222,7 @@ Creating RGW without pool name (Negative)
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Not Be Equal As Strings      ${status_code}  200   
-
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
 #Creating RGW without port (Negative)
@@ -256,7 +260,7 @@ Creating RGW without certificate (Negative)
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Not Be Equal As Strings      ${status_code}  200                                       
-                                    
+        ${message}                  Get Response Message        ${response}
 ###################################################################################################################################
 #Creating RGW without hosts/nodes (Negative)
 ######################################################################################################################################
@@ -308,7 +312,8 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK      
@@ -360,7 +365,8 @@ Ceph Rados Add S3Account
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+         ${message}                 Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK  
@@ -392,7 +398,8 @@ Ceph Rados Update Port
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK   
@@ -424,7 +431,8 @@ Ceph Rados Update Nodes (Add Node)
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK  
@@ -496,6 +504,7 @@ Ceph Rados Gateway Delete
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
@@ -525,7 +534,8 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK      
@@ -752,7 +762,8 @@ Ceph Rados Remove S3Account
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK  
@@ -776,6 +787,7 @@ Ceph Rados Gateway Delete
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
@@ -878,7 +890,8 @@ Ceph Rados Create with Multiple Nodes
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK  
@@ -910,7 +923,8 @@ Ceph Rados Remove One Node
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK  
@@ -934,6 +948,7 @@ Ceph Rados Gateway Delete
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
@@ -962,7 +977,8 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+        ${message}                  Get Response Message        ${response}
+
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK      
@@ -986,6 +1002,7 @@ Ceph Rados Gateway Delete
 
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
@@ -1156,4 +1173,3 @@ Delete Metadata Profile
                                 ...    Name=${CEPH_RGW_S3ACCOUNTS}
                                
                                 Log To Console    ${response}
-
