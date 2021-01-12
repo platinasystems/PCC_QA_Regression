@@ -63,6 +63,9 @@ pipeline {
                 emailext (
                     subject: "Test Report: Job '${env.JOB_NAME} ${env.BUILD_NUMBER}'",
                     body: """
+                    ${ROBOT_FAILEDCASES} 
+                    ${ROBOT_PASSPERCENTAGE}
+                    ${ROBOT_PASSRATIO}
                     Check console output at ${env.BUILD_URL}
                     """,
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
