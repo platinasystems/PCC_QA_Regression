@@ -62,7 +62,7 @@ pipeline {
             steps {
                 emailext (
                     subject: "Test Report: Job '${env.JOB_NAME} ${env.BUILD_NUMBER}'",
-                    body: readFile("/home/jenkins/workspace/AA/PCC.SystemTest/output/report.html"),
+                    body: ${FILE,path="output/report.html"},
                     mimeType: "text/html",
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
                     from: "msuman@platinasystems.com"
