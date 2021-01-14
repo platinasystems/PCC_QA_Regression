@@ -62,19 +62,9 @@ pipeline {
             steps {
                 emailext (
                     subject: "Test Report: Job '${env.JOB_NAME} ${env.BUILD_NUMBER}'",
-                    body: step([$class: 'RobotPublisher',
-                    outputPath: 'output',
-                    outputFileName: 'output.xml',
-                    reportFileName: 'report.html',
-                    logFileName: 'log.html',
-                    otherFiles: '*.log',
-                    disableArchiveOutput: false,
-                    enableCache: true,
-                    unstableThreshold: 90,
-                    passThreshold: 95,
-                    onlyCritical: true
-                    ]),
-                    mimeType: "text/html",
+                    body:"""
+                    Check console output at ${env.BUILD_URL}
+                    """, 
                     to: "${MOTOR_EMAIL_RECIPIENTS_LIST}",
                     from: "msuman@platinasystems.com"
                 )

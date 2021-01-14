@@ -113,7 +113,8 @@ class CephCluster(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-
+ 
+        time.sleep(60)
         tmp_node=[]
         payload_nodes=[]
 
@@ -712,3 +713,47 @@ class CephCluster(AaBase):
                        
         except Exception as e:
             trace("Error in stop_all_osds_daemons_of_node: {}".format(e))
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Reboot Manager And Verify")
+    ###########################################################################
+    def cephi_mgr_reboot_and_verify(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Reboot Manager And Verify")
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        manager_node_cmd='sudo ceph -s |grep mgr | cut -d "," -f1 | cut -d ":" -f2|cut -d "(" -f1'
+        node=self._serialize_response(time.time(),cli_run(self.hostip,self.user,self.password,manager_node_cmd))
+        print("Node Info:"+str(node))
+        node_name=str(node["Result"]["stdout"]).strip()
+        print("Reboot node name:"+str(node_name))
+        node_ip=easy.get_hostip_by_name(conn,node_name)
+        print("Reboot node ip:"+str(node_ip))
+        if type(node_ip) != str:
+            print("Unable to fetch host ip of "+str(node))
+            return "Error"
+        print("Rebooting host "+str(node_ip))
+        trace("Rebooting host "+str(node_ip))
+
+        cmd = "sudo reboot"
+        restart_cmd = cli_run(node_ip,self.user,self.password,cmd)
+        banner("Sleeping")
+        time.sleep(180)
+        banner("Done sleeping")
+        cmd = "ping {} -c 4".format(node_ip)
+        restart_up_status = cli_run(node_ip,self.user,self.password, cmd)
+        if re.search("0% packet loss", restart_up_status):
+            cmd="sudo systemctl status ceph-mgr@{}".format(node_name)
+            cmd_output=cli_run(node_ip,self.user,self.password,cmd)
+            if re.search("active", str(cmd_output)):
+                return "OK"
+            else:
+                print(cmd_output)
+                return "Error"
+        else:
+            print("Unable to reboot {}".format(node_ip))
+            return "Error"
+

@@ -42,7 +42,7 @@ Ceph Cluster Creation with 2 nodes both servers (Negative)
 
         ${status_code}             Get Response Status Code  ${response}
                                    Should Not Be Equal As Strings  ${status_code}  200
-
+        ${message}                 Get Response Message        ${response}
 ###################################################################################################################################
 Ceph Cluster Creation without name (Negative)
 ###################################################################################################################################
@@ -57,7 +57,7 @@ Ceph Cluster Creation without name (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
 Ceph Cluster Creation with invalid name (Negative)
@@ -74,7 +74,7 @@ Ceph Cluster Creation with invalid name (Negative)
 
         ${status_code}             Get Response Status Code  ${response}
                                    Should Not Be Equal As Strings  ${status_code}  200
-
+        ${message}                 Get Response Message        ${response}
 ###################################################################################################################################
 Ceph Cluster Creation without selecting any nodes (Negative)
 ###################################################################################################################################
@@ -94,7 +94,7 @@ Ceph Cluster Creation without selecting any nodes (Negative)
 
         ${status_code}             Get Response Status Code  ${response}
                                    Should Not Be Equal As Strings  ${status_code}  200
-
+        ${message}                 Get Response Message        ${response}
 
 ###################################################################################################################################
 Ceph Cluster Creation without tags (Negative)
@@ -115,6 +115,7 @@ Ceph Cluster Creation without tags (Negative)
 
         ${status_code}             Get Response Status Code  ${response}
                                    Should Not Be Equal As Strings  ${status_code}  200
+        ${message}                 Get Response Message        ${response}
 
 ###################################################################################################################################
 Ceph Cluster with one node (Negative)
@@ -136,6 +137,7 @@ Ceph Cluster with one node (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
 Ceph Cluster with two node one server one invader(Negative)
@@ -157,7 +159,7 @@ Ceph Cluster with two node one server one invader(Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
 Ceph Cluster Create
@@ -183,6 +185,7 @@ Ceph Cluster Create
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -215,121 +218,125 @@ Ceph Cluster Creation With Nodes Which Are Part of Existing Cluster (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
-#Ceph Cluster Update - Add Invader
-####################################################################################################################################
-#    [Documentation]                 *Ceph Cluster Update - Add Invade*
-#                               ...  keyword:
-#                               ...  PCC.Ceph Get Cluster Id
-#                               ...  PCC.Ceph Cluster Update
-#                               ...  PCC.Ceph Wait Until Cluster Ready
-#
-#        ${status}                   PCC.Ceph Get Pcc Status
-#                               ...  name=ceph-pvt
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${id}                       PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#
-#        ${response}                 PCC.Ceph Cluster Update
-#                               ...  id=${id}
-#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
-#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Ceph Wait Until Cluster Ready
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Ceph Verify BE
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-####################################################################################################################################
-#Ceph Cluster Update - Add Server
-####################################################################################################################################
-#    [Documentation]                 *Ceph Cluster Update - Add Invade*
-#                               ...  keyword:
-#                               ...  PCC.Ceph Get Cluster Id
-#                               ...  PCC.Ceph Cluster Update
-#                               ...  PCC.Ceph Wait Until Cluster Ready
-#
-#        ${status}                   PCC.Ceph Get Pcc Status
-#                               ...  name=ceph-pvt
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${id}                       PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#
-#        ${response}                 PCC.Ceph Cluster Update
-#                               ...  id=${id}
-#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}","${SERVER_3_NAME}"]
-#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Ceph Wait Until Cluster Ready
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Ceph Verify BE
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
-#                                    Should Be Equal As Strings      ${status}    OK
-#
+Ceph Cluster Update - Add Invader
 ###################################################################################################################################
-#Ceph Cluster Update - Remove 2 Mons Nodes
-####################################################################################################################################
-#    [Documentation]                 *Ceph Cluster Update - Add Invade*
-#                               ...  keyword:
-#                               ...  PCC.Ceph Get Cluster Id
-#                               ...  PCC.Ceph Cluster Update
-#                               ...  PCC.Ceph Wait Until Cluster Ready
-#
-#        ${status}                   PCC.Ceph Get Pcc Status
-#                               ...  name=ceph-pvt
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${id}                       PCC.Ceph Get Cluster Id
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#
-#        ${response}                 PCC.Ceph Cluster Update
-#                               ...  id=${id}
-#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Ceph Wait Until Cluster Ready
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Ceph Verify BE
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-#                                    Should Be Equal As Strings      ${status}    OK
-#
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph Cluster Update - Add Server
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}","${SERVER_3_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+##################################################################################################################################
+Ceph Cluster Update - Remove 2 Mons Nodes
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK
+
 ##################################################################################################################################
 Reboot Node And Verify Ceph Is Intact
 ##################################################################################################################################
@@ -353,6 +360,18 @@ Reboot Node And Verify Ceph Is Intact
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
 
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph Reboot Manager And Verify If Service Is Still Running
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Reboot Manager And Verify
+
+            ${status}               PCC.Ceph Reboot Manager And Verify
+                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+                                    Sleep    60s
                                     Should Be Equal As Strings      ${status}    OK
 
 #################################################################################################################################
@@ -401,6 +420,7 @@ Delete Network Manager When Ceph Is Present (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
 TCP-1012 Update Cluster(2 Invader setup) - Remove - Remove TWO OSD nodes from cluster [4 nodes (3 MONs + 2 OSDs)] (Negative)
@@ -425,6 +445,7 @@ TCP-1012 Update Cluster(2 Invader setup) - Remove - Remove TWO OSD nodes from cl
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
 ####################################################################################################################################
 #TCP-1016 Ceph Cluster Update - Remove Invader
@@ -475,6 +496,7 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
 
 ###################################################################################################################################
 #TCP-985 Update Cluster - Try to add Tags
@@ -525,4 +547,5 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
 #        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Not Be Equal As Strings      ${status_code}  200
 #
+
 
