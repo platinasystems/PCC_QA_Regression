@@ -41,8 +41,11 @@ class CephRgw(AaBase):
         self.secretKey=None
         self.accessKey=None
         self.user="pcc"
+        self.service_ip=None
         self.password="cals0ft"
         self.fileName="rgwFile"
+        self.control_cidr=None
+        self.data_cidr=None
 
 
     ###########################################################################
@@ -96,6 +99,10 @@ class CephRgw(AaBase):
             print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
+        if self.service_ip.lower()=="yes":
+            serviceIpType="NodeIp"
+        else:
+            serviceIpType="Default"
         
         payload = {
                     "name":self.name,
@@ -103,7 +110,8 @@ class CephRgw(AaBase):
                     "targetNodes":self.targetNodes,
                     "port":self.port,
                     "certificateID": self.certificateID,
-                    "S3Accounts":self.S3Accounts 
+                    "S3Accounts":self.S3Accounts,
+                    "serviceIpType":serviceIpType
                   }
         print("Payload:-"+str(payload))
         return pcc.add_ceph_rgw(conn, payload)
@@ -144,7 +152,12 @@ class CephRgw(AaBase):
             print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
-        
+
+        if self.service_ip.lower()=="yes":
+            serviceIpType="NodeIp"
+        else:
+            serviceIpType="Default"
+
         payload = {
                     "ID":self.ID,
                     "name":self.name,
@@ -152,7 +165,8 @@ class CephRgw(AaBase):
                     "targetNodes":self.targetNodes,
                     "port":self.port,
                     "certificateID": self.certificateID,
-                    "S3Accounts":self.S3Accounts 
+                    "S3Accounts":self.S3Accounts,
+                    "serviceIpType":serviceIpType
                 }
 
         print("Payload:-"+str(payload))
@@ -362,6 +376,55 @@ class CephRgw(AaBase):
             return "Error"
             
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Update Configure")
+    ###########################################################################
+    def ceph_rgw_update_configure(self, **kwargs):
+        banner("PCC.Ceph Rgw Update Configure")
+        self._load_kwargs(kwargs)
+        main_cmd=""
+        if self.accessKey:
+            main_cmd+='sudo sed -i "s/access_key =.*/access_key = {}/g" /home/pcc/.s3cfg;'.format(self.accessKey)
+        if self.secretKey:
+            main_cmd+='sudo sed -i "s/secret_key =.*/secret_key = {}/g" /home/pcc/.s3cfg;'.format(self.secretKey)
+        if self.targetNodeIp:
+            if self.port:
+                main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:{}/g" /home/pcc/.s3cfg'.format(self.targetNodeIp,self.port)
+            else:
+                main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:443/g" /home/pcc/.s3cfg'.format(self.targetNodeIp)
+            print("Command=" + str(main_cmd))
+            output = cli_run(self.pcc, self.user, self.password, main_cmd)
+            print(output)
+            return "OK"
+        else:
+            if self.service_ip.lower()=="yes":
+                cmd='sudo ip addr show | grep control0 | tail -1 | tr -s " " |cut -d " " -f3|cut -d "/" -f1'
+                cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                if self.port:
+                    main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:{}/g" /home/pcc/.s3cfg'.format(str(cmd_out),
+                                                                                                       self.port)
+                else:
+                    main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:443/g" /home/pcc/.s3cfg'.format(str(cmd_out))
+                print("Command="+str(main_cmd))
+                output = cli_run(self.pcc, self.user, self.password, main_cmd)
+                print(output)
+                return "OK"
+            else:
+                if not self.data_cidr:
+                    return "Please provide Data CIDR"
+                cmd='sudo vtysh -c "show run" |grep {} |tail -1 |tr -s " "| cut -d " " -f6'.format(self.data_cidr[0:8])
+                cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                if self.port:
+                    main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:{}/g' /home/pcc/.s3cfg".format(str(cmd_out),self.port)
+                else:
+                    main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:443/g' /home/pcc/.s3cfg".format(str(cmd_out))
+                print("Command=" + str(main_cmd))
+                output = cli_run(self.pcc, self.user, self.password, main_cmd)
+                print(output)
+                return "OK"
+        print("Configuration not updated sucessfully")
+        return "Configuration not updated sucessfully"
 
     ###########################################################################
     @keyword(name="PCC.Ceph Rgw Make Bucket")
@@ -581,3 +644,37 @@ class CephRgw(AaBase):
         else:
             return "OK"
 
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Verify Service IP BE")
+    ###########################################################################
+    def ceph_rgw_verify_service_ip_be(self, **kwargs):
+        banner("PCC.Ceph Rgw Verify Service IP BE")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        if self.targetNodeIp:
+            ip=self.targetNodeIp
+        elif self.pcc:
+            ip=self.pcc
+        else:
+            return "Target node is not provided"
+
+        cmd="sudo netstat -ntlp |grep rados"
+        ntlp_check = cli_run(ip, self.user, self.password, cmd)
+        if self.service_ip.lower()=="yes":
+            if re.search(self.control_cidr[0:8], str(ntlp_check)):
+                return "OK"
+            else:
+                print("Could not verify service ip for ntlp check")
+                return "Could not verify service ip for ntlp check"
+        else:
+            if re.search(self.control_cidr[0:8], str(ntlp_check)):
+                print("Could not verify service ip for ntlp check")
+                return "Could not verify service ip for ntlp check"
+            else:
+                return "OK"
+
+        return "Please provide service_ip keyword with yes/no"
