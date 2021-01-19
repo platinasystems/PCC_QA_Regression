@@ -256,7 +256,7 @@ Ceph Cluster Update - Add Invader
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -337,43 +337,43 @@ Ceph Cluster Update - Remove 2 Mons Nodes
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
-##################################################################################################################################
-Reboot Node And Verify Ceph Is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying Ceph cluster BE*
-                               ...  keywords:
-                               ...  Ceph Verify BE
-                               ...  Restart node
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-    ${restart_status}               Restart node
-                               ...  hostip=${SERVER_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-
 ###################################################################################################################################
-Ceph Reboot Manager And Verify If Service Is Still Running
+#Reboot Node And Verify Ceph Is Intact
 ###################################################################################################################################
-    [Documentation]                 *Ceph Cluster Update - Add Invade*
-                               ...  keyword:
-                               ...  PCC.Ceph Reboot Manager And Verify
-
-            ${status}               PCC.Ceph Reboot Manager And Verify
-                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
-                                    Sleep    60s
-                                    Should Be Equal As Strings      ${status}    OK
-
+#    [Documentation]                 *Verifying Ceph cluster BE*
+#                               ...  keywords:
+#                               ...  Ceph Verify BE
+#                               ...  Restart node
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#    ${restart_status}               Restart node
+#                               ...  hostip=${SERVER_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.Ceph Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Ceph Reboot Manager And Verify If Service Is Still Running
+####################################################################################################################################
+#    [Documentation]                 *Ceph Cluster Update - Add Invade*
+#                               ...  keyword:
+#                               ...  PCC.Ceph Reboot Manager And Verify
+#
+#            ${status}               PCC.Ceph Reboot Manager And Verify
+#                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+#                                    Sleep    60s
+#                                    Should Be Equal As Strings      ${status}    OK
+#
 #################################################################################################################################
 Down And Up The Interface And Check For Ceph
 ###################################################################################################################################
