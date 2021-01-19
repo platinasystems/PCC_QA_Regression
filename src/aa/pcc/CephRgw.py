@@ -41,7 +41,7 @@ class CephRgw(AaBase):
         self.secretKey=None
         self.accessKey=None
         self.user="pcc"
-        self.service_ip=None
+        self.service_ip="no"
         self.password="cals0ft"
         self.fileName="rgwFile"
         self.control_cidr=None
@@ -383,6 +383,7 @@ class CephRgw(AaBase):
     def ceph_rgw_update_configure(self, **kwargs):
         banner("PCC.Ceph Rgw Update Configure")
         self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
         main_cmd=""
         if self.accessKey:
             main_cmd+='sudo sed -i "s/access_key =.*/access_key = {}/g" /home/pcc/.s3cfg;'.format(self.accessKey)
@@ -401,6 +402,7 @@ class CephRgw(AaBase):
             if self.service_ip.lower()=="yes":
                 cmd='sudo ip addr show | grep control0 | tail -1 | tr -s " " |cut -d " " -f3|cut -d "/" -f1'
                 cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                print("Host ip to update:"+str(cmd_out))
                 if self.port:
                     main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:{}/g" /home/pcc/.s3cfg'.format(str(cmd_out),
                                                                                                        self.port)
@@ -415,6 +417,7 @@ class CephRgw(AaBase):
                     return "Please provide Data CIDR"
                 cmd='sudo vtysh -c "show run" |grep {} |tail -1 |tr -s " "| cut -d " " -f6'.format(self.data_cidr[0:8])
                 cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                print("Host ip to update:"+str(cmd_out))
                 if self.port:
                     main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:{}/g' /home/pcc/.s3cfg".format(str(cmd_out),self.port)
                 else:
@@ -433,7 +436,7 @@ class CephRgw(AaBase):
         banner("PCC.Ceph Rgw Make Bucket")
         self._load_kwargs(kwargs)
         
-        cmd='sudo s3cmd mb s3://BUCKET --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd mb s3://BUCKET -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("created",str(data)):
@@ -452,7 +455,7 @@ class CephRgw(AaBase):
         self._load_kwargs(kwargs)       
         cmd='sudo dd if=/dev/zero of={} bs=10MiB count=1'.format(self.fileName)
         file_create=cli_run(self.pcc,self.user,self.password,cmd)
-        cmd='sudo s3cmd put {} s3://BUCKET/{} --access_key={} --secret_key={} --host={}:{}'.format(self.fileName,self.fileName,self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd put {} s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.fileName)
         print("Command:"+str(cmd))
         trace("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
@@ -472,7 +475,7 @@ class CephRgw(AaBase):
     def ceph_rgw_get_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Get File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd get s3://BUCKET/{} --access_key={} --secret_key={} --host={}:{}'.format(self.fileName,self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd get s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("download",str(data)):
@@ -491,7 +494,7 @@ class CephRgw(AaBase):
     def ceph_rgw_list_buckets(self,**kwargs):
         banner("PCC.Ceph Rgw Delete Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd ls'
+        cmd='sudo s3cmd ls -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("BUCKET",str(data)):
@@ -524,7 +527,7 @@ class CephRgw(AaBase):
     def ceph_rgw_delete_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete File To Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd del s3://BUCKET/{} --access_key={} --secret_key={} --host={}:{}'.format(self.fileName,self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd del s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("delete",str(data)):
@@ -541,7 +544,7 @@ class CephRgw(AaBase):
     def ceph_delete_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd rb s3://BUCKET --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd rb s3://BUCKET -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("removed",str(data)):

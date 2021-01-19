@@ -745,7 +745,7 @@ class CephCluster(AaBase):
         banner("Done sleeping")
         cmd = "ping {} -c 4".format(node_ip)
         restart_up_status = cli_run(node_ip,self.user,self.password, cmd)
-        if re.search("0% packet loss", restart_up_status):
+        if re.search("0% packet loss", str(restart_up_status)):
             cmd="sudo systemctl status ceph-mgr@{}".format(node_name)
             cmd_output=cli_run(node_ip,self.user,self.password,cmd)
             if re.search("active", str(cmd_output)):
