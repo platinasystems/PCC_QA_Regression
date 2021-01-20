@@ -185,13 +185,13 @@ class Kubernetes(AaBase):
                     capture_data=data
                     if "progressPercentage" in data['latestAnsibleJob'].keys():
                         trace("  Waiting until cluster: %s is Ready, currently:  %s" % (data['ID'], data['latestAnsibleJob']['progressPercentage']))
-                        if int(data['latestAnsibleJob']['progressPercentage'])==100:
+                        if int(data['latestAnsibleJob']['progressPercentage'])==100 and (str(data['deployStatus']).lower() == 'installed' or str(data['deployStatus']).lower() == 'update completed'):
                             print("Response:-"+str(data))
                             cluster_ready = True
                     elif str(data['deployStatus']).lower() == 'installed' or str(data['deployStatus']).lower() == 'update completed':
                         print("Response:-"+str(data))
                         cluster_ready = True
-                    elif re.search("failed",str(data['deployStatus'])):
+                    if re.search("failed",str(data['deployStatus'])):
                         print("Response:-"+str(data))
                         return "Error"
             if time.time() > timeout:
