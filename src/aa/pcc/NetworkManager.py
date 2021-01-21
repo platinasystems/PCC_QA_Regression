@@ -418,3 +418,36 @@ class NetworkManager(AaBase):
             return "Error"
         print("Could not verify the health of network cluter "+str(self.name))
         return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Network Manager Verify Upstream BE")
+    ###########################################################################
+    def network_manager_verify_upstream_be(self, **kwargs):
+        banner("PCC.Network Manager Verify Upsteam BE")
+        self._load_kwargs(kwargs)
+        success_chk = []
+        failed_chk = []
+        cmd = "sudo vtysh -c 'show ip bgp nei'"
+        cmd1 = "sudo ip route sh|head -1"
+        for ip in eval(str(self.nodes_ip)):
+            print("________________________")
+            print("Network verification for {} is in progress ...".format(ip))
+            trace("Network verification for {} is in progress ...".format(ip))
+            network_check = self._serialize_response(time.time(), cli_run(ip, self.user, self.password, cmd))
+            internet_check= self._serialize_response(time.time(), cli_run(ip, self.user, self.password, cmd1))
+            print("Data Retrieve:" + str(network_check))
+            print("Internet Route Retrieve:" + str(internet_check))
+            if re.search("established", str(network_check)) and re.search("172.17.2",str(internet_check))==None:
+                success_chk.append(ip)
+            else:
+                failed_chk.append(ip)
+
+        if len(success_chk) == len(eval(str(self.nodes_ip))):
+            print("Backend verification successfuly done for : {}".format(success_chk))
+            return "OK"
+
+        if failed_chk:
+            print("Network is not properly set for {}".format(failed_chk))
+            return "Error"
+        else:
+            return "OK"
