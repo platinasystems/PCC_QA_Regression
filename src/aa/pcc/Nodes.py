@@ -600,4 +600,180 @@ class Nodes(AaBase):
             print("Host not verified in Kafka container: {}".format(failed_name))     
             return "Error"
         else:
-            return "OK"       
+            return "OK"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Cleanup features associated to Node")
+    ###############################################################################################################
+
+    def cleanup_features_associated_to_node(self, *args, **kwargs):
+        """
+        Cleanup features associated to Node
+        [Args]
+            (list) Names: List of Names of the Nodes to be deleted
+            or
+            Don't provide any arguments if you want to delete all nodes
+            ...
+        [Returns]
+            (str) OK: Returns "OK" if all nodes are deleted successfully
+            else: returns "Error"
+        """
+
+        banner("Cleanup features associated to Node")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            response = self.get_nodes()
+            update_response_status = []
+            node_names = []
+            wait_until_node_ready_resp = []
+            
+            if get_response_data(response) == []:
+                return "No nodes present on PCC"
+            else:
+                counter=1
+                for node in get_response_data(response):
+                    print("Node:{} output - {}".format(counter, node))
+                    counter+=1
+                    node_names.append(node['Name'])
+                    
+                    payload = { "Id":node['Id'],
+                                "ClusterId":0,
+                                "roles":[],
+                                "scopeId":int(self.scopeId)}
+                    
+                    update_resp = pcc.modify_node(conn, payload)
+                    update_response_status.append(update_resp['StatusCode'])
+                update_result = len(update_response_status) > 0 and all(elem == 200 for elem in update_response_status)
+                banner("Node names : {}".format(node_names))
+                for names in node_names:
+                    resp = self.wait_until_node_ready(Name=names)
+                    wait_until_node_ready_resp.append(resp)
+                node_ready_result = len(wait_until_node_ready_resp) > 0 and all(elem == "OK" for elem in wait_until_node_ready_resp)
+                
+                if update_result and node_ready_result:
+                    return "OK"
+                return "Features not yet deleted ->  node update response is: {} and node ready status is {}".format(update_response_status,wait_until_node_ready_resp)
+                    
+        except Exception as e:
+            return "Exception encountered: {}".format(e)
+
+    ###############################################################################################################
+    @keyword(name="PCC.Cleanup images present on Node from backend")
+    ###############################################################################################################   
+    
+    def cleanup_images_present_on_node(self, *args, **kwargs):
+        """
+        PCC.Cleanup images present on Node from backend
+        [Args]
+            None
+           
+        [Returns]
+            (str) OK: Returns "OK" if all images are cleaned from nodes
+            else: returns "Error"
+        """
+        
+        banner("PCC.Cleanup images present on Node from backend")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            response = self.get_nodes()
+            node_hostips = []
+            image_deletion_status=[]
+            
+            if get_response_data(response) == []:
+                return "No nodes present on PCC"
+            else:
+                counter=1
+                for node in get_response_data(response):
+                    node_hostips.append(node['Host'])
+                cmd = "sudo docker images -a|wc -l"
+                cmd1 = "sudo docker rmi -f $(sudo docker images -a -q)" 
+                cmd2 = "sudo docker images -a -q|wc -l"
+                print("Cmd1 is: {}".format(cmd1))
+                print("Cmd2 is: {}".format(cmd2))
+                for hostip in node_hostips:
+                    cmd_response = self._serialize_response(time.time(),cli_run(hostip, self.user, self.password, cmd))['Result']['stdout']
+                    if str(cmd_response).strip() == "1":
+                        image_deletion_status.append("OK")
+                    else:
+                        cmd1_response = self._serialize_response(time.time(),cli_run(hostip, self.user, self.password, cmd1))['Result']['stdout']
+                        if re.search("Deleted:",str(cmd1_response)) or re.search("Untagged:",str(cmd1_response)):
+                            image_deletion_status.append("OK")
+                        else:
+                            image_deletion_status.append("Failed at {} for node {}".format(cmd1,hostip))
+                        time.sleep(1)
+                    
+                        cmd2_response = self._serialize_response(time.time(),cli_run(hostip, self.user, self.password, cmd2))['Result']['stdout']
+                        if str(cmd2_response).strip() == "0":
+                            image_deletion_status.append("OK")
+                        else:
+                            image_deletion_status.append("Failed at {} for node {}".format(cmd2,hostip))
+                    
+                    
+                status = len(image_deletion_status) > 0 and all(elem == "OK" for elem in image_deletion_status)
+                
+                if status:
+                    return "OK"
+                return "Images not yet deleted from nodes->  status is: {} and image_deletion_status is {}".format(status, image_deletion_status)
+                    
+        except Exception as e:
+            return "Exception encountered: {}".format(e)
+
+    ###########################################################################
+    @keyword(name="PCC.Wait Until All Nodes are Ready")
+    ###########################################################################    
+    def wait_until_all_nodes_are_ready(self, *args, **kwargs):
+        """
+        Wait Until Node Ready
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (str) Name: Name of the Node 
+        [Returns]
+            (dict) Wait Time 
+            (dict) Error response: If Exception occured
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Wait Until All Nodes are Ready")
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
+        all_node_list = pcc.get_nodes(conn)['Result']['Data']
+        node_ready_status = []
+        try:
+            for node_name in all_node_list:
+                ready = False
+                time_waited = 0
+                PCC_TIMEOUT = 60*10 #10 minutes
+                timeout = time.time() + PCC_TIMEOUT
+                while not ready:
+                    ready = False
+                    node_list = pcc.get_nodes(conn)['Result']['Data']
+                    for node in node_list:
+                        if str(node['Name']) == str(node_name['Name']):
+                            if node['provisionStatus'] == 'Ready':
+                                trace("Node:{} is ready".format(node_name['Name']))
+                                node_ready_status.append("OK")
+                                ready=True
+                                break
+                            if "fail" in node['provisionStatus']:
+                                node_ready_status.append("Failed:{}".format(node['Name']))
+                                trace("Wait until node ready status - Failed on node {}. Node Status is {}".format(node_name['Name'],node['provisionStatus']))
+                                print("Wait until node ready status - Failed on node {}. Node Status is {}".format(node_name['Name'],node['provisionStatus']))
+                                ready=True
+                                break
+                            if time.time() > timeout:
+                                print("Error: Timeout for node {}".format(node_name['Name']))
+                                node_ready_status.append("Timeout: {}".format(node_name['Name']))
+                                ready=True
+                                break
+                            if not ready:
+                                trace("Node:{} is not yet ready".format(node_name['Name']))
+                                time.sleep(5)
+                                time_waited += 5
+            node_ready_result = len(node_ready_status) > 0 and all(elem == "OK" for elem in node_ready_status)
+            if node_ready_result:
+                return "OK"
+            else:
+                return "Wait Until Node ready status is: {}".format(node_ready_status)
+        except Exception as e:
+            return "Exception encountered: {}".format(e)   
