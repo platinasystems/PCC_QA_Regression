@@ -65,7 +65,6 @@ Ceph K8s Multiple
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  PCC.K8s Delete All Cluster
-
         ${status}                   PCC.K8s Delete All Cluster
                                     Should be equal as strings    ${status}    OK
 
@@ -76,7 +75,6 @@ Cleanup Auth Profiles after login as Admin user
         [Documentation]    *Clean-up Auth Profiles* test
                            ...  keywords:
                            ...  PCC.Delete All Auth Profile
-
         [Tags]    Tenant
         ########  Cleanup Auth Profile   ################################################################################
 
@@ -105,7 +103,6 @@ Cleanup Container Registry after login as Admin user
                            ...  keywords:
                            ...  PCC.Clean all CR
                            ...  PCC.Wait for deletion of CR
-
         ${result}    PCC.Clean all CR
 
                      Log to Console    ${result}
@@ -125,7 +122,6 @@ Re-assigning ROOT to Node
                            ...  keywords:
                            ...  PCC.Get Tenant Id
                            ...  PCC.Assign Tenant to Node
-
         ########  Getting ROOT ID   #######################################################################################
 
         ${tenant_id}    PCC.Get Tenant Id
@@ -152,7 +148,6 @@ Deleting Maas From Nodes
                                ...  Keywords:
                                ...  PCC.Delete and Verify Roles On Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
-
         ${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  roles=["Baremetal Management Node"]
@@ -168,43 +163,15 @@ Deleting Maas From Nodes
                                ...  password=${PCC_LINUX_PASSWORD}
                                     Should Not Be Equal As Strings      ${response}  OK
 									
-
-
-####################################################################################################################################
-Cleanup all keys from PCC
-####################################################################################################################################
-    [Documentation]                 *Cleanup all keys*
-                               ...  keywords:
-                               ...  PCC.Delete All Keys
-
-        ${status}                   PCC.Delete All Keys
-
-                                    Log To Console    ${status}
-
-
-
-
-
 ###################################################################################################################################
 Ceph Rgw Delete Multiple
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
-
         ${status}                   PCC.Ceph Delete All Rgw
                                     Should be equal as strings    ${status}    OK
 
-####################################################################################################################################
-Cleanup all certificates from PCC
-####################################################################################################################################
-    [Documentation]                 *Cleanup all certificates*
-                               ...  keywords:
-                               ...  PCC.Delete All Certificates
-
-        ${status}                   PCC.Delete All Certificates
-
-                                    Log To Console    ${status}
 
 ###################################################################################################################################
 Ceph Fs Delete
@@ -212,7 +179,6 @@ Ceph Fs Delete
     [Documentation]                 *Delete Fs if it exist*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Fs
-
         ${status}                   PCC.Ceph Delete All Fs
                                     Should be equal as strings    ${status}    OK
 
@@ -222,7 +188,6 @@ Ceph Rbd Delete Multiple
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rbds
-
 
         ${status}                   PCC.Ceph Delete All Rbds
                                     Should be equal as strings    ${status}    OK
@@ -234,7 +199,6 @@ Ceph Pool Multiple Delete
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  CC.Ceph Delete All Pools
-
         ${status}                   PCC.Ceph Delete All Pools
                                     Should be equal as strings    ${status}    OK
 
@@ -244,7 +208,6 @@ Ceph Cluster Delete
     [Documentation]                 *Delete cluster if it exist*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Cluster
-
         ${status}                   PCC.Ceph Delete All Cluster
                                     Should be equal as strings    ${status}    OK
 
@@ -265,7 +228,6 @@ Network Manager Delete
     [Documentation]                 *Delete Network Manager if it exist*
                                ...  keywords:
                                ...  PCC.Network Manager Delete All
-
         ${status}                   PCC.Network Manager Delete All
                                     Should be equal as strings    ${status}    OK
 
@@ -275,7 +237,6 @@ Delete Multiple Subnet
     [Documentation]                 *Delete IPAM Subnet*
                                ...  keywords:
                                ...  PCC.Ipam Subnet Delete All
-
         ${status}                   PCC.Ipam Subnet Delete All
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -285,7 +246,6 @@ Cleanup features associated to Node
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  PCC.Cleanup features associated to Node
-
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=Default zone
                         ...  parentID=${parent1_Id}
@@ -314,11 +274,11 @@ Wait Until All Nodes Are Ready
     [Documentation]                 *Cleanup all keys*
                                ...  keywords:
                                ...  PCC.Wait Until All Nodes Are Ready
-
         ${status}                   PCC.Wait Until All Nodes Are Ready
 
                                     Log To Console    ${status}
 									Should Be Equal As Strings      ${status}  OK
+								
 									
 ###################################################################################################################################
 Delete All Node Roles
@@ -328,11 +288,32 @@ Delete All Node Roles
                            ...  keywords:
                            ...  PCC.Delete all Node roles
         [Tags]    Only
-
         ${status}    PCC.Delete all Node roles
 
                      Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node group still exists
+                     Should Be Equal As Strings    ${status}    OK    Node roles still exists
+					 
+####################################################################################################################################
+Cleanup all certificates from PCC
+####################################################################################################################################
+    [Documentation]                 *Cleanup all certificates*
+                               ...  keywords:
+                               ...  PCC.Delete All Certificates
+        ${status}                   PCC.Delete All Certificates
+
+                                    Log To Console    ${status}
+									Should be equal as strings    ${status}    OK
+									
+####################################################################################################################################
+Cleanup all keys from PCC
+####################################################################################################################################
+    [Documentation]                 *Cleanup all keys*
+                               ...  keywords:
+                               ...  PCC.Delete All Keys
+        ${status}                   PCC.Delete All Keys
+
+                                    Log To Console    ${status}
+									Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Delete All Node Groups
@@ -344,7 +325,6 @@ Delete All Node Groups
                            ...  PCC.Add Node Group
                            ...  PCC.Validate Node Group
         [Tags]    Only
-
         ${status}    PCC.Delete all Node groups
 
                      Log To Console    ${status}
@@ -359,7 +339,6 @@ Delete All Profiles
                            ...  PCC.Delete All Profiles
 
 
-
         ${response}    PCC.Delete All Profiles
 
                        Log To Console    ${response}
@@ -371,9 +350,7 @@ PCC Multiple Tenant deletion
         [Documentation]    *PCC Multiple Tenant deletion* test
                            ...  keywords:
                            ...  PCC.Delete Multiple Tenants
-
         [Tags]    Delete
-
         ${status}    PCC.Delete Multiple Tenants
                        ...    Tenant_list=["${TENANT1}"]
 
@@ -387,11 +364,16 @@ Policy driven management cleanup
                 [Documentation]    *Policy driven management cleanup* test
                            ...  keywords:
                            ...  PCC.Delete Multiple Tenants
-
                 ###  Unassign locations from policies  ###
 				${status}    PCC.Unassign Locations Assigned from All Policies
 							 
 							 Log to Console    ${message}
+							 Should Be Equal As Strings    ${status}    OK
+				
+				####  Delete All Policies  ####
+                ${status}    PCC.Delete All Policies
+
+							 Log To Console    ${status}
 							 Should Be Equal As Strings    ${status}    OK
 				
 				####  Delete All Locations  ####
@@ -405,12 +387,6 @@ Policy driven management cleanup
 							   ${message}    Get From Dictionary    ${result}    message
 							   Log to Console    ${message}
 							   Should Be Equal As Strings    ${status}    200
-
-                ####  Delete All Policies  ####
-                ${status}    PCC.Delete All Policies
-
-							 Log To Console    ${status}
-							 Should Be Equal As Strings    ${status}    OK
                                                                                                                         
 #####################################################################################################################################
 Delete Nodes
@@ -418,7 +394,6 @@ Delete Nodes
 
     [Documentation]    *Delete Nodes* test
     [Tags]    delete
-
         ${network_id}              PCC.Get Network Manager Id
                               ...  name=${NETWORK_MANAGER_NAME}
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
@@ -434,7 +409,6 @@ Nodes Verification Back End (Services should not be active)
     [Documentation]                      *Nodes Verification Back End*
                                     ...  keywords:
                                     ...  PCC.Node Verify Back End
-
         ${status}                   PCC.Node Verify Back End
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Not Be Equal As Strings      ${status}    OK
