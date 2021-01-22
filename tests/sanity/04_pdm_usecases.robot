@@ -555,7 +555,7 @@ Create Policies
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=DNS_SITE
-                       ...  inputs=[{"name":"domain","value":"www.site.com"},{"name":"nameserver_0","value":"8.8.8.8"},{"name":"search_0","value":"dns_site1.com"},{"name":"search_1","value":"dns_site2.com"}]
+                       ...  inputs=[{"name":"domain","value":"www.site.com"},{"name":"nameserver_0","value":"172.17.2.253"},{"name":"nameserver_1","value":"8.8.8.8"},{"name":"search_0","value":"dns_site1.com"},{"name":"search_1","value":"dns_site2.com"}]
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
                        ${status}    Get From Dictionary    ${result}    status
