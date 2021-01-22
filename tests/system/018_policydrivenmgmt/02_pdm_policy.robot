@@ -71,7 +71,8 @@ Create a policy with default inputs (using DNS app)
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=dns-policy-description
-                       ...  scopeIds=[${scope1_id},${scope2_id}]                       
+                       ...  scopeIds=[${scope1_id},${scope2_id}]
+                       ...  inputs=[{"name":"nameserver_0","value":"172.17.2.253"},{"name":"nameserver_1","value":"8.8.8.8"}]
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
