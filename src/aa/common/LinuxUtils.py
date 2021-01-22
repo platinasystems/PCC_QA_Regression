@@ -282,4 +282,38 @@ class LinuxUtils(AaBase):
         
         except Exception as e:
             return "Error in installing net-tools: {}".format(e)
-    
+
+    ###################################################################################################
+    @keyword(name="Ping Check")
+    ###################################################################################################
+    def ping_check(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        failed_check=[]
+        if self.node_names:
+            for node in eval(str(self.node_names)):
+                host_ip=easy.get_hostip_by_name(conn,node)
+                if type(host_ip)==str:
+                    ping_cmd = "sudo ping {} -c 4".format(host_ip)
+                    ping_execute = cli_run(cmd=ping_cmd, host_ip=host_ip, linux_user=self.username, linux_password=self.password)
+                    ping_serialize = self._serialize_response(time.time(), ping_execute)
+                    output = str(ping_serialize['Result']['stdout']).replace('\n', '').strip()
+                    print("-------Ping Output for {}--------".format(node))
+                    print(output)
+                    if ", 0% packet loss" in output:
+                        continue
+                    else:
+                        failed_check.append(node)
+            if failed_check:
+                print("Could not verify ping test for {}".format(failed_check))
+                return "Could not verify ping test for {}".format(failed_check)
+            else:
+                return "OK"
+        else:
+            print("node_names argument is missing")
+            return "node_name argument is missing"
+
