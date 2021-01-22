@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+	[Tags]    delete	
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -85,11 +85,11 @@ Cleanup Auth Profiles after login as Admin user
 
                      #Sleep    1 minutes
 
-        ${status}	 PCC.Get CR Id
-					 ...    Name=${CR_NAME}
-					 Pass Execution If    ${network_id} is ${None}    ${CR_NAME} Not Present on PCC
-					 
-		${status}    PCC.CR Wait For CR updation
+        ${cr_id}                         PCC.Get CR Id
+                                         ...    Name=${CR_NAME}
+                                         Pass Execution If    ${cr_id} is ${None}    ${CR_NAME} Not Present on PCC
+
+                ${status}    PCC.CR Wait For CR updation
                      ...    Name=${CR_NAME}
 
                      Log to Console    ${status}
@@ -162,7 +162,7 @@ Deleting Maas From Nodes
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                     Should Not Be Equal As Strings      ${response}  OK
-									
+
 ###################################################################################################################################
 Ceph Rgw Delete Multiple
 ###################################################################################################################################
@@ -246,6 +246,11 @@ Cleanup features associated to Node
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  PCC.Cleanup features associated to Node
+
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default region
+                        Log To Console    ${parent1_Id}
+
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=Default zone
                         ...  parentID=${parent1_Id}
@@ -262,12 +267,12 @@ Cleanup features associated to Node
                        ...  parentID=${parent3_Id}
 
                        Log To Console    ${scope_id}
-						
-		${status}       PCC.Cleanup features associated to Node
-						...    scopeId=${scope_id}
-						Log To Console    ${status}
-						Should Be Equal As Strings      ${status}  OK
-						
+
+                ${status}       PCC.Cleanup features associated to Node
+                                                ...    scopeId=${scope_id}
+                                                Log To Console    ${status}
+                                                Should Be Equal As Strings      ${status}  OK
+
 ####################################################################################################################################
 Wait Until All Nodes Are Ready
 ####################################################################################################################################
@@ -277,9 +282,9 @@ Wait Until All Nodes Are Ready
         ${status}                   PCC.Wait Until All Nodes Are Ready
 
                                     Log To Console    ${status}
-									Should Be Equal As Strings      ${status}  OK
-								
-									
+                                                                        Should Be Equal As Strings      ${status}  OK
+
+
 ###################################################################################################################################
 Delete All Node Roles
 ###################################################################################################################################
@@ -292,7 +297,7 @@ Delete All Node Roles
 
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK    Node roles still exists
-					 
+
 ####################################################################################################################################
 Cleanup all certificates from PCC
 ####################################################################################################################################
@@ -302,8 +307,8 @@ Cleanup all certificates from PCC
         ${status}                   PCC.Delete All Certificates
 
                                     Log To Console    ${status}
-									Should be equal as strings    ${status}    OK
-									
+                                                                        Should be equal as strings    ${status}    OK
+
 ####################################################################################################################################
 Cleanup all keys from PCC
 ####################################################################################################################################
@@ -313,7 +318,7 @@ Cleanup all keys from PCC
         ${status}                   PCC.Delete All Keys
 
                                     Log To Console    ${status}
-									Should be equal as strings    ${status}    OK
+                                                                        Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Delete All Node Groups
@@ -342,7 +347,7 @@ Delete All Profiles
         ${response}    PCC.Delete All Profiles
 
                        Log To Console    ${response}
-									
+
 ###################################################################################################################################
 PCC Multiple Tenant deletion
 ###################################################################################################################################
@@ -350,7 +355,7 @@ PCC Multiple Tenant deletion
         [Documentation]    *PCC Multiple Tenant deletion* test
                            ...  keywords:
                            ...  PCC.Delete Multiple Tenants
-        [Tags]    Delete
+        
         ${status}    PCC.Delete Multiple Tenants
                        ...    Tenant_list=["${TENANT1}"]
 
@@ -365,29 +370,29 @@ Policy driven management cleanup
                            ...  keywords:
                            ...  PCC.Delete Multiple Tenants
                 ###  Unassign locations from policies  ###
-				${status}    PCC.Unassign Locations Assigned from All Policies
-							 
-							 Log to Console    ${message}
-							 Should Be Equal As Strings    ${status}    OK
-				
-				####  Delete All Policies  ####
+                ${status}    PCC.Unassign Locations Assigned from All Policies
+
+                             Log to Console    ${status}
+                             Should Be Equal As Strings    ${status}    OK
+
+                                ####  Delete All Policies  ####
                 ${status}    PCC.Delete All Policies
 
-							 Log To Console    ${status}
-							 Should Be Equal As Strings    ${status}    OK
-				
-				####  Delete All Locations  ####
-                ${response}    PCC.Delete Scope
-							   ...  scope_name=region-1
-							   ...  parentID=
+                             Log To Console    ${status}
+                             Should Be Equal As Strings    ${status}    OK
 
-							   Log To Console    ${response}
-							   ${result}    Get Result    ${response}
-							   ${status}    Get From Dictionary    ${result}    status
-							   ${message}    Get From Dictionary    ${result}    message
-							   Log to Console    ${message}
-							   Should Be Equal As Strings    ${status}    200
-                                                                                                                        
+                                ####  Delete All Locations  ####
+                ${response}    PCC.Delete Scope
+                               ...  scope_name=region-1
+                               ...  parentID=
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}   Get From Dictionary    ${result}    message
+                               Log To Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
 #####################################################################################################################################
 Delete Nodes
 #####################################################################################################################################
@@ -399,8 +404,8 @@ Delete Nodes
                                    Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
-								   
-								   Log To Console    ${status}
+
+                                   Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
