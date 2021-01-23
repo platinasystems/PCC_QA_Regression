@@ -226,18 +226,20 @@ class Nodes(AaBase):
         found = True
         time_waited = 0
         timeout = time.time() + PCC_TIMEOUT
-        while found:
-            found = False
-            node_list = pcc.get_nodes(conn)['Result']['Data']
-            for node in node_list:
-                if str(node['Name']) == str(self.Name):
-                    found = True
-            if time.time() > timeout:
-                return {"Error": "Timeout"}
-            if not found:
-                time.sleep(5)
-                time_waited += 5
-        return "OK"
+        try:
+            while found:
+                node_list = pcc.get_nodes(conn)['Result']['Data']
+                if node_list ==None:
+                    return "OK"
+                if re.search(self.Name,str(node_list)):
+                    trace("Node:{} not yet deleted".format(self.Name))
+                    time.sleep(3)
+                    if time.time()>timeout:
+                        return {"Error": "Timeout"}
+                else:
+                    return "OK"
+        except Exception as e:
+            return "Exception encountered: {}".format(e)
         
     ###########################################################################
     @keyword(name="PCC.Wait Until Node Ready")
@@ -452,39 +454,30 @@ class Nodes(AaBase):
                     
             else:
                 response = self.get_nodes()
-                list_id = []
-                
-                if get_response_data(response) == []:
+                deletion_status_code = []
+                node_ready_status = []
+                if get_response_data(response) == None:
                     return "OK"
                 else:
-                    for ids in get_response_data(response):
-                        list_id.append(ids['id'])
-                    print("list of id:{}".format(list_id))
-                    for id_ in list_id:
-                        response = self.delete_node(Id=id_)
+                    for node in get_response_data(response):
+                        deletion_response = self.delete_node(Id=node['Id']) 
+                        deletion_status_code.append(deletion_response['StatusCode'])
                         
-                deletion_status = False
-                counter = 0
-                while deletion_status == False:
-                    counter+=1
-                    response = self.get_nodes()
-                    if get_response_data(response) != []:
-                        time.sleep(6)
-                        banner("All Nodes not yet deleted")
-                        if counter < 50:
-                            banner("Counter: {}".format(counter))
-                            continue
-                        else:
-                            return "Error: All nodes not deleted"
-                    elif get_response_data(response) == []:
-                        deletion_status = True
-                        banner("All Nodes deleted successfully")
+                        wait_until_deletion_response = self.wait_until_node_deleted(Name=node['Name'])
+                        node_ready_status.append(wait_until_deletion_response)
+                    
+                    trace("deletion_status_code: {}".format(deletion_status_code))
+                    trace("node_ready_status: {}".format(node_ready_status))
+                    result1 = len(deletion_status_code) > 0 and all(elem == 200 for elem in deletion_status_code)
+                    result2 = len(node_ready_status) > 0 and all(elem == "OK" for elem in node_ready_status)
+                    
+                    if result1 and result2:
                         return "OK"
                     else:
-                        banner("Entered into continuous loop")
-                        return "Error"
+                        return "Node deletion status is {} and wait until status is {}".format(deletion_status_code,node_ready_status)
+
         except Exception as e:
-            logger.console("Error in delete_multiple_nodes_and_wait_until_deletion status: {}".format(e))
+            return "Exception encountered: {}".format(e)
 
     ###########################################################################
     @keyword(name="PCC.Node Verify Back End")
@@ -776,4 +769,4 @@ class Nodes(AaBase):
             else:
                 return "Wait Until Node ready status is: {}".format(node_ready_status)
         except Exception as e:
-            return "Exception encountered: {}".format(e)   
+            return "Exception encountered: {}".format(e)
