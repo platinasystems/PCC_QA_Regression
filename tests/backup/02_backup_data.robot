@@ -60,6 +60,73 @@ Login
                                                 Set Global Variable    ${invader2_id}
 
 ###################################################################################################################################
+Create Subnets For Network Manager 
+###################################################################################################################################
+    [Documentation]                 *Create IPAM Subnet*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Create
+                               ...  PCC.Wait Until Ipam Subnet Ready
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
+                               ...  subnet=${IPAM_CONTROL_SUBNET_IP}
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=${IPAM_CONTROL_SUBNET_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=${IPAM_DATA_SUBNET_NAME}
+                               ...  subnet=${IPAM_DATA_SUBNET_IP}
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=${IPAM_DATA_SUBNET_NAME}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Network Manager Creation 
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation with same ControlCIDR and DataCIDR*
+                               ...  keywords:
+                               ...  PCC.Network Manager Create
+                               ...  PCC.Wait Until Network Manager Ready
+                               ...  PCC.Network Manager Verify BE 
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                  
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager Verify BE      
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK 
+
+###################################################################################################################################
 Create Kubernetes cluster
 ###################################################################################################################################
         [Documentation]             *Create Kubernetes cluster*
