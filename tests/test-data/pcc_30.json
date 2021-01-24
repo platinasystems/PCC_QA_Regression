@@ -13,7 +13,7 @@
             "read_only_password":"readonly@123",
             "setup_password":"hc7giw4MHztsfYrT",
             "setup_username":"Sylvester",
-	    "setup_upgrade_cmd":"sudo /home/pcc/platina-cli run -u Sylvester -p hc7giw4MHztsfYrT --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Sylvester -rp hc7giw4MHztsfYrT --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release release-branch.pcc1.6 --pruneVolumes"
+	    "setup_upgrade_cmd":"sudo /home/pcc/platina-cli-ws/platina-cli run -u Sylvester -p hc7giw4MHztsfYrT --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Sylvester --rp hc7giw4MHztsfYrT --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master --pruneVolumes"
         },
     
     "i28":	
