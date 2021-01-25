@@ -335,6 +335,7 @@ class Cli(AaBase):
         print("cmd op: {}".format(str(cmd_op)))
         if re.search("FAIL",str(cmd_op)):
             print("Failed to backup, result is: \n {}".format(str(cmd_op)))
+            BuiltIn().fatal_error('Stoping the exectuion, Backup not succeded !!!')
             return "Error: Failed to backup"
         else:
             cmd_file="sudo test -f /home/pcc/platina-cli-ws/master.gpg && echo 'True' || echo 'False'"
@@ -406,6 +407,7 @@ class Cli(AaBase):
         print("cmd op: {}".format(str(cmd_op)))
         if re.search("FAIL",str(cmd_op)):
             print("Failed to backup, result is: \n {}".format(str(cmd_op)))
+            BuiltIn().fatal_error('Stoping the exectuion, Restore not succeded !!!')
             return "Error: Failed to backup"
         else:
             return "OK"
