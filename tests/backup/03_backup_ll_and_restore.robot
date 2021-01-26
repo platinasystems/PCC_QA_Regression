@@ -112,6 +112,7 @@ Restore PCC Instance Locally
                                ...  linux_password=${PCC_LINUX_PASSWORD}
                                ...  backup_params=all
                                ...  backup_type=local
+                               ...  restore_type=local
 
                                     Log to Console    ${status}
                                     Should Be Equal As Strings    ${status}    OK
