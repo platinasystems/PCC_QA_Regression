@@ -145,11 +145,12 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                            ...  keywords:
 
         [Tags]    Only
-                ####  Creating Public certificate for rsyslog ####
+                ####  Creating certificate with private keys for rsyslog ####
                 ${response}    PCC.Add Certificate
                        ...  Alias=Cert_for_rsyslog
                        ...  Description=Cert_for_rsyslog
-                       ...  Certificate_upload=Certificate_to_be_uploaded.pem
+                       ...  Certificate_upload=Rsyslog_cert.pem
+		       ...  Private_key=Rsyslog_pvt_key.pem	
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -196,7 +197,7 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                                ...  appId=${app_id}
                                ...  description=rsyslog-policy
                                ...  scopeIds=[${default_rack_Id}]
-                               ...  inputs=[{"name": "rsyslog_remote_address","value":"${SERVER_2_HOST_IP}"},{"name":"rsyslog_enable_tls","value":"yes"},{"name":"rsyslog_ca_certificate","value":"${certificate_id}"}]
+                               ...  inputs=[{"name": "rsyslog_remote_address","value":"${SERVER_2_HOST_IP}"},{"name":"rsyslog_enable_tls","value":"true"},{"name":"rsyslog_tcp_port","value":"6514"},{"name":"rsyslog_ca_certificate","value":"${certificate_id}"}]
 
                                Log To Console    ${response}
                                ${result}    Get Result    ${response}
@@ -204,6 +205,34 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                                ${message}    Get From Dictionary    ${result}    message
                                Log to Console    ${message}
                                Should Be Equal As Strings    ${status}    200
+		
+		${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+			      Should Be Equal As Strings    ${status}    OK
+
+	    #### Creating rsyslog Policy and assigning it to location####
+                ${app_id}    PCC.Get App Id from Policies
+                                        ...  Name=rsyslogd
+                                        Log To Console    ${app_id}
+
+                ${response}    PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=rsyslog-policy-without-tls
+                               ...  scopeIds=[${default_site_Id}]
+                               ...  inputs=[{"name": "rsyslog_remote_address","value":"${CLUSTERHEAD_1_HOST_IP}"},{"name":"rsyslog_enable_tls","value":"false"},{"name":"rsyslog_tcp_port","value":"514"}]
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               Log to Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+		
+		${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
 
 #############################################################################################################
 Unassign locations from all policies
