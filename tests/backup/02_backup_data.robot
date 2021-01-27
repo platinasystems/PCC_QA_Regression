@@ -137,6 +137,10 @@ Create Kubernetes cluster
                                ...  name=${K8s_NAME}
                                     Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
 
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.K8s Create Cluster
                                ...  id=${K8S_ID}
                                ...  k8sVersion=${K8S_VERSION}
