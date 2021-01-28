@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_218
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-      [Tags]    This
+      [Tags]    Today
                                     Load Ipam Data    ${pcc_setup}
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
@@ -80,21 +80,21 @@ Check if Remote Syslog Package already exists, if exists delete the package
                            ...  keywords:
                            ...  CLI.Check package installed
                                                    ...  CLI.Remove a package from machine
-
+	[Tags]    Today
                 ${status}               CLI.Check package installed
                                         ...    package_name=rsyslog
                                         ...    host_ip=${SERVER_1_HOST_IP}
                                         ...    linux_user=${PCC_LINUX_USER}
                                         ...    linux_password=${PCC_LINUX_PASSWORD}
 
-                                        Pass Execution If       '${status}' == 'rsyslog Package not installed'   'ryslog Package already installed'
+                                        Pass Execution If       '${status}' == 'rsyslog Package is not installed'   'ryslog Package already installed'
 
                 ${status}               CLI.Remove a package from machine
                                                 ...    package_name=rsyslog
                                                 ...    host_ip=${SERVER_1_HOST_IP}
                                                 ...    linux_user=${PCC_LINUX_USER}
                                                 ...    linux_password=${PCC_LINUX_PASSWORD}
-
+						
                                                 Should Be Equal As Strings    ${status}    rsyslog Package removed
 
 ###################################################################################################################################
@@ -116,7 +116,8 @@ Check that the rsyslog and rsyslog-gnutls package is installed and the services 
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
-
+			       Sleep    50s
+	
                 ${status}               CLI.Check package installed
                                                 ...    package_name=rsyslog
                                                 ...    host_ip=${SERVER_1_HOST_IP}
@@ -205,11 +206,79 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                                ${message}    Get From Dictionary    ${result}    message
                                Log to Console    ${message}
                                Should Be Equal As Strings    ${status}    200
-		
+
+	    #### Wait until all nodes are ready ####
+
 		${status}     PCC.Wait Until All Nodes Are Ready
 
                               Log To Console    ${status}
 			      Should Be Equal As Strings    ${status}    OK
+
+	    #### Restart RSYSLog client ####
+		
+		${status}     CLI.Restart Rsyslog service
+			      ...  host_ips=['${SERVER_2_HOST_IP}','${SERVER_1_HOST_IP}']
+			      			
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+	    #### Validate RSYSlog from backend ####
+		
+		${status}     CLI.Validate Rsyslog from backend
+                              ...  node_names=['${SERVER_1_NAME}']
+			      ...  host_ip=${SERVER_2_HOST_IP}	
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+	    #### Unassign loactions from policies ####
+
+		${status}    PCC.Unassign Locations Assigned from All Policies
+
+                           Log To Console    ${status}
+                           Should Be Equal As Strings    ${status}    OK
+	   
+ 	    #### Wait until all nodes are ready ####
+
+                ${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+	    #### Cleanup logs created by Rsyslog ####
+	
+		${status}     CLI.Cleanup logs created by Rsyslog
+                              ...  host_ips=['${SERVER_2_HOST_IP}']
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
+Check if user is able to define one or more Remote Syslog Client policies(without TLS) and associate them with various parts of the scoping tree
+###################################################################################################################################
+
+        [Documentation]    *Check if user is able to define one or more Remote Syslog Client policies test*
+                           ...  keywords:
+
+
+		####  Fetching Default scopeIds ####
+                ${default_region_Id}    PCC.Get Scope Id
+                	                ...  scope_name=Default region
+                        	        Log To Console    ${default_region_Id}
+                                	Set Global Variable    ${default_region_Id}
+
+        	${default_zone_Id}    PCC.Get Scope Id
+                  	              ...  scope_name=Default zone
+        	                      ...  parentID=${default_region_Id}
+	
+                          	      Log To Console    ${default_zone_Id}
+                              	      Set Global Variable    ${default_zone_Id}
+
+        	${default_site_Id}    PCC.Get Scope Id
+                	              ...  scope_name=Default site
+                        	      ...  parentID=${default_zone_Id}
+                              	      Log To Console    ${default_site_Id}
+                              	      Set Global Variable    ${default_site_Id}
 
 	    #### Creating rsyslog Policy and assigning it to location####
                 ${app_id}    PCC.Get App Id from Policies
@@ -228,23 +297,65 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                                ${message}    Get From Dictionary    ${result}    message
                                Log to Console    ${message}
                                Should Be Equal As Strings    ${status}    200
-		
-		${status}     PCC.Wait Until All Nodes Are Ready
+
+	    #### Wait until all nodes are ready ####
+
+                ${status}     PCC.Wait Until All Nodes Are Ready
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 
-#############################################################################################################
-Unassign locations from all policies
-#############################################################################################################
+            #### Restart RSYSLog client ####
 
-        [Documentation]    *Check if user is able to define one or more Remote Syslog Client policies test*
-                           ...  keywords:
+                ${status}     CLI.Restart Rsyslog service
+                              ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}','${SERVER_1_HOST_IP}']
 
-        [Tags]    This
-                ####  Creating Public certificate for rsyslog ####
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+            #### Validate RSYSlog from backend ####
+
+                ${status}     CLI.Validate Rsyslog from backend
+                              ...  node_names=['${SERVER_1_NAME}']
+                              ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+            #### Unassign loactions from policies ####
+
                 ${status}    PCC.Unassign Locations Assigned from All Policies
 
                            Log To Console    ${status}
                            Should Be Equal As Strings    ${status}    OK
+
+            #### Wait until all nodes are ready ####
+
+                ${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+	    #### Cleanup logs created by Rsyslog ####
+
+                ${status}     CLI.Cleanup logs created by Rsyslog
+                              ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}']
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
+Delete Policies
+###################################################################################################################################
+
+        [Documentation]    *Delete Policies*
+                           ...  keywords:
+	
+	${status}     PCC.Delete All Policies
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings    ${status}    OK
+
+
+
 

@@ -431,19 +431,22 @@ class PolicyDrivenMgmt(AaBase):
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         get_response = self.get_all_policies(**kwargs)['Result']['Data']
-        policy_ids= []
-        for data in get_response:
-            policy_ids.append(data['id'])
-        deletion_status = []
-        for id in policy_ids:
-            deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
-            deletion_status.append(deletion_resp['status'])
-            time.sleep(3)
-        result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
-        if result:
-            return "OK"  
+        if get_response == None:
+            return "OK"
         else:
-            return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
+            policy_ids= []
+            for data in get_response:
+                policy_ids.append(data['id'])
+            deletion_status = []
+            for id in policy_ids:
+                deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
+                deletion_status.append(deletion_resp['status'])
+                time.sleep(3)
+            result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
+            if result:
+                return "OK"  
+            else:
+                return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
 
     ###########################################################################
     @keyword(name="PCC.Unassign Locations Assigned from All Policies")
@@ -453,26 +456,28 @@ class PolicyDrivenMgmt(AaBase):
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         get_response = self.get_all_policies(**kwargs)['Result']['Data']
-        
-        location_unassign_status = []
-        for data in get_response:
-            payload= {  "id":data['id'],
-                        "appId": data['appId'],
-                        "scopeIDs": [],
-                        "description": data['description'],
-                        "inputs":data['inputs'],
-                        "owner":data['owner']
-                     }
-            response  = pcc.modify_policy_by_id(conn, str(data['id']), payload)
-            print("Response is {}".format(response))
-            location_unassign_status.append(response['StatusCode'])
-            time.sleep(1)
-            
-        result = len(location_unassign_status) > 0 and all(elem == 200 for elem in location_unassign_status)
-        if result:
-            return "OK"  
+        if get_response == None:
+            return "OK"
         else:
-            return "Error: while unassignment of locations from all policies: {}".format(location_unassign_status)
+            location_unassign_status = []
+            for data in get_response:
+                payload= {  "id":data['id'],
+                            "appId": data['appId'],
+                            "scopeIDs": [],
+                            "description": data['description'],
+                            "inputs":data['inputs'],
+                            "owner":data['owner']
+                         }
+                response  = pcc.modify_policy_by_id(conn, str(data['id']), payload)
+                print("Response is {}".format(response))
+                location_unassign_status.append(response['StatusCode'])
+                time.sleep(1)
+            
+            result = len(location_unassign_status) > 0 and all(elem == 200 for elem in location_unassign_status)
+            if result:
+                return "OK"  
+            else:
+                return "Error: while unassignment of locations from all policies: {}".format(location_unassign_status)
 
     ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
