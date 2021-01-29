@@ -235,17 +235,13 @@ Ceph Pool Multiple Delete
                                
         ${status}                   PCC.Ceph Delete All Pools
                                     Should be equal as strings    ${status}    OK
-                                    
-###################################################################################################################################
-PCC Multiple Tenant deletion
-###################################################################################################################################
 
-        [Documentation]           *PCC Multiple Tenant deletion* test
-                                  ...  keywords:
-                                  ...  PCC.Delete Multiple Tenants
-                                  
-        ${status}                 PCC.Delete Multiple Tenants
-                                  ...    Tenant_list=['Test_Tenant_4','Test_Tenant_5'] 
-                                  
-                                  Log To Console    ${status}
-                                  Should Be Equal As Strings    ${status}    OK    Not Deleted
+###############################################################################################################################
+Delete All Tenants
+###################################################################################################################################
+    [Documentation]                 *Deleting all Tenants*
+                               ...  keywords:
+                               ...  PCC.Delete All Tenants
+
+         ${status}                  PCC.Delete All Tenants
+                                    Should be equal as strings    ${status}    OK    All Tenants Not deleted                                   

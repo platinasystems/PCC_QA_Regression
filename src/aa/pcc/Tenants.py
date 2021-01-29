@@ -273,4 +273,43 @@ class Tenants(AaBase):
         except Exception as e:
             return {"Error: {}".format(e)}
         
-    
+   ###########################################################################
+    @keyword(name="PCC.Delete All Tenants")
+    ###########################################################################
+    def delete_all_tenants(self, *args, **kwargs):
+        """
+        Delete All Tenants
+        [Args]
+            (dict) conn: Connection dictionary obtained after logging in
+            (list) tenants: Tenants list to be deleted
+
+        [Returns]
+            "OK": If all Tenants are deleted
+            else "Error"
+
+        """
+        banner("Delete All Tenants")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        banner("Kwargs are: {}".format(kwargs))
+        try:
+            tenant_list = self.get_tenant_list(conn)['Result']
+            trace(tenant_list)
+            tenant_names = [tenant['name'] for tenant in tenant_list]
+            trace("tenant_names: {}".format(tenant_names))
+            if tenant_names == ['ROOT','Tenant_6']:
+                return "OK"
+            else:
+                tenants_to_be_deleted = set(tenant_names)- set(['ROOT','Tenant_6'])
+                trace("tenants_to_be_deleted: {}".format(tenants_to_be_deleted))
+                for tenant in list(tenants_to_be_deleted):
+                    trace("Deleting tenant: {}".format(tenant))
+                    tenant_id = self.get_tenant_id(Name=tenant)
+                    response = self.delete_tenant(Id= str(tenant_id))
+                    if response['StatusCode'] == 200:
+                        continue
+                    else:
+                        return Error
+                return "OK"
+        except Exception as e:
+            return {"Error: {}".format(e)} 

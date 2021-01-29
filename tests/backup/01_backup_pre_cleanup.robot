@@ -349,18 +349,17 @@ Delete All Profiles
                        Log To Console    ${response}
 
 ###################################################################################################################################
-PCC Multiple Tenant deletion
+PCC All Tenant deletion
 ###################################################################################################################################
 
-        [Documentation]    *PCC Multiple Tenant deletion* test
+        [Documentation]    *PCC All Tenant deletion* test
                            ...  keywords:
-                           ...  PCC.Delete Multiple Tenants
+                           ...  PCC.Delete All Tenants
         
-        ${status}    PCC.Delete Multiple Tenants
-                       ...    Tenant_list=["${TENANT1}"]
-
-                       Log To Console    ${status}
-                       Should Be Equal As Strings    ${status}    OK    Not Deleted
+        ${status}    PCC.Delete All Tenants
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Not Deleted
 
 ###################################################################################################################################
 Policy driven management cleanup
