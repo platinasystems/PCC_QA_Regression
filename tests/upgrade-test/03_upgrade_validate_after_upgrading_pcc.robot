@@ -71,7 +71,7 @@ Login to PCC
                                                 Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Nodes Verification after restoring PCC
+Nodes Verification after upgrading PCC
 ###################################################################################################################################
     [Documentation]                      *Nodes Verification Back End*
                                ...  keywords:
@@ -89,7 +89,7 @@ Nodes Verification after restoring PCC
 
 
 ###################################################################################################################################
-Ceph Validation after restoring PCC
+Ceph Validation after upgrading PCC
 ###################################################################################################################################
     [Documentation]                 *Ceph Validation after restoring PCC*
                                ...  keywords:
@@ -191,7 +191,7 @@ Ceph Validation after restoring PCC
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Subnet Validation after restoring PCC
+Subnet Validation after upgrading PCC
 ###################################################################################################################################
     [Documentation]                 *Subnet Validation after restoring PCC*
                                ...  keywords:
@@ -205,7 +205,7 @@ Subnet Validation after restoring PCC
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Network Cluster Validation after restoring PCC
+Network Cluster Validation after upgrading PCC
 ###################################################################################################################################
     [Documentation]                 *Network Cluster Validation after restoring PCC*
                                ...  keywords:
@@ -226,7 +226,7 @@ Network Cluster Validation after restoring PCC
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-K8s Validation after restoring PCC
+K8s Validation after upgrading PCC
 ###################################################################################################################################
         [Documentation]             *K8s Validation after restoring PCC*
                                ...  Keywords:
@@ -243,7 +243,7 @@ K8s Validation after restoring PCC
 
                                     Should Be Equal As Strings      ${status}    OK                      
 ###################################################################################################################################
-Verify CR creation successful from frontend and backend after restore
+Verify CR creation successful from frontend and backend after upgrade
 ###################################################################################################################################
 
         [Documentation]             *Verify CR creation successful from frontend and backend* test
@@ -313,7 +313,7 @@ Verify CR creation successful from frontend and backend after restore
                                     Should Be Equal As Strings    ${Port_used_result}    OK
 					 
 ###################################################################################################################################
-PCC Node Role validation after restore
+PCC Node Role validation after upgrade
 ###################################################################################################################################
 
         [Documentation]             *PCC Node Role Validation after restore* test
@@ -327,7 +327,7 @@ PCC Node Role validation after restore
                                     Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
 					 
 ###################################################################################################################################
-PCC-Tenant-Validation after restore
+PCC-Tenant-Validation after upgrade
 ###################################################################################################################################
 
         [Documentation]             *Tenant validation after restore* test
@@ -340,7 +340,7 @@ PCC-Tenant-Validation after restore
                                     Should Be Equal As Strings    ${status}    OK
 					 
 ###################################################################################################################################
-PCC Node Group Validation after restore
+PCC Node Group Validation after upgrade
 ###################################################################################################################################
 
         [Documentation]             *PCC Node Group Validation after restore* test
@@ -355,7 +355,7 @@ PCC Node Group Validation after restore
 					 
 									   
 ###################################################################################################################################
-Create scoping object - Region for backup and restore
+Create scoping object - Region for upgrade testing
 ###################################################################################################################################
 
         [Documentation]             *Create scoping object - Region* test
@@ -369,7 +369,7 @@ Create scoping object - Region for backup and restore
                                     Should Be Equal As Strings    ${status}    OK
 					   
 ###################################################################################################################################
-Validate Node role and its assignment on nodes after restore
+Validate Node role and its assignment on nodes after upgrade
 ###################################################################################################################################
 
         [Documentation]             *Create a policy* test
