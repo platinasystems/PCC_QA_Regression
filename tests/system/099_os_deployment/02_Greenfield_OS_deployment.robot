@@ -14,7 +14,7 @@
 #        [Tags]    Password
 #        ${status}        Login To PCC    ${pcc_setup}
 #                         Should Be Equal    ${status}  OK
-#
+#                         Load PCC Test Data    ${pcc_setup}
 #                         Load Clusterhead 1 Test Data    ${pcc_setup}
 #                         Load Clusterhead 2 Test Data    ${pcc_setup}
 #
@@ -32,6 +32,26 @@
 #                         Log To Console    ${server1_id}
 #                         Set Global Variable    ${server1_id}
 #
+#
+####################################################################################################################################
+#Update OS Images
+###################################################################################################################################
+#
+#        [Documentation]    *Update OS Images* test
+#                           ...  keywords:
+#                           ...  PCC.Update OS Images
+#        [Tags]    Only
+#
+#        ${result}      PCC.Update OS Images
+#                       ...    setup_password=${PCC_SETUP_PWD}
+#                       ...    pcc_username=${PCC_USERNAME}
+#                       ...    pcc_password=${PCC_PASSWORD}
+#                       ...    host_ip=${PCC_HOST_IP}
+#                       ...    username=${PCC_LINUX_USER}
+#                       ...    password=${PCC_LINUX_PASSWORD}
+#
+#                       Log To Console    ${result}
+#                       Should Be Equal As Strings      ${result}  OK
 #
 ####################################################################################################################################
 ##Delete node which needs to be PXE-Booted

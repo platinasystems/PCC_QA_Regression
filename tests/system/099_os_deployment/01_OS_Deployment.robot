@@ -14,7 +14,8 @@ Login to PCC.
         [Tags]    Only
         ${status}        Login To PCC    ${pcc_setup}
                          Should Be Equal    ${status}  OK
-
+			
+			 Load PCC Test Data    ${pcc_setup}
                          Load Clusterhead 1 Test Data    ${pcc_setup}
                          Load Clusterhead 2 Test Data    ${pcc_setup}
                          Load Server 1 Test Data    ${pcc_setup}
@@ -55,7 +56,9 @@ Update OS Images
 
         ${result}      PCC.Update OS Images
                        ...    setup_password=${PCC_SETUP_PWD}
-                       ...    host_ip=${PCC_HOST_IP}
+                       ...    pcc_username=${PCC_USERNAME}
+		       ...    pcc_password=${PCC_PASSWORD}	
+		       ...    host_ip=${PCC_HOST_IP}
                        ...    username=${PCC_LINUX_USER}
                        ...    password=${PCC_LINUX_PASSWORD}
 

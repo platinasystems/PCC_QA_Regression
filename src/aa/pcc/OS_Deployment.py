@@ -52,7 +52,8 @@ class OS_Deployment(AaBase):
         self.i28_password = None
         self.version=None
         self.setup_password = None
-        
+        self.pcc_username = None
+        self.pcc_password = None
         super().__init__()
 
     ###########################################################################
@@ -401,13 +402,16 @@ class OS_Deployment(AaBase):
         banner("PCC.Update OS Images")
         self._load_kwargs(kwargs)                 
         try:
-            cmd_1= """sudo platina-cli-ws/platina-cli os-media list-local -p {}| awk {}|sed -e '1,4d'""".format(self.setup_password, "'{print $2}'")
+            cmd_1= """sudo platina-cli-ws/platina-cli os-media list-local --pccUsername {} --pccPassword {}| awk '/amd64|i386/ {}'""".format(self.pcc_username,self.pcc_password,'{print $2}')
             logger.console("Command1 is: {}".format(cmd_1))
             image_in_local_repo_cmd_output = cli_run(cmd=cmd_1, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
             print("image_in_local_repo_cmd_output : {}".format(image_in_local_repo_cmd_output))
             time.sleep(10)
             serialised_op = self._serialize_response(time.time(), image_in_local_repo_cmd_output)
-            image_in_local_repo = str(serialised_op['Result']['stdout']).strip().split('\n')
+            if serialised_op == None:
+                image_in_local_repo = []
+            else:
+                image_in_local_repo = str(serialised_op['Result']['stdout']).strip().split('\n')
             print(image_in_local_repo)
             
             cmd_2= """sudo platina-cli-ws/platina-cli os-media list -p {} --skipVerifySignature|awk {}|sed -e '1,3d'""".format(self.setup_password, "'{print $1}'")
@@ -418,9 +422,6 @@ class OS_Deployment(AaBase):
             serialised_op = self._serialize_response(time.time(), image_in_platina_cli_cmd_output)
             image_in_platina_cli = str(serialised_op['Result']['stdout']).strip().split('\n')
             print(image_in_platina_cli)
-            
-            if 'is' in image_in_local_repo:
-                image_in_local_repo = []
             print("image_in_platina_cli is :" + str(image_in_platina_cli))
             print("image_in_local_repo is :" + str(image_in_local_repo))
             os_image_not_in_pcc = list(list(set(image_in_platina_cli)-set(image_in_local_repo)) + list(set(image_in_local_repo)-set(image_in_platina_cli)))
@@ -431,13 +432,13 @@ class OS_Deployment(AaBase):
                 updated_images = []
                 for image in os_image_not_in_pcc:
                     print("=========== Updating image: {} ===========".format(image))
-                    cmd= """sudo platina-cli-ws/platina-cli os-media download --media {} -p {} --skipVerifySignature""".format(image,self.setup_password)
+                    cmd= """sudo platina-cli-ws/platina-cli os-media download --media {} --pccUsername {} --pccPassword {} --skipVerifySignature""".format(image,self.pcc_username,self.pcc_password)
                     logger.console("Command is: {}".format(cmd))
                     update_img_cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
                     print("update_img_cmd_output : {}".format(update_img_cmd_output))
                     time.sleep(2*60) ##Image updation takes 2 minutes, sleeping for 2 minutes 
                     print("======== Checking {} is updated in local-repo or not ==========".format(image))
-                    check_img_updated_cmd = """sudo platina-cli-ws/platina-cli os-media list-local -p {}| awk {}|sed -e '1,4d'""".format(self.setup_password, "'{print $2}'")
+                    check_img_updated_cmd = """sudo platina-cli-ws/platina-cli os-media list-local --pccUsername {} --pccPassword {}| awk '/amd64|i386/ {}'""".format(self.pcc_username,self.pcc_password,'{print $2}')
                     check_img_updated_cmd_output = cli_run(cmd=check_img_updated_cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
                     if re.search(image,str(check_img_updated_cmd_output)):
                         updated_images.append("OK")
