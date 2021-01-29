@@ -569,7 +569,114 @@ Update CephFS - remove_data_pools - After upgrade
 
                                     Should Be Equal As Strings      ${status}    OK	
 								
+###################################################################################################################################
+Edit FQDN in Container Registry after upgrade
+###################################################################################################################################
+        
+        [Documentation]    *Edit FQDN* test
+                           ...  keywords:
+                           ...  PCC.Update Container Registry
+                                   
+        ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
+                         Log To Console    ${server_id}
+                         Set Global Variable    ${server_id}
 
+        ${response}    PCC.Update Container Registry 
+                       
+                       ...    nodeID=${server_id}
+                       ...    Name=${CR_NAME}
+                       ...    fullyQualifiedDomainName=${CR_MODIFIED_FQDN}
+                       ...    password=${CR_PASSWORD}
+                       ...    secretKeyBase=${CR_SECRETKEYBASE}
+                       ...    databaseName=${CR_DATABASENAME}
+                       ...    databasePassword=${CR_DB_PWD}
+                       ...    port=${CR_PORT}
+                       ...    registryPort=${CR_REGISTRYPORT}
+                       ...    adminState=${CR_ADMIN_STATE}
+                       ...    storageType=mount
+                       ...    storageLocation=testlocation
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+                       PCC.CR Wait For CR updation
+                       ...    Name=${CR_NAME}
 
 									
+###################################################################################################################################
+PCC Edit Node Role after upgrade
+###################################################################################################################################
+
+        [Documentation]    *PCC Edit Node Role* test
+                           ...  keywords:
+                           ...  PCC.Modify Node Role
+                           ...  PCC.Validate Node Role
+        ${owner}       PCC.Get Tenant Id       Name=${ROOT_TENANT}
+        
+        ${template_id}    PCC.Get Template Id    Name=${APP_1} 
+        
+        ${node_role_id}    PCC.Get Node Role Id    Name=${NODE_ROLE_1}
+                            
+        
+        ${response}    PCC.Modify Node Role
+                       ...    Id=${node_role_id}
+                       ...    Name=${NODE_ROLE_5}
+                       ...    Description=${NODE_ROLE_DESC_5}
+                       ...    templateIDs=[${template_id}]
+                       ...    owners=[${owner}]
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+                       
+                       Sleep    2s
+                       
+        ${status}    PCC.Validate Node Role
+                     ...    Name=${NODE_ROLE_5}
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+
+###################################################################################################################################
+Node Group Name Change after upgrade
+###################################################################################################################################
+
+        [Documentation]    *Node Group Name Change* test
+                           ...  keywords:
+                           ...  Get Node Group Id
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Modify Node Group
+                           ...  PCC.Validate Node Group
+                           
+        ${nodegroup_id}    PCC.Get Node Group Id                                  
+                           ...    Name=${NODE_GROUP1}
+        
+        ${owner}       PCC.Get Tenant Id       Name=ROOT
+        
+        ${response}    PCC.Modify Node Group
+                       ...    Id=${nodegroup_id}
+                       ...    Name=${NODE_GROUP4} 
+                       ...    owner=${owner}
+                       ...    Description=${NODE_GROUP_DESC4}
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+                       
+        ${status}    PCC.Validate Node Group
+                     ...    Name=${NODE_GROUP4}
+                     
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node group doesnot exists   
+
 

@@ -146,7 +146,23 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                            ...  keywords:
 
         [Tags]    Only
-                ####  Creating certificate with private keys for rsyslog ####
+                
+		####  Create Rsyslog configuration ####
+
+		${status}    CLI.Rsyslog Server Configuration
+                	     ...  rsys_server=${SERVER_2_NAME}
+                 	     ...  rsys_tls=yes
+                	     Should be equal as strings    ${status}    OK
+		
+		#### Restart RSYSLog client service ####
+
+                ${status}     CLI.Restart Rsyslog service
+                              ...  host_ips=['${SERVER_2_HOST_IP}']
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+		####  Creating certificate with private keys for rsyslog ####
                 ${response}    PCC.Add Certificate
                        ...  Alias=Cert_for_rsyslog
                        ...  Description=Cert_for_rsyslog
@@ -259,6 +275,21 @@ Check if user is able to define one or more Remote Syslog Client policies(withou
 
         [Documentation]    *Check if user is able to define one or more Remote Syslog Client policies test*
                            ...  keywords:
+
+		####  Create Rsyslog configuration ####
+
+                ${status}    CLI.Rsyslog Server Configuration
+                             ...  rsys_server=${CLUSTERHEAD_1_NAME}
+                             ...  rsys_tls=no
+                             Should be equal as strings    ${status}    OK
+
+                #### Restart RSYSLog client service ####
+
+                ${status}     CLI.Restart Rsyslog service
+                              ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}']
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK		
 
 
 		####  Fetching Default scopeIds ####

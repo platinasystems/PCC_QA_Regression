@@ -297,7 +297,9 @@ class Tenants(AaBase):
             trace(tenant_list)
             tenant_names = [tenant['name'] for tenant in tenant_list]
             trace("tenant_names: {}".format(tenant_names))
-            if tenant_names == ['ROOT','Tenant_6']:
+            if tenant_names == ['ROOT']:
+                return "OK"
+            elif tenant_names == ['ROOT','Tenant_6']:
                 return "OK"
             else:
                 tenants_to_be_deleted = set(tenant_names)- set(['ROOT','Tenant_6'])

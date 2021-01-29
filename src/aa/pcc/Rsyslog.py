@@ -28,6 +28,8 @@ class Rsyslog(AaBase):
         self.linux_password= "cals0ft"
         self.node_names=None
         self.host_ips= None
+        self.rsys_tls = "no"
+        self.rsys_server = None
         super().__init__()
 
     ###########################################################################
@@ -139,6 +141,68 @@ class Rsyslog(AaBase):
         except Exception as e:
             return "Exception encountered while Rsyslog cleanup: {}".format(e)
 
-
+    ###########################################################################
+    @keyword(name="CLI.Rsyslog Server Configuration")
+    ###########################################################################
+    def rsyslog_server_configuration(self,*args,**kwargs):
+        banner("CLI.Rsyslog Server Configuration")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        if self.rsys_server:
+            server_ip=easy.get_hostip_by_name(conn,self.rsys_server)
+            print("Server Host Ip: "+str(server_ip))
+            trace("Server Host Ip: "+str(server_ip))
+        if self.rsys_tls.lower()=="yes":
+            path=os.getcwd()+"/tests/test-data/rsyslog/tls"
+            print("----------------Copying Rsyslog Config File For TLS----------------")
+            trace("----------------Copying Rsyslog Config File For TLS----------------")
+            changing_perm="sudo chmod 777 /etc"
+            cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+            cmd_config="sudo sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/".format(path,server_ip)
+            print("Command for transferriddng rsyslog config file for TLS: "+str(cmd_config))
+            trace("Command for transferring rsyslog config file for TLS: "+str(cmd_config))
+            cmd_out = os.system(cmd_config)
+            print("-----------Verifying if folder exist for server files-----------------")
+            trace("-----------Verifying if folder exist for server files-----------------")
+            cmd_dir="sudo test -d /etc/pki/tls/private && echo 'True' || echo 'False'"
+            cmd_out=cli_run(server_ip,self.linux_user,self.linux_password,cmd_dir)
+            print("----------------------------------------------------------------------")
+            if re.search("False", str(cmd_out)):
+                folder_cmd = "sudo mkdir -p /etc/pki/tls/private"
+                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, folder_cmd)
+                changing_perm="sudo chmod 777 /etc/pki/tls/private"
+                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+                print("-----------Copying server files-----------------")
+                trace("-----------Copying server files-----------------")
+                cmd_transfer = "sudo sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
+                print("Command for transferring server files : "+str(cmd_transfer))
+                trace("Command for transferring server files : "+str(cmd_transfer))
+                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, cmd_transfer)
+                print("------------------------------------------------")
+            else:
+                changing_perm="sudo chmod 777 /etc/pki/tls/private"
+                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+                print("-----------Copying server files-----------------")
+                trace("-----------Copying server files-----------------")
+                cmd_transfer = "sudo sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
+                print("Command for transferring server files : "+str(cmd_transfer))
+                trace("Command for transferring server files : "+str(cmd_transfer))
+                cmd_out = os.system(cmd_transfer)
+        else:
+            path=os.getcwd()+"/tests/test-data/rsyslog/non_tls"
+            changing_perm="sudo chmod 777 /etc"
+            cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+            print("-----------Copying Rsyslog Config File For Non TLS-----------------")
+            trace("-----------Copying Rsyslog Config File For Non TLS-----------------")
+            cmd_config="sudo sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/.".format(path,server_ip)
+            print("Command for transferring rsyslog config file for non TLS: " + str(cmd_config))
+            trace("Command for transferring rsyslog config file for non TLS: " + str(cmd_config))
+            cmd_out = os.system(cmd_config)
+            print("------------------------------------------------")
+        return "OK"
 
 

@@ -93,7 +93,7 @@ Nodes Verification Back End (Services should be running and active)
                                     ...  PCC.Node Verify Back End
         [Tags]    Exclude
 		${status}       PCC.Node Verify Back End
-						...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+						...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
 						Log To Console    ${status}
 						Run Keyword If  "${status}" != "OK"  Fatal Error
 						Should Be Equal As Strings      ${status}    OK
