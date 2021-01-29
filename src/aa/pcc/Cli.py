@@ -388,7 +388,7 @@ class Cli(AaBase):
         trace("Restore type:"+str(self.restore_type))
         trace("Backup type:"+str(self.backup_type))
         if self.backup_type == "local" and self.restore_type == "remote":
-            key_copy_cmd='sudo sshpass -p "cals0ft" scp /home/pcc/platina-cli-ws/keys/local/master.gpg pcc@{}:/home/pcc/.'.format(self.host_ip)
+            key_copy_cmd='sudo sshpass -p "cals0ft" scp -o StrictHostKeyChecking=no /home/pcc/platina-cli-ws/keys/local/master.gpg pcc@{}:/home/pcc/.'.format(self.host_ip)
             key_copy_cmd_op=cli_run(self.restore_hostip,self.linux_user,self.linux_password,key_copy_cmd)
             print("key_copy_cmd_op: {}".format(str(key_copy_cmd_op)))
             if re.search("FAIL",str(key_copy_cmd_op)):
