@@ -1,6 +1,7 @@
 import re
 import time
 import json
+import ast
 
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -47,7 +48,8 @@ class CephCluster(AaBase):
         self.dummy_file_name = None
         self.dummy_file_size = None
         self.operation_to_perform = None
-        
+        self.storage_types= None
+        self.node_location = None
         super().__init__()
 
     ###########################################################################
@@ -756,4 +758,114 @@ class CephCluster(AaBase):
         else:
             print("Unable to reboot {}".format(node_ip))
             return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Nodes OSDs Architecture Validation")
+    ###########################################################################
+    def ceph_node_osd_architecture_validation(self, *args, **kwargs):
+        banner("PCC.Ceph Nodes OSDs Architecture Validation")
+        self._load_kwargs(kwargs)
+        if self.name == None:
+            return "Please provide Ceph cluster name"
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = self.get_ceph_cluster_id_by_name(conn,self.name)
+        response = pcc.get_ceph_clusters_state(conn,id=str(cluster_id),state='osds')
+        response_data = get_response_data(response)
+        servers = list(set([x['server'] for x in response_data]))
+        trace("Servers are:{}".format(servers))
+        temp_dict = {}
+        for server in servers:
+            temp_osd_ids = []
+            for data in response_data:
+                if data['server']== server:
+                    temp_osd_ids.append(data['osd'])
+            temp_dict[server] = temp_osd_ids
+        architecture_from_pcc = temp_dict
+        trace("architecture_from_pcc:{}".format(architecture_from_pcc))
+        cmd = 'sudo ceph node ls osd -f json-pretty'
+        status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+        print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+        serialised_status = self._serialize_response(time.time(), status)
+        trace("serialised_status: {}".format(serialised_status))
+        cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+        architecture_from_backend = json.loads(cmd_output)
+        if architecture_from_pcc == architecture_from_backend:
+            return "OK"
+        else:
+            return "Architecture of Node and OSDs doesn't match -- architecture_from_pcc :{} and architecture_from_backend : {}".format(architecture_from_pcc,architecture_from_backend)
+
+
+    ###############################################################################################################
+    @keyword(name="CLI.Validate CEPH Storage Type")
+    ###############################################################################################################
+    
+    def validate_ceph_storage_type(self, *args, **kwargs):
+        banner("CLI.Validate CEPH Storage Type")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            cmd= "sudo grep -ri 'bluestore\|filestore' /var/lib/ceph/osd/"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+            serialised_status = self._serialize_response(time.time(), status)
+          
+            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+            trace("Command output is:{}".format(cmd_output))
+            validation_status =[]
+            for storage_type in ast.literal_eval(self.storage_types):
+                if re.search(storage_type, cmd_output):
+                    validation_status.append("OK")
+                else:
+                    validation_status.append("Storage type:{} not found on host:{}".format(storage_type,self.hostip))
+            trace("validation_status: {}".format(validation_status))
+            result = len(validation_status) > 0 and all(elem == "OK" for elem in validation_status) 
+            if result:
+                return "OK"  
+            else:
+                return "Validation unsuccessful for CEPH storage type. Validation status is:{}".format(validation_status) 
+            
+        except Exception as e:
+            trace("Error in validate_ceph_storage_type: {}".format(e))
+
+    ###############################################################################################################
+    @keyword(name="CLI.Validate CEPH Crush Map From Backend")
+    ###############################################################################################################
+    
+    def validate_ceph_crush_map_from_backend(self, *args, **kwargs):
+        banner("CLI.Validate CEPH Crush Map From Backend")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            cmd= "sudo ceph osd tree|awk '/region|zone|datacenter|rack|host/ {print $4}'"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+            serialised_status = self._serialize_response(time.time(), status)
+          
+            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+            trace("Command output is:{}".format(cmd_output))
+            validation_status =[]
+            
+            for node_name, location in ast.literal_eval(self.node_location).items():
+                if node_name.lower() in cmd_output:
+                    validation_status.append("OK")
+                else:
+                    validation_status.append("{} not present in from_backend".format(node_name))
+                for loc in location:
+                    if loc.lower() in cmd_output:
+                        validation_status.append("OK")
+                    else:
+                        validation_status.append("{} not present in from_backend for node:{}".format(loc,node_name))
+                        
+            trace("validation_status: {}".format(validation_status))
+            result = len(validation_status) > 0 and all(elem == "OK" for elem in validation_status) 
+            if result:
+                return "OK"  
+            else:
+                return "Validation unsuccessful for CEPH crush map. Validation status is:{}".format(validation_status) 
+            
+        except Exception as e:
+            trace("Error in validate_ceph_crush_map_from_backend: {}".format(e))
 
