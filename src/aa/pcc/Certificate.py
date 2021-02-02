@@ -115,6 +115,7 @@ class Certificate(AaBase):
                 for certificate in certificate_list:
                     print("========= Deleting {} certificate ===========".format(certificate['alias']))
                     response= pcc.delete_certificate_by_id(conn, id=str(certificate['id']))
+                    print("Deletion Response: {}".format(response))
                     statuscode = response["StatusCode"]
                     print("Status code is :{}".format(statuscode))
                     certificate_deletion_status.append(str(statuscode))
