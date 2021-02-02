@@ -125,15 +125,15 @@ class CephFs(AaBase):
         while fs_ready == False:
             response = pcc.get_ceph_fs(conn)
             for data in get_response_data(response):
-                print(str(data))
                 if str(data['name']).lower() == str(self.name).lower():
+                    print(str(data))
+                    trace("  Waiting until Fs : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
                     if str(data['deploy_status']) == "completed":
                         fs_ready = True
                     elif re.search("failed",str(data['deploy_status'])):
                         return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Fs Ready] Timeout")
-            trace("  Waiting until Fs : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
         return "OK"
 

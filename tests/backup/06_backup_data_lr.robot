@@ -244,7 +244,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts After Backu
                                                 Should Be Equal As Strings      ${status_code}  200
                
         ${status}                               PCC.Ceph Wait Until Rgw Ready
-                                           ...  name=rgw
+                                           ...  name=${CEPH_RGW_NAME}
                                                 Should Be Equal As Strings      ${status}    OK
                
         ${backend_status}                       PCC.Ceph Rgw Verify BE Creation

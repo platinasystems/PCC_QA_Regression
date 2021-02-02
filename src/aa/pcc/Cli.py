@@ -329,7 +329,7 @@ class Cli(AaBase):
 
         if (self.backup_type == "remote"):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} --url http://{}:9001 --id minio --secret minio123".format(self.pcc_password, self.backup_hostip)
-
+        print("Command: " + str(cmd) + " is getting executed")
         trace("Command: " + str(cmd) + " is getting executed")
         cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
         print("cmd op: {}".format(str(cmd_op)))
@@ -403,6 +403,7 @@ class Cli(AaBase):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} -t {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password, self.backup_params)
         
         trace("Command" + str(cmd) + "is getting executed")
+        print("Command" + str(cmd) + "is getting executed")
         cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
         print("cmd op: {}".format(str(cmd_op)))
         if re.search("FAIL",str(cmd_op)):

@@ -214,6 +214,7 @@ class CephRgw(AaBase):
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print("Response To Look :-"+str(data))
+                    trace("  Waiting until %s is Ready, current status: %s" % (str(data['name']),str(data['deploy_status'])))
                     if data['deploy_status'] == "completed":
                         return "OK"
                     elif re.search("failed", str(data['deploy_status'])):
@@ -222,7 +223,6 @@ class CephRgw(AaBase):
                         break
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Rgw Ready] Timeout")
-            trace("  Waiting until %s is Ready, current status: %s" % (str(data['name']),str(data['deploy_status'])))
             time.sleep(5)
         return "OK"
 
