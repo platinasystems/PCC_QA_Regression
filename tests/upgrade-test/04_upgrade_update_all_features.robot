@@ -195,30 +195,30 @@ Ceph Cluster Update - Add Invader- After Upgrade
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK       
                                     
-##################################################################################################################################
-Reboot Node And Verify Ceph Is Intact - After Upgrade
-##################################################################################################################################
-    [Documentation]                 *Verifying Ceph cluster BE*
-                               ...  keywords:
-                               ...  Ceph Verify BE
-                               ...  Restart node
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK 
- 
-    ${restart_status}               Restart node
-                               ...  hostip=${SERVER_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK  
+###################################################################################################################################
+#Reboot Node And Verify Ceph Is Intact - After Upgrade
+###################################################################################################################################
+#    [Documentation]                 *Verifying Ceph cluster BE*
+#                               ...  keywords:
+#                               ...  Ceph Verify BE
+#                               ...  Restart node
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK 
+# 
+#    ${restart_status}               Restart node
+#                               ...  hostip=${SERVER_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.Ceph Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK  
                                     
 #################################################################################################################################
 Down And Up The Interface And Check For Ceph - After Upgrade
