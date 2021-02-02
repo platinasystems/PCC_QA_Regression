@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	  This
+	[Tags]    ceph
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -66,7 +66,7 @@ Downgrade PCC
 Login to PCC
 ###################################################################################################################################
 	[Documentation]                 *Login to PCC and load data*
-	[Tags]    This  
+	[Tags]    ceph  
 		${status}                               Login To PCC        testdata_key=${pcc_setup}
                                                 Should be equal as strings    ${status}    OK
 
@@ -103,7 +103,7 @@ Install net-tools on nodes
 #####################################################################################################################################
 
     [Documentation]    *Install net-tools on nodes* test                 
-    [Tags]    This
+    [Tags]    Exclude
     
     ${status}    Install net-tools command
                  
@@ -116,7 +116,7 @@ Install net-tools on nodes
 Get Node Ids
 ###################################################################################################################################                    
         
-	[Tags]    Exclude
+
 	${server1_id}                           PCC.Get Node Id    Name=${SERVER_1_NAME}
                                                 Log To Console    ${server1_id}
                                                 Set Global Variable    ${server1_id}                 
@@ -144,7 +144,6 @@ Create IPAM Subnets
                                ...  keywords:
                                ...  PCC.Ipam Subnet Create
                                ...  PCC.Wait Until Ipam Subnet Ready
-		
 	[Tags]    Exclude	
 		###  Control CIDR  ####
         ${response}                 PCC.Ipam Subnet Create
@@ -191,7 +190,7 @@ Network Manager Creation
     [Documentation]                 *Network Manager Creation*
                                ...  keywords:
                                ...  PCC.Network Manager Create
-	[Tags]    Today
+	[Tags]    Exclude
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=${NETWORK_MANAGER_NODES}
@@ -216,45 +215,45 @@ Network Manager Creation
 		${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
-###################################################################################################################################
-Create Kubernetes cluster
-###################################################################################################################################
-        [Documentation]             *Create Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Create Cluster
-        
-	[Tags]    Today
-	${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8s_NAME}
-                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
-
-	${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK        
-
-	${response}                 PCC.K8s Create Cluster
-                               ...  id=${K8S_ID}
-                               ...  k8sVersion=${K8S_VERSION}
-                               ...  name=${K8S_NAME}
-                               ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=${K8S_NODES}
-                               ...  pools=${K8S_POOL}
-                               ...  networkClusterName=${NETWORK_MANAGER_NAME}
-
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-        
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-
+####################################################################################################################################
+#Create Kubernetes cluster
+####################################################################################################################################
+#        [Documentation]             *Create Kubernetes cluster*
+#                               ...  Keywords:
+#                               ...  PCC.K8s Create Cluster
+#        
+#	[Tags]    Today
+#	${cluster_id}               PCC.K8s Get Cluster Id
+#                               ...  name=${K8s_NAME}
+#                                    Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
+#
+#	${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK        
+#
+#	${response}                 PCC.K8s Create Cluster
+#                               ...  id=${K8S_ID}
+#                               ...  k8sVersion=${K8S_VERSION}
+#                               ...  name=${K8S_NAME}
+#                               ...  cniPlugin=${K8S_CNIPLUGIN}
+#                               ...  nodes=${K8S_NODES}
+#                               ...  pools=${K8S_POOL}
+#                               ...  networkClusterName=${NETWORK_MANAGER_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        
+#        ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                               ...  name=${K8S_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
 ###################################################################################################################################
 Ceph Cluster Create
 ###################################################################################################################################
@@ -292,7 +291,60 @@ Ceph Cluster Create
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK
 									
+####################################################################################################################################
+#Ceph Crush Map Validation
+####################################################################################################################################
+#    [Documentation]                 *Ceph Crush Map Validation*
+#                               ...  keywords:
+#                               ...  CLI.Validate CEPH Crush Map From Backend
+#    [Tags]    ceph
+#
+#        ${status}    CLI.Validate CEPH Crush Map From Backend
+#                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+#                     ...  hostip=${SERVER_1_HOST_IP}
+#
+#                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+#
+#
+#	${status}    CLI.Validate CEPH Crush Map From Backend
+#                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+#		     ...  hostip=${SERVER_2_HOST_IP}
+#
+#                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+#
+###################################################################################################################################
+Ceph Storage Type Validation
+###################################################################################################################################
+    [Documentation]                 *Ceph Storage Type Validation*
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Storage Type
+    [Tags]    ceph
 
+        ${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['filestore']
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+	
+	${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['filestore']
+                     ...  hostip=${SERVER_2_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph Architecture- Nodes and OSDs
+###################################################################################################################################
+    [Documentation]                 *Ceph Architecture Node OSDs*
+                               ...  keywords:
+                               ...  PCC.Ceph Nodes OSDs Architecture Validation
+	[Tags]	  ceph
+
+        ${status}    PCC.Ceph Nodes OSDs Architecture Validation
+                     ...  name=${CEPH_CLUSTER_NAME}
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Ceph Pools For Upgrade
@@ -432,7 +484,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Upgrade
                                                 Should Be Equal As Strings      ${status_code}  200
                
         ${status}                               PCC.Ceph Wait Until Rgw Ready
-                                           ...  name=rgw
+                                           ...  name=${CEPH_RGW_NAME}
                                                 Should Be Equal As Strings      ${status}    OK
                
         ${backend_status}                       PCC.Ceph Rgw Verify BE Creation

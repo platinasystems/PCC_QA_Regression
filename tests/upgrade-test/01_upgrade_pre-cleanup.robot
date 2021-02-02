@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+	[Tags]    Test
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -123,7 +123,7 @@ Set Interfaces For ${CLUSTERHEAD_1_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-
+	[Tags]    Test
 #        ${response}                 PCC.Interface Set 1D Link
 #                               ...  node_name=${CLUSTERHEAD_1_NAME}
 #                               ...  interface_name=xeth4
@@ -216,7 +216,7 @@ Set Interfaces For ${CLUSTERHEAD_2_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-
+	[Tags]    Test
 #        ${response}                 PCC.Interface Set 1D Link
 #                               ...  node_name=${CLUSTERHEAD_2_NAME}
 #                               ...  interface_name=xeth4
@@ -309,7 +309,7 @@ Set Interfaces For ${SERVER_1_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-
+	[Tags]    Test
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp130s0
@@ -375,7 +375,7 @@ Set Interfaces For ${SERVER_2_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-
+	[Tags]    Test
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp130s0

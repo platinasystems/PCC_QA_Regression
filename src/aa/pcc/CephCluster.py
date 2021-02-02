@@ -792,6 +792,7 @@ class CephCluster(AaBase):
         trace("serialised_status: {}".format(serialised_status))
         cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
         architecture_from_backend = json.loads(cmd_output)
+        trace("architecture_from_backend:{}".format(architecture_from_backend))
         if architecture_from_pcc == architecture_from_backend:
             return "OK"
         else:
@@ -847,7 +848,6 @@ class CephCluster(AaBase):
             cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
             trace("Command output is:{}".format(cmd_output))
             validation_status =[]
-            
             for node_name, location in ast.literal_eval(self.node_location).items():
                 if node_name.lower() in cmd_output:
                     validation_status.append("OK")
@@ -857,7 +857,7 @@ class CephCluster(AaBase):
                     if loc.lower() in cmd_output:
                         validation_status.append("OK")
                     else:
-                        validation_status.append("{} not present in from_backend for node:{}".format(loc,node_name))
+                        validation_status.append("{} not present in backend for node:{}".format(loc,node_name))
                         
             trace("validation_status: {}".format(validation_status))
             result = len(validation_status) > 0 and all(elem == "OK" for elem in validation_status) 

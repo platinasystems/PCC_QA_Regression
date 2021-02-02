@@ -89,73 +89,73 @@ Network Manager Update after Upgrade
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
 
+####################################################################################################################################
+#Add App To K8 Cluster and delete after Upgrade
+####################################################################################################################################
+#        [Documentation]             *Add App Kubernetes cluster*
+#                               ...  Keywords:
+#                               ...  PCC.K8s Get Cluster Id
+#                               ...  PCC.K8s Add App 
+#                               ...  PCC.K8s Wait Until Cluster is Ready
+#		
+#		### Add App to K8s ###
+#        ${cluster_id}               PCC.K8s Get Cluster Id
+#                               ...  name=${K8S_NAME}
+#                                    
+#        ${response}                 PCC.K8s Add App                    
+#                               ...  cluster_id=${cluster_id}
+#                               ...  appName=${K8S_APPNAME}
+#                               ...  appNamespace=${K8S_APPNAMESPACE}
+#                               ...  gitUrl=${K8S_GITURL}
+#                               ...  gitRepoPath=${K8S_GITREPOPATH}
+#                               ...  gitBranch=${K8S_GITBRANCH}
+#                               ...  label=${K8S_LABEL}
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                
+#        ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                               ...  name=${K8S_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#		### Delete App from K8s ###
+#
+#        ${cluster_id}               PCC.K8s Get Cluster Id
+#                               ...  name=${K8S_NAME}
+#   
+#        ${app_id}                   PCC.K8s Get App Id
+#                               ...  appName=${K8S_APPNAME}
+#                                    
+#        ${response}                 PCC.K8s Delete App
+#                               ...  cluster_id=${cluster_id}
+#                               ...  appIds=${app_id}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                               ...  name=${K8S_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#									
 ###################################################################################################################################
-Add App To K8 Cluster and delete after Upgrade
+#Reboot Node And Verify K8s Is Intact After Upgrade
 ###################################################################################################################################
-        [Documentation]             *Add App Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Get Cluster Id
-                               ...  PCC.K8s Add App 
-                               ...  PCC.K8s Wait Until Cluster is Ready
-		
-		### Add App to K8s ###
-        ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8S_NAME}
-                                    
-        ${response}                 PCC.K8s Add App                    
-                               ...  cluster_id=${cluster_id}
-                               ...  appName=${K8S_APPNAME}
-                               ...  appNamespace=${K8S_APPNAMESPACE}
-                               ...  gitUrl=${K8S_GITURL}
-                               ...  gitRepoPath=${K8S_GITREPOPATH}
-                               ...  gitBranch=${K8S_GITBRANCH}
-                               ...  label=${K8S_LABEL}
-                               
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-                                
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-		### Delete App from K8s ###
-
-        ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8S_NAME}
-   
-        ${app_id}                   PCC.K8s Get App Id
-                               ...  appName=${K8S_APPNAME}
-                                    
-        ${response}                 PCC.K8s Delete App
-                               ...  cluster_id=${cluster_id}
-                               ...  appIds=${app_id}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-									
-##################################################################################################################################
-Reboot Node And Verify K8s Is Intact After Upgrade
-##################################################################################################################################
-    [Documentation]                 *Verifying K8s cluster BE*
-                               ...  keywords:
-                               ...  PCC.K8s Verify BE
-                               ...  Restart node
-                               
-    ${restart_status}               Restart node
-                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
+#    [Documentation]                 *Verifying K8s cluster BE*
+#                               ...  keywords:
+#                               ...  PCC.K8s Verify BE
+#                               ...  Restart node
+#                               
+#    ${restart_status}               Restart node
+#                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
 									
 ###################################################################################################################################
 Ceph Cluster Update - Add Invader- After Upgrade
@@ -387,37 +387,37 @@ Create Application credential profile without application For Rados - After Upgr
                                       Log to Console    ${message}
                                       Should Be Equal As Strings    ${status}    200
 									  
-#####################################################################################################################################
-Ceph Rados Add S3Account - After Upgrade
-#####################################################################################################################################
-     [Documentation]                *Ceph Rados Gateway Update*
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...  name=${CEPH_RGW_NAME}
-     
-        ${response}                 PCC.Ceph Update Rgw
-                               ...  ID=${rgw_id}
-                               ...  name=${CEPH_RGW_NAME}
-                               ...  poolName=rgw
-                               ...  targetNodes=${CEPH_RGW_NODES}
-                               ...  port=${CEPH_RGW_PORT}
-                               ...  certificateName=${CEPH_RGW_CERT_NAME}
-                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
-                               
-        ${status_code}              Get Response Status Code        ${response}     
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Ready
-                               ...  name=${CEPH_RGW_NAME}
-                                    Should Be Equal As Strings      ${status}    OK  
-
-        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
-                                    Should Be Equal As Strings      ${backend_status}    OK 
-
+######################################################################################################################################
+#Ceph Rados Add S3Account - After Upgrade
+######################################################################################################################################
+#     [Documentation]                *Ceph Rados Gateway Update*
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${rgw_id}                   PCC.Ceph Get Rgw Id
+#                               ...  name=${CEPH_RGW_NAME}
+#     
+#        ${response}                 PCC.Ceph Update Rgw
+#                               ...  ID=${rgw_id}
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=rgw
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Ready
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK  
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+#                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+#                                    Should Be Equal As Strings      ${backend_status}    OK 
+#
 #####################################################################################################################################
 Ceph Rados Update Port - After Upgrade
 #####################################################################################################################################
@@ -567,8 +567,62 @@ Update CephFS - remove_data_pools - After upgrade
         ${status}                   PCC.Ceph Wait Until Fs Ready
                                ...  name=${CEPH_FS_NAME}
 
-                                    Should Be Equal As Strings      ${status}    OK	
-								
+                                    Should Be Equal As Strings      ${status}    OK		
+
+###################################################################################################################################
+Ceph Crush Map Validation
+###################################################################################################################################
+    [Documentation]                 *Ceph Crush Map Validation*
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Crush Map From Backend
+    [Tags]    ceph
+
+        ${status}    CLI.Validate CEPH Crush Map From Backend
+                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+
+       ${status}    CLI.Validate CEPH Crush Map From Backend
+                    ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                    ...  hostip=${SERVER_2_HOST_IP}
+
+                    Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+
+###################################################################################################################################
+Ceph Storage Type Validation
+###################################################################################################################################
+    [Documentation]                 *Ceph Storage Type Validation*
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Storage Type
+    [Tags]    ceph
+
+        ${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['filestore']
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+
+        ${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['filestore']
+                     ...  hostip=${SERVER_2_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph Architecture- Nodes and OSDs
+###################################################################################################################################
+    [Documentation]                 *Ceph Architecture Node OSDs*
+                               ...  keywords:
+                               ...  PCC.Ceph Nodes OSDs Architecture Validation
+        [Tags]    ceph
+
+        ${status}    PCC.Ceph Nodes OSDs Architecture Validation
+                     ...  name=${CEPH_CLUSTER_NAME}
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+							
 ###################################################################################################################################
 Edit FQDN in Container Registry after upgrade
 ###################################################################################################################################

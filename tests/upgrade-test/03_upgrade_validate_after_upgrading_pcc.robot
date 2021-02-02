@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	This
+	[Tags]	ceph
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -43,7 +43,7 @@ Upgrade PCC
 	[Documentation]                 *Upgrade PCC*
                                ...  keywords:
                                ...  CLI.Pcc Down
-	
+	[Tags]  Only_this
 	###  Making CLI Down  ####
 	${status}		CLI.Pcc Down
 					...    host_ip=${PCC_HOST_IP}
@@ -53,7 +53,7 @@ Upgrade PCC
 					
 					Should Be Equal As Strings    ${status}    OK
 	
-	### Taking PCC to lower version   ###
+	### Taking PCC to stable version   ###
 	${status}       CLI.PCC Pull Code
 					...  host_ip=${PCC_HOST_IP}
 					...  linux_user=${PCC_LINUX_USER}
@@ -66,7 +66,7 @@ Upgrade PCC
 Login to PCC
 ###################################################################################################################################
 	[Documentation]                 *Login to PCC and load data*
-
+	[Tags]  ceph
 		${status}                               Login To PCC        testdata_key=${pcc_setup}
                                                 Should be equal as strings    ${status}    OK
 
@@ -212,12 +212,14 @@ Network Cluster Validation after upgrading PCC
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
                                ...  PCC.Health Check Network Manager
-        ${status}                   PCC.Wait Until Network Manager Ready
+        [Tags]  ceph
+
+	${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -225,23 +227,23 @@ Network Cluster Validation after upgrading PCC
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-###################################################################################################################################
-K8s Validation after upgrading PCC
-###################################################################################################################################
-        [Documentation]             *K8s Validation after restoring PCC*
-                               ...  Keywords:
-                               ...  PCC.K8s Wait Until Cluster is Ready
-                               ...  PCC.K8s Verify BE
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK                      
+####################################################################################################################################
+#K8s Validation after upgrading PCC
+####################################################################################################################################
+#        [Documentation]             *K8s Validation after restoring PCC*
+#                               ...  Keywords:
+#                               ...  PCC.K8s Wait Until Cluster is Ready
+#                               ...  PCC.K8s Verify BE
+#        ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                               ...  name=${K8S_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK                      
 ###################################################################################################################################
 Verify CR creation successful from frontend and backend after upgrade
 ###################################################################################################################################

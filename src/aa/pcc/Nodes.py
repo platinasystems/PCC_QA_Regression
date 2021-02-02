@@ -632,7 +632,7 @@ class Nodes(AaBase):
                     
                     payload = { "Id":node['Id'],
                                 "ClusterId":0,
-                                "roles":[],
+                                "roles":[1],
                                 "scopeId":int(self.scopeId)}
                     
                     update_resp = pcc.modify_node(conn, payload)
