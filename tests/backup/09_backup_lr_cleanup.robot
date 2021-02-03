@@ -452,9 +452,6 @@ Delete Nodes
     [Documentation]    *Delete Nodes* test                 
     [Tags]    delete
 
-        ${network_id}              PCC.Get Network Manager Id
-                              ...  name=${NETWORK_MANAGER_NAME}
-                                   Pass Execution If    ${network_id} is not ${None}    Network Cluster is Present Deleting Aborted
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
                               ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
@@ -469,6 +466,6 @@ Nodes Verification Back End (Services should not be active)
                                     ...  keywords:
                                     ...  PCC.Node Verify Back End
 
-        ${status}                   PCC.Node Verify Back End
+        ${status}                   PCC.Node Verify Back End After Deletion
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Not Be Equal As Strings      ${status}    OK

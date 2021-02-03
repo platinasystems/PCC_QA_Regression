@@ -519,6 +519,46 @@ class Nodes(AaBase):
             return "Error"
         else:
             return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Node Verify Back End After Deletion")
+    ###########################################################################
+    def verify_node_back_end_after_deletion(self, *args, **kwargs):
+
+        banner("PCC.Node Verify Back End After Deletion")
+        self._load_kwargs(kwargs)
+        print("Kwargs:{}".format(kwargs))
+    
+        pcc_agent_cmd="sudo systemctl status pccagent"
+        sys_cllector_cmd="sudo systemctl status systemCollector"
+        frr_cmd="sudo service frr status|head -10"
+
+        failed_host=[]
+
+        if self.host_ips:
+            for host_ip in eval(str(self.host_ips)):
+                logger.console("Verifying services for host {} .....".format(host_ip))
+                pcc_agent_output=cli_run(host_ip,self.user,self.password,pcc_agent_cmd)
+                sys_collector_output=cli_run(host_ip,self.user,self.password,sys_cllector_cmd)   
+                logger.console("Pcc Agent Output: {}".format(pcc_agent_output))
+                logger.console("System Collector Output: {}".format(sys_collector_output))
+                #frr_output=cli_run(host_ip,self.user,self.password,frr_cmd)
+                #logger.console("Frr Service Output: {}".format(frr_output))
+                #if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output) and re.search("running",str(frr_output))):
+                if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output)):
+                    continue
+                else:
+                    
+                    failed_host.append(host_ip)
+                    continue                
+        else:
+            print("Host list is empty, please provide the host ip in a list for eg. host_ips=['000.00.0.00']")
+            
+        if failed_host:  
+            print("Service are down for {}".format(failed_host))
+            return "Error"
+        else:
+            return "OK"
             
     #verifying sn and model number from front-end to backend        
     ###########################################################################
