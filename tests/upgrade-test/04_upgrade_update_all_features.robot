@@ -578,13 +578,13 @@ Ceph Crush Map Validation
     [Tags]    ceph
 
         ${status}    CLI.Validate CEPH Crush Map From Backend
-                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["region-1"]}
                      ...  hostip=${SERVER_1_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 
        ${status}    CLI.Validate CEPH Crush Map From Backend
-                    ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                    ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["region-1"]}
                     ...  hostip=${SERVER_2_HOST_IP}
 
                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
