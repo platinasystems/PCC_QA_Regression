@@ -436,7 +436,7 @@ Ceph Rados Update Port - After Upgrade
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=446
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
-                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+                               #...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
@@ -468,7 +468,7 @@ Ceph Rados Update Nodes (Add Node) - After Upgrade
                                ...  targetNodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
-                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+                               #...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200

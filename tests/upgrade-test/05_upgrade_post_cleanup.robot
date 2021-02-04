@@ -169,7 +169,21 @@ Ceph Rgw Delete Multiple
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
-        ${status}                   PCC.Ceph Delete All Rgw
+        
+	${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+	${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+                                    Should Be Equal As Strings      ${status}    OK   
+
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                                    Should Be Equal As Strings      ${backend_status}    OK
+				    Sleep    120s
+	${status}                   PCC.Ceph Delete All Rgw
                                     Should be equal as strings    ${status}    OK
 
 
