@@ -37,6 +37,7 @@ class CephRbd(AaBase):
         self.password = "cals0ft"
         self.hostip = None
         self.mount_folder_name = None
+        self.inet_ip = None
         super().__init__()
 
     ###########################################################################
@@ -280,11 +281,11 @@ class CephRbd(AaBase):
         try:
             print("Kwargs are: {}".format(kwargs))
             
-            inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
-            print("Inet IP is : {}".format(inet_ip))
+            #inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
+            #print("Inet IP is : {}".format(inet_ip))
             
             #Maps rbd0
-            cmd= "sudo rbd map {} --pool {} --name client.admin -m {} -k /etc/ceph/ceph.client.admin.keyring".format(self.name, self.pool_name, inet_ip)
+            cmd= "sudo rbd map {} --pool {} --name client.admin -m {} -k /etc/ceph/ceph.client.admin.keyring".format(self.name, self.pool_name, self.inet_ip)
             
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             print("cmd1: {} executed successfully and status is:{}".format(cmd,status))
