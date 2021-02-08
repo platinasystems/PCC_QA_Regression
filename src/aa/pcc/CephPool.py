@@ -36,6 +36,19 @@ class CephPool(AaBase):
         self.count=0
         self.pool_name = None
         self.hostip = None
+        self.storage_pool_id= None
+        self.mode = None
+        self.type = None
+        self.targetMaxBytes = None
+        self.targetMaxObjects = None
+        self.cacheTargetDirtyRatio = None
+        self.cacheTargetFullRatio = None
+        self.cacheMinFlushAge = None
+        self.cacheMinEvictAge = None
+        self.hitFilter = None
+        self.hitSetCount = None
+        self.hitSetPeriod = None
+        self.osdClass = None
         
         super().__init__()
 
@@ -391,3 +404,112 @@ class CephPool(AaBase):
             
         except Exception as e:
             trace("Error in get_stored_size_replicated_pool: {}".format(e))
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get All Cache Pools Data")
+    ###########################################################################
+    def get_ceph_all_cache_pools_data(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get All Cache Pools Data")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        response = get_response_data(pcc.get_ceph_pool_caches(conn))
+        return response
+		
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get Cache Pool By Cache Pool Id")
+    ###########################################################################
+    def get_ceph_cache_pool_by_cache_pool_id(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Cache Pool By Cache Pool Id")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        response = get_response_data(pcc.get_ceph_cache_pool_by_cache_id(conn, self.id))
+        return response
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Add Cache Pool")
+    ###########################################################################
+    def add_ceph_cache_pool(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Add Cache Pool")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+		payload = { "storagePoolID": int(self.storage_pool_id),
+                    "name": self.name,
+                    "mode": self.mode,
+                    "type": self.type,
+                    "targetMaxBytes": int(self.targetMaxBytes),
+                    "targetMaxObjects": int(self.targetMaxObjects),
+                    "cacheTargetDirtyRatio": self.cacheTargetDirtyRatio,
+                    "cacheTargetFullRatio": self.cacheTargetFullRatio,
+                    "cacheMinFlushAge": int(self.cacheMinFlushAge),
+                    "cacheMinEvictAge": int(self.cacheMinEvictAge),
+                    "hitFilter": self.hitFilter,
+                    "hitSetCount": int(self.hitSetCount),
+                    "hitSetPeriod": int(self.hitSetPeriod),
+                    "size": int(self.size),
+                    "quota": self.quota,
+                    "quotaUnit": self.quota_unit,
+                    "osdClass": self.osdClass
+				  }
+        response = get_response_data(pcc.add_ceph_cache_pool(conn, data=payload))
+        return response
+		
+    ###########################################################################
+    @keyword(name="PCC.Ceph Update Cache Pool")
+    ###########################################################################
+    def update_ceph_cache_pool(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Update Cache Pool")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+		payload = { "storagePoolID": int(self.storage_pool_id),
+                    "name": self.name,
+                    "mode": self.mode,
+                    "type": self.type,
+                    "targetMaxBytes": int(self.targetMaxBytes),
+                    "targetMaxObjects": int(self.targetMaxObjects),
+                    "cacheTargetDirtyRatio": self.cacheTargetDirtyRatio,
+                    "cacheTargetFullRatio": self.cacheTargetFullRatio,
+                    "cacheMinFlushAge": int(self.cacheMinFlushAge),
+                    "cacheMinEvictAge": int(self.cacheMinEvictAge),
+                    "hitFilter": self.hitFilter,
+                    "hitSetCount": int(self.hitSetCount),
+                    "hitSetPeriod": int(self.hitSetPeriod),
+                    "size": int(self.size),
+                    "quota": self.quota,
+                    "quotaUnit": self.quota_unit,
+                    "osdClass": self.osdClass
+				  }
+        response = get_response_data(pcc.update_ceph_cache_pool(conn, data=payload, str(id)))
+        return response
+		
+    ###########################################################################
+    @keyword(name="PCC.Ceph Delete Cache Pool")
+    ###########################################################################
+    def delete_ceph_cache_pool(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Delete Cache Pool")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+		
+        response = get_response_data(pcc.delete_ceph_cache_pool_by_id(conn, str(id)))
+        return response
