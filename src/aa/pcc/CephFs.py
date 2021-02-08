@@ -14,6 +14,8 @@ from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
 
+from aa.pcc.CephCluster import CephCluster
+
 PCCSERVER_TIMEOUT = 60*10
 
 class CephFs(AaBase):
@@ -29,8 +31,11 @@ class CephFs(AaBase):
         self.default_pool = {}
         self.ceph_cluster_id = None
         self.nodes_ip = []
-        self.user=""
-        self.password=""
+        self.user="pcc"
+        self.password="cals0ft"
+        self.mount_folder_name = None
+        self.dummy_file_name = None
+        self.hostip = None
         super().__init__()
 
     ###########################################################################
@@ -120,15 +125,15 @@ class CephFs(AaBase):
         while fs_ready == False:
             response = pcc.get_ceph_fs(conn)
             for data in get_response_data(response):
-                print(str(data))
                 if str(data['name']).lower() == str(self.name).lower():
+                    print(str(data))
+                    trace("  Waiting until Fs : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
                     if str(data['deploy_status']) == "completed":
                         fs_ready = True
                     elif re.search("failed",str(data['deploy_status'])):
                         return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Fs Ready] Timeout")
-            trace("  Waiting until Fs : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
         return "OK"
 
@@ -267,4 +272,98 @@ class CephFs(AaBase):
                 print("Issue: Not getting 200 response back")
                 return "Error"
                         
-        return "OK" 
+        return "OK"
+        
+    ###############################################################################################################
+    @keyword(name="PCC.Mount FS to Mount Point")
+    ###############################################################################################################
+    
+    def mount_fs(self, *args, **kwargs):
+        banner("Mount FS to Mount Point")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            
+            inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
+            print("Inet IP is: {}".format(inet_ip))
+            
+            #Maps fs
+            cmd= "sudo mount -t ceph {}:/ /mnt/{} -o name=admin,secret='ceph-authtool -p /etc/ceph/ceph.client.admin.keyring'".format(inet_ip,self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd1: {} executed successfully and status is: {}".format(cmd, status))
+            
+            time.sleep(1)
+            
+            cmd= "sudo mount| grep test_fs_mnt"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd2: {} executed successfully and status is: {}".format(cmd, status))
+            serialised_status = self._serialize_response(time.time(), status)
+            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+            
+            if '/mnt/{}'.format(self.mount_folder_name) in cmd_output:
+                print("Found in string") 
+            else:
+                return "Error: {} file not found".format(self.mount_folder_name)
+            
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in mount_fs: {}".format(e))
+            
+    ###############################################################################################################
+    @keyword(name="PCC.Check FS Mount on other server")
+    ###############################################################################################################
+    
+    def check_fs_mount(self, *args, **kwargs):
+        banner("PCC.Check FS Mount on other server")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            print("username is '{}' and password is: '{}'".format(self.user,self.password))
+            inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
+            
+            cmd= "sudo mkdir /mnt/{}".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd1: {} executed successfully and status is: {}".format(cmd, status))
+            
+            cmd= "sudo mount -t ceph {}:/ /mnt/{} -o name=admin,secret='ceph-authtool -p /etc/ceph/ceph.client.admin.keyring'".format(inet_ip,self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd2: {} executed successfully and status is: {}".format(cmd, status))
+            
+            cmd= "sudo ls /mnt/{}".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd3: {} executed successfully and status is: {}".format(cmd, status))
+            
+            serialised_status = self._serialize_response(time.time(), status)
+            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+            
+            if '{}'.format(self.dummy_file_name) in cmd_output:
+                print("Data Found in output") 
+            else:
+                return "Error: '{}' file not found".format(self.dummy_file_name)
+            
+            return "OK"
+        except Exception as e:
+            trace("Error in check_fs_mount: {}".format(e))
+            
+    ###############################################################################################################
+    @keyword(name="PCC.Unmount FS")
+    ###############################################################################################################
+    
+    def unmount_fs(self, *args, **kwargs):
+        banner("PCC.Unmount FS")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            print("username is '{}' and password is: '{}'".format(self.user,self.password))
+            cmd= "sudo umount /mnt/{}".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd1: {} executed successfully and status is : {}".format(cmd,status))
+        
+            cmd= "sudo rm -rf /mnt/{}/".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            print("cmd2: {} executed successfully and status is : {}".format(cmd,status))
+            
+            return "OK"
+        except Exception as e:
+            trace("Error in unmount_and_unmap_rbd: {}".format(e)) 

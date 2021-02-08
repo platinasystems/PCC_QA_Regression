@@ -18,6 +18,7 @@ class NodeRoles(AaBase):
 
     def __init__(self):
         self.Name = None
+        self.nodes = None
         self.Id = None
         self.Description = None
         self.owners = []
@@ -139,6 +140,39 @@ class NodeRoles(AaBase):
             return "Node role not available"
         except Exception as e:
             return {"Error": str(e)}
+            
+    ###########################################################################
+    @keyword(name="PCC.Verify Node Role On Nodes")
+    ###########################################################################
+    def verify_node_roles_on_nodes(self, *args, **kwargs):
+        """
+        Verify node role on Nodes
+        [Args]
+            (list) nodes: name of pcc nodes
+            (list) roles: name of roles
+        [Returns]
+            (dict) Response: OK if node role exists on the node (includes any errors)
+        """
+        self._load_kwargs(kwargs)
+        print("kwargs:-"+str(kwargs))
+        banner("PCC.Verify Node Role On Nodes")
+        
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        node_role_id = self.get_node_role_id(conn,Name= self.Name)
+        for node in ast.literal_eval(self.nodes):
+            print("Node from user is: {}".format(node))
+            response = pcc.get_nodes(conn)
+            for data in get_response_data(response):
+                self.Id=data['Id']
+                self.Host=data['Host']
+                print("node name from pcc: {}".format(data['Name']).lower())
+                if str(data['Name']).lower() == str(node).lower():
+                    if data['roles'] == None:
+                        return "No roles present on node"
+                    if node_role_id in data['roles']:
+                        return "OK"
+                    else:
+                        return "Node role {} not present on node: {}".format(self.Name, node)
             
     ###########################################################################
     @keyword(name="PCC.Delete Node Role")
@@ -305,23 +339,27 @@ class NodeRoles(AaBase):
             list_node_roles = []
             
             for node_role in get_response_data(response):
-                if node_role['name']== "Default" or node_role['name']== "Baremetal Management Node" or node_role['name']== "Cluster Head":
+                if node_role['name']== "Default" or node_role['name']== "Baremetal Management Node" or node_role['name']== "Cluster Head" or node_role['name']== "Ceph Resource" or node_role['name']== "Kubernetes Resource" or node_role['name']== "Network Resource":
                     continue
                 list_node_roles.append(node_role['name'])
             print("list of node roles: {}".format(list_node_roles))
             response_status = []
+            
             try:
-                for node in list_node_roles:
-                    print("Node is : " + node)
-                    Id = self.get_node_role_id(Name=node)
-                    response = pcc.delete_role_by_id(conn, str(Id))
-                    print("Response: {}".format(response))
-                    response_status.append(response["StatusCode"])
-                response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
-                if response_result:
+                if list_node_roles == []:
                     return "OK"
                 else:
-                    return response_status  
+                    for node in list_node_roles:
+                        print("Node is : " + node)
+                        Id = self.get_node_role_id(Name=node)
+                        response = pcc.delete_role_by_id(conn, str(Id))
+                        print("Response: {}".format(response))
+                        response_status.append(response["StatusCode"])
+                    response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
+                    if response_result:
+                        return "OK"
+                    else:
+                        return response_status  
             except Exception as e:
                 return {"Error":str(e)}     
         except Exception as e:

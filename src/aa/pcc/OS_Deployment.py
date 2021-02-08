@@ -2,6 +2,7 @@ import time
 import ast
 import re
 import os
+import subprocess
 from robot.api.deco import keyword
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
@@ -51,7 +52,8 @@ class OS_Deployment(AaBase):
         self.i28_password = None
         self.version=None
         self.setup_password = None
-        
+        self.pcc_username = None
+        self.pcc_password = None
         super().__init__()
 
     ###########################################################################
@@ -371,55 +373,25 @@ class OS_Deployment(AaBase):
     def set_password_on_server(self, *args, **kwargs):
         banner("PCC.Set password on Server")
         self._load_kwargs(kwargs)             
-        
-        count=0
-        try:
-            print("######################  i28 #######################")
-            ######################  i28 #######################
-            cmd = r"""ssh -i {} {}@{} -t 'echo -e "{}\n{}" | sudo passwd pcc'""".format(self.key_name, self.admin_user, self.host_ip, self.password,self.password)
-            cmd1='ssh-keygen -f "/home/pcc/.ssh/known_hosts" -R {}'.format(self.host_ip)
-            cmd2='ssh-keyscan -H {} >> ~/.ssh/known_hosts'.format(self.host_ip)
+        try: 
+            cmd='ssh-keygen -R {}'.format(self.host_ip)
+            cmd1='ssh-keyscan {} >> ~/.ssh/known_hosts'.format(self.host_ip)
             print("******************")
-            print("Command for setting password is {}".format(cmd))
-            print("Command for accessing server is {}".format(cmd1))
-            print("Command for copying key {}".format(cmd2))
+            print("Command for removing server from host file {}".format(cmd))
+            print("Command for addinging server in host file {}".format(cmd1))
             print("******************")
-            password_reset = cli_run(cmd=cmd, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
-            access_output = cli_run(cmd=cmd1, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)
-            copy_output = cli_run(cmd=cmd2, host_ip=self.i28_hostip, linux_user=self.i28_username,linux_password=self.i28_password)            
+            access_output = os.system(cmd)
+            accss_output1 = os.system(cmd1)
             print("******************")
-            print("Output is:{}".format(str(copy_output)))
+            print("Output is:{}".format(str(access_output)))
             print("******************")
-            if re.search(self.host_ip,str(copy_output)):
-                count+=1
-            else:
-                return "Error"
-
-            #####################  Jenkins  ####################### 
-            print("#####################  Jenkins  #######################")               
-            cmd1='sudo ssh-keygen -f "/home/jenkins/.ssh/known_hosts" -R {}'.format(self.host_ip)
-            cmd2='sudo ssh-keyscan -H {} >> /home/jenkins/.ssh/known_hosts'.format(self.host_ip)
-            print("******************")
-            print("Command for setting password is {}".format(cmd))
-            print("Command for accessing server is {}".format(cmd1))
-            print("Command for copying key {}".format(cmd2))
-            print("******************")
-            access_output = os.system(cmd1)
-            copy_output = os.system(cmd2)            
-            print("******************")
-            print(" Jenkins Output is:{}".format(str(copy_output)))
-            print("******************")
-            if re.search(self.host_ip,str(copy_output)):
-                count+=1
-            else:
-                return "Error"
-            
-            if count==2:
+            if int(access_output)==0:
                 return "OK"
             else:
                 return "Error"
+            
         except Exception as e:
-            logger.console("Error in set password on Jenkins server: " + str(e))
+            logger.console("Error in set password on server:" + str(e))
         return "OK"
                          
     ###########################################################################
@@ -430,13 +402,16 @@ class OS_Deployment(AaBase):
         banner("PCC.Update OS Images")
         self._load_kwargs(kwargs)                 
         try:
-            cmd_1= """sudo platina-cli-ws/platina-cli os-media list-local -p {}| awk {}|sed -e '1,4d'""".format(self.setup_password, "'{print $2}'")
+            cmd_1= """sudo platina-cli-ws/platina-cli os-media list-local --pccUsername {} --pccPassword {}| awk '/amd64|i386/ {}'""".format(self.pcc_username,self.pcc_password,'{print $2}')
             logger.console("Command1 is: {}".format(cmd_1))
             image_in_local_repo_cmd_output = cli_run(cmd=cmd_1, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
             print("image_in_local_repo_cmd_output : {}".format(image_in_local_repo_cmd_output))
             time.sleep(10)
             serialised_op = self._serialize_response(time.time(), image_in_local_repo_cmd_output)
-            image_in_local_repo = str(serialised_op['Result']['stdout']).strip().split('\n')
+            if serialised_op == None:
+                image_in_local_repo = []
+            else:
+                image_in_local_repo = str(serialised_op['Result']['stdout']).strip().split('\n')
             print(image_in_local_repo)
             
             cmd_2= """sudo platina-cli-ws/platina-cli os-media list -p {} --skipVerifySignature|awk {}|sed -e '1,3d'""".format(self.setup_password, "'{print $1}'")
@@ -447,7 +422,8 @@ class OS_Deployment(AaBase):
             serialised_op = self._serialize_response(time.time(), image_in_platina_cli_cmd_output)
             image_in_platina_cli = str(serialised_op['Result']['stdout']).strip().split('\n')
             print(image_in_platina_cli)
-            
+            print("image_in_platina_cli is :" + str(image_in_platina_cli))
+            print("image_in_local_repo is :" + str(image_in_local_repo))
             os_image_not_in_pcc = list(list(set(image_in_platina_cli)-set(image_in_local_repo)) + list(set(image_in_local_repo)-set(image_in_platina_cli)))
             if not os_image_not_in_pcc: # If all images exists in PCC, returns OK
                 print("All images already updated")
@@ -456,13 +432,13 @@ class OS_Deployment(AaBase):
                 updated_images = []
                 for image in os_image_not_in_pcc:
                     print("=========== Updating image: {} ===========".format(image))
-                    cmd= """sudo platina-cli-ws/platina-cli os-media download --media {} -p {} --skipVerifySignature""".format(image,self.setup_password)
+                    cmd= """sudo platina-cli-ws/platina-cli os-media download --media {} --pccUsername {} --pccPassword {} --skipVerifySignature""".format(image,self.pcc_username,self.pcc_password)
                     logger.console("Command is: {}".format(cmd))
                     update_img_cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password) 
                     print("update_img_cmd_output : {}".format(update_img_cmd_output))
                     time.sleep(2*60) ##Image updation takes 2 minutes, sleeping for 2 minutes 
                     print("======== Checking {} is updated in local-repo or not ==========".format(image))
-                    check_img_updated_cmd = """sudo platina-cli-ws/platina-cli os-media list-local -p {}| awk {}|sed -e '1,4d'""".format(self.setup_password, "'{print $2}'")
+                    check_img_updated_cmd = """sudo platina-cli-ws/platina-cli os-media list-local --pccUsername {} --pccPassword {}| awk '/amd64|i386/ {}'""".format(self.pcc_username,self.pcc_password,'{print $2}')
                     check_img_updated_cmd_output = cli_run(cmd=check_img_updated_cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
                     if re.search(image,str(check_img_updated_cmd_output)):
                         updated_images.append("OK")

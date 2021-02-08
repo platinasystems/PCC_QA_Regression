@@ -49,3 +49,12 @@ def get_stripped_result_field(response, field):
         return ' '.join(response["Result"][field].split())
     except Exception as e:
         return {"Error": str(e)}
+
+###########################################################################
+@keyword(name="Get Response Message")
+###########################################################################
+def get_response_message(response):
+        try:
+            return response["Result"]["message"]
+        except Exception as e:
+            return {"Error": str(e)}

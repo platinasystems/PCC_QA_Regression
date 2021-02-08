@@ -12,10 +12,11 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from aa.common.AaBase import AaBase
 from aa.common.Utils import banner, trace, debug, pretty_print
 from aa.common.Cli import cli_run
+from aa.common.Result import get_response_data
 
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
-
+from aa.pcc.Nodes import Nodes
 
 class LinuxUtils(AaBase):
     
@@ -172,19 +173,52 @@ class LinuxUtils(AaBase):
             logger.console("Error in Restart node: " + e)
             
     ###################################################################################################
+    @keyword(name="Force Restart node")
+    ###################################################################################################
+    
+    # returns OK if Node is Restarted successfully
+    # <usage> restart_node(hostip=<hostip>)
+    
+    def force_restart_node(self,*args, **kwargs):
+        self._load_kwargs(kwargs)
+        try:
+            cmd = "sudo reboot -f"
+            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                                          linux_password=self.password)
+            banner("Sleeping")
+            time.sleep(int(self.time_to_wait))
+            banner("Done sleeping")
+            cmd = "ping {} -c 4".format(self.hostip)
+            
+            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
+                                     linux_password=self.password)
+            
+            serialised_restart_up_status = self._serialize_response(time.time(), restart_up_status)
+            print("serialised_restart_up_status is:{}".format(serialised_restart_up_status))
+            
+            cmd_output = str(serialised_restart_up_status['Result']['stdout']).replace('\n', '').strip()
+            
+            if ", 0% packet loss" in cmd_output:
+                return "OK"
+            else:
+                return "Error"
+        except Exception as e:
+            logger.console("Error in Force Restart node: " + e)
+            
+    ###################################################################################################
     @keyword(name="Install net-tools command")
     ###################################################################################################
     
     def install_nettools(self,*args, **kwargs):
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        
         print("Kwargs are: {}".format(kwargs))
         try:
             host_ips = []
             status = []
-            for node_name in ast.literal_eval(self.node_names):
-                host_ip = easy.get_hostip_by_name(conn, Name=node_name)
-                host_ips.append(host_ip)
+            get_nodes_response = Nodes().get_nodes(**kwargs)
+            host_ips = [str(node['Host']) for node in get_response_data(get_nodes_response)]
             print("host_ips_list : {}".format(host_ips))
             for ip in host_ips:    
                 cmd = "sudo cat /etc/os-release|grep PRETTY_NAME"
@@ -248,4 +282,38 @@ class LinuxUtils(AaBase):
         
         except Exception as e:
             return "Error in installing net-tools: {}".format(e)
-    
+
+    ###################################################################################################
+    @keyword(name="Ping Check")
+    ###################################################################################################
+    def ping_check(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        failed_check=[]
+        if self.node_names:
+            for node in eval(str(self.node_names)):
+                host_ip=easy.get_hostip_by_name(conn,node)
+                if type(host_ip)==str:
+                    ping_cmd = "sudo ping {} -c 4".format(host_ip)
+                    ping_execute = cli_run(cmd=ping_cmd, host_ip=host_ip, linux_user=self.username, linux_password=self.password)
+                    ping_serialize = self._serialize_response(time.time(), ping_execute)
+                    output = str(ping_serialize['Result']['stdout']).replace('\n', '').strip()
+                    print("-------Ping Output for {}--------".format(node))
+                    print(output)
+                    if ", 0% packet loss" in output:
+                        continue
+                    else:
+                        failed_check.append(node)
+            if failed_check:
+                print("Could not verify ping test for {}".format(failed_check))
+                return "Could not verify ping test for {}".format(failed_check)
+            else:
+                return "OK"
+        else:
+            print("node_names argument is missing")
+            return "node_name argument is missing"
+

@@ -228,9 +228,12 @@ class PolicyDrivenMgmt(AaBase):
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             print("kwargs in get_policy_inputs_from_apps are : {}".format(kwargs))
+            if 'appId' not in kwargs:
+                return "Provide a valid appName/appId to create policy"
             data = pcc.get_policy_enabled_apps(conn)['Result']['Data']
-            for i in data:
-                if self.Name.lower() in i.values():
+            for i in eval(str(data)):
+                app_list = [str(x).lower() for x in i.values() if type(x)!= int]
+                if self.Name.lower() in app_list:
                     values= i['actions'][0]['inputs']
             required_data = []
             for val in values:
@@ -252,8 +255,10 @@ class PolicyDrivenMgmt(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             logger.console("kwargs are : {}".format(kwargs))
             data = pcc.get_policy_enabled_apps(conn)['Result']['Data']
-            for i in data:
-                if self.Name.lower() in i.values():
+            
+            for i in eval(str(data)):
+                app_list = [str(x).lower() for x in i.values() if type(x)!= int]
+                if self.Name.lower() in app_list:
                     app_id_from_policy =  i['id']
                     logger.console("app_id_from_policy: {}".format(app_id_from_policy))
         except Exception as e:
@@ -288,19 +293,27 @@ class PolicyDrivenMgmt(AaBase):
         banner("PCC.Create Policy")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        logger.console("Kwargs: {}".format(kwargs))        
+        logger.console("Kwargs: {}".format(kwargs))    
+        print("Kwargs in create policy are: {}".format(kwargs))       
+        if 'appId' not in kwargs:
+            return "Provide a valid appName/appId to create policy"
         if 'appId' in kwargs:
             if type(kwargs['appId']) == str:
+                print("I am here")
                 if kwargs['appId'].isnumeric():
                     self.appId = ast.literal_eval(kwargs['appId'])
                 else:
+                    print("I am in else1")
                     self.appId = kwargs['appId']
             else:
+                print("I am in else2")
                 self.appId = int(kwargs['appId'])
+        print("app id is: {}".format(self.appId))
         if 'inputs' in kwargs:
             user_inputs = ast.literal_eval(kwargs['inputs'])
             default_inputs = self.get_policy_inputs_from_apps(**kwargs)
-            
+            if default_inputs == "Provide a valid appName/appId to create policy":
+                return "Provide a valid appName/appId to create policy"
             for user_input in user_inputs:
                 for default_input in default_inputs:
                     if user_input['name'] == default_input['name']:
@@ -309,7 +322,8 @@ class PolicyDrivenMgmt(AaBase):
             self.inputs = default_inputs
         else:
             self.inputs = self.get_policy_inputs_from_apps(**kwargs)
-            
+            if self.inputs == "Provide a valid appName/appId to create policy":
+                return "Provide a valid appName/appId to create policy"
         if 'scopeIds' in kwargs:
             self.scopeIds =  ast.literal_eval(self.scopeIds)
             
@@ -350,18 +364,25 @@ class PolicyDrivenMgmt(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs are: {}".format(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}") 
+        if 'appId' not in kwargs:
+            return "Provide a valid appName/appId to create policy"
         if 'appId' in kwargs:
             if type(kwargs['appId']) == str:
+                print("I am here")
                 if kwargs['appId'].isnumeric():
                     self.appId = ast.literal_eval(kwargs['appId'])
                 else:
+                    print("I am in else1")
                     self.appId = kwargs['appId']
             else:
+                print("I am in else2")
                 self.appId = int(kwargs['appId'])
+        print("app id is: {}".format(self.appId))
         if 'inputs' in kwargs:
             user_inputs = ast.literal_eval(kwargs['inputs'])
             default_inputs = self.get_policy_inputs_from_apps(**kwargs)
-            
+            if default_inputs == "Provide a valid appName/appId to create policy":
+                return "Provide a valid appName/appId to create policy"
             for user_input in user_inputs:
                 for default_input in default_inputs:
                     if user_input['name'] == default_input['name']:
@@ -369,7 +390,9 @@ class PolicyDrivenMgmt(AaBase):
             
             self.inputs = default_inputs
         else:
-            self.inputs = self.get_policy_inputs_from_apps(**kwargs)       
+            self.inputs = self.get_policy_inputs_from_apps(**kwargs)
+            if self.inputs == "Provide a valid appName/appId to create policy":
+                return "Provide a valid appName/appId to create policy"
         if 'scopeIds' in kwargs:
             self.scopeIds =  ast.literal_eval(self.scopeIds)
             
@@ -408,20 +431,54 @@ class PolicyDrivenMgmt(AaBase):
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         get_response = self.get_all_policies(**kwargs)['Result']['Data']
-        policy_ids= []
-        for data in get_response:
-            policy_ids.append(data['id'])
-        deletion_status = []
-        for id in policy_ids:
-            deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
-            deletion_status.append(deletion_resp['status'])
-            time.sleep(3)
-        result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
-        if result:
-            return "OK"  
+        if get_response == None:
+            return "OK"
         else:
-            return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
-        
+            policy_ids= []
+            for data in get_response:
+                policy_ids.append(data['id'])
+            deletion_status = []
+            for id in policy_ids:
+                deletion_resp = pcc.delete_policy_by_id(conn, str(id))['Result']
+                deletion_status.append(deletion_resp['status'])
+                time.sleep(3)
+            result = len(deletion_status) > 0 and all(elem == 200 for elem in deletion_status)
+            if result:
+                return "OK"  
+            else:
+                return "Error: while deleting all policies - deletion_status is: {}".format(deletion_status)
+
+    ###########################################################################
+    @keyword(name="PCC.Unassign Locations Assigned from All Policies")
+    ###########################################################################
+    def unassign_locations_from_all_policies(self, *args, **kwargs):
+        banner("PCC.Unassign Locations Assigned from All Policies")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        get_response = self.get_all_policies(**kwargs)['Result']['Data']
+        if get_response == None:
+            return "OK"
+        else:
+            location_unassign_status = []
+            for data in get_response:
+                payload= {  "id":data['id'],
+                            "appId": data['appId'],
+                            "scopeIDs": [],
+                            "description": data['description'],
+                            "inputs":data['inputs'],
+                            "owner":data['owner']
+                         }
+                response  = pcc.modify_policy_by_id(conn, str(data['id']), payload)
+                print("Response is {}".format(response))
+                location_unassign_status.append(response['StatusCode'])
+                time.sleep(1)
+            
+            result = len(location_unassign_status) > 0 and all(elem == 200 for elem in location_unassign_status)
+            if result:
+                return "OK"  
+            else:
+                return "Error: while unassignment of locations from all policies: {}".format(location_unassign_status)
+
     ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
     ###########################################################################
@@ -599,8 +656,9 @@ class PolicyDrivenMgmt(AaBase):
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         cmd_ntp1="sudo systemctl status ntp"
-        cmd_ntp2="sudo netstat -anp | grep ntp"
-        cmd_ntp3="sudo ps aux | grep ntp"
+        #cmd_ntp2="sudo netstat -anp | grep ntp"
+        cmd_ntp2="sudo ps aux | grep ntp"
+        cmd_ntp3="sudo systemctl status ntpd"
                 
         success_chk = []
         failed_chk = []
@@ -608,13 +666,15 @@ class PolicyDrivenMgmt(AaBase):
             ntp_check1=cli_run(ip,self.user,self.password,cmd_ntp1)
             print("Command_1 is: {}".format(cmd_ntp1))
             print("=========== NTP_Check1 output ==========\n{}".format(ntp_check1))
+            
             ntp_check2=cli_run(ip,self.user,self.password,cmd_ntp2)
             print("Command_2 is: {}".format(cmd_ntp2))
             print("=========== NTP_Check2 output ==========\n{}".format(ntp_check2))
+            
             ntp_check3=cli_run(ip,self.user,self.password,cmd_ntp3)
             print("Command_3 is: {}".format(cmd_ntp3))
             print("=========== NTP_Check3 output ==========\n{}".format(ntp_check3))
-            if re.search("ntpd",str(ntp_check1)) and re.search("running",str(ntp_check1)) and re.search("CONNECTED",str(ntp_check2)) and re.search("ntpd",str(ntp_check3)):
+            if (re.search("ntpd",str(ntp_check1)) or re.search("ntpd",str(ntp_check3))) and (re.search("running",str(ntp_check1)) or re.search("running",str(ntp_check3)))  and re.search("ntpd",str(ntp_check2)):
                 print("NTP Found")
                 success_chk.append(ip)
                     
@@ -807,9 +867,6 @@ class PolicyDrivenMgmt(AaBase):
         else: 
             return "Error: Policy Ids {} are not assigned on node {}".format(self.policyIDs, self.node_name)
         
-        
-        
-            
     ###########################################################################
     @keyword(name="PCC.Validate DNS From Backend")
     ###########################################################################
@@ -826,25 +883,20 @@ class PolicyDrivenMgmt(AaBase):
                 print(" ========= Command_1 is: {} ==========".format(cmd1))
                 cmd1_op=cli_run(self.host_ip,self.user,self.password,cmd1)
                 print("cmd1 op: {}".format(cmd1_op))
-                
-                cmd2="sudo systemd-resolve --status"
-                print(" ========= Command_2 is: {} ==========".format(cmd2))
-                cmd2_op=cli_run(self.host_ip,self.user,self.password,cmd2)
-                print("cmd2 op: {}".format(cmd2_op))
-                
-                if (re.search("{}".format(search_item),str(cmd1_op)) and re.search("{}".format(search_item),str(cmd2_op))) and re.search("{}".format(self.dns_server_ip),str(cmd2_op)) :
+
+                if (re.search("{}".format(search_item),str(cmd1_op))):
                     found_result.append("OK")
                 else:
-                    found_result.append("Not found: {}".format(search_item)) 
+                    found_result.append("Not found: {}".format(search_item))
             print("Found result: {}".format(found_result))
             result = len(found_result) > 0 and all(elem == "OK" for elem in found_result)
             if result:
-                return "OK"  
+                return "OK"
             else:
-                return "Error: validation unsuccessful: Check result list: {}".format(found_result)   
+                return "Error: validation unsuccessful: Check result list: {}".format(found_result)
         else:
             return "Error: Please provide valid search list"
-            
+    
     ###########################################################################
     @keyword(name="PCC.Validate NTP From Backend")
     ###########################################################################
@@ -859,11 +911,4 @@ class PolicyDrivenMgmt(AaBase):
             return "OK"
         else:
             return "Error: validation unsuccessful, time zone {} not found".format(self.time_zone)   
-        
-        
-          
-            
-        
-    
-    
-    
+

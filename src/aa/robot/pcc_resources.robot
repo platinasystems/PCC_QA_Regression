@@ -37,6 +37,8 @@ Library                         aa.pcc.ApplicationCredentialManager
 Library                         aa.pcc.Ipam
 Library                         aa.pcc.PolicyDrivenMgmt
 Library                         aa.pcc.Monitor
+Library                         aa.pcc.SystemPackageUpdates
+Library				aa.pcc.Rsyslog
 Library                         Collections
 
 *** Keywords ***
@@ -100,10 +102,20 @@ Load PCC Test Data
         ${TENANT_USER_PCC_PWD}    Evaluate    $pcc_server_dict.get("tenant_user_password", None)
                                   Set Suite Variable      ${TENANT_USER_PCC_PWD}
         
+        ${READONLY_USER_PCC_USERNAME}    Evaluate    $pcc_server_dict.get("read_only_username", None)
+                                       Set Suite Variable      ${READONLY_USER_PCC_USERNAME}
+                                       
+        ${READONLY_USER_PCC_PWD}    Evaluate    $pcc_server_dict.get("read_only_password", None)
+                                  Set Suite Variable      ${READONLY_USER_PCC_PWD}
+        
         ${PCC_SETUP_PWD}          Evaluate    $pcc_server_dict.get("setup_password", None)
                                   Set Suite Variable      ${PCC_SETUP_PWD}
+        
+        ${PCC_SETUP_USERNAME}          Evaluate    $pcc_server_dict.get("setup_username", None)
+                                  Set Suite Variable      ${PCC_SETUP_USERNAME}
 
-
+        ${PCC_SETUP_UPGRADE_CMD}          Evaluate    $pcc_server_dict.get("setup_upgrade_cmd", None)
+                                  Set Suite Variable      ${PCC_SETUP_UPGRADE_CMD}
 ###################################################################################################################################
 Load Clusterhead 1 Test Data
 ###################################################################################################################################
@@ -369,7 +381,6 @@ Verify List of Nodes
 ###################################################################################################################################
             [Arguments]         ${expected_node_list}
         [Documentation]         *Verify all expected nodes are present* - Initial setup must contain only specified set of nodes
-
                                 # Get All Nodes for the given PCC
         ${response}             PCC.Get Node
         ${data}                 Get Response Data       ${response}
@@ -466,7 +477,6 @@ Load Container Registry Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Container Registry Data*
-
                                     Log To Console      **** Load Container Registry Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json   container-registry
 
@@ -599,7 +609,6 @@ Load Auth Profile Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Auth Profile Data*
-
                                     Log To Console      **** Load Auth Profile Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    auth-profile
 
@@ -677,7 +686,6 @@ Load Certificate Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Certificate Data*
-
                                     Log To Console      **** Load Certificate Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    certificate
 
@@ -697,7 +705,6 @@ Load Tunneling Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Tunneling Data*
-
                                     Log To Console      **** Load Tunneling Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    tunneling
 
@@ -759,7 +766,6 @@ Load OS-Deployment Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load OS-Deployment Data*
-
                                     Log To Console      **** Load OS-Deployment Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    os_deployment
 
@@ -794,7 +800,6 @@ Load PXE-Boot Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load PXE-Boot Data*
-
                                     Log To Console      **** Load OS-Deployment Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    pxe-boot
 
@@ -818,7 +823,6 @@ Load OpenSSH_Keys Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load OpenSSH_Keys Data*
-
                                     Log To Console      **** Load OpenSSH_Keys Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    openSSH_keys
 
@@ -853,7 +857,6 @@ Load i28 Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load i28 Data*
-
                                     Log To Console      **** Load OpenSSH_Keys Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    i28
 
@@ -876,7 +879,6 @@ Load Alert Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Alert Data*
-
                                     Log To Console      **** Load Alert Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    alerting
                             
@@ -910,7 +912,6 @@ Load Node Groups Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Node Groups Data*
-
                                     Log To Console      **** Load Node Groups Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    node_groups
                             
@@ -973,7 +974,6 @@ Load Tenant Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Tenant Data*
-
                                     Log To Console      **** Load Tenant Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    tenant
                             
@@ -1036,7 +1036,6 @@ Load Node Roles Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load Node Roles Data*
-
                                     Log To Console      **** Load Node Roles Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    node_roles
                             
@@ -1123,7 +1122,6 @@ Load SAS Enclosure Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_filename}
     [Documentation]                 *Load SAS Enclosure Data*
-
                                     Log To Console      **** Load Node Roles Data ****
         ${pcc_server_dict}          TESTDATA.Get        ${testdata_filename}.json    SAS_Enclosure
                             
@@ -1156,6 +1154,10 @@ Load Network Manager Data
 
         ${NETWORK_MANAGER_IGWPOLICY}    Evaluate    $pcc_server_dict.get("igwPolicy", None)
                                         Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY}
+
+        ${NETWORK_MANAGER_BGP_NEIGHBORS}    Evaluate    $pcc_server_dict.get("bgp_neighbors", None)
+                                        Set Suite Variable    ${NETWORK_MANAGER_BGP_NEIGHBORS}
+
 
 ###################################################################################################################################
 Load Ipam Data

@@ -87,7 +87,44 @@ class Certificate(AaBase):
         
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return easy.get_certificate_id_by_name(conn, Name = self.Alias)
-        
+
+    ###############################################################################################################
+    @keyword(name="PCC.Delete All Certificates")
+    ###############################################################################################################
+
+    def cleanup_certificates(self, *args, **kwargs):
+        """
+        PCC.Delete All Certificates
+        [Args]
+            None
+
+        [Returns]
+            (str) OK: Returns "OK" if all certificates are cleaned from PCC
+            else: returns "Error"
+        """
+
+        banner("PCC.Delete All Certificates")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        certificate_deletion_status=[]
+        try:
+            certificate_list = pcc.get_certificates(conn)['Result']
+            if certificate_list == []:
+                return "OK"
+            else:
+                for certificate in certificate_list:
+                    print("========= Deleting {} certificate ===========".format(certificate['alias']))
+                    response= pcc.delete_certificate_by_id(conn, id=str(certificate['id']))
+                    print("Deletion Response: {}".format(response))
+                    statuscode = response["StatusCode"]
+                    print("Status code is :{}".format(statuscode))
+                    certificate_deletion_status.append(str(statuscode))
+                status = len(certificate_deletion_status) > 0 and all(elem == "200" for elem in certificate_deletion_status)
+                if status:
+                    return "OK"
+                return "All certificates not deleted: {}".format(certificate_deletion_status)
+        except Exception as e:
+            return {"Error": str(e)}
         
         
         

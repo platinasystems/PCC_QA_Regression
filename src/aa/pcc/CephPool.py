@@ -10,7 +10,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
 
-from aa.common.Utils import banner, trace, pretty_print
+from aa.common.Utils import banner, trace, pretty_print, convert
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
@@ -30,10 +30,13 @@ class CephPool(AaBase):
         self.pool_type = ""
         self.quota = None
         self.quota_unit = ""
-        self.user=""
-        self.password=""
+        self.user="pcc"
+        self.password="cals0ft"
         self.nodes_ip=[]
         self.count=0
+        self.pool_name = None
+        self.hostip = None
+        
         super().__init__()
 
     ###########################################################################
@@ -270,6 +273,7 @@ class CephPool(AaBase):
                 raise Exception("[PCC.Ceph Wait Until Pool Ready] Timeout")
             trace("  Waiting until pool : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
+        time.sleep(10)
         return "OK"
 
 
@@ -307,6 +311,7 @@ class CephPool(AaBase):
                 time.sleep(5)
             else:
                 trace("Pool deleted!")
+        time.sleep(10)
         return "OK"
 
     ###########################################################################
@@ -359,3 +364,30 @@ class CephPool(AaBase):
             raise Exception(e)
 
         return pcc.modify_ceph_pool(conn, payload)
+        
+    ###############################################################################################################
+    @keyword(name="PCC.Get Stored Size for Replicated Pool")
+    ###############################################################################################################
+    
+    def get_stored_size_replicated_pool(self, *args, **kwargs):
+        banner("Get Stored Size for Replicated Pool")
+        self._load_kwargs(kwargs)
+        try:
+            cmd= "sudo ceph df detail | grep -w {}".format(self.pool_name)
+            replicated_pool_stored_size = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
+            serialised_replicated_pool_stored_size = self._serialize_response(time.time(), replicated_pool_stored_size)
+            cmd_output = str(serialised_replicated_pool_stored_size['Result']['stdout']).replace('\n', '').strip()
+            
+            splitting = cmd_output.split()
+            print("splitting: {}".format(splitting))
+            
+            print("value of replicated pool: {}".format(splitting[3]))
+            print("Size of replicated pool: {}".format(splitting[4]))
+            
+            size_of_replicated_pool = convert(eval(splitting[3]), splitting[4])
+            print("Size of replicated pool is: {}".format(size_of_replicated_pool))
+            
+            return size_of_replicated_pool
+            
+        except Exception as e:
+            trace("Error in get_stored_size_replicated_pool: {}".format(e))

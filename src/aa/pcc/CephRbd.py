@@ -14,6 +14,8 @@ from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 
+from aa.pcc.CephCluster import CephCluster
+
 PCCSERVER_TIMEOUT = 60*6
 
 class CephRbd(AaBase):
@@ -30,6 +32,11 @@ class CephRbd(AaBase):
         self.tags =  []
         self.image_feature = ""
         self.count=0
+        self.pool_name = None
+        self.username = "pcc"
+        self.password = "cals0ft"
+        self.hostip = None
+        self.mount_folder_name = None
         super().__init__()
 
     ###########################################################################
@@ -194,6 +201,7 @@ class CephRbd(AaBase):
                 trace("  Waiting until rbd: %s is deleted. Timeout in %.1f seconds." % 
                        (data['name'], timeout-time.time()))
                 time.sleep(5)
+        time.sleep(10)
         return "OK"
 
 
@@ -228,6 +236,7 @@ class CephRbd(AaBase):
                 raise Exception("[PCC.Ceph Wait Until Rbd Ready] Timeout")
             trace("  Waiting until rbd : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
+        time.sleep(10)
         return "OK"
 
     ###########################################################################
@@ -260,3 +269,87 @@ class CephRbd(AaBase):
             raise Exception(e)
 
         return pcc.modify_ceph_rbds(conn, payload)
+        
+    ###############################################################################################################
+    @keyword(name="PCC.Map RBD")
+    ###############################################################################################################
+    
+    def map_rbd(self, *args, **kwargs):
+        banner("Map RBD")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            
+            inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
+            print("Inet IP is : {}".format(inet_ip))
+            
+            #Maps rbd0
+            cmd= "sudo rbd map {} --pool {} --name client.admin -m {} -k /etc/ceph/ceph.client.admin.keyring".format(self.name, self.pool_name, inet_ip)
+            
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            print("cmd1: {} executed successfully and status is:{}".format(cmd,status))
+            
+            time.sleep(2)
+            
+            #mkfs.ext4 rbd0 command execution
+            cmd= "sudo mkfs.ext4 -m0 /dev/rbd0"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            print("cmd2: {} executed successfully and status is:{}".format(cmd,status))
+            
+            time.sleep(2)            
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in map_rbd: {}".format(e))
+            
+    ###############################################################################################################
+    @keyword(name="PCC.Mount RBD To Mount Point")
+    ###############################################################################################################
+    
+    def mount_rbd(self, *args, **kwargs):
+        banner("Mount RBD To Mount Point")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            #Mount rbd0
+            cmd= "sudo mount /dev/rbd0 /mnt/{}".format(self.mount_folder_name)
+            
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            print("cmd1: {} executed successfully and status is:{}".format(cmd,status))
+            
+            time.sleep(5)
+            return "OK"
+            
+        except Exception as e:
+            trace("Error in mount_rbd: {}".format(e))
+            
+    ###############################################################################################################
+    @keyword(name="PCC.Unmount and Unmap RBD")
+    ###############################################################################################################
+    
+    def unmount_and_unmap_rbd(self, *args, **kwargs):
+        banner("PCC.Unmount and Unmap RBD")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            cmd= "sudo umount /mnt/{}".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            print("cmd1: {} executed successfully and status is : {}".format(cmd,status))
+            logger.console("cmd1: {} executed successfully and status is : {}".format(cmd,status))
+            time.sleep(60*1) # Sleep for 2 minutes
+            
+            cmd= "sudo rbd unmap /dev/rbd0"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            print("cmd2: {} executed successfully and status is : {}".format(cmd,status))
+            logger.console("cmd2: {} executed successfully and status is : {}".format(cmd,status))
+            time.sleep(60*2) # Sleep for 2 minutes
+            
+            cmd= "sudo rm -rf /mnt/{}/".format(self.mount_folder_name)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            print("cmd3: {} executed successfully and status is : {}".format(cmd,status))
+            logger.console("cmd3: {} executed successfully and status is : {}".format(cmd,status))
+            time.sleep(60*2) # Sleep for 2 minutes
+            
+            return "OK"
+        except Exception as e:
+                trace("Error in unmount_and_unmap_rbd: {}".format(e))

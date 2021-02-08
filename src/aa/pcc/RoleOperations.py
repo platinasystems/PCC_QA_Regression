@@ -135,7 +135,7 @@ class RoleOperations(AaBase):
 
         timeout = time.time() + PCC_TIMEOUT
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        time.sleep(20)
+        time.sleep(10)
         while not ready:
             ready = False
             node_list = pcc.get_nodes(conn)['Result']['Data']
@@ -147,6 +147,7 @@ class RoleOperations(AaBase):
                     if node['provisionStatus'] == 'Ready':
                         print("Node Response:-"+str(node))
                         ready = True
+                        return "OK"
                     elif re.search("failed",str(node['provisionStatus'])):
                         print("Node Response:-"+str(node))
                         return "Failed"
@@ -154,10 +155,8 @@ class RoleOperations(AaBase):
                 print("Node Response:"+str(tmp_response))
                 return {"Error": "Timeout"}
             if not ready:
-                trace("  Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
+                trace("Waiting until node: %s is Ready, currently status: %s" % (self.node_name, status))
                 time.sleep(5)
-
-        return "OK"
 
     ###########################################################################
     @keyword(name="PCC.Delete and Verify Roles On Nodes")
@@ -179,38 +178,48 @@ class RoleOperations(AaBase):
 
         payload=None
         tmp_id=None
-        
+        response_code_list = []
         for node in eval(str(self.nodes)):
-            role_ids=[]
+            print("*****************  On node from user: {} ********************".format(node))
             response = pcc.get_nodes(conn)
             for data in get_response_data(response):
                 self.Id=data['Id']
                 role_ids=data['roles']          
+                print("***************** node from pcc: {} ********************".format(data['Name'].lower()))
                 if str(data['Name']).lower() == str(node).lower():
+                    
                     print("Role_Ids_On_Node:-"+str(role_ids))
-                    for role in eval(str(self.roles)):
-                        tmp_id=easy.get_node_role_id_by_name(conn,str(role))
-                        print("Role-Id to Remove:-"+str(role)+"-"+str(tmp_id))
-                        if tmp_id in eval(str(role_ids)):
-                            role_ids.remove(tmp_id)
-                    payload={
-                             "Id":self.Id,
-                             "roles":role_ids
-                             }
-                    print("Payload:-"+str(payload))
-                    api_response=pcc.modify_node(conn, payload)
-                    print("API Response:-"+str(api_response))
-                    if api_response['Result']['status']==200:
-                        continue
+                    if role_ids:
+                        for role in eval(str(self.roles)):
+                            tmp_id=easy.get_node_role_id_by_name(conn,str(role))
+                            print("Role-Id to Remove:-"+str(role)+"-"+str(tmp_id))
+                            if tmp_id in eval(str(role_ids)):
+                                role_ids.remove(tmp_id)
+                        payload={
+                                 "Id":self.Id,
+                                 "roles":role_ids
+                                 }
+                        print("Payload:-"+str(payload))
+                        api_response=pcc.modify_node(conn, payload)
+                        print("API Response:-"+str(api_response))
+                        if api_response['StatusCode']==200:
+                            print("Required roles deleted for {}".format(node))
+                            response_code_list.append(str(api_response['StatusCode']))
+                            continue
+                        else:
+                            return api_response
                     else:
-                        return api_response
-        
-        return "OK"
+                        print("No roles present of node: {}".format(node))
+        result = len(response_code_list) > 0 and all(elem == "200" for elem in response_code_list)
+        if result:
+            return "OK"
+        else:
+            return "Error in removing node roles: {}".format(response_code_list)
         
     ###########################################################################
-    @keyword(name="PCC.Mass Verify BE")
+    @keyword(name="PCC.Maas Verify BE")
     ###########################################################################
-    def verify_mass_be(self, *args, **kwargs):  
+    def verify_maas_be(self, *args, **kwargs):  
         banner("PCC.Mass Verify BE")
         self._load_kwargs(kwargs)
         print("Kwargs:-"+str(kwargs))    

@@ -15,7 +15,7 @@ from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
 
-PCCSERVER_TIMEOUT = 60*5
+PCCSERVER_TIMEOUT = 60*8
 
 class CephRgw(AaBase):
 
@@ -41,7 +41,11 @@ class CephRgw(AaBase):
         self.secretKey=None
         self.accessKey=None
         self.user="pcc"
+        self.service_ip="no"
         self.password="cals0ft"
+        self.fileName="rgwFile"
+        self.control_cidr=None
+        self.data_cidr=None
 
 
     ###########################################################################
@@ -67,7 +71,10 @@ class CephRgw(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
 
         if  self.cephPoolID==None:
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
@@ -92,6 +99,10 @@ class CephRgw(AaBase):
             print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
+        if self.service_ip.lower()=="yes":
+            serviceIpType="NodeIp"
+        else:
+            serviceIpType="Default"
         
         payload = {
                     "name":self.name,
@@ -99,7 +110,8 @@ class CephRgw(AaBase):
                     "targetNodes":self.targetNodes,
                     "port":self.port,
                     "certificateID": self.certificateID,
-                    "S3Accounts":self.S3Accounts 
+                    "S3Accounts":self.S3Accounts,
+                    "serviceIpType":serviceIpType
                   }
         print("Payload:-"+str(payload))
         return pcc.add_ceph_rgw(conn, payload)
@@ -112,7 +124,10 @@ class CephRgw(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
 
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
 
         if  self.cephPoolID==None:
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
@@ -137,7 +152,12 @@ class CephRgw(AaBase):
             print("Node List:"+str(tmp_node))
             
         self.targetNodes=tmp_node
-        
+
+        if self.service_ip.lower()=="yes":
+            serviceIpType="NodeIp"
+        else:
+            serviceIpType="Default"
+
         payload = {
                     "ID":self.ID,
                     "name":self.name,
@@ -145,7 +165,8 @@ class CephRgw(AaBase):
                     "targetNodes":self.targetNodes,
                     "port":self.port,
                     "certificateID": self.certificateID,
-                    "S3Accounts":self.S3Accounts 
+                    "S3Accounts":self.S3Accounts,
+                    "serviceIpType":serviceIpType
                 }
 
         print("Payload:-"+str(payload))
@@ -193,13 +214,15 @@ class CephRgw(AaBase):
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print("Response To Look :-"+str(data))
-                    if data['progressPercentage'] == 100:
-                        gateway_ready = True
-                    elif re.search("failed",str(data['deploy_status'])):
+                    trace("  Waiting until %s is Ready, current status: %s" % (str(data['name']),str(data['deploy_status'])))
+                    if data['deploy_status'] == "completed":
+                        return "OK"
+                    elif re.search("failed", str(data['deploy_status'])):
                         return "Error"
+                    else:
+                        break
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Rgw Ready] Timeout")
-            trace("  Waiting until cluster: %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
             time.sleep(5)
         return "OK"
 
@@ -258,8 +281,9 @@ class CephRgw(AaBase):
             return "OK"
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
-            print("Rados Gateway {} and id {} is deleting....".format(data['name'],data['id']))
-            self.ID=data['id']
+            print("Rados Gateway {} and id {} is deleting....".format(data['name'],data['ID']))
+            self.ID=data['ID']
+            self.name=data['name']
             del_response=pcc.delete_ceph_rgw_by_id(conn, str(self.ID))
             if del_response['Result']['status']==200:
                 del_check=self.wait_until_rados_deleted()
@@ -354,13 +378,65 @@ class CephRgw(AaBase):
         return "OK"
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Update Configure")
+    ###########################################################################
+    def ceph_rgw_update_configure(self, **kwargs):
+        banner("PCC.Ceph Rgw Update Configure")
+        self._load_kwargs(kwargs)
+        print("Kwargs:"+str(kwargs))
+        main_cmd=""
+        if self.accessKey:
+            main_cmd+='sudo sed -i "s/access_key =.*/access_key = {}/g" /home/pcc/.s3cfg;'.format(self.accessKey)
+        if self.secretKey:
+            main_cmd+='sudo sed -i "s/secret_key =.*/secret_key = {}/g" /home/pcc/.s3cfg;'.format(self.secretKey)
+        if self.targetNodeIp:
+            if self.port:
+                main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:{}/g" /home/pcc/.s3cfg'.format(self.targetNodeIp,self.port)
+            else:
+                main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:443/g" /home/pcc/.s3cfg'.format(self.targetNodeIp)
+            print("Command=" + str(main_cmd))
+            output = cli_run(self.pcc, self.user, self.password, main_cmd)
+            print(output)
+            return "OK"
+        else:
+            if self.service_ip.lower()=="yes":
+                cmd='sudo ip addr show | grep control0 | tail -1 | tr -s " " |cut -d " " -f3|cut -d "/" -f1'
+                cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                print("Host ip to update:"+str(cmd_out))
+                if self.port:
+                    main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:{}/g" /home/pcc/.s3cfg'.format(str(cmd_out),
+                                                                                                       self.port)
+                else:
+                    main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:443/g" /home/pcc/.s3cfg'.format(str(cmd_out))
+                print("Command="+str(main_cmd))
+                output = cli_run(self.pcc, self.user, self.password, main_cmd)
+                print(output)
+                return "OK"
+            else:
+                if not self.data_cidr:
+                    return "Please provide Data CIDR"
+                cmd='sudo vtysh -c "show run" |grep {} |tail -1 |tr -s " "| cut -d " " -f6'.format(self.data_cidr[0:8])
+                cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                print("Host ip to update:"+str(cmd_out))
+                if self.port:
+                    main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:{}/g' /home/pcc/.s3cfg".format(str(cmd_out),self.port)
+                else:
+                    main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:443/g' /home/pcc/.s3cfg".format(str(cmd_out))
+                print("Command=" + str(main_cmd))
+                output = cli_run(self.pcc, self.user, self.password, main_cmd)
+                print(output)
+                return "OK"
+        print("Configuration not updated sucessfully")
+        return "Configuration not updated sucessfully"
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Rgw Make Bucket")
     ###########################################################################
     def ceph_rgw_make_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Make Bucket")
         self._load_kwargs(kwargs)
         
-        cmd='sudo s3cmd mb s3://BUCKET --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd mb s3://BUCKET -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("created",str(data)):
@@ -377,14 +453,15 @@ class CephRgw(AaBase):
     def ceph_rgw_upload_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Upload File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo echo "Platina Systems" > rgwFile'
+        cmd='sudo dd if=/dev/zero of={} bs=10MiB count=1'.format(self.fileName)
         file_create=cli_run(self.pcc,self.user,self.password,cmd)
-        cmd='sudo s3cmd put rgwFile s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd put {} s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.fileName)
         print("Command:"+str(cmd))
+        trace("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("upload",str(data)):
             print("File is uploaded to bucket")
-            cmd='sudo rm rgwFile'
+            cmd='sudo rm {}'.format(self.fileName)
             file_del=cli_run(self.pcc,self.user,self.password,cmd)
             return "OK"
         else:
@@ -398,12 +475,12 @@ class CephRgw(AaBase):
     def ceph_rgw_get_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Get File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd get s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd get s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("download",str(data)):
             print("File is exracted from Bucket")
-            cmd='sudo rm rgwData'
+            cmd='sudo rm {}'.format(self.fileName)
             data=cli_run(self.pcc,self.user,self.password,cmd)
             return "OK"
         else:
@@ -417,7 +494,7 @@ class CephRgw(AaBase):
     def ceph_rgw_list_buckets(self,**kwargs):
         banner("PCC.Ceph Rgw Delete Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd ls'
+        cmd='sudo s3cmd ls -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("BUCKET",str(data)):
@@ -450,7 +527,7 @@ class CephRgw(AaBase):
     def ceph_rgw_delete_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete File To Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd del s3://BUCKET/rgwData --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd del s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("delete",str(data)):
@@ -467,7 +544,7 @@ class CephRgw(AaBase):
     def ceph_delete_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd rb s3://BUCKET --access_key={} --secret_key={} --host={}:{}'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port)
+        cmd='sudo s3cmd rb s3://BUCKET -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("removed",str(data)):
@@ -485,18 +562,24 @@ class CephRgw(AaBase):
         banner("PCC.Ceph Rgw Verify BE Creation")
         self._load_kwargs(kwargs)
         
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e        
+
         ceph_be_cmd="sudo ceph -s"
-        cmd_rgw="sudo systemctl status ceph-radosgw@rgw*"
-        wait_time=600
+        wait_time=400
         
-        for i in range(30):
-            time.sleep(20)
-            wait_time-=20
+        for i in range(4):
+            time.sleep(100)
+            wait_time-=100
             print("wait time left for RGW backend check {}s".format(wait_time))
             trace("wait time left for RGW backend check {}s".format(wait_time))
             failed_chk=[]
             success_chk=[]
             for ip in eval(str(self.targetNodeIp)):
+                host_name=easy.get_host_name_by_ip(conn,ip)
+                cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)
                 ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
                 rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
                 if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
@@ -508,7 +591,7 @@ class CephRgw(AaBase):
                 if len(success_chk)==len(eval(str(self.targetNodeIp))):
                     print("Backend verification successfuly done for : {}".format(success_chk))
                     return "OK"
-        if wait_time==0:
+        if wait_time<=0:
             print("Rgw Check: "+str(rgw_check)) 
             print("Ceph Rgw Check: "+str(ceph_check))     
                               
@@ -524,13 +607,16 @@ class CephRgw(AaBase):
     def ceph_rgw_verify_be_deletion(self,**kwargs):
         banner("PCC.Ceph Rgw Verify BE Deletion")
         self._load_kwargs(kwargs)
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
         
         ceph_be_cmd="sudo ceph -s"
-        cmd_rgw="sudo systemctl status ceph-radosgw@rgw*"
-
-        wait_time=300
+        wait_time=180
         
-        for i in range(15):
+        for i in range(9):
             time.sleep(20)
             wait_time-=20
             print("wait time left for RGW backend check {}s".format(wait_time))
@@ -538,6 +624,8 @@ class CephRgw(AaBase):
             failed_chk=[]
             success_chk=[]
             for ip in eval(str(self.targetNodeIp)):
+                host_name=easy.get_host_name_by_ip(conn,ip)
+                cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)            
                 ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
                 rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
                 if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
@@ -548,9 +636,48 @@ class CephRgw(AaBase):
                 if len(success_chk)==len(eval(str(self.targetNodeIp))):
                     print("Backend verification successfuly done for : {}".format(success_chk))
                     return "OK"
-                                              
+
+        if wait_time<=0:
+            print("Rgw Check: "+str(rgw_check)) 
+            print("Ceph Rgw Check: "+str(ceph_check))
+                                                        
         if failed_chk:  
             print("Rgw service are not down for {}".format(failed_chk))     
             return "Error"
         else:
             return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw Verify Service IP BE")
+    ###########################################################################
+    def ceph_rgw_verify_service_ip_be(self, **kwargs):
+        banner("PCC.Ceph Rgw Verify Service IP BE")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        if self.targetNodeIp:
+            ip=self.targetNodeIp
+        elif self.pcc:
+            ip=self.pcc
+        else:
+            return "Target node is not provided"
+
+        cmd="sudo netstat -ntlp |grep rados"
+        ntlp_check = cli_run(ip, self.user, self.password, cmd)
+        if self.service_ip.lower()=="yes":
+            if re.search(self.control_cidr[0:8], str(ntlp_check)):
+                return "OK"
+            else:
+                print("Could not verify service ip for ntlp check")
+                return "Could not verify service ip for ntlp check"
+        else:
+            if re.search(self.control_cidr[0:8], str(ntlp_check)):
+                print("Could not verify service ip for ntlp check")
+                return "Could not verify service ip for ntlp check"
+            else:
+                return "OK"
+
+        return "Please provide service_ip keyword with yes/no"

@@ -31,7 +31,7 @@ def get_hostip_by_name(conn:dict, Name:str)->str:
         (dict) conn: Connection dictionary obtained after logging in
         (str) Name: Name of the Node 
     [Returns]
-        (int) HostIP: HostIP of the matchining Node, or
+        (str) HostIP: HostIP of the matchining Node, or
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
@@ -40,6 +40,24 @@ def get_hostip_by_name(conn:dict, Name:str)->str:
         for node in node_list:
             if str(node['Name']) == str(Name):
                 return node['Host']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
+        
+def get_host_name_by_ip(conn:dict, ip:str)->str:
+    """
+    Get HostName by IP
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Ip: IP of the Host Node 
+    [Returns]
+        (dict) Error response: If Exception occured
+    """
+    node_list = pcc.get_nodes(conn)['Result']['Data']
+    try:
+        for node in node_list:
+            if str(node['Host']) == str(ip):
+                return node['Name']
         return None
     except Exception as e:
         return {"Error": str(e)}

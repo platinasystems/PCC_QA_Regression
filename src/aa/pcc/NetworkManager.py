@@ -36,6 +36,8 @@ class NetworkManager(AaBase):
         self.igwPolicy=None
         self.user="pcc"
         self.password="cals0ft"
+        self.forceRemove=None
+        self.bgp_neighbors=None
         super().__init__()
 
     ###########################################################################
@@ -50,7 +52,12 @@ class NetworkManager(AaBase):
             raise e
 
         network_id = easy.get_network_clusters_id_by_name(conn,self.name)
+        print("Network_id is: {}".format(network_id))
+        if re.search("Error",str(network_id)):
+            print("Unable to get response")
+            return None
         return network_id
+        
 
     ###########################################################################
     @keyword(name="PCC.Network Manager Create")
@@ -63,14 +70,28 @@ class NetworkManager(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-            
+        
         tmp_node=[]
-        for node_name in eval(str(self.nodes)):
-            print("Getting Node Id for -"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print(" Node Id retrieved -"+str(node_id))
-            tmp_node.append({"id":node_id})
-        self.nodes=tmp_node
+        if self.igwPolicy.lower()=="upstream":
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                bgp_data=eval(str(self.bgp_neighbors))
+                if node_name in bgp_data:
+                    data=bgp_data[node_name]
+                    data["id"]=node_id
+                    tmp_node.append(data)
+                else:
+                    tmp_node.append({"id": node_id, "bgp_neighbors":[]})
+        else:
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                tmp_node.append({"id":node_id})
+
+        self.nodes=tmp_node        
         
         if self.controlCIDR:
             self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
@@ -104,13 +125,27 @@ class NetworkManager(AaBase):
             raise Exception(e)
  
         tmp_node=[]
-        for node_name in eval(str(self.nodes)):
-            print("Getting Node Id for -"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print(" Node Id retrieved -"+str(node_id))
-            tmp_node.append({"id":node_id})
-        self.nodes=tmp_node
-        
+        if self.igwPolicy.lower()=="upstream":
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                bgp_data=eval(str(self.bgp_neighbors))
+                if node_name in bgp_data:
+                    data=bgp_data[node_name]
+                    data["id"]=node_id
+                    tmp_node.append(data)
+                else:
+                    tmp_node.append({"id": node_id, "bgp_neighbors":[]})
+        else:
+            for node_name in eval(str(self.nodes)):
+                print("Getting Node Id for -"+str(node_name))
+                node_id=easy.get_node_id_by_name(conn,node_name)
+                print(" Node Id retrieved -"+str(node_id))
+                tmp_node.append({"id":node_id})
+
+        self.nodes=tmp_node       
+
         if self.controlCIDR:
             self.controlCIDRId=easy.get_subnet_id_by_name(conn,self.controlCIDR)
 
@@ -139,7 +174,12 @@ class NetworkManager(AaBase):
 
         if self.name == None:
             return {"Error": "[PCC.Network Manager Delete]: Name of the Network Manager is not specified."}
-
+            
+        if str(self.forceRemove).lower()=="true":
+            payload={"forceRemove":True}
+        else:
+            payload={"forceRemove":False}
+            
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
@@ -147,7 +187,7 @@ class NetworkManager(AaBase):
             
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
-        return pcc.delete_network_cluster_by_id(conn, str(self.id))
+        return pcc.delete_network_cluster_by_id(conn, str(self.id), payload)
 
     ###########################################################################
     @keyword(name="PCC.Network Manager Refresh")
@@ -227,6 +267,8 @@ class NetworkManager(AaBase):
         while Id_found_in_list_of_networks == True:
             Id_found_in_list_of_networks = False
             response = pcc.get_network_clusters(conn)
+            if not get_response_data(response):
+                return "OK"
             for data in get_response_data(response):
                 if str(data['id']) == str(self.id):
                     Id_found_in_list_of_networks = True
@@ -254,12 +296,18 @@ class NetworkManager(AaBase):
             raise e
         
         response = pcc.get_network_clusters(conn)
+        if not get_response_data(response):
+            return "OK"
+
+        payload={"forceRemove":False}
+        print("Payload:"+str(payload))
+            
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
             print("Network Manager {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
             self.name=data['name']
-            del_response=pcc.delete_network_cluster_by_id(conn, str(self.id))
+            del_response=pcc.delete_network_cluster_by_id(conn, str(self.id), payload)
             if del_response['Result']['status']==200:
                 del_check=self.wait_until_network_manager_deleted()
                 if del_check=="OK":
@@ -355,7 +403,8 @@ class NetworkManager(AaBase):
             raise e
 
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)  
-        time.sleep(30) 
+        time.sleep(30)
+        print("Network Manager ID: "+str(self.id)) 
         response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
         print("Response:"+str(response))
         if response["deploy_status"].lower()=="completed" and (response['health']=="OK" or response['health']=="Warning"):
@@ -369,3 +418,36 @@ class NetworkManager(AaBase):
             return "Error"
         print("Could not verify the health of network cluter "+str(self.name))
         return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Network Manager Verify Upstream BE")
+    ###########################################################################
+    def network_manager_verify_upstream_be(self, **kwargs):
+        banner("PCC.Network Manager Verify Upsteam BE")
+        self._load_kwargs(kwargs)
+        success_chk = []
+        failed_chk = []
+        cmd = "sudo vtysh -c 'show ip bgp nei'"
+        cmd1 = "sudo ip route sh|head -1"
+        for ip in eval(str(self.nodes_ip)):
+            print("________________________")
+            print("Network verification for {} is in progress ...".format(ip))
+            trace("Network verification for {} is in progress ...".format(ip))
+            network_check = self._serialize_response(time.time(), cli_run(ip, self.user, self.password, cmd))
+            internet_check= self._serialize_response(time.time(), cli_run(ip, self.user, self.password, cmd1))
+            print("Data Retrieve:" + str(network_check))
+            print("Internet Route Retrieve:" + str(internet_check))
+            if re.search("established", str(network_check)) and re.search("172.17.2",str(internet_check))==None:
+                success_chk.append(ip)
+            else:
+                failed_chk.append(ip)
+
+        if len(success_chk) == len(eval(str(self.nodes_ip))):
+            print("Backend verification successfuly done for : {}".format(success_chk))
+            return "OK"
+
+        if failed_chk:
+            print("Network is not properly set for {}".format(failed_chk))
+            return "Error"
+        else:
+            return "OK"

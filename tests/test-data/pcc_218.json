@@ -7,9 +7,12 @@
             "pcc_linux_password":"cals0ft",
             "pcc_username":"admin",
             "pcc_password":"admin",
-            "tenant_user_username":"Abinash.Patnaik@calsoftinc.com",
+            "tenant_user_username":"platinasystems@gmail.com",
             "tenant_user_password":"calsoft@123",
-            "setup_password":"Ia4UImAR76vknBVO"
+            "read_only_username":"calsoftplatina@gmail.com",
+            "read_only_password":"readonly@123",
+            "setup_password":"Ia4UImAR76vknBVO",
+            "setup_username":"Yosemite_Sam"
         },
     
     "i28":	

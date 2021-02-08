@@ -71,3 +71,28 @@ def cmp_json(data1,data2):
     if data1 == data2: # a normal string comparison
         return "Ok"
  
+def midtext(start,end,text):
+    startpos = text.index(start)
+    endpos= text.index(end)
+    return(text[startpos+(len(start)+1):endpos].strip())
+
+## Size converter function
+def convert(value, size):
+    converter = {'B':1 * value,
+                 'KiB':10 * value,
+                 'MiB':100 * value,
+                 'GiB':1000 * value,
+                 'TiB':10000 * value,
+                 'PiB':100000 * value,
+                 'EiB':1000000 * value,
+                 'KB': 10 * value,
+                 'MB': 100 * value,
+                 'GB': 1000 * value,
+                 'TB': 10000 * value,
+                 'PB': 100000 * value,
+                 'EB': 1000000 * value
+                 }
+    if size in converter:
+        return converter[size]
+    else:
+        return "Size not found in the list"
