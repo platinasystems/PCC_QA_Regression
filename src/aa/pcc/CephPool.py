@@ -39,16 +39,6 @@ class CephPool(AaBase):
         self.storage_pool_id= None
         self.mode = None
         self.type = None
-        self.targetMaxBytes = None
-        self.targetMaxObjects = None
-        self.cacheTargetDirtyRatio = None
-        self.cacheTargetFullRatio = None
-        self.cacheMinFlushAge = None
-        self.cacheMinEvictAge = None
-        self.hitFilter = None
-        self.hitSetCount = None
-        self.hitSetPeriod = None
-        self.osdClass = None
         
         super().__init__()
 
@@ -441,30 +431,24 @@ class CephPool(AaBase):
     def add_ceph_cache_pool(self,*args,**kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Ceph Add Cache Pool")
-
+        trace("Kwargs are: {}".format(kwargs))
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-	payload = { "storagePoolID": int(self.storage_pool_id),
+        payload = { "storagePoolID": int(self.storage_pool_id),
                     "name": self.name,
-                    "mode": self.mode,
                     "type": self.type,
-                    "targetMaxBytes": int(self.targetMaxBytes),
-                    "targetMaxObjects": int(self.targetMaxObjects),
-                    "cacheTargetDirtyRatio": self.cacheTargetDirtyRatio,
-                    "cacheTargetFullRatio": self.cacheTargetFullRatio,
-                    "cacheMinFlushAge": int(self.cacheMinFlushAge),
-                    "cacheMinEvictAge": int(self.cacheMinEvictAge),
-                    "hitFilter": self.hitFilter,
-                    "hitSetCount": int(self.hitSetCount),
-                    "hitSetPeriod": int(self.hitSetPeriod),
                     "size": int(self.size),
                     "quota": self.quota,
-                    "quotaUnit": self.quota_unit,
-                    "osdClass": self.osdClass
-				  }
-        response = get_response_data(pcc.add_ceph_cache_pool(conn, data=payload))
+                    "quota_unit": self.quota_unit,
+                    "tags":ast.literal_eval(self.tags),
+                    "pool_type":self.pool_type,
+                    "ceph_cluster_id":self.ceph_cluster_id
+		  }
+        trace("Payload is :{}".format(payload))
+        response = pcc.add_ceph_cache_pool(conn,payload)
+        trace("Response is : {}".format(response))
         return response
 		
     ###########################################################################
@@ -478,25 +462,17 @@ class CephPool(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-	payload = { "storagePoolID": int(self.storage_pool_id),
+        payload = { "storagePoolID": int(self.storage_pool_id),
                     "name": self.name,
-                    "mode": self.mode,
                     "type": self.type,
-                    "targetMaxBytes": int(self.targetMaxBytes),
-                    "targetMaxObjects": int(self.targetMaxObjects),
-                    "cacheTargetDirtyRatio": self.cacheTargetDirtyRatio,
-                    "cacheTargetFullRatio": self.cacheTargetFullRatio,
-                    "cacheMinFlushAge": int(self.cacheMinFlushAge),
-                    "cacheMinEvictAge": int(self.cacheMinEvictAge),
-                    "hitFilter": self.hitFilter,
-                    "hitSetCount": int(self.hitSetCount),
-                    "hitSetPeriod": int(self.hitSetPeriod),
                     "size": int(self.size),
                     "quota": self.quota,
                     "quotaUnit": self.quota_unit,
-                    "osdClass": self.osdClass
-				  }
-        response = get_response_data(pcc.update_ceph_cache_pool(conn, data=payload, str(id)))
+                    "tags":ast.literal_eval(self.tags),
+                    "pool_type":self.pool_type,
+                    "ceph_cluster_id":self.ceph_cluster_id
+                  }
+        response = pcc.update_ceph_cache_pool(conn, data=payload,id=str(self.id))
         return response
 		
     ###########################################################################
