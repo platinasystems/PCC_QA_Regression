@@ -581,7 +581,7 @@ Create Rgw Bucket (ServiceIp As Default)
                                       ...  name=ceph-pvt
                                            Should Be Equal As Strings      ${status}    OK
 
-        ${status}                          PCC.Ceph Rgw Madatke Bucket
+        ${status}                          PCC.Ceph Rgw Make Bucket
                                       ...  pcc=${SERVER_1_HOST_IP}
                                       ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
