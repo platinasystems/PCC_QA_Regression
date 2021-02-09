@@ -1,3 +1,4 @@
+RUN python -m pip install --upgrade pip
 FROM mplatina/motor-test-base:1.0.0
 COPY tests /motor/tests
 COPY pipeline /motor/pipeline
