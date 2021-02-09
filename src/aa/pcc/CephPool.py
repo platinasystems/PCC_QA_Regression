@@ -446,7 +446,7 @@ class CephPool(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-		payload = { "storagePoolID": int(self.storage_pool_id),
+	payload = { "storagePoolID": int(self.storage_pool_id),
                     "name": self.name,
                     "mode": self.mode,
                     "type": self.type,
@@ -478,7 +478,7 @@ class CephPool(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-		payload = { "storagePoolID": int(self.storage_pool_id),
+	payload = { "storagePoolID": int(self.storage_pool_id),
                     "name": self.name,
                     "mode": self.mode,
                     "type": self.type,
