@@ -61,6 +61,16 @@ Backup PCC Instance Locally
                                     Should Be Equal As Strings    ${status}    OK
                                     Sleep    1 minutes
 
+###################################################################################################################################
+Backend Verification Before Restore
+###################################################################################################################################
+        ${response}                 CLI.Backend Verification Before Restore
+                               ...  backup_hostip=${PCC_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                               ...  pcc_password=${PCC_SETUP_PWD}
+                                    Should Be Equal As Strings      ${response}  OK
+
 ##################################################################################################################################
 Prune Volumes And Perform Fresh Install
 ###################################################################################################################################
@@ -118,4 +128,14 @@ Restore PCC Instance Locally
                                     Should Be Equal As Strings    ${status}    OK
 
                                     Sleep    1 minutes
+
+###################################################################################################################################
+Backend Verification After Restore
+###################################################################################################################################
+        ${response}                 CLI.Backend Verification After Restore
+                               ...  backup_hostip=${PCC_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                               ...  pcc_password=${PCC_SETUP_PWD}
+                                    Should Be Equal As Strings      ${response}  OK
 
