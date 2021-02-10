@@ -389,12 +389,12 @@ Down And Up The Interface And Check For Ceph
 
         ${status}                   PCC.Set Interface Down
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Set Interface Up
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Ceph Verify BE
