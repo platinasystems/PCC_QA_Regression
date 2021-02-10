@@ -39,6 +39,8 @@ class CephPool(AaBase):
         self.storage_pool_id= None
         self.mode = None
         self.type = None
+        self.data_pool_name= None
+        self.cache_pool_name= None
         
         super().__init__()
 
@@ -489,3 +491,29 @@ class CephPool(AaBase):
 		
         response = get_response_data(pcc.delete_ceph_cache_pool_by_id(conn, str(id)))
         return response
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Validate storage and cache pool relation")
+    ###########################################################################
+    def validate_storage_and_cache_pool_relation(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Validate storage and cache pool relation")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        validation=[]
+        get_all_pools_response = pcc.get_ceph_pools_by_cluster_id(conn,str(self.ceph_cluster_id))
+        trace("get_all_pools_response: {}".format(get_all_pools_response))
+        for data in get_response_data(get_all_pools_response):
+            if (data['name']==self.data_pool_name) and (data['cachePool']['name']==self.cache_pool_name):
+                validation.append("OK")
+            if (data['name']==self.cache_pool_name) and (data['storagePool']['name']==self.data_pool_name):
+                validation.append("OK")
+        trace("Validation status: {}".format(validation))
+        if (len(validation)==2) and (len(validation) > 0 and all(elem == "OK" for elem in validation)):
+            return "OK"
+        else:
+            return "Validation failed for datapool- {} and cache_pool- {}".format(self.data_pool_name,self.cache_pool_name)
+
