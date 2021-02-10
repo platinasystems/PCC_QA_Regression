@@ -27,9 +27,9 @@ Login to PCC.
                          Load i28 Data    ${pcc_setup}
                          Load OS-Deployment Data    ${pcc_setup}
 
-        ${server3_id}    PCC.Get Node Id    Name=${SERVER_3_NAME}
-                         Log To Console    ${server3_id}
-                         Set Global Variable    ${server3_id}
+        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
+                         Log To Console    ${server2_id}
+                         Set Global Variable    ${server2_id}
 
 
 ######################################################################################################################################
@@ -117,16 +117,16 @@ Verify Provision Ready Status and update node, if not ready (TC-1)
 
     ${response}    PCC.Update Node for OS Deployment
 
-                   ...    Id=${server3_id}
-                   ...    Node_name=${SERVER_3_NAME}
-                   ...    Name=${SERVER_3_NAME}
-                   ...    host_ip=${SERVER_3_HOST_IP}
-                   ...    bmc_ip=${SERVER_3_BMC}
-                   ...    bmc_user=${SERVER_3_BMCUSER}
-                   ...    bmc_users=["${SERVER_3_BMCUSER}"]
-                   ...    bmc_password=${SERVER_3_BMCPWD}
-                   ...    server_console=${SERVER_3_CONSOLE}
-                   ...    managed=${SERVER_3_MANAGED_BY_PCC}
+                   ...    Id=${server2_id}
+                   ...    Node_name=${SERVER_2_NAME}
+                   ...    Name=${SERVER_2_NAME}
+                   ...    host_ip=${SERVER_2_HOST_IP}
+                   ...    bmc_ip=${SERVER_2_BMC}
+                   ...    bmc_user=${SERVER_2_BMCUSER}
+                   ...    bmc_users=["${SERVER_2_BMCUSER}"]
+                   ...    bmc_password=${SERVER_2_BMCPWD}
+                   ...    server_console=${SERVER_2_CONSOLE}
+                   ...    managed=${SERVER_2_MANAGED_BY_PCC}
 
                    Log To Console    ${response}
                    ${result}    Get Result    ${response}
@@ -143,7 +143,7 @@ Update OS details (centos78) - Brownfield
 
     ${response}           PCC.Update OS details
 
-                          ...    Id=[${server3_id}]
+                          ...    Id=[${server2_id}]
                           ...    image_name=${IMAGE_1_NAME}
                           ...    locale=${LOCALE}
                           ...    time_zone=${TIME_ZONE}
@@ -168,7 +168,7 @@ Wait Until Node Ready (centos78) - Brownfield
     [Documentation]    *Wait Until Node Ready (centos78) - Brownfield* test
 
     ${status}    PCC.Wait Until Node Ready
-                 ...    Name=${SERVER_3_NAME}
+                 ...    Name=${SERVER_2_NAME}
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
@@ -181,7 +181,7 @@ Verify OS details from PCC (centos78) - Brownfield
     [Documentation]    *Verify OS details from PCC* test
 
     ${status}    PCC.Verify OS details from PCC
-                 ...  Name=${SERVER_3_NAME}
+                 ...  Name=${SERVER_2_NAME}
                  ...  image_name=${IMAGE_1_NAME}
 
                  Log To Console    ${status}
@@ -198,8 +198,8 @@ Set Password on Server (CentOS)
     ${status}    PCC.Set password on Server
                  ...  key_name=${KEY_NAME}
                  ...  admin_user=${ADMIN_USER}
-                 ...  host_ip=${SERVER_3_HOST_IP}
-                 ...  password=${SERVER_3_PWD}
+                 ...  host_ip=${SERVER_2_HOST_IP}
+                 ...  password=${SERVER_2_PWD}
                  ...  i28_username=${i28_USERNAME}
                  ...  i28_hostip=${i28_HOST_IP}
                  ...  i28_password=${i28_PASSWORD}
@@ -280,16 +280,16 @@ Verify Provision Ready Status and update node, if not ready (TC-2)
     [Tags]    Only
     ${response}    PCC.Update Node for OS Deployment
 
-                   ...    Id=${server3_id}
-                   ...    Node_name=${SERVER_3_NAME}
-                   ...    Name=${SERVER_3_NAME}
-                   ...    host_ip=${SERVER_3_HOST_IP}
-                   ...    bmc_ip=${SERVER_3_BMC}
-                   ...    bmc_user=${SERVER_3_BMCUSER}
-                   ...    bmc_users=["${SERVER_3_BMCUSER}"]
-                   ...    bmc_password=${SERVER_3_BMCPWD}
-                   ...    server_console=${SERVER_3_CONSOLE}
-                   ...    managed=${SERVER_3_MANAGED_BY_PCC}
+                   ...    Id=${server2_id}
+                   ...    Node_name=${SERVER_2_NAME}
+                   ...    Name=${SERVER_2_NAME}
+                   ...    host_ip=${SERVER_2_HOST_IP}
+                   ...    bmc_ip=${SERVER_2_BMC}
+                   ...    bmc_user=${SERVER_2_BMCUSER}
+                   ...    bmc_users=["${SERVER_2_BMCUSER}"]
+                   ...    bmc_password=${SERVER_2_BMCPWD}
+                   ...    server_console=${SERVER_2_CONSOLE}
+                   ...    managed=${SERVER_2_MANAGED_BY_PCC}
 
                    Log To Console    ${response}
                    ${result}    Get Result    ${response}
@@ -306,7 +306,7 @@ Update OS details (ubuntu-bionic) - Brownfield
     [Tags]    Only
     ${response}           PCC.Update OS details
 
-                          ...    Id=[${server3_id}]
+                          ...    Id=[${server2_id}]
                           ...    image_name=${IMAGE_2_NAME}
                           ...    locale=${LOCALE}
                           ...    time_zone=${TIME_ZONE}
@@ -332,7 +332,7 @@ Wait Until Node Ready (ubuntu-bionic) - Brownfield
     [Documentation]    *Wait Until Node Ready (ubuntu-bionic) - Brownfield* test
     [Tags]    Only
     ${status}    PCC.Wait Until Node Ready
-                 ...    Name=${SERVER_3_NAME}
+                 ...    Name=${SERVER_2_NAME}
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
@@ -345,7 +345,7 @@ Verify OS details from PCC (ubuntu-bionic) - Brownfield
     [Documentation]    *Verify OS details from PCC (ubuntu-bionic)* test
     [Tags]    Only
     ${status}    PCC.Verify OS details from PCC
-                 ...  Name=${SERVER_3_NAME}
+                 ...  Name=${SERVER_2_NAME}
                  ...  image_name=${IMAGE_2_NAME}
 
                  Log To Console    ${status}
@@ -360,8 +360,8 @@ Set Password on Server (Ubuntu)
     ${status}    PCC.Set password on Server
                  ...  key_name=${KEY_NAME}
                  ...  admin_user=${ADMIN_USER}
-                 ...  host_ip=${SERVER_3_HOST_IP}
-                 ...  password=${SERVER_3_PWD}
+                 ...  host_ip=${SERVER_2_HOST_IP}
+                 ...  password=${SERVER_2_PWD}
                  ...  i28_username=${i28_USERNAME}
                  ...  i28_hostip=${i28_HOST_IP}
                  ...  i28_password=${i28_PASSWORD}
