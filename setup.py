@@ -1,4 +1,4 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup, find_packages
 from os.path import abspath, dirname, join
 
 PROJECT_NAME = "aa"
@@ -37,7 +37,7 @@ DOWNLOAD_URL = PROJECT_GIT_URL + "/archive/master.zip"
 setup(
     name = PROJECT_NAME,
     package_dir={'': 'src'},
-    packages= find_namespace_packages(where="src"),
+    packages= find_packages(where="src"),
     scripts=[ 
         join(SOURCE_DIR, 'scripts', 'run-aa.sh')
         ],
