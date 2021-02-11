@@ -34,7 +34,7 @@ Set Interfaces For ${CLUSTERHEAD_1_NAME}
                                ...  assign_ip=[]
                                ...  managedbypcc=True
                                ...  autoneg=off
-                               ...  speed=10000
+                               ...  speed=40000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
                                
@@ -127,7 +127,7 @@ Set Interfaces For ${CLUSTERHEAD_2_NAME}
                                ...  assign_ip=[]
                                ...  managedbypcc=True
                                ...  autoneg=off
-                               ...  speed=10000
+                               ...  speed=40000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
                                
