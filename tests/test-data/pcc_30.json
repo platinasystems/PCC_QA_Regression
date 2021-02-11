@@ -197,19 +197,19 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["sv125","sv-124","i43"],
-            "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
+            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-10"],
+            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.10"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
             "igwPolicy":"default",
-	    "bgp_neighbors":{"i42":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.8","remote_as":64600},{"neighbor_ip":"10.0.10.12","remote_as":64601}]},"i43":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.10","remote_as":64600},{"neighbor_ip":"10.0.10.14","remote_as":64601}]}}
+	    "bgp_neighbors":{"qa-clusterhead-10":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.8","remote_as":64600},{"neighbor_ip":"10.0.10.12","remote_as":64601}]},"qa-clusterhead-11":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.10","remote_as":64600},{"neighbor_ip":"10.0.10.14","remote_as":64601}]}}
         },
         
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["sv125","sv-124","i43"],
-            "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
+            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-10"],
+            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.10"],
             "tags":["SATA/SAS"],
             "networkClusterName":"network-pvt"
         },
@@ -245,7 +245,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "targetNodes":["sv-124"],
+            "targetNodes":["qa-server-100"],
             "port":443,
             "certificateName":"rgw-crt",
             "S3Accounts":"rgw-app"
@@ -257,7 +257,7 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["i43","sv-124","sv125"],
+            "nodes":["qa-clusterhead-10","qa-server-100","qa-server-101"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
@@ -282,7 +282,7 @@
      
      "pxe-boot":
         {
-            "gateway":"172.17.2.1",            
+            "gateway":"172.17.10.1",            
             "pxe_booted_server":"0123456789",
             "adminStatus_up":"UP",
             "adminStatus_down":"DOWN"
