@@ -190,7 +190,7 @@
         {
             "controlName":"control-pvt",
             "dataName":"data-pvt",
-            "controlSubnet":"10.0.203.32/27",
+            "controlSubnet":"10.0.130.0/24",
             "dataSubnet":"192.168.150.0/24"
         },
         
