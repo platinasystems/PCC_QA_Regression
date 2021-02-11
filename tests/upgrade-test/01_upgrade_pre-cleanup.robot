@@ -123,34 +123,34 @@ Set Interfaces For ${CLUSTERHEAD_1_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-	[Tags]    Test
-#        ${response}                 PCC.Interface Set 1D Link
-#                               ...  node_name=${CLUSTERHEAD_1_NAME}
-#                               ...  interface_name=xeth24
-#                               ...  assign_ip=[]
-#                               ...  managedbypcc=True
-#                               ...  autoneg=off
-#                               ...  speed=40000
-#                               ...  adminstatus=UP
-#                               ...  cleanUp=yes
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#                                    Sleep    10s
-#        ${response}                 PCC.Interface Apply
-#                               ...  node_name=${CLUSTERHEAD_1_NAME}
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200                                
-#        ${status}                   PCC.Wait Until Interface Ready
-#                               ...  node_name=${CLUSTERHEAD_1_NAME}
-#                               ...  interface_name=xeth24
-#                                    Should Be Equal As Strings      ${status}    OK
-#        ${status}                   PCC.Interface Verify PCC
-#                               ...  node_name=${CLUSTERHEAD_1_NAME}
-#                               ...  interface_name=xeth24
-#                               ...  assign_ip=[]
-#                                    Should Be Equal As Strings      ${status}    OK
-
+                               
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth5
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=40000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth5
+                                    Should Be Equal As Strings      ${status}    OK     
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth5
+                               ...  assign_ip=[]
+                                    Should Be Equal As Strings      ${status}    OK 
+                                    
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-1
@@ -160,24 +160,24 @@ Set Interfaces For ${CLUSTERHEAD_1_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${CLUSTERHEAD_1_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-1
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK  
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-1
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
-                                    Should Be Equal As Strings      ${status}    OK
+                               ...  cleanUp=yes                                 
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_1_NAME}
@@ -188,24 +188,24 @@ Set Interfaces For ${CLUSTERHEAD_1_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${CLUSTERHEAD_1_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                    
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-2
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-2
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
-                                    Should Be Equal As Strings      ${status}    OK
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
 
 ###################################################################################################################################
 Set Interfaces For ${CLUSTERHEAD_2_NAME}
@@ -216,34 +216,34 @@ Set Interfaces For ${CLUSTERHEAD_2_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-	[Tags]    Test
-#        ${response}                 PCC.Interface Set 1D Link
-#                               ...  node_name=${CLUSTERHEAD_2_NAME}
-#                               ...  interface_name=xeth24
-#                               ...  assign_ip=[]
-#                               ...  managedbypcc=True
-#                               ...  autoneg=off
-#                               ...  speed=40000
-#                               ...  adminstatus=UP
-#                               ...  cleanUp=yes
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#                                    Sleep    10s
-#        ${response}                 PCC.Interface Apply
-#                               ...  node_name=${CLUSTERHEAD_2_NAME}
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200                                
-#        ${status}                   PCC.Wait Until Interface Ready
-#                               ...  node_name=${CLUSTERHEAD_2_NAME}
-#                               ...  interface_name=xeth24
-#                                    Should Be Equal As Strings      ${status}    OK
-#        ${status}                   PCC.Interface Verify PCC
-#                               ...  node_name=${CLUSTERHEAD_2_NAME}
-#                               ...  interface_name=xeth24
-#                               ...  assign_ip=[]
-#                                    Should Be Equal As Strings      ${status}    OK
-
+                               
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth5
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=40000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth5
+                                    Should Be Equal As Strings      ${status}    OK     
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth5
+                               ...  assign_ip=[]
+                                    Should Be Equal As Strings      ${status}    OK 
+                                    
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-1
@@ -253,24 +253,24 @@ Set Interfaces For ${CLUSTERHEAD_2_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${CLUSTERHEAD_2_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-1
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK  
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-1
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
-                                    Should Be Equal As Strings      ${status}    OK
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_2_NAME}
@@ -281,27 +281,27 @@ Set Interfaces For ${CLUSTERHEAD_2_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${CLUSTERHEAD_2_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                    
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-2
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-2
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
-                                    Should Be Equal As Strings      ${status}    OK
-
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
+                                    
 ###################################################################################################################################
-Set Interfaces For ${SERVER_1_NAME}
+Set Interfaces For ${SERVER_1_NAME} 
 ###################################################################################################################################
     [Documentation]                 *Set Interfaces For ${SERVER_1_NAME}*
                                ...  keywords:
@@ -309,7 +309,7 @@ Set Interfaces For ${SERVER_1_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-	[Tags]    Test
+                               
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
@@ -319,25 +319,25 @@ Set Interfaces For ${SERVER_1_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${SERVER_1_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name${SERVER_1_NAME}
                                ...  interface_name=enp129s0
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK  
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
-                                    Should Be Equal As Strings      ${status}    OK
-
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
+                                    
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0d1
@@ -347,27 +347,27 @@ Set Interfaces For ${SERVER_1_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${SERVER_1_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name${SERVER_1_NAME}
                                ...  interface_name=enp129s0d1
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK  
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0d1
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
+                               ...  cleanUp=yes                               
                                     Should Be Equal As Strings      ${status}    OK
-
+                                    
 ###################################################################################################################################
-Set Interfaces For ${SERVER_2_NAME}
+Set Interfaces For ${SERVER_2_NAME} 
 ###################################################################################################################################
     [Documentation]                 *Set Interfaces For ${SERVER_2_NAME} (sv125)*
                                ...  keywords:
@@ -375,7 +375,7 @@ Set Interfaces For ${SERVER_2_NAME}
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
                                ...  PCC.Wait Until Interface Ready
-	[Tags]    Test
+                               
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0
@@ -385,24 +385,24 @@ Set Interfaces For ${SERVER_2_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${SERVER_2_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name${SERVER_2_NAME}
                                ...  interface_name=enp129s0
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK  
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0
                                ...  assign_ip=[]
-                               ...  cleanUp=yes
-                                    Should Be Equal As Strings      ${status}    OK
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_2_NAME}
@@ -413,21 +413,91 @@ Set Interfaces For ${SERVER_2_NAME}
                                ...  speed=10000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
-
-        ${status_code}              Get Response Status Code        ${response}
+                               
+        ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
                                ...  node_name=${SERVER_2_NAME}
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200                                 
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name${SERVER_2_NAME}
                                ...  interface_name=enp129s0d1
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK        
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0d1
                                ...  assign_ip=[]
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
+
+###################################################################################################################################
+Set Interfaces For ${SERVER_3_NAME} 
+###################################################################################################################################
+    [Documentation]                 *Set Interfaces For ${SERVER_3_NAME} (sv110)*
+                               ...  keywords:
+                               ...  PCC.Interface Set 1D Link
+                               ...  PCC.Interface Apply
+                               ...  PCC.Interface Verify PCC
+                               ...  PCC.Wait Until Interface Ready
+                               
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
                                ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_3_NAME}
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_3_NAME}
+                               ...  interface_name=enp3s0
+                                    Should Be Equal As Strings      ${status}    OK  
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes                               
+                                    Should Be Equal As Strings      ${status}    OK 
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0d1
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+                               
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_3_NAME}
+        ${status_code}              Get Response Status Code        ${response}     
+                                    Should Be Equal As Strings      ${status_code}  200                                   
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_3_NAME}
+                               ...  interface_name=enp3s0d1
+                                    Should Be Equal As Strings      ${status}    OK        
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0d1
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes                               
                                     Should Be Equal As Strings      ${status}    OK
+
+
+
+
