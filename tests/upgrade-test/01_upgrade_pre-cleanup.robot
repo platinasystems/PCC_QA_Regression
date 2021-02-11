@@ -17,6 +17,7 @@ Login
                                     Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
+				    Load Server 3 Test Data    ${pcc_setup}
                                     Load K8s Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
 
@@ -435,7 +436,7 @@ Set Interfaces For ${SERVER_2_NAME}
 ###################################################################################################################################
 Set Interfaces For ${SERVER_3_NAME} 
 ###################################################################################################################################
-    [Documentation]                 *Set Interfaces For ${SERVER_3_NAME} (sv110)*
+    [Documentation]                 *Set Interfaces For ${SERVER_3_NAME}*
                                ...  keywords:
                                ...  PCC.Interface Set 1D Link
                                ...  PCC.Interface Apply
