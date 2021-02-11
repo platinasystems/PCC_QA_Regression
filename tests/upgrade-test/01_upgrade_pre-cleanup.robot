@@ -449,7 +449,7 @@ Set Interfaces For ${SERVER_3_NAME}
                                ...  assign_ip=[]
                                ...  managedbypcc=True
                                ...  autoneg=off
-                               ...  speed=10000
+                               ...  speed=40000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
                                
@@ -477,7 +477,7 @@ Set Interfaces For ${SERVER_3_NAME}
                                ...  assign_ip=[]
                                ...  managedbypcc=True
                                ...  autoneg=off
-                               ...  speed=10000
+                               ...  speed=40000
                                ...  adminstatus=UP
                                ...  cleanUp=yes
                                
