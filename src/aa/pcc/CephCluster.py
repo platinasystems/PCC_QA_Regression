@@ -869,3 +869,26 @@ class CephCluster(AaBase):
         except Exception as e:
             trace("Error in validate_ceph_crush_map_from_backend: {}".format(e))
 
+    ###########################################################################
+    @keyword(name="PCC.Ceph Active Manager And Verify")
+    ###########################################################################
+    def ceph_active_manager(self, args, *kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Active Manager And Verify")
+        print("Kwargs:"+str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        manager_node_cmd='sudo ceph -s |grep mgr | cut -d "," -f1 | cut -d ":" -f2|cut -d "(" -f1'
+        node=self._serialize_response(time.time(),cli_run(self.hostip,self.user,self.password,manager_node_cmd))
+        trace("Node Info:"+str(node))
+        node_name=str(node["Result"]["stdout"]).strip()
+        trace("Active Manager node name:"+str(node_name))
+        node_ip=easy.get_hostip_by_name(conn,node_name)
+        print("Active manager node ip:"+str(node_ip))
+        if type(node_ip) != str:
+            print("Unable to fetch host ip of "+str(node))
+            return "Error"
+        else:
+            return node_ip

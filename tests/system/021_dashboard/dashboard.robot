@@ -13,6 +13,7 @@ Login
                                     Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
+        [Tags]             kc
 
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
@@ -25,8 +26,6 @@ PCC Dashboard - Verify object graph
         [Documentation]    *PCC Dashboard - Verify object graph * test
                            ...  keywords:
                            ...  PCC.Dashboard Verify object graph
-
-        [Tags]             kc
 
 
         ${status}      PCC.Dashboard Verify object graph
@@ -105,3 +104,67 @@ PCC Dashboard - Verify Object Health/Kernel/OS Information
 
                        Should Be Equal As Strings      ${status}    OK
 
+###################################################################################################################################
+PCC Dashboard - Storage Page Validation
+###################################################################################################################################
+        [Documentation]    *PCC Dashboard - Storage Page Validation* test
+                                   ...  keywords:
+                                   ...  PCC.Dashboard Storage Page Validation
+
+
+        [Tags]             kc
+
+        ${status}      PCC.Dashboard Storage Page Validation
+
+                       Should Be Equal As Strings      ${status}    OK
+
+
+
+
+###################################################################################################################################
+PCC Dashboard - Filesystem page validation
+###################################################################################################################################
+        [Documentation]    *PCC Dashboard - Filesystem page validation* test
+                                   ...  keywords:
+                                   ...  PCC.Dashboard Filesystem Page Validation
+
+        [Tags]             kc
+
+        ${status}      PCC.Dashboard Filesystem Page Validation
+
+                       Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+PCC Dashboard - Monitor Page Storage Controller Validation
+###################################################################################################################################
+        [Documentation]    *PCC Dashboard - Monitor Page Storage Controller Validation* test
+                                   ...  keywords:
+                                   ...  PCC.Dashboard Monitor Page Storage Controller Validation
+
+        [Tags]             kc
+
+        ${status}      PCC.Dashboard Monitor Page Storage Controller Validation
+                       Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+PCC Dashboard - Monitor Page Partition Validation
+###################################################################################################################################
+        [Documentation]    *PCC Dashboard - Monitor Page Partition Validation* test
+                                   ...  keywords:
+                                   ...  PCC.Dashboard Monitor Page Partitions Validation
+
+        [Tags]             kc
+
+        ${status}      PCC.Dashboard Monitor Page Partitions Validation
+                       Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+PCC Dashboard - Monitor Page Filesystem Validation
+###################################################################################################################################
+        [Documentation]    *PCC Dashboard - Monitor Page Filesystem Validation* test
+                                   ...  keywords:
+                                   ...  PCC.Dashboard Monitor Page Filesystem Validation
+
+        [Tags]             kc
+
+        ${status}      PCC.Dashboard Monitor Page Filesystem Validation
+                       Should Be Equal As Strings      ${status}    OK

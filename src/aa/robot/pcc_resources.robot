@@ -39,6 +39,7 @@ Library                         aa.pcc.PolicyDrivenMgmt
 Library                         aa.pcc.Monitor
 Library                         aa.pcc.SystemPackageUpdates
 Library				aa.pcc.Rsyslog
+Library                         aa.pcc.Dashboard
 Library                         Collections
 
 *** Keywords ***

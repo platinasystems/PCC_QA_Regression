@@ -2,6 +2,7 @@ import time
 import json
 import ast
 import math
+import re
 
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -490,5 +491,506 @@ class Dashboard(AaBase):
         if failed_objects:
             trace("Following objects are failed : {}".format(failed_objects))
             return "Comparison failed"
+        else:
+            return "OK"
+    ###########################################################################
+    @keyword(name="PCC.Dashboard Storage Page Validation")
+    ###########################################################################
+    def storage_page_validation(self, *arg, **kwargs):
+        banner("PCC.Dashboard Storage Page Validation")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        node_summary_response = pcc.get_nodes(conn)
+        cmd = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "Total_Capacity"'
+        cmd_2 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "name"'
+        cmd_3 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "ioTime"'
+        cmd_4 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "iopsInProgress"'
+        cmd_5 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "readBytes"'
+        cmd_6 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "readTime"'
+        cmd_7 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "readCount"'
+        cmd_8 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "writeBytes"'
+        cmd_9 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "writeCount"'
+        cmd_10 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "writeTime"'
+        cmd_11 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "weightedIO"'
+        trace("Command:{}".format(str(cmd)))
+        failed_object=[]
+        for data in get_response_data(node_summary_response):
+            host_ip = data["Host"]
+            trace(host_ip)
+            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
+            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
+            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
+            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
+            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
+            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
+            cmd_execution_7 = cli_run(str(host_ip), self.user, self.password, cmd_7)
+            cmd_execution_8 = cli_run(str(host_ip), self.user, self.password, cmd_8)
+            cmd_execution_9 = cli_run(str(host_ip), self.user, self.password, cmd_9)
+            cmd_execution_10 = cli_run(str(host_ip), self.user, self.password, cmd_10)
+            cmd_execution_11 = cli_run(str(host_ip), self.user, self.password, cmd_11)
+
+            serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
+            serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
+            serialise_output_3 = self._serialize_response(time.time(), cmd_execution_3)['Result']['stdout']
+            serialise_output_4 = self._serialize_response(time.time(), cmd_execution_4)['Result']['stdout']
+            serialise_output_5 = self._serialize_response(time.time(), cmd_execution_5)['Result']['stdout']
+            serialise_output_6 = self._serialize_response(time.time(), cmd_execution_6)['Result']['stdout']
+            serialise_output_7 = self._serialize_response(time.time(), cmd_execution_7)['Result']['stdout']
+            serialise_output_8 = self._serialize_response(time.time(), cmd_execution_8)['Result']['stdout']
+            serialise_output_9 = self._serialize_response(time.time(), cmd_execution_9)['Result']['stdout']
+            serialise_output_10 = self._serialize_response(time.time(), cmd_execution_10)['Result']['stdout']
+            serialise_output_11 = self._serialize_response(time.time(), cmd_execution_11)['Result']['stdout']
+
+            trace(serialise_output_1)
+            trace(serialise_output_2)
+            trace(serialise_output_3)
+            trace(serialise_output_4)
+            trace(serialise_output_5)
+            trace(serialise_output_6)
+            trace(serialise_output_7)
+            trace(serialise_output_8)
+            trace(serialise_output_9)
+            trace(serialise_output_10)
+            trace(serialise_output_11)
+
+            if re.search("fail",str(serialise_output_1),re.IGNORECASE):
+                print("Total capacity validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Total Capacity validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_2),re.IGNORECASE):
+                print("Drive name validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Drive name validation pass for {}".format(host_ip))
+            
+            if re.search("fail",str(serialise_output_3),re.IGNORECASE):
+                print("IO Time validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("IO time validation pass for {}".format(host_ip))
+           
+            if re.search("fail",str(serialise_output_4),re.IGNORECASE):
+                print("IOPs in progress validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("IOPs in progress validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_5),re.IGNORECASE):
+                print("Read validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Read validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_6),re.IGNORECASE):
+                print("Read Time validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Read Time validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_7),re.IGNORECASE):
+                print("Read Count validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Read Count validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_8),re.IGNORECASE):
+                print("Write validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Write validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_9),re.IGNORECASE):
+                print("Write count validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Write Count validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_10),re.IGNORECASE):
+                print("Write time validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Write time validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_11),re.IGNORECASE):
+                print("Weighted IO validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Weighted IO time validation pass for {}".format(host_ip))
+
+        if failed_object:
+            return "Physical-->storage page validation failed"
+        else:
+            return "OK"
+    ###########################################################################
+    @keyword(name="PCC.Dashboard Filesystem Page Validation")
+    ###########################################################################
+    def filesystem_page_validation(self, *arg, **kwargs):
+        banner("PCC.Dashboard Filesystem Page Validation")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        node_summary_response = pcc.get_nodes(conn)
+        cmd = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "device"'
+        cmd_2 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "fstype"'
+        cmd_3 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "mountpoint"'
+        cmd_4 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "total"'
+        cmd_5 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "used"'
+        cmd_6 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "free"'
+        cmd_7 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "usedPercent"'
+        cmd_8 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "inodesTotal"'
+        cmd_9 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "inodesFree"'
+        cmd_10 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "inodesUsed"'
+        cmd_11 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "inodesUsedPercent"'
+        cmd_12 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "mountoptions"'
+        trace("Command:{}".format(str(cmd)))
+        failed_object = []
+        for data in get_response_data(node_summary_response):
+            host_ip = data["Host"]
+            trace(host_ip)
+            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
+            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
+            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
+            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
+            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
+            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
+            cmd_execution_7 = cli_run(str(host_ip), self.user, self.password, cmd_7)
+            cmd_execution_8 = cli_run(str(host_ip), self.user, self.password, cmd_8)
+            cmd_execution_9 = cli_run(str(host_ip), self.user, self.password, cmd_9)
+            cmd_execution_10 = cli_run(str(host_ip), self.user, self.password, cmd_10)
+            cmd_execution_11 = cli_run(str(host_ip), self.user, self.password, cmd_11)
+            cmd_execution_12 = cli_run(str(host_ip), self.user, self.password, cmd_12)
+
+            serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
+            serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
+            serialise_output_3 = self._serialize_response(time.time(), cmd_execution_3)['Result']['stdout']
+            serialise_output_4 = self._serialize_response(time.time(), cmd_execution_4)['Result']['stdout']
+            serialise_output_5 = self._serialize_response(time.time(), cmd_execution_5)['Result']['stdout']
+            serialise_output_6 = self._serialize_response(time.time(), cmd_execution_6)['Result']['stdout']
+            serialise_output_7 = self._serialize_response(time.time(), cmd_execution_7)['Result']['stdout']
+            serialise_output_8 = self._serialize_response(time.time(), cmd_execution_8)['Result']['stdout']
+            serialise_output_9 = self._serialize_response(time.time(), cmd_execution_9)['Result']['stdout']
+            serialise_output_10 = self._serialize_response(time.time(), cmd_execution_10)['Result']['stdout']
+            serialise_output_11 = self._serialize_response(time.time(), cmd_execution_11)['Result']['stdout']
+            serialise_output_12 = self._serialize_response(time.time(), cmd_execution_12)['Result']['stdout']
+
+            trace(serialise_output_1)
+            trace(serialise_output_2)
+            trace(serialise_output_3)
+            trace(serialise_output_4)
+            trace(serialise_output_5)
+            trace(serialise_output_6)
+            trace(serialise_output_7)
+            trace(serialise_output_8)
+            trace(serialise_output_9)
+            trace(serialise_output_10)
+            trace(serialise_output_11)
+            trace(serialise_output_12)
+
+            if re.search("fail",str(serialise_output_1),re.IGNORECASE):
+                print("Device validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Device validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_2),re.IGNORECASE):
+                print("FS type validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("FS type validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_3),re.IGNORECASE):
+                print("Mount point validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Mount point validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_4),re.IGNORECASE):
+                print("Total validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Total validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_5),re.IGNORECASE):
+                print("Used validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Used validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_6),re.IGNORECASE):
+                print("Free validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Free validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_7),re.IGNORECASE):
+                print("Used percent validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Used percent validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_8),re.IGNORECASE):
+                print("Inode total failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Inode total pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_9),re.IGNORECASE):
+                print("Inode free validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Inode free validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_10),re.IGNORECASE):
+                print("Inode used validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Inode used validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_11),re.IGNORECASE):
+                print("Inode used percent validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Inode used percent validation pass for {}".format(host_ip))
+
+            if re.search("fail",str(serialise_output_12),re.IGNORECASE):
+                print("Mount option validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Mount option validation pass for {}".format(host_ip))
+
+        if failed_object:
+            return "Physical-->Filesystem page validation failed"
+        else:
+            return "OK"
+    ###########################################################################
+    @keyword(name="PCC.Dashboard Monitor Page Storage Controller Validation")
+    ###########################################################################
+    def monitor_page_storage_controller_validation(self, *arg, **kwargs):
+        banner("PCC.Dashboard Monitor Page Storage Controller Validation")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        node_summary_response = pcc.get_nodes(conn)
+        cmd = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "controller"'
+        cmd_2 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "model"'
+        cmd_3 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "revision"'
+        cmd_4 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "businfo"'
+        cmd_5 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "subsystem"'
+        cmd_6 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "driver"'
+        cmd_7 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep -w "Type"'
+
+        # Online and vendor both are invalidate
+        # cmd_8 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "Online"'
+        # cmd_9 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "vendor"'
+
+        trace("Command:{}".format(str(cmd)))
+        failed_object = []
+        for data in get_response_data(node_summary_response):
+            host_ip = data["Host"]
+            trace(host_ip)
+            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
+            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
+            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
+            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
+            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
+            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
+            cmd_execution_7 = cli_run(str(host_ip), self.user, self.password, cmd_7)
+
+            serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
+            serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
+            serialise_output_3 = self._serialize_response(time.time(), cmd_execution_3)['Result']['stdout']
+            serialise_output_4 = self._serialize_response(time.time(), cmd_execution_4)['Result']['stdout']
+            serialise_output_5 = self._serialize_response(time.time(), cmd_execution_5)['Result']['stdout']
+            serialise_output_6 = self._serialize_response(time.time(), cmd_execution_6)['Result']['stdout']
+            serialise_output_7 = self._serialize_response(time.time(), cmd_execution_7)['Result']['stdout']
+
+            trace(serialise_output_1)
+            trace(serialise_output_2)
+            trace(serialise_output_3)
+            trace(serialise_output_4)
+            trace(serialise_output_5)
+            trace(serialise_output_6)
+            trace(serialise_output_7)
+
+            if re.search("fail", str(serialise_output_1), re.IGNORECASE):
+                print("Storage controller name validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Storage controller name validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_2), re.IGNORECASE):
+                print("Storage Model name  validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Storage Model name  validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_3), re.IGNORECASE):
+                print("Revision validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Revision validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_4), re.IGNORECASE):
+                print("Bus info validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Bus info validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_5), re.IGNORECASE):
+                print("Subsystem validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Subsystem validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_6), re.IGNORECASE):
+                print("Driver validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Driver validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_7), re.IGNORECASE):
+                print("Type validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Type validation pass for {}".format(host_ip))
+
+        if failed_object:
+            print("Following nodes are failed:{}".format(failed_object))
+            return "Monitor Page Storage Controller Validation failed"
+        else:
+            return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Dashboard Monitor Page Partitions Validation")
+    ###########################################################################
+    def monitor_page_partition_validation(self, *arg, **kwargs):
+        banner("PCC.Dashboard Monitor Page partition Validation")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        node_summary_response = pcc.get_nodes(conn)
+        cmd = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep -w "name"'
+        cmd_2 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "size"'
+        trace("Command:{}".format(str(cmd)))
+        failed_object = []
+        for data in get_response_data(node_summary_response):
+            host_ip = data["Host"]
+            trace(host_ip)
+            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
+            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
+
+            serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
+            serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
+
+            trace(serialise_output_1)
+            trace(serialise_output_2)
+
+            if re.search("fail", str(serialise_output_1), re.IGNORECASE):
+                print("Partition name validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Partition name validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_2), re.IGNORECASE):
+                print("Partition size  validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Partition size validation pass for {}".format(host_ip))
+
+        if failed_object:
+            print("Following nodes are failed: {}".format(failed_object))
+            return "Monitor page partition validation failed"
+        else:
+            return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Dashboard Monitor Page Filesystem Validation")
+    ###########################################################################
+    def monitor_page_filesystem_validation(self, *arg, **kwargs):
+        banner("PCC.Dashboard Monitor Page Filesystem Validation")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        node_summary_response = pcc.get_nodes(conn)
+        cmd = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "total"'
+        cmd_2 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "mountpoint"'
+        cmd_3 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "fstype"'
+        cmd_4 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "free"'
+        cmd_5 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "avail"'
+        cmd_6 = 'sudo /opt/platina/pcc/bin/systemCollector test storage validate | grep "device"'
+
+        trace("Command:{}".format(str(cmd)))
+        failed_object = []
+        for data in get_response_data(node_summary_response):
+            host_ip = data["Host"]
+            trace(host_ip)
+            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
+            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
+            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
+            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
+            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
+            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
+
+            serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
+            serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
+            serialise_output_3 = self._serialize_response(time.time(), cmd_execution_3)['Result']['stdout']
+            serialise_output_4 = self._serialize_response(time.time(), cmd_execution_4)['Result']['stdout']
+            serialise_output_5 = self._serialize_response(time.time(), cmd_execution_5)['Result']['stdout']
+            serialise_output_6 = self._serialize_response(time.time(), cmd_execution_6)['Result']['stdout']
+
+            trace(serialise_output_1)
+            trace(serialise_output_2)
+            trace(serialise_output_3)
+            trace(serialise_output_4)
+            trace(serialise_output_5)
+            trace(serialise_output_6)
+
+            if re.search("fail", str(serialise_output_1), re.IGNORECASE):
+                print("Filesystem capacity validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Filesystem capacity validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_2), re.IGNORECASE):
+                print("Filesystem mount point validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Filesystem mount point validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_3), re.IGNORECASE):
+                print("Filesystem type validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Filesystem type validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_4), re.IGNORECASE):
+                print(" Filesystem free memory validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Filesystem free memory validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_5), re.IGNORECASE):
+                print("Filesystem available memory validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Filesystem available memory validation pass for {}".format(host_ip))
+
+            if re.search("fail", str(serialise_output_6), re.IGNORECASE):
+                print("Filesystem device label validation failed for {}".format(host_ip))
+                failed_object.append(host_ip)
+            else:
+                print("Filesystem device label validation pass for {}".format(host_ip))
+
+        if failed_object:
+            print("Following nodes are failed:{}".format(failed_object))
+            return "Monitor Page filesystem Validation failed"
         else:
             return "OK"
