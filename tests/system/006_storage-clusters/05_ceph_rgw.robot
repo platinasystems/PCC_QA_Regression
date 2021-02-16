@@ -749,7 +749,7 @@ Delete Rgw Bucket (ServiceIp As Default)
 
                                            
 #####################################################################################################################################
-Ceph Rados Remove S3Account 
+Ceph Rados Remove S3Account (ServiceIp As Default)
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
 
@@ -781,7 +781,7 @@ Ceph Rados Remove S3Account
                                     Should Be Equal As Strings      ${backend_status}    OK         
                                     
 ####################################################################################################################################
-Ceph Rados Gateway Delete 
+Ceph Rados Gateway Delete (ServiceIp As Default)
 ####################################################################################################################################
 
     [Documentation]                 *Ceph Rados Gateway Delete*
@@ -805,6 +805,287 @@ Ceph Rados Gateway Delete
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
                                     
+###################################################################################################################################
+#Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts (ServiceIp As NodeIp)
+######################################################################################################################################
+#
+#     [Documentation]                *Ceph Rados Gateway Creation*
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#             
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+#                               ...  service_ip=yes
+#                           
+#        ${status_code}              Get Response Status Code        ${response}   
+#        ${message}                  Get Response Message        ${response}  
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Ready
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK      
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+#                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+#                                    Should Be Equal As Strings      ${backend_status}    OK 
+#                                    
+#        ${backend_status}           PCC.Ceph Rgw Verify Service IP BE
+#                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+#                                    Should Be Equal As Strings      ${backend_status}    OK 
+#                                    
+####################################################################################################################################
+#Create Rgw Configuration File (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *Create Rgw Configuration File*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#                                           Sleep    2 minutes
+#        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+#                                      ...  name=${CEPH_RGW_NAME}
+#
+#        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+#                                      ...  name=${CEPH_RGW_NAME}
+#
+#        ${status}                          PCC.Ceph Rgw Configure
+#                                      ...  accessKey=${accessKey}
+#                                      ...  secretKey=${secretKey}
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=0.0.0.0
+#                                      ...  port=${CEPH_RGW_PORT}
+#
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Create Rgw Update Configuration File (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *Create Rgw Configuration File*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#                                           Sleep    2 minutes
+#        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+#                                      ...  name=${CEPH_RGW_NAME}
+#
+#        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+#                                      ...  name=${CEPH_RGW_NAME}
+#
+#        ${status}                          PCC.Ceph Rgw Configure
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  service_ip=0.0.0.0
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Create Rgw Bucket (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *Create Rgw Bucket*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Make Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#List Rgw Bucket (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *List Rgw Bucket*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw List Buckets
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Update Rgw Configuration File With Data IP And Try To ADD File (ServiceIp As NodeIp)(Negative)
+####################################################################################################################################
+#    [Documentation]                        *Create Rgw Configuration File*
+#
+#
+#        ${status}                          PCC.Ceph Rgw Update Configure
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  service_ip=no
+#                                      ...  data_cidr=${IPAM_DATA_SUBNET_IP}
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Upload File To Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#                                           Should Not Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Update Rgw Configuration File With Control IP And Try To ADD File (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *Create Rgw Configuration File*
+#
+#        ${status}                          PCC.Ceph Rgw Update Configure
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  service_ip=yes
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Upload File To Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Verify File Is Upload on Pool (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *Verify File Is Uploaded on Pool*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Verify File Upload To Pool
+#                                      ...  poolName=${CEPH_RGW_POOLNAME}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Get A File From Rgw Bucket (ServiceIp As NodeIp)
+####################################################################################################################################
+#    [Documentation]                        *Get a file from Rgw Bucket*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Get File From Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Delete Rgw Bucket When Bucket Is Not Empty (ServiceIp As NodeIp) (Negative)
+####################################################################################################################################
+#      [Documentation]                      *Delete Rgw Bucket When Bucket Is Not Empty*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Delete Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#
+#                                           Should Not Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Delete A File From Rgw Bucket (ServiceIp As NodeIp)
+#####################################################################################################################################
+#    [Documentation]                        *Delete a file from Rgw Bucket*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Delete File From Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Delete Rgw Bucket (ServiceIp As NodeIp)
+####################################################################################################################################
+#      [Documentation]                      *Delete Rgw Bucket*
+#
+#        ${status}                          PCC.Ceph Get Pcc Status
+#                                      ...  name=ceph-pvt
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                          PCC.Ceph Rgw Delete Bucket
+#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  port=${CEPH_RGW_PORT}
+#
+#                                           Should Be Equal As Strings      ${status}    OK
+#
+#                                           
+######################################################################################################################################
+#Ceph Rados Remove S3Account (ServiceIp As NodeIp)
+######################################################################################################################################
+#     [Documentation]                 *Ceph Rados Gateway Update*
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${rgw_id}                   PCC.Ceph Get Rgw Id
+#                               ...  name=${CEPH_RGW_NAME}
+#     
+#        ${response}                 PCC.Ceph Update Rgw
+#                               ...  ID=${rgw_id}
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=${CEPH_RGW_POOLNAME}
+#                               ...  targetNodes=${CEPH_RGW_NODES}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               
+#        ${status_code}              Get Response Status Code        ${response}     
+#        ${message}                  Get Response Message        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Ready
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK  
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+#                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+#                                    Should Be Equal As Strings      ${backend_status}    OK         
+#                                    
+#####################################################################################################################################
+#Ceph Rados Gateway Delete (ServiceIp As NodeIp)
+#####################################################################################################################################
+#
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+# 
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+# 
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}    
+#        ${message}                  Get Response Message        ${response} 
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
+#                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+#                                    Should Be Equal As Strings      ${backend_status}    OK                                    
 ###################################################################################################################################
 #Ceph Rados Gateway Creation With Erasure Pool Without S3 Accounts
 ######################################################################################################################################
