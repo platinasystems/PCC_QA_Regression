@@ -97,7 +97,21 @@ Check if PCC assign the Default node role to the node when a node is added to PC
 
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
+	
+	#### Check Node Self Healing ####
+	${status}    CLI.Validate Node Self Healing
+		     ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+		     ...    linux_user=pcc
+		     ...    linux_password=cals0ft
+		     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
 
+	${status}    CLI.Validate Node Self Healing
+                     ...    host_ip=${SERVER_1_HOST_IP}
+                     ...    linux_user=pcc
+                     ...    linux_password=cals0ft
+                     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
 
 ################################################################################################################################################################
 Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the cluster head(TCP-1587, 1660, 1661, 1662)
@@ -238,11 +252,16 @@ Reboot Node and check Backend Validations after node is up (TCP-1684)
                 ${status}        Restart node
                                          ...    hostip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    username=pcc
-                     ...    password=cals0ft
+			                 ...    password=cals0ft
                                          ...    time_to_wait=240
 
                                          Should Be Equal As Strings    ${status}    OK
+		
+		${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
 
                 ${status}    CLI.Validate Kubernetes Resource
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
@@ -587,3 +606,25 @@ Backend Validations after node roles deletion
                      ...    linux_password=cals0ft
 
                                          Should Not Be Equal As Strings    ${status}    OK
+
+###############################################################################################################################################
+System Package Updates cleanup
+###############################################################################################################################################
+            #### Unassign loactions from policies ####
+
+                ${status}    PCC.Unassign Locations Assigned from All Policies
+
+                           Log To Console    ${status}
+                           Should Be Equal As Strings    ${status}    OK
+
+            #### Wait until all nodes are ready ####
+
+                ${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+		${status}     PCC.Delete All Policies
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings    ${status}    OK

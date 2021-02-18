@@ -351,7 +351,7 @@ class SystemPackageUpdates(AaBase):
                 if re.search(r"gpg\(Fedora EPEL (7) <epel@fedoraproject.org>\)", str(check_GPG_keys_output)) and re.search(r"Official Signing Key\) <security@centos.org>\)", str(check_GPG_keys_output)):
                     validation_checks.append("OK")
 
-                if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==2):
+                if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==1):
                     return "OK"
                 else:
                     return "OS Package repository validation unsuccessful in Redhat or CentOS: {}".format(validation_checks)
@@ -386,14 +386,14 @@ class SystemPackageUpdates(AaBase):
                 cmd_op1=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd1)
                 serialised_output1 = self._serialize_response(time.time(), cmd_op1)
                 print("serialised_output1 is : {}".format(serialised_output1))
-                cmd2= 'sudo cat /var/log/unattended-upgrades/unattended-upgrades.log | grep "installed"'
+                cmd2= 'sudo cat /var/log/unattended-upgrades/unattended-upgrades.log'
                 cmd_op2=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd2)
                 serialised_output2 = self._serialize_response(time.time(), cmd_op2)
                 print("serialised_output2 is : {}".format(serialised_output2))
-                if (re.search(r'APT::Periodic::Update-Package-Lists "0"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and (re.search(r'installed', str(serialised_output2))):
+                if (re.search(r'APT::Periodic::Update-Package-Lists "0"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and ((re.search(r'installed', str(serialised_output2))) or (re.search(r'No packages found that can be upgraded', str(serialised_output2)))):
                     return "Automatic upgrades set to No from backend"
                 
-                elif (re.search(r'APT::Periodic::Update-Package-Lists "1"', str(serialised_output1))) and (re.search(r'APT::Periodic::Unattended-Upgrade "1"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and (re.search(r'installed', str(serialised_output2))):
+                elif (re.search(r'APT::Periodic::Update-Package-Lists "1"', str(serialised_output1))) and (re.search(r'APT::Periodic::Unattended-Upgrade "1"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and ((re.search(r'installed', str(serialised_output2)))or (re.search(r'No packages found that can be upgraded', str(serialised_output2)))):
                     return "Automatic upgrades set to Yes from backend"
                 else:
                     return "Automatic upgrades validation unsuccessful in Debian"
