@@ -129,12 +129,16 @@ class Rsyslog(AaBase):
             
             for hostip in ast.literal_eval(self.host_ips):
                 cmd_op=cli_run(hostip,self.linux_user,self.linux_password,cmd)
-                print("cmd: {}\n ====== Output is {} ========".format(cmd1, cmd_op))
-                if re.search("0+0 records out",str(cmd_op)):
+                print("cmd: {}\n ====== Output is {} ========".format(cmd, cmd_op))
+                if re.search("0\+0 records out",str(cmd_op)):
                     cleanup_status.append("OK")
                 else:
                     cleanup_status.append("Rsyslog Cleanup failed on {}".format(hostip))
+            
+            trace("Cleanup status is: {}".format(cleanup_status))
             result = len(cleanup_status) > 0 and all(elem == "OK" for elem in cleanup_status)
+            trace("Result is : {}".format(result))
+
             if result:
                 return "OK"
             else:
