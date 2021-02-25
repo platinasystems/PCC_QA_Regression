@@ -322,13 +322,16 @@ class Dashboard(AaBase):
     def verify_object_location(self, *arg, **kwargs):
         banner("PCC.Dashboard Verify object location")
         self._load_kwargs(kwargs)
-        print("Kwargs:" + str(kwargs))
+        trace("Kwargs:" + str(kwargs))
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            trace("Connection:{}".format(conn))
         except Exception as e:
             raise e
         dashboard_response = pcc.get_object_metrics(conn)
+        trace("Dashboard response: {}".format(dashboard_response))
         nodesummary_response = pcc.get_nodes(conn)
+        trace("Node summary response: {}".format(nodesummary_response))
         failed_objects = []
         dashboard_dict = {}
         node_summary_dict = {}
@@ -343,13 +346,14 @@ class Dashboard(AaBase):
                             location_id = item["id"]
                             break
                         dashboard_dict[node_name] = location_id
-
+        trace("Dashboard dictonary:{}".format(dashboard_dict))
         ### Parsing Nodesummary data
         for data in get_response_data(nodesummary_response):
             node_name_from_nodesummary = data['Name']
             scope_id = data['scope']['id']
             node_summary_dict[node_name_from_nodesummary] = scope_id
 
+        trace("Nodesummary dictonary:{}".format(node_summary_dict))
         if dashboard_dict == node_summary_dict:
             return "OK"
         else:
@@ -359,7 +363,7 @@ class Dashboard(AaBase):
     @keyword(name="PCC.Dashboard Verify Object Health/Kernel/OS Information")
     ###########################################################################
     def verify_object_information(self, *arg, **kwargs):
-        banner("PCC.Dashboard Verify object location")
+        banner("PCC.Dashboard Verify Object Health/Kernel/OS Information")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
         try:
@@ -389,11 +393,13 @@ class Dashboard(AaBase):
                         k8s_dashboard["Name"] = data["pccObjectName"]
                         k8s_dashboard["Health"] = data["health"]["description"].lower()
 
+                        trace("K8s Dashboard:{}".format(k8s_dashboard))
                         for data1 in get_response_data(k8s_response):
                             if data1["name"] == k8s_dashboard["Name"]:
                                 k8s_cluster["Name"] = data1["name"]
                                 k8s_cluster["Health"] = data1["healthStatus"]
-    
+
+                        trace("K8s cluster:{}".format(k8s_cluster))    
                         if k8s_cluster == k8s_dashboard:
                             print("Correct K8s information")
                         else:
@@ -402,17 +408,22 @@ class Dashboard(AaBase):
                 if object == "CephCluster":
                     if data["pccObjectType"] == object:
                         ceph_cluster_dashboard_dict["Name"] = data["pccObjectName"]
-                        ceph_dashboard_description = data["health"]["description"]
-                        ceph_cluster_dashboard_dict["Health"] = ''.join(
-                            e for e in ceph_dashboard_description if e.isalnum())
 
                         for item in data["pccObjectDetails"]:
-                            if item["topic"] == "Total Capacity":
-                                capacity_value = str(math.ceil(eval(item["message"].split(" ")[0]))) + " " + \
-                                                 item["message"].split(" ")[1]
-                                ceph_cluster_dashboard_dict["Total Capacity"] = capacity_value
+                            if item["topic"] == "Health":
+                                for data in item["message"]:
+                                    ceph_cluster_dashboard_dict["Health"] = ''.join(e for e in data["message"] if e.isalnum())
+
+                            elif item["topic"] == "Capacity Usage":
+                                for data in item["message"]:
+                
+                                    capacity_value = str(math.floor(eval(data["message"].split(" ")[3]))) + " " +data["message"].split(" ")[4]
+                                    ceph_cluster_dashboard_dict["Total Capacity"] = capacity_value
                             elif item["topic"] == "Version":
-                                ceph_cluster_dashboard_dict["Version"] = item["message"]
+                                for data in item["message"]:
+                                    message = data["message"].split(" ")
+                                    ceph_cluster_dashboard_dict["Version"] = message[0]+" " +message[1]
+                        trace("Ceph Cluster dashboard:{}".format(ceph_cluster_dashboard_dict))
 
                         for ceph in get_response_data(ceph_clusters_response):
                             if ceph["name"] == ceph_cluster_dashboard_dict["Name"]:
@@ -421,21 +432,25 @@ class Dashboard(AaBase):
                                 ceph_response = pcc.get_ceph_cluster_health_by_id(conn, str(ceph_id))
     
                                 ceph_health_response = get_response_data(ceph_response)
-    
+                                
                                 ceph_cluster_description = ceph_health_response["summary"]
-                                ceph_cluster_dict["Health"] = ''.join(e for e in ceph_cluster_description if e.isalnum())
-                                cmd1 = 'sudo /opt/platina/pcc/bin/systemCollector lastsample ceph-metrics|grep version|tr -s " "|cut -d ":" -f2|xargs'
+                                trace("Ceph health description:{}".format(ceph_cluster_description))
+                                if ceph_cluster_description == "":
+                                    ceph_cluster_dict["Health"]="Everythingisgood"
+                                else:
+                                    ceph_cluster_dict["Health"] = ''.join(e for e in ceph_cluster_description if e.isalnum())
+                                cmd1 = 'sudo ceph --version'
                                 cmd2 = 'sudo ceph -s | grep usage | cut -d "/" -f2 | cut -d "a" -f1'
-                                cmd_execution = cli_run(self.nodeip, self.user, self.password, cmd1)
-    
+                                cmd_execution1 = cli_run(self.nodeip, self.user, self.password, cmd1)
+                                trace("command execution:{}".format(cmd_execution1))
                                 cmd_execution_2 = cli_run(self.nodeip, self.user, self.password, cmd2)
-                                serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result'][
-                                    'stdout']
-                                ceph_cluster_dict["Version"] = serialise_output_1.strip()
-                                serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result'][
-                                    'stdout']
+                                serialise_output_1 = self._serialize_response(time.time(), cmd_execution1)['Result']['stdout'].split()
+                                trace("serialise output:{}".format(serialise_output_1))
+                                ceph_cluster_dict["Version"] = serialise_output_1[2]+" "+serialise_output_1[4]
+                                serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
                                 ceph_cluster_dict["Total Capacity"] = serialise_output_2.strip()
-    
+
+                        trace("Ceph cluster:{}".format(ceph_cluster_dict))    
                         if ceph_cluster_dashboard_dict == ceph_cluster_dict:
                             print("Ceph cluster related information is correct")
                         else:

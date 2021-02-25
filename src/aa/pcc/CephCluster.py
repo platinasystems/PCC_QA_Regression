@@ -872,15 +872,17 @@ class CephCluster(AaBase):
     ###########################################################################
     @keyword(name="PCC.Ceph Active Manager And Verify")
     ###########################################################################
-    def ceph_active_manager(self, args, *kwargs):
+    def ceph_active_manager(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Ceph Active Manager And Verify")
         print("Kwargs:"+str(kwargs))
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            trace("Connection:{}".format(conn))
         except Exception as e:
             raise e
         manager_node_cmd='sudo ceph -s |grep mgr | cut -d "," -f1 | cut -d ":" -f2|cut -d "(" -f1'
+        trace("Manager node:{}".format(manager_node_cmd))
         node=self._serialize_response(time.time(),cli_run(self.hostip,self.user,self.password,manager_node_cmd))
         trace("Node Info:"+str(node))
         node_name=str(node["Result"]["stdout"]).strip()

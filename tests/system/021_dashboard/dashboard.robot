@@ -78,7 +78,9 @@ PCC Dashboard - Verify object location
                                    ...  keywords:
                                    ...  PCC.Dashboard Verify object location
 
-        ${status}      PCC.Dashboard Verify object location
+        
+
+      ${status}      PCC.Dashboard Verify object location
                        ...  objects=["Node"]
 
                        Should Be Equal As Strings      ${status}    OK
@@ -91,6 +93,8 @@ PCC Dashboard - Verify Object Health/Kernel/OS Information
                                    ...  keywords:
                                    ...  PCC.Dashboard Verify Object Health/Kernel/OS Information
                                    ...  PCC.Ceph Active Manager And Verify
+
+        [Tags]             kc
 
         ${node_ip}     PCC.Ceph Active Manager And Verify
                        ...  hostip=${CLUSTERHEAD_1_HOST_IP}
@@ -112,7 +116,7 @@ PCC Dashboard - Storage Page Validation
                                    ...  PCC.Dashboard Storage Page Validation
 
 
-        [Tags]             kc
+        
 
         ${status}      PCC.Dashboard Storage Page Validation
 
@@ -128,7 +132,7 @@ PCC Dashboard - Filesystem page validation
                                    ...  keywords:
                                    ...  PCC.Dashboard Filesystem Page Validation
 
-        [Tags]             kc
+       
 
         ${status}      PCC.Dashboard Filesystem Page Validation
 
@@ -140,7 +144,7 @@ PCC Dashboard - Monitor Page Storage Controller Validation
                                    ...  keywords:
                                    ...  PCC.Dashboard Monitor Page Storage Controller Validation
 
-        [Tags]             kc
+       
 
         ${status}      PCC.Dashboard Monitor Page Storage Controller Validation
                        Should Be Equal As Strings      ${status}    OK
@@ -152,7 +156,7 @@ PCC Dashboard - Monitor Page Partition Validation
                                    ...  keywords:
                                    ...  PCC.Dashboard Monitor Page Partitions Validation
 
-        [Tags]             kc
+       
 
         ${status}      PCC.Dashboard Monitor Page Partitions Validation
                        Should Be Equal As Strings      ${status}    OK
@@ -164,7 +168,7 @@ PCC Dashboard - Monitor Page Filesystem Validation
                                    ...  keywords:
                                    ...  PCC.Dashboard Monitor Page Filesystem Validation
 
-        [Tags]             kc
+       
 
         ${status}      PCC.Dashboard Monitor Page Filesystem Validation
                        Should Be Equal As Strings      ${status}    OK
