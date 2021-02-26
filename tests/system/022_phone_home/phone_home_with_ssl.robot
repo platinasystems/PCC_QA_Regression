@@ -1,4 +1,4 @@
-ettings ***
+*** Settings ***
 Resource    pcc_resources.robot
 
 *** Variables ***

@@ -1,4 +1,4 @@
-mport time
+import time
 import json
 import ast
 import math
@@ -37,10 +37,11 @@ class PhoneHome(AaBase):
         banner("PCC.PhoneHome Update Config File")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
-
+        trace("Kwargs:" + str(kwargs))
         cmd = "sudo /home/pcc/platina-cli-ws/platina-cli support config --configPath /home/pcc/{}".format(self.config_file)
         trace("Command:{}".format(str(cmd)))
         cmd_execution = cli_run(self.host_ip, self.user, self.password, cmd)
+        trace("cmd_execution: {}".format(cmd_execution))
         if re.search("FAIL", str(cmd_execution)):
             return "Error"
         else:
@@ -53,18 +54,22 @@ class PhoneHome(AaBase):
         banner("PCC.PhoneHome Verify Application.yml File")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
-
+        trace("Kwargs:" + str(kwargs))
         if self.config_file == "config_without_ssl.json":
             docker_cmd = "sudo docker cp phone-home:/home/conf/application.yml /home/pcc/."
             application_cmd = "cat /home/pcc/application.yml"
             docker_cmd_run = cli_run(self.host_ip, self.user, self.password, docker_cmd)
             application_cmd_output = cli_run(self.host_ip, self.user, self.password, application_cmd)
+            
+            trace("docker_cmd_run:{}".format(docker_cmd_run))
+            trace("application_cmd_output:{}".format(application_cmd_output))
             validation_status = []
-            validation_list = ['collectionEnabled: true', 'submitEnabled: true', 'dailySubmission: true',
-                               'platinaDestination: true', 'https: true',
-                               'httpsSkipVerify: false', 'destinationHost: "172.17.2.30"', 'destinationPort: 443',
+            validation_list = ['collectionenabled: true', 'submitenabled: true', 'dailysubmission: true',
+                               'platinadestination: true', 'https: false','jobCleanupAge: 0',
+                               'httpsSkipVerify: true', 'destinationHost: "{}"'.format(self.host_ip), 'destinationPort: 9001',
                                'destinationBucket: phone-home']
             for i in validation_list:
+                trace("================ Value of i is :{} =============".format(i))
                 validation_status.append(re.search(i, str(application_cmd_output)))
 
             if len(validation_status) > 0 and all(elem == True for elem in validation_status):
@@ -77,10 +82,12 @@ class PhoneHome(AaBase):
             application_cmd = "cat /home/pcc/application.yml"
             docker_cmd_run = cli_run(self.host_ip, self.user, self.password, docker_cmd)
             application_cmd_output = cli_run(self.host_ip, self.user, self.password, application_cmd)
+            trace("docker_cmd_run:{}".format(docker_cmd_run))
+            trace("application_cmd_output:{}".format(application_cmd_output))
             validation_status = []
-            validation_list = ['collectionEnabled: true', 'submitEnabled: true', 'dailySubmission: true',
-                               'platinaDestination: false', 'https: true', 'jobCleanupAge: 0',
-                               'httpsSkipVerify: true', 'destinationHost: "172.17.2.30"', 'destinationPort: 9001',
+            validation_list = ['collectionenabled: true', 'submitenabled: true', 'dailysubmission: true',
+                               'platinadestination: false', 'https: true', 'jobCleanupAge: 0',
+                               'httpsSkipVerify: true', 'destinationHost: "{}"'.format(self.host_ip), 'destinationPort: 9001',
                                'destinationBucket: phone-home']
             for i in validation_list:
                 validation_status.append(re.search(i, str(application_cmd_output)))
@@ -99,10 +106,11 @@ class PhoneHome(AaBase):
         banner("PCC.PhoneHome Verify Data Push")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
-
+        trace("Kwargs:" + str(kwargs))
         cmd = "sudo /home/pcc/platina-cli-ws/platina-cli support data-push"
         trace("Command:{}".format(str(cmd)))
         cmd_execution = cli_run(self.host_ip, self.user, self.password, cmd)
+        trace("Command executed successfully")
         if re.search("FAIL", str(cmd_execution)):
             return "Error"
         else:
@@ -113,18 +121,20 @@ class PhoneHome(AaBase):
     ###########################################################################
     def wait_until_phone_home_job_is_finished(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        trace("Kwargs:" + str(kwargs))
         banner("PCC.Wait Until Phone Home Job Is Finished")
         PCCSERVER_TIMEOUT = 60 * 60  # 60 minutes timeout
         timeout = time.time() + PCCSERVER_TIMEOUT
         cmd = "sudo /home/pcc/platina-cli-ws/platina-cli support jobs"
         finished = False
         while not finished:
-            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.user, linux_password=self.password)
+            cmd_output = cli_run(self.host_ip, self.user, self.password, cmd)
+            trace("cmd_output: {}".format(cmd_output))
             serialised_output = str(cmd_output['Result']['stdout']).replace('\n', '').strip()
             if time.time() > timeout:
                 return "Timeout: Still in collecting state"
             if re.search("collecting", serialised_output) or re.search("processing", serialised_output):
-                time.sleep(10)
+                time.sleep(30)
                 trace("Still collecting/processing phone home data... Please wait")
                 continue
             if re.search("end", serialised_output) and ("collecting" not in serialised_output) and (
@@ -145,14 +155,18 @@ class PhoneHome(AaBase):
         banner("PCC.PhoneHome Verify Success Logs In Container")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
-
+        trace("Kwargs:" + str(kwargs))
         date_cmd = cli_run(self.host_ip, self.user, self.password, "date +%Y-%m-%d")
+        trace("date_cmd output is: {}".format(date_cmd))
         date_cmd_op = self._serialize_response(time.time(), date_cmd)
+        trace("Serialised date_cmd_op: {}".format(date_cmd_op))
         docker_cp_cmd = "sudo docker cp phone-home:home/logs/default.log /home/pcc/"
         docker_cp_cmd_output = cli_run(self.host_ip, self.user, self.password, docker_cp_cmd)
         default_log_success_check = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"| grep "{}"|wc -l'.format(date_cmd_op)
+        trace("default_log_success_check: {}".format(default_log_success_check))
         default_log_success_output = cli_run(self.host_ip, self.user, self.password, default_log_success_check)
         default_log_serialize_output = self._serialize_response(time.time(), default_log_success_output)
+        trace("default_log_serialize_output:{}".format(default_log_serialize_output))
         if int(default_log_serialize_output) == 1:
             return "OK"
         else:
@@ -165,7 +179,7 @@ class PhoneHome(AaBase):
         banner("PCC.PhoneHome Fetch Tar File Details")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
-
+        trace("Kwargs:" + str(kwargs))
         date_cmd = cli_run(self.host_ip, self.user, self.password, "date +%Y-%m-%d")
         date_cmd_op = self._serialize_response(time.time(), date_cmd)
         manual_tar_file_command = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "manual"|grep "{}"'.format(date_cmd_op)
