@@ -146,27 +146,27 @@ Add Node to Kubernetes cluster
                               ...  name=${K8S_NAME}
                                    Should Be Equal As Strings      ${status}    OK
 
-##################################################################################################################################
-Reboot Node And Verify K8s Is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying K8s cluster BE*
-                               ...  keywords:
-                               ...  PCC.K8s Verify BE
-                               ...  Restart node
-                               
-    ${restart_status}               Restart node
-                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
+###################################################################################################################################
+#Reboot Node And Verify K8s Is Intact
+###################################################################################################################################
+#    [Documentation]                 *Verifying K8s cluster BE*
+#                               ...  keywords:
+#                               ...  PCC.K8s Verify BE
+#                               ...  Restart node
+#                               
+#    ${restart_status}               Restart node
+#                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
 ###################################################################################################################################
 Down And Up The Interface And Check For K8s
 ###################################################################################################################################

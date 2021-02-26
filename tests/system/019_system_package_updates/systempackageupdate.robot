@@ -242,69 +242,69 @@ Backend Validations after node roles addition (Includes TCP-1610)
 
                                          Should Be Equal As Strings    ${status}    OK
 
-###############################################################################################################################################
-Reboot Node and check Backend Validations after node is up (TCP-1684)
-###############################################################################################################################################
-        [Documentation]                 *Backend validations*
-                               ...  Keywords:
-
-                [Tags]    Only
-                ${status}        Restart node
-                                         ...    hostip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    username=pcc
-			                 ...    password=cals0ft
-                                         ...    time_to_wait=240
-
-                                         Should Be Equal As Strings    ${status}    OK
-		
-		${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${CLUSTERHEAD_1_NAME}
-
-                               Log To Console    ${node_wait_status}
-                               Should Be Equal As Strings    ${node_wait_status}    OK
-
-                ${status}    CLI.Validate Kubernetes Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate CEPH Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Platina Systems Package repository
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.OS Package repository
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Node Self Healing
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
+################################################################################################################################################
+#Reboot Node and check Backend Validations after node is up (TCP-1684)
+################################################################################################################################################
+#        [Documentation]                 *Backend validations*
+#                               ...  Keywords:
+#
+#                [Tags]    Only
+#                ${status}        Restart node
+#                                         ...    hostip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    username=pcc
+#			                 ...    password=cals0ft
+#                                         ...    time_to_wait=240
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#		
+#		${node_wait_status}    PCC.Wait Until Node Ready
+#                               ...  Name=${CLUSTERHEAD_1_NAME}
+#
+#                               Log To Console    ${node_wait_status}
+#                               Should Be Equal As Strings    ${node_wait_status}    OK
+#
+#                ${status}    CLI.Validate Kubernetes Resource
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate CEPH Resource
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate Network Resource
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate Platina Systems Package repository
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.OS Package repository
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate Node Self Healing
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
 
 ###############################################################################################################################################
 Check if an user is able to define a policy to disable Automatic Daily Updates(TCP-1603, 1604)
