@@ -26,7 +26,7 @@ PCC Phone Home - Update Config File
                            ...  keywords:
                            ...  PCC.PhoneHome Update Config File
 
-	[Tags]    Only
+
         ${status}      PCC.PhoneHome Update Config File
                        ...  host_ip=${PCC_HOST_IP}
                        ...  config_file=config_without_ssl.json
@@ -77,6 +77,7 @@ PCC Phone Home - Wait Until Phone Home Job Is Finished
                            ...  keywords:
                            ...  PCC.Wait Until Phone Home Job Is Finished
 
+	[Tags]    Only
 
         ${status}      PCC.Wait Until Phone Home Job Is Finished
                        ...  host_ip=${PCC_HOST_IP}
