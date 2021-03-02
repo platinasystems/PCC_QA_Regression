@@ -219,6 +219,8 @@ class PhoneHome(AaBase):
 
         split_manual_tar_file = manual_tar_file.split(" ")
         manual_tar = {}
+        trace("split_manual_tar_file:{}".format(split_manual_tar_file))
+        print("split_manual_tar_file:{}".format(split_manual_tar_file))
         manual_tar['name'] = split_manual_tar_file[0].replace('".', '')
         manual_tar['tar_file_without_user'] = split_manual_tar_file[0].replace('".', '').replace(self.setup_username,"")
         manual_tar['size'] = float(split_manual_tar_file[2])
@@ -234,6 +236,8 @@ class PhoneHome(AaBase):
 
         split_daily_tar_file = daily_tar_file.split(" ")
         daily_tar = {}
+        trace("split_daily_tar_file: {}".format(split_daily_tar_file))
+        print("split_daily_tar_file : {}".format(split_daily_tar_file))
         daily_tar['name'] = split_daily_tar_file[0].replace('".', '')
         daily_tar['tar_file_without_user'] = split_daily_tar_file[0].replace('".', '').replace(self.setup_username,"")
         daily_tar['size'] = float(split_daily_tar_file[2])

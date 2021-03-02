@@ -23,6 +23,7 @@ class SystemPackageUpdates(AaBase):
     SystemPackageUpdate
     """
     def __init__(self):
+        self.host_ips= None
         self.host_ip= None
         self.linux_user= "pcc"
         self.linux_password= "cals0ft"
@@ -486,4 +487,25 @@ class SystemPackageUpdates(AaBase):
             print("Exception encountered: {}".format(e))
             return "Exception encountered: "+ str(e)
             
-    
+
+
+    ###########################################################################
+    @keyword(name="CLI.Validate Ethtool")
+    ###########################################################################
+    def validate_ethtool(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("CLI.Validate Ethtool")
+        try:
+            for host_ip in ast.literal_eval(self.host_ips):
+                trace("Host IP:{}".format(host_ip))
+                cmd = 'sudo ethtool --version'
+                cmd_op = cli_run(host_ip,self.linux_user,self.linux_password,cmd)
+                trace("Command output:{}".format(cmd_op))
+                if re.search("ethtool version",str(cmd_op)):
+                    return "OK"
+                else:
+                    return "Error: Ethtool Not Found"
+
+        except Exception as e:
+            print("Exception encountered: {}".format(e))
+            return "Exception encountered: "+ str(e)    

@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_218
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-      [Tags]    Last
+      [Tags]    kc
 
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
@@ -628,3 +628,19 @@ System Package Updates cleanup
 
                       Log To Console    ${status}
                       Should Be Equal As Strings    ${status}    OK
+
+###############################################################################################################################################
+Ethtool Backend Validation
+###############################################################################################################################################
+        [Documentation]                 *Backend validations*
+                               ...  Keywords: CLI.Validate Ethtool
+
+        [Tags]        kc
+
+        ${status}                   CLI.Validate Ethtool
+                             ...    host_ips=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
