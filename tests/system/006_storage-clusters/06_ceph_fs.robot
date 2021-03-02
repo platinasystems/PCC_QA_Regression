@@ -968,6 +968,7 @@ Pool released from RBD is used for creating/updating CephFS
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 

@@ -41,7 +41,8 @@ class CephPool(AaBase):
         self.type = None
         self.data_pool_name= None
         self.cache_pool_name= None
-        
+        self.resilienceScheme= None
+
         super().__init__()
 
     ###########################################################################
@@ -178,7 +179,8 @@ class CephPool(AaBase):
             "size":self.size,
             "tags":self.tags,
             "ceph_cluster_id":self.ceph_cluster_id,
-            "pool_type":self.pool_type,
+            "type":self.pool_type,
+            "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
             "quota_unit":self.quota_unit
         }
@@ -215,7 +217,8 @@ class CephPool(AaBase):
                 "size":self.size,
                 "tags":self.tags,
                 "ceph_cluster_id":self.ceph_cluster_id,
-                "pool_type":self.pool_type,
+                "type":self.pool_type,
+                "resilienceScheme":self.resilienceScheme,
                 "quota":self.quota,
                 "quota_unit":self.quota_unit
                 }
@@ -357,7 +360,8 @@ class CephPool(AaBase):
             "size":self.size,
             "tags":self.tags,
             "ceph_cluster_id":self.ceph_cluster_id,
-            "pool_type":self.pool_type,
+            "type":self.pool_type,
+            "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
             "quota_unit":self.quota_unit
              }
@@ -445,7 +449,7 @@ class CephPool(AaBase):
                     "quota": self.quota,
                     "quota_unit": self.quota_unit,
                     "tags":ast.literal_eval(self.tags),
-                    "pool_type":self.pool_type,
+                    "resilienceScheme":self.resilienceScheme,
                     "ceph_cluster_id":self.ceph_cluster_id
 		  }
         trace("Payload is :{}".format(payload))
@@ -471,7 +475,7 @@ class CephPool(AaBase):
                     "quota": self.quota,
                     "quotaUnit": self.quota_unit,
                     "tags":ast.literal_eval(self.tags),
-                    "pool_type":self.pool_type,
+                    "resilienceScheme":self.resilienceScheme,
                     "ceph_cluster_id":self.ceph_cluster_id
                   }
         response = pcc.update_ceph_cache_pool(conn, data=payload,id=str(self.id))

@@ -65,6 +65,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=MiB
 #                               ...  Datachunks=4
@@ -99,6 +100,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #                               ...  Datachunks=8
@@ -132,6 +134,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=TiB
 #                               ...  Datachunks=8
@@ -165,6 +168,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=PiB
 #                               ...  Datachunks=4
@@ -197,6 +201,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=EiB
 #                               ...  Datachunks=4
@@ -244,6 +249,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=MiB
 #                               ...  Datachunks=10
@@ -275,6 +281,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                               ...  Datachunks=4
@@ -304,6 +311,7 @@
 #                               ...  ceph_cluster_id=${cluster_id}
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                               ...  Datachunks=4
@@ -375,6 +383,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=MiB
 #                               ...  ErasureCodeProfileID=${erasure_profile_id}
@@ -417,6 +426,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                               ...  ErasureCodeProfileID=${erasure_profile_id}
@@ -460,6 +470,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                               ...  ErasureCodeProfileID=${erasure_profile_id}
@@ -498,6 +509,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                               ...  ErasureCodeProfileID=${erasure_profile_id}
@@ -718,6 +730,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=1
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #

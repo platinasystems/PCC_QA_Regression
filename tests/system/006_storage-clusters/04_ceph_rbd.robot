@@ -995,6 +995,7 @@ Ceph Rbd Update Name - Rename
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=120
 #                               ...  quota_unit=GiB
 #
@@ -1062,6 +1063,7 @@ Ceph Rbd Update Name - Rename
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=11
 #                               ...  quota_unit=GiB
 #
@@ -1198,6 +1200,7 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=10
                                ...  quota_unit=MiB
 
@@ -1269,6 +1272,7 @@ Ceph Rbd Resize_increase - equal to pool quota
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=10
                                ...  quota_unit=MiB
 
@@ -1498,6 +1502,7 @@ Ceph Rbd Mount Test
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=10
 #                               ...  quota_unit=MiB
 #
@@ -1513,6 +1518,7 @@ Ceph Rbd Mount Test
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=10
 #                               ...  quota_unit=MiB
 #

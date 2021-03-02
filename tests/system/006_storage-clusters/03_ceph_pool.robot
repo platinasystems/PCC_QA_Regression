@@ -44,6 +44,7 @@ Ceph Pool Creation without name (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -66,6 +67,7 @@ Ceph Pool Creation without name (Negative)
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #
@@ -88,6 +90,7 @@ Ceph Pool Creation without name (Negative)
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #
@@ -110,6 +113,7 @@ Ceph Pool Creation without name (Negative)
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=${CEPH_POOL_QUOTA}
 #                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #
@@ -144,6 +148,7 @@ Ceph Pool Creation without providing quota (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -173,6 +178,7 @@ Ceph Pool Creation without quota unit (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=
 
@@ -202,6 +208,7 @@ Ceph Pool Creation with decimal quota size (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1.3
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -231,6 +238,7 @@ Ceph Pool Creation with zero quota size (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=0
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -260,6 +268,7 @@ Ceph Pool Creation with negative quota size (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=-2
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -290,6 +299,7 @@ Ceph Pool Creation with quota size greater than 5 digit number
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=123456
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -319,6 +329,7 @@ Ceph Pool Creation with quota size greater than 16 EiB (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=17
                                ...  quota_unit=EiB
 
@@ -348,6 +359,7 @@ Ceph Pool Creation and Verification with quota unit MiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -382,6 +394,7 @@ Ceph Pool Creation and Verification with quota unit GiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=GiB
 
@@ -416,6 +429,7 @@ Ceph Pool Creation and Verification with quota unit TiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=TiB
 
@@ -450,6 +464,7 @@ Ceph Pool Creation and Verification with quota unit PiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=PiB
 
@@ -484,6 +499,7 @@ Ceph Pool Creation and Verification with quota unit EiB
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=EiB
 
@@ -518,8 +534,10 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     
@@ -533,6 +551,7 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -549,6 +568,7 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -582,6 +602,7 @@ Ceph Pool Creation for Fs
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=TiB
 
@@ -599,6 +620,7 @@ Ceph Pool Creation for Fs
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=TiB
 
@@ -616,6 +638,7 @@ Ceph Pool Creation for Fs
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=TiB
 
@@ -653,6 +676,7 @@ Ceph Pool Update Pool Name with existing Pool Name (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                
@@ -687,6 +711,7 @@ Ceph Pool Edit Name
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                
@@ -726,6 +751,7 @@ Ceph Pool Ugrade Quota Unit
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=PiB
                                
@@ -764,6 +790,7 @@ Ceph Pool Downgrade Quota Unit
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=GiB
                                
@@ -803,6 +830,7 @@ Ceph Pool Ugrade Quota Size
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=4
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                
@@ -842,6 +870,7 @@ Ceph Pool Update Pool No of Copies
                                ...  size=5
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                
@@ -880,6 +909,7 @@ Ceph Pool Update Quota Size and Quota Unit together
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=GiB
                                
@@ -915,6 +945,7 @@ Ceph Pool Creation with pool size contain alphabets/ special characters (Negativ
                                ...  size=abs
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -945,6 +976,7 @@ Ceph Pool Creation Duplicate (Negative)
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -970,6 +1002,7 @@ Ceph Pool Creation Duplicate (Negative)
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=1
 #                               ...  quota_unit=MiB
 #

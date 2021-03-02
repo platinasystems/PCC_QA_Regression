@@ -46,6 +46,7 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                       ...  quota=1
                                       ...  quota_unit=GiB
                                       
@@ -63,6 +64,7 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                       ...  quota=1
                                       ...  quota_unit=GiB
                                       
@@ -80,6 +82,7 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                       ...  quota=1
                                       ...  quota_unit=GiB
                                       
@@ -110,6 +113,7 @@ Ceph Pool For Rgws
 #                                     ...  ceph_cluster_id=${cluster_id}
 #                                     ...  size=${CEPH_POOL_SIZE}
 #                                     ...  pool_type=erasure
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                                     ...  quota=${CEPH_POOL_QUOTA}
 #                                     ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                                     ...  Datachunks=4
