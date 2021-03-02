@@ -44,23 +44,25 @@ Upgrade PCC
                                ...  keywords:
                                ...  CLI.Pcc Down
 	[Tags]  Only_this
-	###  Making CLI Down  ####
-	${status}		CLI.Pcc Down
-					...    host_ip=${PCC_HOST_IP}
-					...    pcc_password=${PCC_SETUP_PWD}
-					...    linux_user=${PCC_LINUX_USER}
-					...    linux_password=${PCC_LINUX_PASSWORD}
-					
-					Should Be Equal As Strings    ${status}    OK
+#	###  Making CLI Down  ####
+#	${status}		CLI.Pcc Down
+#					...    host_ip=${PCC_HOST_IP}
+#					...    pcc_password=${PCC_SETUP_PWD}
+#					...    linux_user=${PCC_LINUX_USER}
+#					...    linux_password=${PCC_LINUX_PASSWORD}
+#					
+#					Should Be Equal As Strings    ${status}    OK
 	
 	### Taking PCC to stable version   ###
 	${status}       CLI.PCC Pull Code
 					...  host_ip=${PCC_HOST_IP}
 					...  linux_user=${PCC_LINUX_USER}
 					...  linux_password=${PCC_LINUX_PASSWORD}
-					...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master
+					...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli upgrade -p ${PCC_SETUP_PWD} --release stable
 
-                    Should Be Equal As Strings    ${status}    OK
+                                        #...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master
+
+                                        Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
 Login to PCC
