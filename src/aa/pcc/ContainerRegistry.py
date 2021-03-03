@@ -63,7 +63,8 @@ class ContainerRegistry(AaBase):
         
         banner("PCC.Creating Container Registry")
         self._load_kwargs(kwargs)
-        
+        trace("Kwargs are: {}".format(kwargs))
+        print("Kwargs are: {}".format(kwargs))
         if self.nodeID:
             payload = {
                 "registryCertId":self.registryCertId,

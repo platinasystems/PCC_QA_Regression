@@ -182,6 +182,7 @@ class Nodes(AaBase):
             (dict) Response: Get Node response after Tenant is assigned (includes any errors)
         """
         self._load_kwargs(kwargs)
+        trace("Kwargs are :{}".format(kwargs))
         banner("PCC.Assign Tenant to Node")
         node_payload = {"tenant" : self.tenant_id,
                    "ids" : [self.ids]
@@ -189,7 +190,7 @@ class Nodes(AaBase):
         
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         response = pcc.update_tenant_to_node(conn, data=node_payload)
-        return self.get_nodes(conn)
+        return response
 
     ###########################################################################
     @keyword(name="PCC.Delete Node")

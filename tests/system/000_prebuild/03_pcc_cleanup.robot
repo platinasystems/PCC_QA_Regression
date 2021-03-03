@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]    delete	
+	[Tags]    debug	
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -148,7 +148,9 @@ Deleting Maas From Nodes
                                ...  Keywords:
                                ...  PCC.Delete and Verify Roles On Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
-        ${response}                 PCC.Delete and Verify Roles On Nodes
+        [Tags]    debug
+
+	${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  roles=["Baremetal Management Node"]
                                     Should Be Equal As Strings      ${response}  OK
