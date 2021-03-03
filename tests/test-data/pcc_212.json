@@ -220,7 +220,8 @@
             "name":"pool-pvt",
             "size":2,
             "tags":[],
-            "pool_type":"replicated",
+            "pool_type":"data",
+	    "resilienceScheme":"replicated",
             "quota":"1",
             "quota_unit":"MiB"
         },
