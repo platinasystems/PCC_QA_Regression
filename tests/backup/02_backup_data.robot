@@ -223,6 +223,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -239,6 +240,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -256,6 +258,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -272,6 +275,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -288,6 +292,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
