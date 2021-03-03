@@ -328,6 +328,9 @@ class Nodes(AaBase):
         banner("PCC.Update Node [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("Kwargs are: {}".format(kwargs))
+        if "scopeId" not in kwargs:
+            get_node_response = self.get_node(conn,self.Id)
+            self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
         if "roles" in kwargs:
             self.roles = ast.literal_eval(self.roles)
         payload = {
