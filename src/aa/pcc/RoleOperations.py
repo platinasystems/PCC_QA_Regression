@@ -203,9 +203,15 @@ class RoleOperations(AaBase):
                             print("Role-Id to Remove:-"+str(role)+"-"+str(tmp_id))
                             if tmp_id in eval(str(role_ids)):
                                 role_ids.remove(tmp_id)
+                        if "scopeId" not in kwargs:
+                            trace("Node id is :{}".format(str(data['Id'])))
+                            get_node_response = pcc.get_node_by_id(conn,str(data['Id']))
+                            trace("get_node_response: {}".format(str(get_node_response)))
+                            self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
                         payload={
                                  "Id":self.Id,
-                                 "roles":role_ids
+                                 "roles":role_ids,
+                                 "scopeId":self.scopeId
                                  }
                         print("Payload:-"+str(payload))
                         api_response=pcc.modify_node(conn, payload)
