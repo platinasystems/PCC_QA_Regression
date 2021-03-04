@@ -1279,7 +1279,7 @@ Fetching Network Manager ID before backup
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                   PCC.Network Manager Verify BE      
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  nodes_ip=${NETWORK_MANAGER_NODES}
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
 #                                    Should Be Equal As Strings      ${status}  OK
 #                                    
@@ -1560,7 +1560,7 @@ Fetching Network Manager ID before backup
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                   PCC.Network Manager Verify BE      
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  nodes_ip=${NETWORK_MANAGER_NODES}
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
 #
