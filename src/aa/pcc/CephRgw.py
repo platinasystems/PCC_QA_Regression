@@ -582,6 +582,8 @@ class CephRgw(AaBase):
                 cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)
                 ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
                 rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
+                print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
+                print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
                 if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
                     success_chk.append(ip)
                     
