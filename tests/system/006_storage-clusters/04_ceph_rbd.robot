@@ -1428,11 +1428,13 @@ Ceph Rbd Mount Test
                      Should be equal as strings    ${status}    OK
 
         ${status}    PCC.Map RBD
-					 ...    name=rbd-5
-					 ...    pool_name=${CEPH_POOL_NAME}
-					 ...    inet_ip=${inet_ip}
-					 
-					 Log To Console    ${status}
+		     ...    name=rbd-5
+		     ...    pool_name=${CEPH_POOL_NAME}
+		     ...    inet_ip=${inet_ip}
+		     ...    hostip=${SERVER_1_HOST_IP}
+                     ...    username=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+		     Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 		
 		
