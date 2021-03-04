@@ -397,7 +397,7 @@ class Cli(AaBase):
             cmd="sudo /home/pcc/platina-cli-ws/platina-cli restore -p {}  --url http://{}:9001 --id minio --secret minio123 --privateKey /home/pcc/master.gpg".format(self.pcc_password, self.restore_hostip)
             
         elif (self.backup_type == "local") and (self.backup_params == "all") and (self.restore_type == "local"):
-            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password)
+            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} --url http://{}:9001 --id minio --secret minio123 --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password, self.host_ip)
         
         elif (self.backup_type == "local") and (self.backup_params != "all") and (self.restore_type == "local"):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} -t {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password, self.backup_params)
