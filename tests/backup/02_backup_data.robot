@@ -303,6 +303,27 @@ Ceph Pools For Backup
                                            ...  name=fs3
                                                 Should Be Equal As Strings      ${status}    OK
 
+##################################################################################################################################
+Ceph Ceph Certificate For Rgws
+###################################################################################################################################
+
+        [Documentation]              *Ceph Ceph Certificate For Rgws*
+
+        ${cert_id}                   PCC.Get Certificate Id
+                                ...  Alias=${CEPH_RGW_CERT_NAME}
+                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there
+
+        ${response}                  PCC.Add Certificate
+                                ...  Alias=${CEPH_RGW_CERT_NAME}
+                                ...  Description=certificate-for-rgw
+                                ...  Private_key=domain.key
+                                ...  Certificate_upload=domain.crt
+
+                                     Log To Console    ${response}
+        ${result}                    Get Result    ${response}
+        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+                                     Should Be Equal As Strings    ${status}    200
+
 
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Backup

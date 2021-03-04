@@ -121,7 +121,8 @@ class CephPool(AaBase):
                 temp["size"] = data["size"]
                 temp["tags"] = []
                 temp["ceph_cluster_id"] = data["ceph_cluster_id"]
-                temp["pool_type"] = data["pool_type"]
+                temp["type"] = data["type"]
+                temp["resilienceScheme"] = data["resilienceScheme"]
                 temp["quota"] = data["quota"]
                 temp["quota_unit"] =  data["quota_unit"]
         return temp
@@ -150,7 +151,8 @@ class CephPool(AaBase):
                     temp["size"] = data["size"]
                     temp["tags"] = ["tags"]
                     temp["ceph_cluster_id"] = data["ceph_cluster_id"]
-                    temp["pool_type"] = data["pool_type"]
+                    temp["type"] = data["type"]
+                    temp["resilienceScheme"] = data["resilienceScheme"]
                     temp["quota"] = data["quota"]
                     temp["quota_unit"] =  data["quota_unit"]
             if len(temp)!=0:        
