@@ -57,7 +57,6 @@ Ceph Cluster Creation without Network Manager (Negative)
     [Documentation]                 *Creating Ceph Cluster*
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
-
         ${network_id}               PCC.Get Network Manager Id
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Pass Execution If    ${network_id} is not ${None}    Network is already there
@@ -83,7 +82,6 @@ Network Manager Creation with same ControlCIDR and DataCIDR
                                ...  PCC.Network Manager Create
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
@@ -114,7 +112,6 @@ Network Manager Delete and Verify PCC (Network Manager with same ControlCIDR and
                                ...  keywords:
                                ...  PCC.Network Manager Delete
                                ...  PCC.Wait Until Network Manager Ready
-
         ${response}                 PCC.Network Manager Delete
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -138,11 +135,10 @@ Set Interfaces For Server Falling in DataCIDR
                                ...  PCC.Interface Set 1D Link
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
-
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
-                               ...  assign_ip=["192.168.150.10/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -167,13 +163,13 @@ Set Interfaces For Server Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
-                               ...  assign_ip=["192.168.150.10/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Interface Set 1D Link
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0d1
-                               ...  assign_ip=["192.168.150.12/31"]
+                               ...  assign_ip=["192.168.150.9/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -185,20 +181,20 @@ Set Interfaces For Server Falling in DataCIDR
 
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Wait Until Interface Ready
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0d1
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0d1
-                               ...  assign_ip=["192.168.150.12/31"]
+                               ...  assign_ip=["192.168.150.9/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 #################################################################################################################################
@@ -206,7 +202,7 @@ Set Interfaces For Server Falling in DataCIDR
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-1
-                               ...  assign_ip=["192.168.150.9/31"]
+                               ...  assign_ip=["192.168.150.8/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -231,13 +227,13 @@ Set Interfaces For Server Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${CLUSTERHEAD_1_NAME}
                                ...  interface_name=xeth1-1
-                               ...  assign_ip=["192.168.150.9/31"]
+                               ...  assign_ip=["192.168.150.8/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Interface Set 1D Link
-                               ...  node_name=${CLUSTERHEAD_2_NAME}
-                               ...  interface_name=xeth1-1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth1-2
+                               ...  assign_ip=["192.168.150.10/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -249,20 +245,20 @@ Set Interfaces For Server Falling in DataCIDR
 
                                     Sleep    10s
         ${response}                 PCC.Interface Apply
-                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${CLUSTERHEAD_1_NAME}
-                               ...  interface_name=xeth1-1
+                               ...  interface_name=xeth1-2
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
-                               ...  node_name=${CLUSTERHEAD_2_NAME}
-                               ...  interface_name=xeth1-1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth1-2
+                               ...  assign_ip=["192.168.150.10/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -273,7 +269,6 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR)
                                ...  PCC.Network Manager Create
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
                                     Sleep    60s
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
@@ -290,7 +285,7 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR)
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -315,18 +310,17 @@ Interface Verification For Server Falling In DataCIDR
     [Documentation]                 *Interface Verification For Server Falling In DataCIDR*
                                ...  keywords:
                                ...  PCC.Interface Verify PCC
-
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
-                               ...  assign_ip=["192.168.150.10/31"]
-                                    Should Not Be Equal As Strings      ${status}    OK
+                               ...  assign_ip=["192.168.150.11/31"]
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
-                               ...  node_name=${SERVER_1_NAME}
+                               ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp129s0d1
-                               ...  assign_ip=["192.168.150.12/31"]
-                                    Should Not Be Equal As Strings      ${status}    OK
+                               ...  assign_ip=["192.168.150.9/31"]
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Network Manager Update (Interfaces For Server Falling in DataCIDR)
@@ -337,7 +331,6 @@ Network Manager Update (Interfaces For Server Falling in DataCIDR)
                                ...  PCC.Network Manager Update
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${network_id}               PCC.Get Network Manager Id
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -373,7 +366,6 @@ Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
                                ...  PCC.Network Manager Refresh
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${response}                 PCC.Network Manager Refresh
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -400,7 +392,6 @@ Network Manager Delete (Interfaces For Server Falling in DataCIDR)
                                ...  keywords:
                                ...  PCC.Network Manager Delete
                                ...  PCC.Wait Until Network Manager Deleted
-
         ${response}                 PCC.Network Manager Delete
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -424,7 +415,6 @@ Set Interfaces For Server Not Falling In DataCIDR
                                ...  PCC.Interface Set 1D Link
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
-
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
@@ -558,7 +548,6 @@ Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
                                ...  PCC.Network Manager Create
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
                                     Sleep    60s
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
@@ -575,7 +564,7 @@ Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -589,7 +578,6 @@ Interface Verification For Server Not Falling In DataCIDR
     [Documentation]                 *Interface Verification Interfaces For Server Not Falling In DataCIDR*
                                ...  keywords:
                                ...  PCC.Interface Verify PCC
-
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
@@ -611,7 +599,6 @@ Network Manager Update (Interfaces For Server Not Falling In DataCIDR)
                                ...  PCC.Network Manager Update
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${network_id}               PCC.Get Network Manager Id
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -647,7 +634,6 @@ Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
                                ...  PCC.Network Manager Refresh
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${response}                 PCC.Network Manager Refresh
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -674,7 +660,6 @@ Network Manager Delete (Interfaces For Server Not Falling In DataCIDR)
                                ...  keywords:
                                ...  PCC.Network Manager Delete
                                ...  PCC.Wait Until Network Manager Deleted
-
         ${response}                 PCC.Network Manager Delete
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -698,7 +683,6 @@ Set Interfaces For Server Partially Falling In DataCIDR
                                ...  PCC.Interface Set 1D Link
                                ...  PCC.Interface Apply
                                ...  PCC.Interface Verify PCC
-
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
@@ -832,7 +816,6 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR)
                                ...  PCC.Network Manager Create
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
@@ -862,7 +845,6 @@ Interface Verification For Server Partially Falling in DataCIDR
     [Documentation]                 *Interface Verification For Server Partially Falling in DataCIDR*
                                ...  keywords:
                                ...  PCC.Interface Verify PCC
-
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0
@@ -873,7 +855,7 @@ Interface Verification For Server Partially Falling in DataCIDR
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp129s0d1
                                ...  assign_ip=["192.168.150.12/31"]
-                                    Should Not Be Equal As Strings      ${status}    OK
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
@@ -883,7 +865,6 @@ Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
                                ...  PCC.Network Manager Refresh
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${response}                 PCC.Network Manager Refresh
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -950,7 +931,6 @@ Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Ad
                                ...  PCC.Network Manager Update
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
-
         ${network_id}               PCC.Get Network Manager Id
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -985,7 +965,6 @@ Network Manager Try To Remove 2 Invaders (Negative)
                                ...  keywords:
                                ...  PCC.Network Manager Update
                                ...  PCC.Wait Until Network Manager Ready
-
         ${network_id}               PCC.Get Network Manager Id
                                ...  name=${NETWORK_MANAGER_NAME}
 
@@ -1303,7 +1282,7 @@ Fetching Network Manager ID before backup
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                   PCC.Network Manager Verify BE
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
 #
@@ -1327,7 +1306,7 @@ Fetching Network Manager ID before backup
 #                               ...  node_name=${SERVER_1_NAME}
 #                               ...  interface_name=enp130s0d1
 #                               ...  assign_ip=["192.168.150.12/31"]
-#                                    Should Not Be Equal As Strings      ${status}    OK
+#                                    Should Be Equal As Strings      ${status}    OK
 #
 ####################################################################################################################################
 #Network Manager Update (Interfaces For Server Falling in DataCIDR)
@@ -1573,7 +1552,7 @@ Fetching Network Manager ID before backup
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                   PCC.Network Manager Verify BE
-#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
 #
@@ -1866,7 +1845,7 @@ Fetching Network Manager ID before backup
 #                               ...  node_name=${SERVER_1_NAME}
 #                               ...  interface_name=enp130s0d1
 #                               ...  assign_ip=["192.168.150.12/31"]
-#                                    Should Not Be Equal As Strings      ${status}    OK
+#                                    Should Be Equal As Strings      ${status}    OK
 #
 ####################################################################################################################################
 #Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
@@ -1999,4 +1978,3 @@ Fetching Network Manager ID before backup
 #                                       ...  name=${NETWORK_MANAGER_NAME}
 #                                       Log To Console    ${network_id_before_backup}
 #                                       Set Global Variable    ${network_id_before_backup}
-#

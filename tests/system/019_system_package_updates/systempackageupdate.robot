@@ -528,7 +528,7 @@ Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes reso
 
                 ${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Cluster Head","Default", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
+                               ...  roles=["Cluster Head", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
