@@ -9,6 +9,8 @@ ${pcc_setup}                 pcc_212
 Login
 ###################################################################################################################################
 
+	[Tags]    policy
+
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -160,7 +162,7 @@ Ceph Validation after restoring PCC
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
-                               ...  name=rgw
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -395,6 +397,8 @@ Validate Node role and its assignment on nodes after restore
         [Documentation]             *Create a policy* test
                                     ...  keywords:
                                     ...  PCC.Create Policy
+
+        [Tags]    policy
         
         ${status}                   PCC.Validate Node Role
                                     ...    Name=DNS_NODE_ROLE
@@ -402,6 +406,15 @@ Validate Node role and its assignment on nodes after restore
                                     Log To Console    ${status}
                                     Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
 					 
+        ${status}                   PCC.Verify Node Role On Nodes
+                                    ...    Name=DNS_NODE_ROLE
+                                    ...    nodes=["${SERVER_2_NAME}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+
+
+
 		${status_code}              PCC.Wait Until Roles Ready On Nodes
                                     ...  node_name=${SERVER_2_NAME}
         
@@ -412,6 +425,8 @@ Validate Node role and its assignment on nodes after restore
 ###################################################################################################################################
 Verifying Policy assignment from backend
 ###################################################################################################################################
+
+	[Tags]    policy
 		
 		##### Validate RSOP on Node ##########
 
