@@ -748,12 +748,23 @@ Create a policy using DNS app, assigning it to Node and Scope
                                              ...  roles=["DNS_NODE_ROLE","Default"]
                    
                                              Should Be Equal As Strings      ${response}  OK
+
+                ${node_wait_status}         PCC.Wait Until Node Ready
+                                    ...  Name=${SERVER_2_NAME}
+
+                                    Log To Console    ${node_wait_status}
+                                    Should Be Equal As Strings    ${node_wait_status}    OK
+
                    
-        ${status_code}                       PCC.Wait Until Roles Ready On Nodes
-                                             ...  node_name=${SERVER_2_NAME}
-                   
-                                             Should Be Equal As Strings      ${status_code}  OK
-		
+                ${status}                   PCC.Verify Node Role On Nodes
+                                    ...    Name=DNS_NODE_ROLE
+                                    ...    nodes=["${SERVER_2_NAME}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+	
+
+	
 		###   Updating node with Region- scope ####
 		${node_id}                           PCC.Get Node Id
                                              ...  Name=${SERVER_2_NAME}
