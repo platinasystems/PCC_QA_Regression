@@ -100,9 +100,7 @@ Assigning Tenant to Node and creating CR (using Tenant User)
                       
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
+                       ${status}    Get From Dictionary    ${result}    StatusCode
                        Should Be Equal As Strings    ${status}    200
                        
 ####################################################################################################################################
