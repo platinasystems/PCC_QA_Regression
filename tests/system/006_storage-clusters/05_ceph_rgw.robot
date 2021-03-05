@@ -10,7 +10,8 @@ Login
 ###################################################################################################################################
         
                                             Load Ceph Rgw Data    ${pcc_setup}
-                                            Load Ceph Pool Data    ${pcc_setup}
+                                            Load Ipam Data    ${pcc_setup}
+					    Load Ceph Pool Data    ${pcc_setup}
                                             Load Ceph Cluster Data    ${pcc_setup}
                                             Load Clusterhead 1 Test Data    ${pcc_setup}
                                             Load Clusterhead 2 Test Data    ${pcc_setup}
@@ -113,7 +114,7 @@ Ceph Pool For Rgws
 #                                     ...  ceph_cluster_id=${cluster_id}
 #                                     ...  size=${CEPH_POOL_SIZE}
 #                                     ...  pool_type=erasure
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+#                                     ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                                     ...  quota=${CEPH_POOL_QUOTA}
 #                                     ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 #                                     ...  Datachunks=4
@@ -325,7 +326,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 #####################################################################################################################################
@@ -378,7 +379,7 @@ Ceph Rados Add S3Account
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 #####################################################################################################################################
@@ -411,7 +412,7 @@ Ceph Rados Update Port
                                     Should Be Equal As Strings      ${status}    OK   
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 #####################################################################################################################################
@@ -517,7 +518,7 @@ Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
                                     
 ###################################################################################################################################
@@ -548,7 +549,7 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 ###################################################################################################################################
@@ -570,7 +571,7 @@ Create Rgw Configuration File (ServiceIp As Default)
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
-                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
                                       ...  targetNodeIp=0.0.0.0
                                       ...  port=${CEPH_RGW_PORT}
 
@@ -586,8 +587,8 @@ Create Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Make Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -602,7 +603,7 @@ List Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw List Buckets
-                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -613,13 +614,13 @@ Update Rgw Configuration File With Control IP And Try To ADD File (ServiceIp As 
 
 
         ${status}                          PCC.Ceph Rgw Update Configure
-                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
                                       ...  service_ip=yes
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Upload File To Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -634,7 +635,7 @@ Verify File Is Upload on Pool (ServiceIp As Default)
 
         ${status}                          PCC.Ceph Rgw Verify File Upload To Pool
                                       ...  poolName=${CEPH_RGW_POOLNAME}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -648,8 +649,8 @@ Delete A File From Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete File From Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -661,14 +662,14 @@ Update Rgw Configuration File With Data IP And Try To ADD File (ServiceIp As Def
 
 
         ${status}                          PCC.Ceph Rgw Update Configure
-                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
                                       ...  service_ip=no
                                       ...  data_cidr=${IPAM_DATA_SUBNET_IP}
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Upload File To Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -683,7 +684,7 @@ Verify File Is Upload on Pool (ServiceIp As Default)
 
         ${status}                          PCC.Ceph Rgw Verify File Upload To Pool
                                       ...  poolName=${CEPH_RGW_POOLNAME}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -697,8 +698,8 @@ Get A File From Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Get File From Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -713,8 +714,8 @@ Delete Rgw Bucket When Bucket Is Not Empty (ServiceIp As Default) (Negative)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Not Be Equal As Strings      ${status}    OK
@@ -729,8 +730,8 @@ Delete A File From Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete File From Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -745,8 +746,8 @@ Delete Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete Bucket
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_2_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -781,7 +782,7 @@ Ceph Rados Remove S3Account (ServiceIp As Default)
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK         
                                     
 ####################################################################################################################################
@@ -864,7 +865,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #        ${status}                          PCC.Ceph Rgw Configure
 #                                      ...  accessKey=${accessKey}
 #                                      ...  secretKey=${secretKey}
-#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
 #                                      ...  targetNodeIp=0.0.0.0
 #                                      ...  port=${CEPH_RGW_PORT}
 #
@@ -887,7 +888,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                      ...  name=${CEPH_RGW_NAME}
 #
 #        ${status}                          PCC.Ceph Rgw Configure
-#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
 #                                      ...  service_ip=0.0.0.0
 #                                           Should Be Equal As Strings      ${status}    OK
 #
@@ -901,8 +902,8 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Make Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #
 #                                           Should Be Equal As Strings      ${status}    OK
@@ -917,7 +918,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw List Buckets
-#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
 #
 #                                           Should Be Equal As Strings      ${status}    OK
 #
@@ -928,14 +929,14 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #
 #        ${status}                          PCC.Ceph Rgw Update Configure
-#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
 #                                      ...  service_ip=no
 #                                      ...  data_cidr=${IPAM_DATA_SUBNET_IP}
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Upload File To Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #                                           Should Not Be Equal As Strings      ${status}    OK
 #
@@ -945,13 +946,13 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #    [Documentation]                        *Create Rgw Configuration File*
 #
 #        ${status}                          PCC.Ceph Rgw Update Configure
-#                                      ...  pcc=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
 #                                      ...  service_ip=yes
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Upload File To Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #                                           Should Be Equal As Strings      ${status}    OK
 #
@@ -966,7 +967,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${status}                          PCC.Ceph Rgw Verify File Upload To Pool
 #                                      ...  poolName=${CEPH_RGW_POOLNAME}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 ####################################################################################################################################
@@ -979,8 +980,8 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Get File From Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #
 #                                           Should Be Equal As Strings      ${status}    OK
@@ -995,8 +996,8 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Delete Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #
 #                                           Should Not Be Equal As Strings      ${status}    OK
@@ -1011,8 +1012,8 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Delete File From Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #
 #                                           Should Be Equal As Strings      ${status}    OK
@@ -1027,8 +1028,8 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Should Be Equal As Strings      ${status}    OK
 #
 #        ${status}                          PCC.Ceph Rgw Delete Bucket
-#                                      ...  pcc=${SERVER_1_HOST_IP}
-#                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                                      ...  pcc=${SERVER_2_HOST_IP}
+#                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                                      ...  port=${CEPH_RGW_PORT}
 #
 #                                           Should Be Equal As Strings      ${status}    OK
@@ -1353,7 +1354,7 @@ Ceph Rados Gateway Delete
 #                               ...  accessKey=${accessKey}
 #                               ...  secretKey=${secretKey}
 #                               ...  pcc=${PCC_HOST_IP}
-#                               ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                               ...  port=${CEPH_RGW_PORT}
 #                               
 #                                    Should Be Equal As Strings      ${status}    OK
@@ -1362,7 +1363,7 @@ Ceph Rados Gateway Delete
 #                               ...  accessKey=${accessKey}
 #                               ...  secretKey=${secretKey}
 #                               ...  pcc=${PCC_HOST_IP}
-#                               ...  targetNodeIp=${SERVER_1_HOST_IP}
+#                               ...  targetNodeIp=${SERVER_2_HOST_IP}
 #                               ...  port=${CEPH_RGW_PORT}
 #                               
 #                                    Should Be Equal As Strings      ${status}    OK     
