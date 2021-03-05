@@ -135,8 +135,7 @@ Re-assigning ROOT to Node
                        ...    ids=${server1_id}
 
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    StatusCode
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
@@ -379,7 +378,14 @@ Policy driven management cleanup
                              Should Be Equal As Strings    ${status}    OK
 
                                 ####  Delete All Locations  ####
-                ${response}    PCC.Delete Scope
+                
+		${status}      PCC.Check Scope Creation From PCC
+                               ...  scope_name=region-1
+
+                               Log To Console    ${status}
+                               Pass Execution If    "${status}"    "Scope with name region-1 not found on PCC"
+
+		${response}    PCC.Delete Scope
                                ...  scope_name=region-1
                                ...  parentID=
 

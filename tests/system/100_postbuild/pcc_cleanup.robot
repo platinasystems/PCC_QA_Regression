@@ -135,8 +135,7 @@ Re-assigning ROOT to Node
                        ...    ids=${server1_id}
 
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    StatusCode
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
