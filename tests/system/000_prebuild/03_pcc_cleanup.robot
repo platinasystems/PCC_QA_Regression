@@ -381,7 +381,13 @@ Policy driven management cleanup
                              Should Be Equal As Strings    ${status}    OK
 
                                 ####  Delete All Locations  ####
-                ${response}    PCC.Delete Scope
+                ${status}      PCC.Check Scope Creation From PCC
+                               ...  scope_name=region-1
+
+                               Log To Console    ${status}
+                               Pass Execution If    "${status}"    "Scope with name region-1 not found on PCC"
+
+		${response}    PCC.Delete Scope
                                ...  scope_name=region-1
                                ...  parentID=
 

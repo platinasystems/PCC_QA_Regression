@@ -35,7 +35,7 @@ Create Kubernetes cluster
                                ...  k8sVersion=${K8S_VERSION}
                                ...  name=${K8S_NAME}
                                ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=${K8S_NODES}
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_NAME}","${SERVER_2_NAME}"]
                                ...  pools=${K8S_POOL}
                                ...  networkClusterName=${NETWORK_MANAGER_NAME}
 
