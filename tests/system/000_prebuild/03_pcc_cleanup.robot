@@ -135,8 +135,7 @@ Re-assigning ROOT to Node
                        ...    ids=${server1_id}
 
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    StatusCode
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
@@ -349,15 +348,15 @@ Delete All Profiles
                        Log To Console    ${response}
 
 ###################################################################################################################################
-PCC Multiple Tenant deletion
+Delete All Tenants
 ###################################################################################################################################
 
         [Documentation]    *PCC Multiple Tenant deletion* test
                            ...  keywords:
                            ...  PCC.Delete Multiple Tenants
         
-        ${status}    PCC.Delete Multiple Tenants
-                       ...    Tenant_list=["${TENANT1}"]
+        ${status}    PCC.Delete All Tenants
+                      
 
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK    Not Deleted
