@@ -9,6 +9,8 @@ ${pcc_setup}                 pcc_212
 Login
 ###################################################################################################################################
 
+        [Tags]    certs
+
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -186,14 +188,8 @@ Delete Certificate
                 
         
         [Documentation]             *Delete Certificate* test
-        [Tags]    Cert              
-        ${response}                 PCC.Delete Certificate
-                                    ...  Alias=Cert_without_pvt_cert
+        [Tags]    certs              
                 
-                                    Log To Console    ${response}
-                                    ${status}    Get From Dictionary    ${response}    StatusCode
-                                    Should Be Equal As Strings    ${status}    200
-                                    
         ${response}                 PCC.Delete Certificate
                                     ...  Alias=Cert_with_pvt_cert
                 
