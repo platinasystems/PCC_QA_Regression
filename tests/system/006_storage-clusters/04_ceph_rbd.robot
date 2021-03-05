@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
- 
+ 	[Tags]    Map
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -1398,11 +1398,11 @@ Ceph Rbd Mount Test
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
                                ...  PCC.Ceph Rbd Update
-							   
+	[Tags]    Map					   
 							   
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
-                       ...    hostip=${SERVER_1_HOST_IP}
+                       ...    hostip=${CLUSTERHEAD_1_HOST_IP}
 
                        Log To Console    ${inet_ip}
                        Set Global Variable    ${inet_ip}
@@ -1476,7 +1476,7 @@ Ceph Rbd Mount Test
 		${status}		PCC.Unmount and Unmap RBD
 						...    mount_folder_name=test_rbd_mnt
 						...    hostip=${SERVER_1_HOST_IP}
-                        ...    user=${PCC_LINUX_USER}
+                        ...    username=${PCC_LINUX_USER}
                         ...    password=${PCC_LINUX_PASSWORD}
 						
 						Log To Console    ${status}
