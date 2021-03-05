@@ -162,7 +162,7 @@ Ceph Validation after restoring PCC
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
-                               ...  name=rgw
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
