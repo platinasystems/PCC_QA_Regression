@@ -317,3 +317,81 @@ class LinuxUtils(AaBase):
             print("node_names argument is missing")
             return "node_name argument is missing"
 
+
+    ###################################################################################################
+    @keyword(name="Install s3cmd command")
+    ###################################################################################################
+
+    def install_s3cmd(self,*args, **kwargs):
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        print("Kwargs are: {}".format(kwargs))
+        try:
+            host_ips = []
+            status = []
+            get_nodes_response = Nodes().get_nodes(**kwargs)
+            host_ips = [str(node['Host']) for node in get_response_data(get_nodes_response)]
+            print("host_ips_list : {}".format(host_ips))
+            for ip in host_ips:
+                cmd = "sudo cat /etc/os-release|grep PRETTY_NAME"
+                cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                              linux_password=self.password)
+
+                serialised_status = self._serialize_response(time.time(), cmd_output)
+                serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+
+                if "Ubuntu" in serialised_cmd_output:
+                    cmd = "sudo apt-get install s3cmd"
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                         linux_password=self.password)
+
+                    serialised_status = self._serialize_response(time.time(), cmd_output)
+                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+                    if "0 newly installed" or "1 newly installed" in serialised_cmd_output:
+                        status.append("OK")
+                    else:
+                        logger.console("Error in installing s3cmd on Ubuntu: {}".format(serialised_cmd_output))
+                        status.append("Error in installing s3cmd on Ubuntu")
+
+                elif "CentOS" in serialised_cmd_output:
+                    cmd = "sudo yum -y install s3cmd"
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                         linux_password=self.password)
+
+                    serialised_status = self._serialize_response(time.time(), cmd_output)
+                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+                    if "Complete!" or "Nothing to do" in serialised_cmd_output:
+                        status.append("OK")
+                    else:
+                        logger.console("Error in installing s3cmd on CentOS: {}".format(serialised_cmd_output))
+                        status.append("Error in installing s3cmd on CentOS")
+
+                elif "Debian" in serialised_cmd_output:
+                    cmd = "sudo apt-get install s3cmd"
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
+                                         linux_password=self.password)
+
+                    serialised_status = self._serialize_response(time.time(), cmd_output)
+                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+
+                    if "0 upgraded" or "0 newly installed" or "1 newly installed" in serialised_cmd_output:
+                        status.append("OK")
+                    else:
+                        logger.console("Error in installing s3cmd on Debian: {}".format(serialised_cmd_output))
+                        status.append("Error in installing s3cmd on Debian")
+
+                else:
+                    return "Error: OS version not supported in code"
+            print("Status: {}".format(status))
+            result = len(status) > 0 and all(elem == "OK" for elem in status)
+            if result:
+                return "OK"
+            else:
+                return "Error: Installation of net-tools failed"
+
+        except Exception as e:
+            return "Error in installing net-tools: {}".format(e)
