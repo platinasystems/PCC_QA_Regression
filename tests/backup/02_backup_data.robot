@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	This
+	[Tags]	policy
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -836,3 +836,143 @@ Verifying Policy assignment from backend
                                              
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
+
+
+###################################################################################################################################
+Create a policy using Rsyslog(without TLS), assigning it to Node and Scope
+###################################################################################################################################
+
+        [Documentation]                      *Create a policy* test
+                                             ...  keywords:
+                                             ...  PCC.Create Policy
+
+
+        [Tags]        policy
+        ###  Creating Rsyslog Policy  ####
+
+		${app_id}                   PCC.Get App Id from Policies
+                                                ...  Name=rsyslogd
+                                                Log To Console    ${app_id}
+
+        ${region_Id}               PCC.Get Scope Id
+                                   ...  scope_name=Default region
+                                   ...  parentID=
+                                       Log To Console    ${region_Id}
+                                       Set Global Variable    ${region_Id}
+
+        ${zone_Id}               PCC.Get Scope Id
+                                   ...  scope_name=Default zone
+                                   ...  parentID=${region_Id}
+                                 Log To Console    ${zone_Id}
+                                 Set Global Variable    ${zone_Id}
+
+        ${site_Id}               PCC.Get Scope Id
+                                 ...  scope_name=Default site
+                                 ...  parentID=${zone_Id}
+                                 Log To Console    ${site_Id}
+                                 Set Global Variable    ${site_Id}
+
+        ${rack_Id}               PCC.Get Scope Id
+                                 ...  scope_name=Default rack
+                                 ...  parentID=${site_Id}
+                                 Log To Console    ${rack_Id}
+                                 Set Global Variable    ${rack_Id}    
+
+
+        ${response}                 PCC.Create Policy
+                                       ...  appId=${app_id}
+                                       ...  description=rsyslog-policy
+                                       ...  scopeIds=[${rack_Id}]
+                                       ...  inputs=[{"name": "rsyslog_remote_address","value":"192.138.34.0"},{"name":"rsyslog_enable_tls","value":"false"},{"name":"rsyslog_tcp_port","value":"514"},{"name":"rsyslog_ca_certificate","value":""}]
+
+                                       Log To Console    ${response}
+                                       ${result}    Get Result    ${response}
+                                       ${status}    Get From Dictionary    ${result}    status
+                                       ${message}    Get From Dictionary    ${result}    message
+                                       Log to Console    ${message}
+                                       Should Be Equal As Strings    ${status}    200
+
+
+        #### Creating RSyslog node role ####
+
+        ${owner}                              PCC.Get Tenant Id       Name=${ROOT_TENANT}
+
+        ${template_id}                        PCC.Get Template Id    Name=RSYSLOG
+                                              Log To Console    ${template_id}
+
+        ${response}                            PCC.Add Node Role
+                                               ...    Name=Rsyslog-NR
+                                               ...    Description=Rsyslog-NR-DESC
+                                               ...    templateIDs=[${template_id}]
+                                               ...    owners=[${owner}]
+
+                                               Log To Console    ${response}
+                                               ${result}    Get Result    ${response}
+                                               ${status}    Get From Dictionary    ${result}    status
+                                               ${message}    Get From Dictionary    ${result}    message
+                                               Log to Console    ${message}
+                                               Should Be Equal As Strings    ${status}    200
+
+                                               Sleep    2s
+
+        ${status}                              PCC.Validate Node Role
+                                               ...    Name=Rsyslog-NR
+
+                                               Log To Console    ${status}
+                                               Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+
+
+
+		###  Adding Node roles on Node  ####
+
+        ${response}                         PCC.Add and Verify Roles On Nodes
+                                            ...  nodes=["${SERVER_1_NAME}"]
+                                            ...  roles=["Rsyslog-NR"]
+
+                                            Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}                 PCC.Wait Until Node Ready
+                                            ...  Name=${SERVER_1_NAME}
+
+                                            Log To Console    ${node_wait_status}
+                                            Should Be Equal As Strings    ${node_wait_status}    OK
+        			                        Sleep    50s
+
+
+###################################################################################################################################
+Verifying Rsyslog Policy assignment from backend
+###################################################################################################################################
+	[Documentation]                      *Verifying Policy assignment from backend* test
+                                          ...  keywords:
+                                          ...  PCC.Create Policy
+
+
+        [Tags]        policy
+
+		##### Validate RSOP on Node ##########
+
+        ${rsyslog_policy_id}                PCC.Get Policy Id
+                                             ...  Name=rsyslogd
+                                             ...  description=rsyslog-policy
+                                             Log To Console    ${rsyslog_policy_id}
+                                             Set Global Variable    ${rsyslog_policy_id}
+
+		${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${SERVER_1_NAME}
+                                             ...  policyIDs=[${rsyslog_policy_id}]
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+		##### Validate Rsyslog from backend #########
+
+        ${status}                           CLI.Check package installed
+                                            ...    package_name=rsyslog
+                                            ...    host_ip=${SERVER_1_HOST_IP}
+                                            ...    linux_user=${PCC_LINUX_USER}
+                                            ...    linux_password=${PCC_LINUX_PASSWORD}
+
+                                            Log To Console    ${status}
+                                            Should Be Equal As Strings    ${status}    rsyslog Package installed
+
+

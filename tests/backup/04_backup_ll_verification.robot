@@ -9,7 +9,7 @@ ${pcc_setup}                 pcc_212
 Login
 ###################################################################################################################################
 
-	[Tags]    policy
+	[Tags]    rsyslog
 
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
@@ -457,4 +457,42 @@ Verifying Policy assignment from backend
                                 
                                     Log To Console    ${status}
                                     Should Be Equal As Strings      ${status}  OK
-					 
+					
+
+###################################################################################################################################
+Verifying Rsyslog Policy assignment from backend
+###################################################################################################################################
+        [Documentation]                      *Verifying Policy assignment from backend* test
+                                          ...  keywords:
+                                          ...  PCC.Create Policy
+
+
+        [Tags]        rsyslog
+
+                ##### Validate RSOP on Node ##########
+
+        ${rsyslog_policy_id}                PCC.Get Policy Id
+                                             ...  Name=rsyslogd
+                                             ...  description=rsyslog-policy
+                                             Log To Console    ${rsyslog_policy_id}
+                                             Set Global Variable    ${rsyslog_policy_id}
+
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${SERVER_1_NAME}
+                                             ...  policyIDs=[${rsyslog_policy_id}]
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+                ##### Validate Rsyslog from backend #########
+
+        ${status}                           CLI.Check package installed
+                                            ...    package_name=rsyslog
+                                            ...    host_ip=${SERVER_1_HOST_IP}
+                                            ...    linux_user=${PCC_LINUX_USER}
+                                            ...    linux_password=${PCC_LINUX_PASSWORD}
+
+                                            Log To Console    ${status}
+                                            Should Be Equal As Strings    ${status}    rsyslog Package installed
+
+ 
