@@ -180,38 +180,6 @@ Delete Key
 
                        
 ###################################################################################################################################
-Delete All Node Roles
-###################################################################################################################################
-
-        [Documentation]    *Delete All Node Roles* test
-                           ...  keywords:
-                           ...  PCC.Delete all Node roles
-        [Tags]    Only
-
-        ${status}    PCC.Delete all Node roles
-                       
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node group still exists  
-
-###################################################################################################################################
-Delete All Node Groups
-###################################################################################################################################
-
-        [Documentation]    *Delete All Node Groups* test
-                           ...  keywords:
-                           ...  PCC.Get Tenant Id
-                           ...  PCC.Add Node Group
-                           ...  PCC.Validate Node Group
-        [Tags]    Only
-
-        ${status}    PCC.Delete all Node groups
-                       
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node group still exists  
-                     
-###################################################################################################################################
-Delete All Profiles
-###################################################################################################################################
 
         [Documentation]    *PCC.Delete All Profiles* test
                            ...  keywords:
@@ -441,6 +409,81 @@ Policy driven management cleanup
                        
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
+Cleanup features associated to Node
+###################################################################################################################################
+    [Documentation]                 *Deleting all Pools*
+                               ...  keywords:
+                               ...  PCC.Cleanup features associated to Node
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default region
+                        Log To Console    ${parent1_Id}
+
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${parent1_Id}
+                        Log To Console    ${parent2_Id}
+
+        ${parent3_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default site
+                        ...  parentID=${parent2_Id}
+
+                        Log To Console    ${parent3_Id}
+
+        ${scope_id}    PCC.Get Scope Id
+                       ...  scope_name=Default rack
+                       ...  parentID=${parent3_Id}
+
+                       Log To Console    ${scope_id}
+
+        ${status}      PCC.Cleanup features associated to Node
+                       ...    scopeId=${scope_id}
+                       Log To Console    ${status}
+                       Should Be Equal As Strings      ${status}  OK
+
+####################################################################################################################################
+Wait Until All Nodes Are Ready
+####################################################################################################################################
+    [Documentation]                 *Cleanup all keys*
+                               ...  keywords:
+                               ...  PCC.Wait Until All Nodes Are Ready
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Delete All Node Roles
+###################################################################################################################################
+
+        [Documentation]    *Delete All Node Roles* test
+                           ...  keywords:
+                           ...  PCC.Delete all Node roles
+        [Tags]    Only
+
+        ${status}    PCC.Delete all Node roles
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node group still exists
+
+###################################################################################################################################
+Delete All Node Groups
+###################################################################################################################################
+
+        [Documentation]    *Delete All Node Groups* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Add Node Group
+                           ...  PCC.Validate Node Group
+        [Tags]    Only
+
+        ${status}    PCC.Delete all Node groups
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK    Node group still exists
+                                                                                                                    
+
                                                                                                                                           
 #####################################################################################################################################
 Delete Nodes
