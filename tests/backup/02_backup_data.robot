@@ -66,7 +66,6 @@ Create Subnets For Network Manager
                                ...  keywords:
                                ...  PCC.Ipam Subnet Create
                                ...  PCC.Wait Until Ipam Subnet Ready
-        [Tags]        cluster_head
 
         ${response}                 PCC.Ipam Subnet Create
                                ...  name=${IPAM_CONTROL_SUBNET_NAME}
@@ -217,7 +216,6 @@ Network Manager Creation
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE 
 
-        [Tags]       cluster_head 
 
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
@@ -325,6 +323,38 @@ Create Kubernetes cluster
 
                                     Should Be Equal As Strings      ${status}    OK
 
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                             ...    Name=Kubernetes Resource
+                             ...    nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+        
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK                            
+
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+                                    
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+        
+                                    Should Be Equal As Strings    ${status}    OK
+                                    
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+        
+                                    Should Be Equal As Strings    ${status}    OK
+                                                                        
+                            
+
+
 ###################################################################################################################################
 Ceph Cluster Create
 ###################################################################################################################################
@@ -359,6 +389,36 @@ Ceph Cluster Create
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK
+
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                               ...  Name=Ceph Resource
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate CEPH Resource
+                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate CEPH Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate CEPH Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
 
 
 ###################################################################################################################################

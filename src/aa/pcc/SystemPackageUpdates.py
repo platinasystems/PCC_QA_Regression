@@ -120,7 +120,7 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
                 print(" ===============  Searching in repo list: deb https://download.docker.com/linux/debian stretch stable =========== ")
-                if re.search(r"deb https://download.docker.com/linux/debian stretch stable", str(check_repo_list_output)):
+                if (re.search(r"deb https://download.docker.com/linux/debian stretch stable", str(check_repo_list_output))) or (re.search(r"deb https://download.docker.com/linux/ubuntu bionic stable", str(check_repo_list_output))):
                     validation_checks.append("OK")
 
                 print("================  Searching in gpg keys: Docker Release (CE deb) ============= ")
