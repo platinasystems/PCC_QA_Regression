@@ -37,6 +37,7 @@ class ErasureCodedPool(AaBase):
         self.ErasureCodeProfileID = None
         self.Datachunks = None
         self.Codingchunks = None
+        self.resilienceScheme = None
         super().__init__()
 
     ###########################################################################
@@ -180,24 +181,26 @@ class ErasureCodedPool(AaBase):
             self.Datachunks = None
             self.Codingchunks = None
         
-        if self.pool_type == "erasure" and self.Datachunks and self.Codingchunks:
+        if self.pool_type == "data" and self.resilienceScheme == "erasure" and self.Datachunks and self.Codingchunks:
             print("I am in 1")
             payload = {"name":self.name,
-                      "pool_type":self.pool_type,
+                      "type":self.pool_type,
                       "size":self.size,
                       "quota":self.quota,
+                      "resilienceScheme":self.resilienceScheme,
                       "quota_unit":self.quota_unit,
                       "ceph_cluster_id":self.ceph_cluster_id,
                       "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)}
                       }
                       
-        elif self.pool_type == "erasure" and self.ErasureCodeProfileID:
+        elif self.pool_type == "data" and self.resilienceScheme == "erasure"  and self.ErasureCodeProfileID:
             print("I am in 2")
             payload = {"name":self.name,
-                      "pool_type":self.pool_type,
+                      "type":self.pool_type,
                       "size":self.size,
                       "quota":str(self.quota),
                       "quota_unit":self.quota_unit,
+                      "resilienceScheme":self.resilienceScheme,
                       "ceph_cluster_id":self.ceph_cluster_id,
                       "erasureCodeProfileId":self.ErasureCodeProfileID,
                       }              
@@ -209,7 +212,8 @@ class ErasureCodedPool(AaBase):
                 "size":self.size,
                 "tags":self.tags,
                 "ceph_cluster_id":self.ceph_cluster_id,
-                "pool_type":self.pool_type,
+                "type":self.pool_type,
+                "resilienceScheme":self.resilienceScheme,
                 "quota":str(self.quota),
                 "quota_unit":self.quota_unit
             }
@@ -257,24 +261,26 @@ class ErasureCodedPool(AaBase):
         for i in range(1,self.count+1):
             name=str(name_bkup)+"-"+str(i)
             
-            if self.pool_type == "erasure" and self.Datachunks and self.Codingchunks:
+            if self.pool_type == "data" and self.resilienceScheme == "erasure"  and self.Datachunks and self.Codingchunks:
                 print("I am in 1")
                 payload = {"name":name,
-                          "pool_type":self.pool_type,
+                          "type":self.pool_type,
                           "size":self.size,
                           "quota":self.quota,
                           "quota_unit":self.quota_unit,
+                          "resilienceScheme":self.resilienceScheme,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)}
                           }
             
-            if self.pool_type == "erasure" and self.ErasureCodeProfileID:
+            if self.pool_type == "data" and self.resilienceScheme == "erasure"  and self.ErasureCodeProfileID:
                 print("I am in 2")
                 payload = {"name":name,
-                          "pool_type":self.pool_type,
+                          "type":self.pool_type,
                           "size":self.size,
                           "quota":self.quota,
                           "quota_unit":self.quota_unit,
+                          "resilienceScheme":self.resilienceScheme,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfileId":self.ErasureCodeProfileID
                           }
@@ -285,8 +291,9 @@ class ErasureCodedPool(AaBase):
                     "size":self.size,
                     "tags":self.tags,
                     "ceph_cluster_id":self.ceph_cluster_id,
-                    "pool_type":self.pool_type,
+                    "type":self.pool_type,
                     "quota":self.quota,
+                    "resilienceScheme":self.resilienceScheme,
                     "quota_unit":self.quota_unit
                     }
             #payload = json.dumps(payload)        
@@ -441,25 +448,27 @@ class ErasureCodedPool(AaBase):
         try:
             
             
-            if self.pool_type == "erasure" and self.Datachunks and self.Codingchunks:
+            if self.pool_type == "data" and self.resilienceScheme == "erasure"  and self.Datachunks and self.Codingchunks:
                 print("I am in 1")
                 payload = {"id":self.id,
                           "name":self.name,
-                          "pool_type":self.pool_type,
+                          "type":self.pool_type,
                           "size":self.size,
                           "quota":self.quota,
+                          "resilienceScheme":self.resilienceScheme,
                           "quota_unit":self.quota_unit,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)}
                           }
                           
-            elif self.pool_type == "erasure" and self.ErasureCodeProfileID:
+            elif self.pool_type == "data" and self.resilienceScheme == "erasure" and self.ErasureCodeProfileID:
                 print("I am in 2")
                 payload = {"id":self.id,  
                           "name":self.name,
-                          "pool_type":self.pool_type,
+                          "type":self.pool_type,
                           "size":self.size,
                           "quota":self.quota,
+                          "resilienceScheme":self.resilienceScheme,
                           "quota_unit":self.quota_unit,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfileId":self.ErasureCodeProfileID
@@ -472,7 +481,8 @@ class ErasureCodedPool(AaBase):
                 "size":self.size,
                 "tags":self.tags,
                 "ceph_cluster_id":self.ceph_cluster_id,
-                "pool_type":self.pool_type,
+                "type":self.pool_type,
+                "resilienceScheme":self.resilienceScheme,
                 "quota":self.quota,
                 "quota_unit":self.quota_unit
                  }
