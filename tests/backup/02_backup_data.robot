@@ -363,6 +363,7 @@ Ceph Cluster Create
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
+
         ${id}                       PCC.Ceph Get Cluster Id
                               ...   name=${CEPH_CLUSTER_NAME}
                                     Pass Execution If    ${id} is not ${None}    Cluster is alredy there
@@ -389,6 +390,22 @@ Ceph Cluster Create
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK
+
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+        
+                                    Should Be Equal As Strings      ${status_code}  OK
+        
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${SERVER_1_NAME}
+                
+                                    Should Be Equal As Strings      ${status_code}  OK   
+                                                     
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${SERVER_2_NAME}
+                        
+                                    Should Be Equal As Strings      ${status_code}  OK                    
 
 
         ${status}                   PCC.Verify Node Role On Nodes
