@@ -346,7 +346,7 @@ Check if an user is able to define a policy to disable Automatic Daily Updates(T
                                           ...  appId=${app_id}
                                           ...  description=Automatic-upgrade-policy
                                           ...  scopeIds=[${default_rack_Id}]
-                                          ...  inputs=[{"name": "enabled","value": "yes"}]
+                                          ...  inputs=[{"name": "enabled","value": "true"}]
 
                                           Log To Console    ${response}
                                           ${result}    Get Result    ${response}
@@ -390,7 +390,7 @@ Check if an user is able to define a policy to disable Automatic Daily Updates(T
                        ...  appId=${app_id}
                        ...  scopeIds=[${default_rack_Id}]
                        ...  description=Automatic-upgrade-policy
-                       ...  inputs=[{"name": "enabled","value": "no"}]
+                       ...  inputs=[{"name": "enabled","value": "false"}]
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}

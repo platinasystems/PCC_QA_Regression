@@ -1213,4 +1213,260 @@ Verifying Rsyslog Policy assignment from backend
                                             Log To Console    ${status}
                                             Should Be Equal As Strings    ${status}    rsyslog Package installed
 
+##################################################################################################################################
+Create Automatic upgrade policy
+##################################################################################################################################
+        [Documentation]                 *Create Automatic upgrade policy*
+                                     ...  keywords:
+                                     ...  PCC.Create Policy
+                                     
+       [Tags]            cluster_head           
+           
+       ${default_region_Id}    PCC.Get Scope Id
+                               ...  scope_name=Default region
+                               Log To Console    ${default_region_Id}
+                               Set Global Variable    ${default_region_Id}
+
+       ${default_zone_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default zone
+                             ...  parentID=${default_region_Id}
+
+                             Log To Console    ${default_zone_Id}
+                             Set Global Variable    ${default_zone_Id}
+
+       ${default_site_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default site
+                             ...  parentID=${default_zone_Id}
+                             Log To Console    ${default_site_Id}
+                             Set Global Variable    ${default_site_Id}
+
+       ${default_rack_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default rack
+                             ...  parentID=${default_site_Id}
+                             Log To Console    ${default_rack_Id}
+                             Set Global Variable    ${default_rack_Id}
+
+       ${app_id}             PCC.Get App Id from Policies
+                             ...  Name=automatic-upgrades
+                             Log To Console    ${app_id}
+
+       ${response}           PCC.Create Policy
+                             ...  appId=${app_id}
+                             ...  description=Automatic-upgrade-policy
+                             ...  scopeIds=[${default_rack_Id}]
+                             ...  inputs=[{"name": "enabled","value": "true"}]
+
+                             Log To Console    ${response}
+                             ${result}    Get Result    ${response}
+                             ${status}    Get From Dictionary    ${result}    status
+                             ${message}    Get From Dictionary    ${result}    message
+                             Log to Console    ${message}
+                             Should Be Equal As Strings    ${status}    200
+
+       ${node_wait_status}   PCC.Wait Until Node Ready
+                             ...  Name=${CLUSTERHEAD_1_NAME}
+
+                             Log To Console    ${node_wait_status}
+                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_1_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_3_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+
+                ### Validation after setting automatic-upgrades to Yes ####
+
+       ${status}             CLI.Automatic Upgrades Validation
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                             Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_2_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_1_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_2_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_3_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+#
+
+
+###############################################################################################################################################
+Update Automatic upgrade policy value
+###############################################################################################################################################
+
+    [Documentation]                 *Update Automatic upgrade policy value*
+                                    ...  keywords:
+                                    ...  PCC.Create Policy
+                                    
+       [Tags]        cluster_head
+
+       ${default_region_Id}    PCC.Get Scope Id
+                               ...  scope_name=Default region
+                               Log To Console    ${default_region_Id}
+                               Set Global Variable    ${default_region_Id}
+
+       ${default_zone_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default zone
+                             ...  parentID=${default_region_Id}
+
+                             Log To Console    ${default_zone_Id}
+                             Set Global Variable    ${default_zone_Id}
+
+       ${default_site_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default site
+                             ...  parentID=${default_zone_Id}
+                             Log To Console    ${default_site_Id}
+                             Set Global Variable    ${default_site_Id}
+
+       ${default_rack_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default rack
+                             ...  parentID=${default_site_Id}
+                             Log To Console    ${default_rack_Id}
+                             Set Global Variable    ${default_rack_Id}           
+
+                ### Setting automatic-upgrades policy to No
+
+       ${policy_id}    PCC.Get Policy Id
+                       ...  Name=automatic-upgrades
+                       ...  description=Automatic-upgrade-policy
+                                                Log To Console    ${policy_id}
+
+       ${app_id}            PCC.Get App Id from Policies
+                       ...  Name=automatic-upgrades
+                            Log To Console    ${app_id}
+
+
+
+       ${response}          PCC.Update Policy
+                       ...  Id=${policy_id}
+                       ...  appId=${app_id}
+                       ...  scopeIds=[${default_rack_Id}]
+                       ...  description=Automatic-upgrade-policy
+                       ...  inputs=[{"name": "enabled","value": "false"}]
+
+                            Log To Console    ${response}
+                            ${result}    Get Result    ${response}
+                            ${status}    Get From Dictionary    ${result}    status
+                            ${message}    Get From Dictionary    ${result}    message
+                            Log to Console    ${message}
+                            Should Be Equal As Strings    ${status}    200
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_1_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_1_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_3_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+
+
+                ### Validation after setting automatic-upgrades to No ####
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_1_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_2_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_1_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_2_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                             Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_3_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+
+
+
+
 
