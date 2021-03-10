@@ -520,7 +520,8 @@ Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-                                    
+	                            Sleep    5 minutes
+				                                    
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 #####################################################################################################################################
@@ -809,6 +810,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
+				    Sleep    5 minutes
                                     
 ###################################################################################################################################
 #Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts (ServiceIp As NodeIp)
@@ -1251,7 +1253,8 @@ Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
- 
+ 				    Sleep    5 minutes
+
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Ceph Node
 #####################################################################################################################################
@@ -1305,6 +1308,7 @@ Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_3_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
+				    Sleep    5 minutes
                                     
 #####################################################################################################################################
 #App credentials associated with RGW instance would work with each node running RGW service 
