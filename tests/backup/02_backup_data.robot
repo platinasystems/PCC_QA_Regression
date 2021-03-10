@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	policy
+	[Tags]	cluster_head
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -66,6 +66,7 @@ Create Subnets For Network Manager
                                ...  keywords:
                                ...  PCC.Ipam Subnet Create
                                ...  PCC.Wait Until Ipam Subnet Ready
+        [Tags]        cluster_head
 
         ${response}                 PCC.Ipam Subnet Create
                                ...  name=${IPAM_CONTROL_SUBNET_NAME}
@@ -95,6 +96,118 @@ Create Subnets For Network Manager
 
                                     Should Be Equal As Strings      ${status}    OK
 
+##########################################################################################################################################
+Assign and validate Cluster Head node role to the cluster heads
+###########################################################################################################################################
+
+    [Documentation]                 *Assign and validate Cluster Head node role to the cluster heads*
+                               ...  Keywords:
+                               ...  PCC.Add and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes
+                               ...  PCC.Verify Node Role On Nodes
+                               ...  CLI.Validate Platina Systems Package repository
+
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  roles=["Cluster Head","Default"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                             ...    Name=Cluster Head
+                             ...    nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Platina Systems Package repository
+                              ...   host_ip=${CLUSTERHEAD_1_NAME}
+                              ...   linux_user=pcc
+                              ...   linux_password=cals0ft
+
+                                    Should Not Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Platina Systems Package repository
+                              ...   host_ip=${CLUSTERHEAD_2_NAME}
+                              ...   linux_user=pcc
+                              ...   linux_password=cals0ft
+
+                                    Should Not Be Equal As Strings    ${status}    OK
+
+        ${status}                   PCC.Node Verify Back End
+                             ...    host_ips=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                    Log To Console    ${status}
+                                    Run Keyword If  "${status}" != "OK"  Fatal Error
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Verify LLDP Neighbors
+                             ...    servers_hostip=['${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}']
+                             ...    invaders_hostip=['${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.OS Package repository
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+        
+        ${status}                   CLI.OS Package repository
+                             ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK                            
+
+        ${status}                   CLI.Validate Node Self Healing
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Node Self Healing
+                             ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Automatic Upgrades Validation
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+
+        ${status}                   PCC.Check NTP services from backend
+                              ...   targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+
+        ${status}                   CLI.Validate Ethtool
+                             ...    host_ips=['${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+                    
+
+
 ###################################################################################################################################
 Network Manager Creation 
 ###################################################################################################################################
@@ -103,6 +216,9 @@ Network Manager Creation
                                ...  PCC.Network Manager Create
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE 
+
+        [Tags]       cluster_head 
+
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
@@ -125,6 +241,51 @@ Network Manager Creation
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK 
+
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                               ...  Name=Network Resource
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+            
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+                                
+
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+        
+                                    Should Be Equal As Strings    ${status}    OK                            
+
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK 
+                                    
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK 
+                                    
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK  
+        
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${SERVER_3_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK                              
+                                                      
 
 ###################################################################################################################################
 Create Kubernetes cluster
