@@ -240,7 +240,7 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
                 print("===========  Searching in repo list: FRRouting Packages for Enterprise Linux 7 - x86_64 ================")
-                if re.search(r"FRRouting Packages for Enterprise Linux 7 - x86_64", str(check_repo_list_output)) and re.search("FRRouting Dependencies for Enterprise Linux 7 - x86_64", str(check_repo_list_output)):
+                if re.search(r"FRRouting Packages for Enterprise Linux 7", str(check_repo_list_output)) and re.search("FRRouting Dependencies for Enterprise Linux 7", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==1):

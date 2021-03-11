@@ -9,7 +9,7 @@ ${pcc_setup}                 pcc_212
 Login
 ###################################################################################################################################
 
-	[Tags]    rsyslog
+	[Tags]    br
 
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
@@ -322,6 +322,8 @@ Ceph Validation after restoring PCC
                                ...  PCC.Ceph Wait Until Rgw Ready
                                ...  PCC.Ceph Wait Until Fs Ready
 
+        [Tags]        br
+
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
@@ -472,6 +474,8 @@ Network Cluster Validation after restoring PCC
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE
                                ...  PCC.Health Check Network Manager
+
+        [Tags]        br
 
         ${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
