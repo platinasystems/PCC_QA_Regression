@@ -54,6 +54,7 @@ class OS_Deployment(AaBase):
         self.setup_password = None
         self.pcc_username = None
         self.pcc_password = None
+        self.set_password_server = None
         super().__init__()
 
     ###########################################################################
@@ -373,22 +374,19 @@ class OS_Deployment(AaBase):
     def set_password_on_server(self, *args, **kwargs):
         banner("PCC.Set password on Server")
         self._load_kwargs(kwargs)             
-        try: 
-            cmd='ssh-keygen -R {}'.format(self.host_ip)
-            cmd1='ssh-keyscan {} >> ~/.ssh/known_hosts'.format(self.host_ip)
-            print("******************")
-            print("Command for removing server from host file {}".format(cmd))
-            print("Command for addinging server in host file {}".format(cmd1))
-            print("******************")
-            access_output = os.system(cmd)
-            accss_output1 = os.system(cmd1)
-            print("******************")
-            print("Output is:{}".format(str(access_output)))
-            print("******************")
-            if int(access_output)==0:
-                return "OK"
-            else:
-                return "Error"
+        try:
+            cmd = """ssh -i id_rsa_khushboo admin@{} -t 'echo -e "cals0ft\ncals0ft" | sudo passwd pcc'""".format(self.set_password_server)
+            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
+            trace("Set_password_on_i28: {}".format(str(cmd_output)))
+
+            cmd1 = 'sudo ssh-keygen -f "/root/.ssh/known_hosts" -R "{}"'.format(self.set_password_server)
+            cmd_output1 = cli_run(cmd=cmd1, host_ip="172.17.3.225", linux_user="jenkins",linux_password="jenkins")
+            trace("Output for removing ssh-keygen: {}".format(str(cmd_output1)))
+
+            date_cmd = "date"
+            cmd_output = cli_run(cmd=date_cmd, host_ip=self.set_password_server, linux_user=self.username,linux_password=self.password)
+            trace("Date Command output is :{}".format(str(cmd_output)))
+            return "OK"
             
         except Exception as e:
             logger.console("Error in set password on server:" + str(e))
