@@ -285,10 +285,27 @@ class CephCluster(AaBase):
     ###########################################################################
     def ceph_cleanup_be(self,**kwargs):
         self._load_kwargs(kwargs)
-        cmd="sudo wipefs -a /dev/sdb; sudo wipefs -a /dev/sdc"
+        cmd1 = "sudo lsblk | grep 'disk' | awk '{print $1}'"
+        
         for ip in self.nodes_ip:
-            data=cli_run(ip,self.user,self.password,cmd)
-        time.sleep(30)
+            trace("======== cmd: {} is getting executed ========".format(cmd1))
+            print("======== cmd: {} is getting executed ========".format(cmd1))
+            drives_op = cli_run(ip,self.user,self.password,cmd1)
+
+            trace("Drives_op: {}".format(str(drives_op)))
+            print("Drives_op: {}".format(str(drives_op)))
+
+            serialized_drives = str(self._serialize_response(time.time(), drives_op )['Result']['stdout']).strip().split('\n')[1:]
+            trace("serialized_drives: {}".format(serialized_drives))
+            print("serialized_drives: {}".format(serialized_drives))
+            for drive in serialized_drives:
+                cmd2="sudo wipefs -a /dev/{}".format(drive.strip())
+                trace("======== cmd: {} is getting executed ========".format(cmd2))
+                print("======== cmd: {} is getting executed ========".format(cmd2))
+                clean_drives_op = cli_run(ip,self.user,self.password,cmd2)
+                trace("Clean drives output:{}".format(str(clean_drives_op)))
+                print("Clean drives output:{}".format(str(clean_drives_op)))
+                time.sleep(5)
         return "OK"
 
     ###########################################################################
