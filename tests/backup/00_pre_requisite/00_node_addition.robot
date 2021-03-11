@@ -100,7 +100,7 @@ Nodes Verification Back End (Services should be running and active)
                                     Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
 
         ${status}                   PCC.Check NTP services from backend
-                              ...   targetNodeIp=['${SERVER_2_HOST_IP},'${SERVER_1_HOST_IP}','${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+                              ...   targetNodeIp=['${SERVER_2_HOST_IP}','${SERVER_1_HOST_IP}','${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
 
                                     Log To Console    ${status}
                                     Should Be Equal As Strings      ${status}  OK
