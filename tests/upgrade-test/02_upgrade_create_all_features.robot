@@ -208,7 +208,7 @@ Network Manager Creation
 
 		####  Verify Network Manager from Backend ####
 		${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP} 
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -274,7 +274,7 @@ Ceph Cluster Create
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=${CEPH_CLUSTER_NODES}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
@@ -288,30 +288,30 @@ Ceph Cluster Create
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 									
-####################################################################################################################################
-#Ceph Crush Map Validation
-####################################################################################################################################
-#    [Documentation]                 *Ceph Crush Map Validation*
-#                               ...  keywords:
-#                               ...  CLI.Validate CEPH Crush Map From Backend
-#    [Tags]    ceph
-#
-#        ${status}    CLI.Validate CEPH Crush Map From Backend
-#                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
-#                     ...  hostip=${SERVER_1_HOST_IP}
-#
-#                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
-#
-#
-#	${status}    CLI.Validate CEPH Crush Map From Backend
-#                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
-#		     ...  hostip=${SERVER_2_HOST_IP}
-#
-#                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
-#
+###################################################################################################################################
+Ceph Crush Map Validation
+###################################################################################################################################
+    [Documentation]                 *Ceph Crush Map Validation*
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Crush Map From Backend
+    [Tags]    ceph
+
+        ${status}    CLI.Validate CEPH Crush Map From Backend
+                     ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                     ...  hostip=${SERVER_3_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+
+
+	${status}    CLI.Validate CEPH Crush Map From Backend
+                     ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+		     ...  hostip=${SERVER_2_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+
 ###################################################################################################################################
 Ceph Storage Type Validation
 ###################################################################################################################################
@@ -322,7 +322,7 @@ Ceph Storage Type Validation
 
         ${status}    CLI.Validate CEPH Storage Type
                      ...  storage_types=['filestore']
-                     ...  hostip=${SERVER_1_HOST_IP}
+                     ...  hostip=${SERVER_3_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 	
@@ -342,7 +342,7 @@ Ceph Architecture- Nodes and OSDs
 
         ${status}    PCC.Ceph Nodes OSDs Architecture Validation
                      ...  name=${CEPH_CLUSTER_NAME}
-                     ...  hostip=${SERVER_1_HOST_IP}
+                     ...  hostip=${SERVER_2_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
@@ -369,7 +369,7 @@ Ceph Pools For Upgrade
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                           ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -404,7 +404,7 @@ Ceph Pools For Upgrade
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                           ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -421,7 +421,7 @@ Ceph Pools For Upgrade
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                           ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -438,7 +438,7 @@ Ceph Pools For Upgrade
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                           ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -493,7 +493,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Upgrade
                                                 Should Be Equal As Strings      ${status}    OK
                
         ${backend_status}                       PCC.Ceph Rgw Verify BE Creation
-                                           ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                                           ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                                 Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
@@ -576,7 +576,7 @@ Ceph Fs Creation For Upgrade
                                            ...  name=${CEPH_FS_NAME}
                                            ...  user=${PCC_LINUX_USER}
                                            ...  password=${PCC_LINUX_PASSWORD}
-                                           ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                           ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                                 Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################

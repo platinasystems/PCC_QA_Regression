@@ -55,7 +55,7 @@ Network Manager Update after Upgrade
         ${response}                 PCC.Network Manager Update
                                ...  id=${network_id}
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -68,7 +68,7 @@ Network Manager Update after Upgrade
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -81,7 +81,7 @@ Network Manager Update after Upgrade
 		${response}                 PCC.Network Manager Update
                                ...  id=${network_id}
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -179,7 +179,7 @@ Ceph Cluster Update - Add Invader- After Upgrade
 
         ${response}                 PCC.Ceph Cluster Update
                                ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -192,7 +192,7 @@ Ceph Cluster Update - Add Invader- After Upgrade
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK       
                                     
 ###################################################################################################################################
@@ -246,7 +246,7 @@ Down And Up The Interface And Check For Ceph - After Upgrade
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
 
