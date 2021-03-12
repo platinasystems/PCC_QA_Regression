@@ -320,7 +320,7 @@ Ceph Cluster Update - Remove 2 Mons Nodes
 
         ${response}                 PCC.Ceph Cluster Update
                                ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -334,8 +334,16 @@ Ceph Cluster Update - Remove 2 Mons Nodes
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
+
+	#### Wiping the drives after node removal #######
+	${status}                   PCC.Ceph Cleanup BE
+                               ...  nodes_ip=["${SERVER_2_HOST_IP}"]
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+
+                                    Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 #Reboot Node And Verify Ceph Is Intact

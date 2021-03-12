@@ -45,6 +45,70 @@ Login to PCC.
 #                 Log To Console    ${status}
 #                 Should be equal as strings    ${status}    OK
 #
+
+###################################################################################################################################
+Ceph Cluster Update- Remove node from Cluster For OS deployment
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Remove Node from Kubernetes cluster to perform OS deployment
+###################################################################################################################################
+       [Documentation]             *Remove Node to Kubernetes cluster*
+                               ...  Keywords:
+                              ...  PCC.K8s Update Cluster Nodes
+                              ...  PCC.K8s Get Cluster Id
+                              ...  PCC.K8s Wait Until Cluster is Ready                             
+       ${cluster_id}               PCC.K8s Get Cluster Id
+                              ...  name=${K8S_NAME}
+
+       ${response}                 PCC.K8s Update Cluster Nodes
+                              ...  cluster_id=${cluster_id}
+                              ...  name=${K8S_NAME}
+                              ...  toRemove=["${SERVER_2_NAME}"]
+                              ...  rolePolicy=auto
+
+       ${status_code}              Get Response Status Code        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
+
+       ${status}                   PCC.K8s Wait Until Cluster is Ready
+                              ...  name=${K8S_NAME}
+                                   Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Update OS Images
 ###################################################################################################################################
