@@ -210,7 +210,7 @@
             "name":"ceph-pvt",
             "nodes":["qa-server-100","qa-server-101","qa-clusterhead-10","sv69"],
             "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.10","172.17.10.12"],
-            "tags":["ISCSI"],
+            "tags":["iSCSI"],
             "networkClusterName":"network-pvt"
         },
   
