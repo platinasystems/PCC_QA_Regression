@@ -28,6 +28,7 @@ class PhoneHome(AaBase):
         self.password = "cals0ft"
         self.setup_username = None
         self.tar_file_type = None
+        self.get_file_name = None
         super().__init__()
 
     ###########################################################################
@@ -80,7 +81,7 @@ class PhoneHome(AaBase):
                 else:
                     validation_status.append("Not found:{}".format(i))
 
-            if len(validation_status) > 0 and all(elem == True for elem in validation_status):
+            if len(validation_status) > 0 and all(elem == "OK" for elem in validation_status):
                 return "OK"
             else:
                 return "Error:validation failed-{}".format(validation_status)
@@ -145,30 +146,33 @@ class PhoneHome(AaBase):
         trace("timeout is: {}".format(timeout))
         cmd = "sudo /home/pcc/platina-cli-ws/platina-cli support jobs"
         finished = False
+        cmd_output = str(cli_run(self.host_ip, self.user, self.password, cmd))
+        file_name = midtext('collecting','-manual', str(cmd_output))
         while not finished:
+            print("==================================================================================================")
             cmd_output = str(cli_run(self.host_ip, self.user, self.password, cmd))
             trace("cmd_output: {}".format(cmd_output))
             print("cmd_output: {}".format(cmd_output))
-            #serialised_output = str(cmd_output['Result']['stdout']).replace('\n', '').strip()
+            trace("File name is : {}".format(str(file_name)))
+            print("File_name is : {}".format(str(file_name)))
             if time.time() > timeout:
                 return "Timeout: Still in collecting state"
-            if re.search("collecting", cmd_output) or re.search("processing", cmd_output):
+            if re.search("collecting  {}".format(file_name), cmd_output) or re.search("processing  {}".format(file_name), cmd_output) or re.search("submitting  {}".format(file_name), cmd_output):
                 time.sleep(30)
                 trace("Still collecting/processing phone home data... Please wait")
                 print("Still collecting/processing phone home data... Please wait")
                 continue
-            if re.search("end",cmd_output) and ("collecting" not in cmd_output) and (
-                    "processing" not in cmd_output):
+            if re.search("end     {}".format(file_name),cmd_output):
                 trace("Finished Phone home job")
                 print("Finished Phone home job")
-                return "OK"
-            if re.search("error", cmd_output):
+                return "OK",file_name
+            if re.search("error       {}".format(file_name), cmd_output):
                 trace("Error: Phone Home Job Failed")
                 print("Error: Phone Home Job Failed")
-                return "Error: Phone Home Job Failed"
+                return "Error: Phone Home Job Failed", file_name
 
             else:
-                return "Error: Phone Home Job Failed"
+                return ["Error: Phone Home Job Failed", file_name]
 
     ###########################################################################
     @keyword(name="PCC.PhoneHome Verify Success Logs In Container")
@@ -178,6 +182,7 @@ class PhoneHome(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
+
         date_cmd = cli_run(self.host_ip, self.user, self.password, "date +%Y-%m-%d")
         trace("date_cmd output is: {}".format(date_cmd))
         print("date_cmd output is: {}".format(date_cmd))
@@ -186,7 +191,7 @@ class PhoneHome(AaBase):
         print("Serialised date_cmd_op: {}".format(date_cmd_op))
         docker_cp_cmd = "sudo docker cp phone-home:home/logs/default.log /home/pcc/"
         docker_cp_cmd_output = cli_run(self.host_ip, self.user, self.password, docker_cp_cmd)
-        default_log_success_check = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"| grep "{}"|wc -l'.format(date_cmd_op)
+        default_log_success_check = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "{}"| grep "{}"|wc -l'.format(self.get_file_name,date_cmd_op)
         trace("default_log_success_check: {}".format(default_log_success_check))
         print("default_log_success_check: {}".format(default_log_success_check))
 
@@ -207,9 +212,10 @@ class PhoneHome(AaBase):
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
+
         date_cmd = cli_run(self.host_ip, self.user, self.password, "date +%Y-%m-%d")
         date_cmd_op = self._serialize_response(time.time(), date_cmd)['Result']['stdout'].strip()
-        manual_tar_file_command = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "manual"|grep "{}"'.format(date_cmd_op)
+        manual_tar_file_command = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "manual"|grep "{}"|grep "{}"'.format(self.get_file_name,date_cmd_op)
         manual_tar_file_command_output = cli_run(self.host_ip, self.user, self.password, manual_tar_file_command)
         manual_tar_file_serialize_output = self._serialize_response(time.time(), manual_tar_file_command_output)['Result']['stdout'].strip()
         manual_tar_file = midtext('uploaded ', "(", manual_tar_file_serialize_output)
@@ -225,28 +231,29 @@ class PhoneHome(AaBase):
         manual_tar['tar_file_without_user'] = split_manual_tar_file[0].replace('".', '').replace(self.setup_username,"")
         manual_tar['size'] = float(split_manual_tar_file[2])
 
-        daily_tar_file_command = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "daily"|grep "{}"'.format(date_cmd_op)
-        daily_tar_file_command_output = cli_run(self.host_ip, self.user, self.password, daily_tar_file_command)
-        daily_tar_file_serialize_output = self._serialize_response(time.time(), daily_tar_file_command_output)['Result']['stdout'].strip()
-        daily_tar_file = midtext('uploaded ', "(", daily_tar_file_serialize_output)
-        trace("daily_tar_file: {}".format(daily_tar_file))
-        print("daily_tar_file: {}".format(daily_tar_file))
+        #daily_tar_file_command = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "daily"|grep "{}"'.format(date_cmd_op)
+        #daily_tar_file_command_output = cli_run(self.host_ip, self.user, self.password, daily_tar_file_command)
+        #daily_tar_file_serialize_output = self._serialize_response(time.time(), daily_tar_file_command_output)['Result']['stdout'].strip()
+        #daily_tar_file = midtext('uploaded ', "(", daily_tar_file_serialize_output)
+        #trace("daily_tar_file: {}".format(daily_tar_file))
+        #print("daily_tar_file: {}".format(daily_tar_file))
 
         ######## Road_Runner/30862a4df11a/2021-02-23-16.30.00.427008-utc-daily.tar.xz". Size: 96.11 MiB
 
-        split_daily_tar_file = daily_tar_file.split(" ")
-        daily_tar = {}
-        trace("split_daily_tar_file: {}".format(split_daily_tar_file))
-        print("split_daily_tar_file : {}".format(split_daily_tar_file))
-        daily_tar['name'] = split_daily_tar_file[0].replace('".', '')
-        daily_tar['tar_file_without_user'] = split_daily_tar_file[0].replace('".', '').replace(self.setup_username,"")
-        daily_tar['size'] = float(split_daily_tar_file[2])
+        #split_daily_tar_file = daily_tar_file.split(" ")
+        #daily_tar = {}
+        #trace("split_daily_tar_file: {}".format(split_daily_tar_file))
+        #print("split_daily_tar_file : {}".format(split_daily_tar_file))
+        #daily_tar['name'] = split_daily_tar_file[0].replace('".', '')
+        #daily_tar['tar_file_without_user'] = split_daily_tar_file[0].replace('".', '').replace(self.setup_username,"")
+        #daily_tar['size'] = float(split_daily_tar_file[2])
 
         trace("manual_tar:{}".format(manual_tar))
-        trace("daily_tar:{}".format(daily_tar))
+        #trace("daily_tar:{}".format(daily_tar))
         print("manual_tar:{}".format(manual_tar))
-        print("daily_tar:{}".format(daily_tar))
-        return manual_tar,daily_tar
+        #print("daily_tar:{}".format(daily_tar))
+        #return manual_tar,daily_tar
+        return manual_tar
 
     ###########################################################################
     @keyword(name="PCC.PhoneHome Verify Tar File Size")
@@ -267,11 +274,12 @@ class PhoneHome(AaBase):
                     return "OK"
 
             if self.tar_file_type == "manual":
-                tar_file_size = self.fetch_tar_file_detail(**kwargs)[0]['size']
+                #tar_file_size = self.fetch_tar_file_detail(**kwargs)[0]['size']
+                tar_file_size = self.fetch_tar_file_detail(**kwargs)['size']
                 trace("tar_file_size:{}".format(tar_file_size))
                 print("tar_file_size:{}".format(tar_file_size))
                 if tar_file_size>500:
-                    return "Manual tar file size is greater than 100 MB"
+                    return "Manual tar file size is greater than 500 MB"
                 else:
                     return "OK"
 
@@ -290,16 +298,22 @@ class PhoneHome(AaBase):
         trace("Kwargs:" + str(kwargs))
         try:
 
-            tar_file_name = self.fetch_tar_file_detail(**kwargs)[0]['name']
+            #tar_file_name = self.fetch_tar_file_detail(**kwargs)[0]['name']
+            tar_file_name = self.fetch_tar_file_detail(**kwargs)['name']
+            cmd= "sudo mkdir /home/pcc/platina-cli-ws/phone-home"
             cmd1 = "sudo mkdir /home/pcc/platina-cli-ws/phone-home/without_ssl"
             cmd2 = "sudo tar -C /home/pcc/platina-cli-ws/phone-home/without_ssl -xvf /home/pcc/storage-s3/minio/volume/data/phone-home/{}".format(tar_file_name)
+            create_phone_home_folder = cli_run(self.host_ip, self.user, self.password, cmd)
             create_folder = cli_run(self.host_ip, self.user, self.password, cmd1)
             untar_file = cli_run(self.host_ip, self.user, self.password, cmd2)
 
-            trace("cmd1: {} executed".format(cmd1))
-            trace("cmd2: {} executed".format(cmd2))
-            print("cmd1: {} executed".format(cmd2))
-            print("cmd2: {} executed".format(cmd2))
+            trace("cmd: {} executed and status is :{}".format(cmd,str(create_phone_home_folder))) 
+            trace("cmd1: {} executed and status is :{}".format(cmd1,str(create_folder)))
+            trace("cmd2: {} executed and status is :{}".format(cmd2,str(untar_file)))
+            print("cmd: {} executed and status is :{}".format(cmd,str(create_phone_home_folder)))
+            print("cmd1: {} executed and status is :{}".format(cmd1,str(create_folder)))
+            print("cmd2: {} executed and status is :{}".format(cmd2,str(untar_file)))
+
             return "OK"
         except Exception as e:
             return "Exception occured in untar file:{}".format(e)
@@ -318,6 +332,9 @@ class PhoneHome(AaBase):
             cmd2 = "sudo cat /home/pcc/passphrase.json | grep 'gpg' | awk '{print $2}'"
             copy_privatekey_on_platina_cli = cli_run(self.host_ip, self.user, self.password, cmd1)
             passphrase_gpg_key = cli_run(self.host_ip, self.user, self.password, cmd2)
+            trace("copy_privatekey_on_platina_cli: {}".format(str(copy_privatekey_on_platina_cli)))
+            print("copy_privatekey_on_platina_cli: {}".format(str(copy_privatekey_on_platina_cli)))
+
             trace("passphrase_gpg_key: {}".format(passphrase_gpg_key))
             print("passphrase_gpg_key: {}".format(passphrase_gpg_key))
             passphrase_gpg_key_output = self._serialize_response(time.time(), passphrase_gpg_key)
@@ -326,10 +343,17 @@ class PhoneHome(AaBase):
             gpg_import_private_key = cli_run(self.host_ip, self.user, self.password, cmd3)
             trace("cmd3 executed: {}".format(cmd3))
             print("cmd3 executed: {}".format(cmd3))
+
+            trace("cmd3 status is: {}".format(str(gpg_import_private_key)))
+            print("cmd3 status is: {}".format(str(gpg_import_private_key)))
+
             cmd4 = "sudo gpg --list-secret-keys | grep Key"
             verify_setup_username = cli_run(self.host_ip, self.user, self.password, cmd4)
             trace("cmd4 executed: {}".format(cmd4))
             print("cmd4 executed: {}".format(cmd4))
+
+            trace("cmd4 status is: {}".format(str(verify_setup_username)))
+            print("cmd4 status is: {}".format(str(verify_setup_username)))
             if self.setup_username in verify_setup_username:
                 return "OK"
             else:
@@ -348,7 +372,8 @@ class PhoneHome(AaBase):
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
         try:
-            tar_file_name = self.fetch_tar_file_detail(**kwargs)[0]['name']
+            #tar_file_name = self.fetch_tar_file_detail(**kwargs)[0]['name']
+            tar_file_name = self.fetch_tar_file_detail(**kwargs)['name']
             cmd1 = "sudo mkdir /home/pcc/platina-cli-ws/phone-home/with_ssl"
             cmd2 = "sudo gpg --output /home/pcc/platina-cli-ws/phone-home/with_ssl/manual_untar_file.tar.xz --decrypt /home/pcc/storage-s3/minio/volume/data/phone-home/{}".format(tar_file_name)
             create_with_ssl_folder = cli_run(self.host_ip, self.user, self.password, cmd1)
@@ -370,19 +395,20 @@ class PhoneHome(AaBase):
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
         try:
-            cmd1 = 'sudo find /home/pcc/platina-cli-ws/phone-home/with_ssl/ -type f -name "*.log"'
+            cmd1 = 'sudo find /home/pcc/platina-cli-ws/phone-home/without_ssl/ -type f -name "*.log"'
             list_all_log_files = cli_run(self.host_ip, self.user, self.password, cmd1)
-            list_all_log_files = str(self._serialize_response(time.time(), list_all_log_files)['Result']['output'].strip()).replace('/home/pcc/platina-cli-ws/phone-home/with_ssl/','')
-            trace("list_all_log_files: {}".format(list_all_log_files))
-            print("list_all_log_files: {}".format(list_all_log_files))
-            validation_checks = ['mailer/logs/detailed.log','mailer/logs/default.log','security/home/logs/detailed.log','security/home/logs/error.log','security/home/logs/default.log','platina-executor/logs/detailed.log','platina-executor/logs/error.log','platina-executor/logs/ansible.log','platina-executor/logs/default.log','monitor/home/logs/detailed.log','monitor/home/logs/error.log','monitor/home/logs/default.log','user-management/home/logs/detailed.log','user-management/home/logs/error.log','user-management/home/logs/default.log','pccserver/logs/detailed.log','pccserver/logs/error.log','pccserver/logs/default.log','gateway/home/logs/detailed.log','gateway/home/logs/error.log','gateway/home/logs/default.log','key-manager/home/logs/detailed.log','key-manager/home/logs/error.log','key-manager/home/logs/default.log','maas/logs/detailed.log','maas/logs/error.log','maas/logs/default.log','platina-monitor/logs/detailed.log','platina-monitor/logs/error.log','platina-monitor/logs/default.log','registry/home/logs/detailed.log','registry/home/logs/error.log','registry/home/logs/default.log']
+            #list_all_log_files = str(self._serialize_response(time.time(), list_all_log_files)['Result']['output'].strip()).replace('/home/pcc/platina-cli-ws/phone-home/without_ssl/','')
+            trace("list_all_log_files: {}".format(str(list_all_log_files)))
+            print("list_all_log_files: {}".format(str(list_all_log_files)))
+            validation_checks = ['mailer/logs/detailed.log','mailer/logs/default.log','security/home/logs/detailed.log','security/home/logs/error.log','security/home/logs/default.log','platina-executor/logs/detailed.log','platina-executor/logs/ansible.log','platina-executor/logs/default.log','monitor/home/logs/detailed.log','monitor/home/logs/error.log','monitor/home/logs/default.log','user-management/home/logs/detailed.log','user-management/home/logs/error.log','user-management/home/logs/default.log','pccserver/logs/detailed.log','pccserver/logs/error.log','pccserver/logs/default.log','gateway/home/logs/detailed.log','gateway/home/logs/error.log','gateway/home/logs/default.log','key-manager/home/logs/detailed.log','key-manager/home/logs/error.log','key-manager/home/logs/default.log','maas/logs/detailed.log','maas/logs/error.log','maas/logs/default.log','platina-monitor/logs/detailed.log','platina-monitor/logs/error.log','platina-monitor/logs/default.log','registry/home/logs/detailed.log','registry/home/logs/error.log','registry/home/logs/default.log']
             status=[]
             for validation in validation_checks:
-                if re.search(str(validation), list_all_log_files):
+                if re.search(str(validation), str(list_all_log_files)):
+                    trace("{} found".format(validation))
                     status.append("OK")
                 else:
+                    trace("{} not found".format(validation))
                     status.append("{} not found".format(validation))
-                    return "Phone home log validation failed: {} not found".format(validation)
             trace("Status is :{}".format(status))
             print("status is :{}".format(status))
             result = len(status) > 0 and all(elem == "OK" for elem in status)
@@ -396,10 +422,10 @@ class PhoneHome(AaBase):
 
 
     ###########################################################################
-    @keyword(name="PCC.PhoneHome Encypted Values Validation")
+    @keyword(name="PCC.PhoneHome Encrypted Values Validation")
     ###########################################################################
-    def phone_home_encypted_value_validation(self, *arg, **kwargs):
-        banner("PCC.PhoneHome Encypted Values Validation")
+    def phone_home_encrypted_value_validation(self, *arg, **kwargs):
+        banner("PCC.PhoneHome Encrypted Values Validation")
         self._load_kwargs(kwargs)
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
@@ -408,19 +434,38 @@ class PhoneHome(AaBase):
             status = []
             for val in encrypted_values:
                 cmd1 = 'sudo grep -rnw "/home/pcc/platina-cli-ws/phone-home/" -e "{}"| wc -l'.format(val)
-                check_encypted_values = cli_run(self.host_ip, self.user, self.password, cmd1)
-                check_encypted_values_serialize = int(self._serialize_response(time.time(), check_encypted_values)['Result']['stdout'].strip())
-                if check_encypted_values_serialize == 0:
+                check_encrypted_values = cli_run(self.host_ip, self.user, self.password, cmd1)
+                check_encrypted_values_serialize = int(self._serialize_response(time.time(), check_encrypted_values)['Result']['stdout'].strip())
+                if check_encrypted_values_serialize == 0:
                     status.append("OK")
                 else:
-                    status.append("Not Encypted:{}".format(val))
+                    status.append("Not Encrypted:{}".format(val))
             trace("status is :{}".format(status))
             print("status is :{}".format(status))
             result = len(status) > 0 and all(elem == "OK" for elem in status)
             if result:
                 return "OK"
             else:
-                return "Result is :{}".format(result)
+                return "Result is :{}".format(status)
 
         except Exception as e:
-            return "Exception occured in phone home encypted value validation: {}".format(e)
+            return "Exception occured in phone home encrypted value validation: {}".format(e)
+
+    ###########################################################################
+    @keyword(name="PCC.PhoneHome Cleanup")
+    ###########################################################################
+    def phone_home_cleanup(self, *arg, **kwargs):
+        banner("PCC.PhoneHome Cleanup")
+        self._load_kwargs(kwargs)
+        print("Kwargs:" + str(kwargs))
+        trace("Kwargs:" + str(kwargs))
+        try:
+            cmds = ["sudo rm -rf /home/pcc/platina-cli-ws/phone-home", "sudo rm -rf /home/pcc/default.log", "sudo rm -rf /home/pcc/storage-s3/minio/volume/data/phone-home/{}".format(self.setup_username)] 
+            for cmd in cmds:
+                execution = cli_run(self.host_ip, self.user, self.password, cmd)
+                trace("Command: {} and status is :{}".format(cmd, execution))
+                print("Command: {} and status is :{}".format(cmd, execution))
+
+            return "OK"
+        except Exception as e:
+            return "Exception occured in phone_home_cleanup: {}".format(e)

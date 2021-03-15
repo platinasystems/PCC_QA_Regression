@@ -73,7 +73,7 @@ def cmp_json(data1,data2):
  
 def midtext(start,end,text):
     startpos = text.index(start)
-    endpos= text.index(end)
+    endpos= text.find(end,startpos+1)
     return(text[startpos+(len(start)+1):endpos].strip())
 
 ## Size converter function
