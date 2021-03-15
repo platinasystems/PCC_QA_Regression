@@ -1165,7 +1165,7 @@ Create a policy using Rsyslog(without TLS), assigning it to Node and Scope
 
         ${response}                         PCC.Add and Verify Roles On Nodes
                                             ...  nodes=["${SERVER_1_NAME}"]
-                                            ...  roles=["Rsyslog-NR"]
+                                            ...  roles=["Rsyslog-NR","Default"]
 
                                             Should Be Equal As Strings      ${response}  OK
 
@@ -1464,9 +1464,5 @@ Update Automatic upgrade policy value
 #                    ...     linux_password=cals0ft
 #
 #                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
-
-
-
-
 
 
