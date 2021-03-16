@@ -205,6 +205,34 @@ class PhoneHome(AaBase):
             return "Error: Phone home default success log verification failed"
 
     ###########################################################################
+    @keyword(name="PCC.PhoneHome Copy Public certificate And Private Key")
+    ###########################################################################
+    def copy_public_cert_and_private_key(self, *arg, **kwargs):
+        banner("PCC.PhoneHome Copy Public certificate And Private Key")
+        self._load_kwargs(kwargs)
+        print("Kwargs:" + str(kwargs))
+        trace("Kwargs:" + str(kwargs))
+
+        copy_public_cert = 'sudo docker cp /home/pcc/public.crt minio:/root/.minio/certs'
+        copy_private_key = 'sudo docker cp /home/pcc/private.key minio:/root/.minio/certs'
+        get_minio_container_id = "sudo docker ps -a | grep 'minio/minio'| awk '{print $1}'"
+
+        command_output_copy_public_cert = cli_run(self.host_ip, self.user, self.password, copy_public_cert)
+        command_output_copy_private_key = cli_run(self.host_ip, self.user, self.password, copy_private_key)
+        get_minio_container_id_output = cli_run(self.host_ip, self.user, self.password, get_minio_container_id)
+        minio_container_id = self._serialize_response(time.time(), get_minio_container_id_output)['Result']['stdout'].strip() 
+
+        restart_minio = 'sudo docker container restart {}'.format(minio_container_id)
+        restart_minio_output = cli_run(self.host_ip, self.user, self.password, restart_minio)
+        
+        print("cmd- {} executed successfully and output is :{}".format(copy_public_cert, str(command_output_copy_public_cert)))
+        print("cmd- {} executed successfully and output is :{}".format(copy_private_key, str(command_output_copy_private_key)))
+        print("cmd- {} executed successfully and output is :{}".format(restart_minio, str(restart_minio_output)))
+        
+        return "OK"
+
+
+    ###########################################################################
     @keyword(name="PCC.PhoneHome Fetch Tar File Details")
     ###########################################################################
     def fetch_tar_file_detail(self, *arg, **kwargs):
@@ -460,7 +488,7 @@ class PhoneHome(AaBase):
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
         try:
-            cmds = ["sudo rm -rf /home/pcc/platina-cli-ws/phone-home", "sudo rm -rf /home/pcc/default.log", "sudo rm -rf /home/pcc/storage-s3/minio/volume/data/phone-home/{}".format(self.setup_username)] 
+            cmds = ["sudo rm -rf /home/pcc/platina-cli-ws/phone-home", "sudo rm -rf /home/pcc/default.log", "sudo rm -rf /home/pcc/storage-s3/minio/volume/data/phone-home/{}/*".format(self.setup_username)] 
             for cmd in cmds:
                 execution = cli_run(self.host_ip, self.user, self.password, cmd)
                 trace("Command: {} and status is :{}".format(cmd, execution))
