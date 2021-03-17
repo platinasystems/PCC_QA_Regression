@@ -29,6 +29,7 @@ class PhoneHome(AaBase):
         self.setup_username = None
         self.tar_file_type = None
         self.get_file_name = None
+        self.encryption_type = None
         super().__init__()
 
     ###########################################################################
@@ -122,6 +123,25 @@ class PhoneHome(AaBase):
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
         cmd = "sudo /home/pcc/platina-cli-ws/platina-cli support data-push"
+        trace("Command:{}".format(str(cmd)))
+        print("Command:{}".format(str(cmd)))
+        cmd_execution = cli_run(self.host_ip, self.user, self.password, cmd)
+        trace("Command executed successfully")
+        print("Command executed successfully")
+        if re.search("FAIL", str(cmd_execution)):
+            return "Error"
+        else:
+            return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.PhoneHome Install Storage")
+    ###########################################################################
+    def install_storage(self, *arg, **kwargs):
+        banner("PCC.PhoneHome Install Storage")
+        self._load_kwargs(kwargs)
+        print("Kwargs:" + str(kwargs))
+        trace("Kwargs:" + str(kwargs))
+        cmd = "sudo /home/pcc/platina-cli-ws/platina-cli storage install"
         trace("Command:{}".format(str(cmd)))
         print("Command:{}".format(str(cmd)))
         cmd_execution = cli_run(self.host_ip, self.user, self.password, cmd)
@@ -365,7 +385,7 @@ class PhoneHome(AaBase):
 
             trace("passphrase_gpg_key: {}".format(passphrase_gpg_key))
             print("passphrase_gpg_key: {}".format(passphrase_gpg_key))
-            passphrase_gpg_key_output = self._serialize_response(time.time(), passphrase_gpg_key)
+            passphrase_gpg_key_output = str(self._serialize_response(time.time(), passphrase_gpg_key)['Result']['stdout']).strip().replace('"','')
 
             cmd3 = "sudo gpg --pinentry-mode=loopback --passphrase {} --import /home/pcc/platina-cli-ws/privatekey.asc".format(passphrase_gpg_key_output)
             gpg_import_private_key = cli_run(self.host_ip, self.user, self.password, cmd3)
@@ -382,7 +402,7 @@ class PhoneHome(AaBase):
 
             trace("cmd4 status is: {}".format(str(verify_setup_username)))
             print("cmd4 status is: {}".format(str(verify_setup_username)))
-            if self.setup_username in verify_setup_username:
+            if re.search(self.setup_username,str(verify_setup_username)):
                 return "OK"
             else:
                 return "Error : {} not found in GPG secret key list".format(self.setup_username)
@@ -402,8 +422,10 @@ class PhoneHome(AaBase):
         try:
             #tar_file_name = self.fetch_tar_file_detail(**kwargs)[0]['name']
             tar_file_name = self.fetch_tar_file_detail(**kwargs)['name']
+            cmd= "sudo mkdir /home/pcc/platina-cli-ws/phone-home"
             cmd1 = "sudo mkdir /home/pcc/platina-cli-ws/phone-home/with_ssl"
             cmd2 = "sudo gpg --output /home/pcc/platina-cli-ws/phone-home/with_ssl/manual_untar_file.tar.xz --decrypt /home/pcc/storage-s3/minio/volume/data/phone-home/{}".format(tar_file_name)
+            create_phone_home_folder = cli_run(self.host_ip, self.user, self.password, cmd)
             create_with_ssl_folder = cli_run(self.host_ip, self.user, self.password, cmd1)
             decrypt_manual_tar_file = cli_run(self.host_ip, self.user, self.password, cmd2)
             trace("cmd1 executed: {}".format(cmd1))
@@ -423,9 +445,14 @@ class PhoneHome(AaBase):
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
         try:
-            cmd1 = 'sudo find /home/pcc/platina-cli-ws/phone-home/without_ssl/ -type f -name "*.log"'
+            if self.encryption_type  == "without_ssl":
+                cmd1 = 'sudo find /home/pcc/platina-cli-ws/phone-home/without_ssl/ -type f -name "*.log"'
+            elif self.encryption_type == "with_ssl":
+                cmd1 = 'sudo find /home/pcc/platina-cli-ws/phone-home/with_ssl/ -type f -name "*.log"'
+            else:
+                return "Please provide encryption type: Like with_ssl or without_ssl"
             list_all_log_files = cli_run(self.host_ip, self.user, self.password, cmd1)
-            #list_all_log_files = str(self._serialize_response(time.time(), list_all_log_files)['Result']['output'].strip()).replace('/home/pcc/platina-cli-ws/phone-home/without_ssl/','')
+            
             trace("list_all_log_files: {}".format(str(list_all_log_files)))
             print("list_all_log_files: {}".format(str(list_all_log_files)))
             validation_checks = ['mailer/logs/detailed.log','mailer/logs/default.log','security/home/logs/detailed.log','security/home/logs/error.log','security/home/logs/default.log','platina-executor/logs/detailed.log','platina-executor/logs/ansible.log','platina-executor/logs/default.log','monitor/home/logs/detailed.log','monitor/home/logs/error.log','monitor/home/logs/default.log','user-management/home/logs/detailed.log','user-management/home/logs/error.log','user-management/home/logs/default.log','pccserver/logs/detailed.log','pccserver/logs/error.log','pccserver/logs/default.log','gateway/home/logs/detailed.log','gateway/home/logs/error.log','gateway/home/logs/default.log','key-manager/home/logs/detailed.log','key-manager/home/logs/error.log','key-manager/home/logs/default.log','maas/logs/detailed.log','maas/logs/error.log','maas/logs/default.log','platina-monitor/logs/detailed.log','platina-monitor/logs/error.log','platina-monitor/logs/default.log','registry/home/logs/detailed.log','registry/home/logs/error.log','registry/home/logs/default.log']

@@ -20,6 +20,23 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
+PCC Phone Home - Install Storage
+###################################################################################################################################
+
+        [Documentation]    *PCC Phone Home - Install storage * test
+                           ...  keywords:
+                           ...  PCC.PhoneHome Install Storage
+
+
+        ${status}      PCC.PhoneHome Install Storage
+                       ...  host_ip=${PCC_HOST_IP}
+                       ...  user=${PCC_LINUX_USER}
+                       ...  password=${PCC_LINUX_PASSWORD}
+
+                       Should Be Equal As Strings     ${status}  OK
+
+
+###################################################################################################################################
 PCC Phone Home - Update Config File
 ###################################################################################################################################
 
@@ -177,6 +194,7 @@ PCC Phone Home - Validation of Logs
                        ...  host_ip=${PCC_HOST_IP}
                        ...  user=${PCC_LINUX_USER}
                        ...  password=${PCC_LINUX_PASSWORD}
+		       ...  encryption_type=without_ssl
 
                        Should Be Equal As Strings     ${status}  OK
 
