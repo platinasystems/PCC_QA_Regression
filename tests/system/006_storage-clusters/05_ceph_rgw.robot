@@ -414,6 +414,8 @@ Ceph Rados Update Port
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
                                ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
+				    
+				    Sleep    3 minutes
                                     
 #####################################################################################################################################
 Ceph Rados Update Nodes (Add Node)
@@ -451,7 +453,8 @@ Ceph Rados Update Nodes (Add Node)
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
                                ...  targetNodeIp=["${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${backend_status}    OK  
-                                    
+                                    Sleep    3 minutes
+
 #####################################################################################################################################
 #Ceph Rados Update Certificte 
 ######################################################################################################################################

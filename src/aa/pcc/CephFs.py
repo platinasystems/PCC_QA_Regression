@@ -285,11 +285,11 @@ class CephFs(AaBase):
         try:
             print("Kwargs are: {}".format(kwargs))
             
-            inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
-            print("Inet IP is: {}".format(inet_ip))
+            #inet_ip = CephCluster().get_ceph_inet_ip(**kwargs)
+            #print("Inet IP is: {}".format(inet_ip))
             
             #Maps fs
-            cmd= "sudo mount -t ceph {}:/ /mnt/{} -o name=admin,secret='ceph-authtool -p /etc/ceph/ceph.client.admin.keyring'".format(inet_ip,self.mount_folder_name)
+            cmd= "sudo mount -t ceph {}:/ /mnt/{} -o name=admin,secret='ceph-authtool -p /etc/ceph/ceph.client.admin.keyring'".format(self.inet_ip,self.mount_folder_name)
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user,linux_password=self.password)
             print("cmd1: {} executed successfully and status is: {}".format(cmd, status))
             
