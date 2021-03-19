@@ -13,7 +13,7 @@ Login to PCC
 
         [Documentation]    *Login to PCC* test
 
-        [Tags]    Runonly
+        [Tags]    Running
         ${status}        Login To PCC    ${pcc_setup}
 
                          Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -680,25 +680,26 @@ Get CEPH Inet IP
 ###################################################################################################################################
 RBD Mount use case (2-1 erasure coded pool)
 ###################################################################################################################################
+	
+	[Documentation]    *RBD Mount test cases with erasure pool* test
+	[Tags]    Running
+        ###  Get INET IP  ###
+        ${inet_ip}     PCC.Get CEPH Inet IP
+                       ...    hostip=${CLUSTERHEAD_1_HOST_IP}
 
+                       Log To Console    ${inet_ip}
+                       Set Global Variable    ${inet_ip}
 
-        ######    Get Stored Size for Replicated Pool and Erasure Pool test   #######
-
-        ${status}      PCC.Get Stored Size for Replicated Pool and Erasure Pool
-                       ...    hostip=${SERVER_1_HOST_IP}
-                       ...    erasure_pool_name=ceph-erasure-pool-mib-2-1
-
-                       Log To Console    ${status}
-
-                       ${size_erasure_pool_before_mount}    Get From List	${status}    0
-                       Log to Console    ${size_erasure_pool_before_mount}
-                       Set Suite Variable    ${size_erasure_pool_before_mount}
-
-                       ${size_replicated_pool_before_mount}    Get From List	${status}    1
-                       Log to Console    ${size_replicated_pool_before_mount}
-                       Set Suite Variable    ${size_replicated_pool_before_mount}
+        ###  Get Stored size before mount  ###
+        ${size_erasure_pool_before_mount}      PCC.Get Stored Size for Erasure Pool
+                                                  ...    hostip=${SERVER_1_HOST_IP}
+                                                  ...    pool_name=ceph-erasure-pool-mib-2-1
+                                                  Log To Console    ${size_erasure_pool_before_mount}
+                                                  Set Suite Variable    ${size_erasure_pool_before_mount}
 
         ###  Mount RBD to Mount Point  ###
+
+
         ${status}    Create mount folder
                      ...    mount_folder_name=test_rbd_mnt
                      ...    hostip=${SERVER_1_HOST_IP}
@@ -709,17 +710,17 @@ RBD Mount use case (2-1 erasure coded pool)
                      Should be equal as strings    ${status}    OK
 
         ${status}    PCC.Map RBD
-                     ...    name=ceph-rbd-erasure-1
-                     ...    pool_name=ceph-erasure-pool-mib-2-1
-                     ...    inet_ip=${inet_ip}
-                     ...    hostip=${SERVER_1_HOST_IP}
+		     ...    name=ceph-rbd-erasure-1
+		     ...    pool_name=pool9
+		     ...    inet_ip=${inet_ip}
+		     ...    hostip=${SERVER_1_HOST_IP}
                      ...    username=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
-		             Log To Console    ${status}
+		     Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
-
-
-        ${status}      PCC.Mount RBD to Mount Point
+		
+		
+		${status}      PCC.Mount RBD to Mount Point
                        ...    mount_folder_name=test_rbd_mnt
                        ...    hostip=${SERVER_1_HOST_IP}
                        ...    username=${PCC_LINUX_USER}
@@ -728,93 +729,49 @@ RBD Mount use case (2-1 erasure coded pool)
                        Log To Console    ${status}
                        Should be equal as strings    ${status}    OK
 
-                       Sleep    1 minutes
+                       Sleep    1 minutes 
 
         ${status}      Create dummy file and copy to mount path
-                       ...    dummy_file_name=test_rbd_mnt_2mb.bin
-                       ...    dummy_file_size=2MiB
+                       ...    dummy_file_name=test_rbd_mnt_4mb.bin
+                       ...    dummy_file_size=4MiB
                        ...    mount_folder_name=test_rbd_mnt
                        ...    hostip=${SERVER_1_HOST_IP}
                        ...    user=${PCC_LINUX_USER}
-                       ...    password=${PCC_LINUX_PASSWORD}
+                       ...    password=${PCC_LINUX_PASSWORD}  
 
                        Log To Console    ${status}
-                       Should be equal as strings    ${status}    OK
+                       Should be equal as strings    ${status}    OK     
 
-                       Sleep    2 minutes
-
-        ######   Get Stored Size for Replicated Pool and Erasure Pool after mount test ######
-
-        ${status}      PCC.Get Stored Size for Replicated Pool and Erasure Pool
-                       ...    hostip=${SERVER_1_HOST_IP}
-                       ...    erasure_pool_name=ceph-erasure-pool-mib-2-1
-
-                       Log To Console    ${status}
-
-                       ${size_erasure_pool_after_mount}    Get From List	${status}    0
-                       Log to Console    ${size_erasure_pool_after_mount}
-                       Set Suite Variable    ${size_erasure_pool_after_mount}
-
-                       ${size_replicated_pool_after_mount}    Get From List	${status}    1
-                       Log to Console    ${size_replicated_pool_after_mount}
-                       Set Suite Variable    ${size_replicated_pool_after_mount}
-
-                       Log to Console    ${size_replicated_pool_before_mount}
-                       Should Be True    ${size_replicated_pool_after_mount} > ${size_replicated_pool_before_mount}
-                       Should Be True    ${size_erasure_pool_after_mount} == ${size_erasure_pool_before_mount}
+                       Sleep    2 minutes  
 
 
-        ####   Flush replicated pool storage to erasure coded pool test ########
+        ###  Get Stored size after mount  ###
+        ${size_erasure_pool_after_mount}     PCC.Get Stored Size for Erasure Pool
+                                                ...    hostip=${SERVER_1_HOST_IP}
+                                                ...    pool_name=ceph-erasure-pool-mib-2-1
 
-        ${status}      PCC.Flush replicated pool storage to erasure coded pool
-                       ...    hostip=${SERVER_1_HOST_IP}
-                       ...    erasure_pool_name=ceph-erasure-pool-mib-2-1
-
-
-                       Log To Console    ${status}
-                       Should be equal as strings    ${status}    OK
-
-                       Sleep    3 minutes
-
-        #### Get Stored Size for Replicated Pool and Erasure Pool after data flush test ######
-
-
-        ${status}      PCC.Get Stored Size for Replicated Pool and Erasure Pool
-                       ...    hostip=${SERVER_1_HOST_IP}
-                       ...    erasure_pool_name=ceph-erasure-pool-mib-2-1
-
-                       Log To Console    ${status}
-
-                       ${size_erasure_pool_after_data_flush}    Get From List	${status}    0
-                       Log to Console    ${size_erasure_pool_after_data_flush}
-                       Set Suite Variable    ${size_erasure_pool_after_data_flush}
-
-                       ${size_replicated_pool_after_data_flush}    Get From List	${status}    1
-                       Log to Console    ${size_replicated_pool_after_data_flush}
-                       Set Suite Variable    ${size_replicated_pool_after_data_flush}
-
-                       Log to Console    ${size_replicated_pool_after_mount}
-
-                       Should Be True    ${size_erasure_pool_after_data_flush} > ${size_erasure_pool_after_mount}
-                       Should Be True    ${size_replicated_pool_after_data_flush} == 0
-
-        ###  Unmount and unmap RBD  ###
+                                                Log To Console    ${size_erasure_pool_after_mount}
+                                                Set Suite Variable    ${size_erasure_pool_after_mount}
+                                                Should Be True    ${size_erasure_pool_after_mount} > ${size_erasure_pool_before_mount}
+		
+		###  Unmount and unmap RBD  ###
 		${status}		PCC.Unmount and Unmap RBD
 						...    mount_folder_name=test_rbd_mnt
 						...    hostip=${SERVER_1_HOST_IP}
                         ...    username=${PCC_LINUX_USER}
                         ...    password=${PCC_LINUX_PASSWORD}
-
+						
 						Log To Console    ${status}
                         Should be equal as strings    ${status}    OK
-
+						
 		${status}    Remove dummy file
-                     ...    dummy_file_name=test_rbd_mnt_2mb.bin
-                     ...    hostip=${SERVER_1_HOST_IP}
-					 ...    user=${PCC_LINUX_USER}
+                     ...    dummy_file_name=test_rbd_mnt_4mb.bin
+                     ...    hostip=${SERVER_1_HOST_IP} 
+		     ...    user=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
 					 Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
+
 
 ####################################################################################################################################
 #Ceph Fs Creation with Erasure Coded Pool - Replicated Pool in metadata
@@ -1175,67 +1132,67 @@ RBD Mount use case (2-1 erasure coded pool)
 #                               Should Be Equal     ${status}  OK
 #
 #                               Sleep    8s
-
-###################################################################################################################################
-Ceph Rbd Delete (Erasure coded)
-###################################################################################################################################
-    [Documentation]            *Delete Pool if it exist.*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Rbd Id
-                               ...  PCC.Ceph Delete Rbd
-                               ...  PCC.Ceph Wait Until Rbd Deleted
-        [Tags]    Runonly
-
-        ${id}                  PCC.Ceph Get Rbd Id
-                               ...  name=ceph-rbd-erasure-1
-                               Pass Execution If    ${id} is ${None}    Rbd is already Deleted
-
-        ${response}            PCC.Ceph Delete Rbd
-                               ...  id=${id}
-
-        ${status_code}         Get Response Status Code        ${response}
-                               Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Rbd Deleted
-                               ...  id=${id}
-                               Should Be Equal     ${status}  OK
-
-
-###################################################################################################################################
-Ceph Pool Delete (Erasure coded)
-###################################################################################################################################
-
-    [Documentation]            *Delete Pool if it exist*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Delete Pool
-                               ...  PCC.Ceph Wait Until Pool Deleted
-
-        [Tags]    Runonly
-
-        ############  Deleting ceph-erasure-pool-mib-4-2  ################
-
-        ${id}                  PCC.Ceph Get Pool Id
-                               ...  name=ceph-erasure-pool-mib-4-2
-                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
-
-        ${response}            PCC.Ceph Delete Pool
-                               ...  id=${id}
-
-        ${status_code}         Get Response Status Code        ${response}
-                               Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Pool Deleted
-                               ...  id=${id}
-                               Should Be Equal     ${status}  OK
-
-###################################################################################################################################
-Ceph Pool Multiple Delete
-###################################################################################################################################
-    [Documentation]                 *Deleting all Pools*
-                                    ...  keywords:
-                                    ...  PCC.Ceph Delete All Pools
-        [Tags]    Run
-
-        ${status}                   PCC.Ceph Delete All Pools
-                                    Should Be Equal     ${status}  OK
+#
+####################################################################################################################################
+#Ceph Rbd Delete (Erasure coded)
+####################################################################################################################################
+#    [Documentation]            *Delete Pool if it exist.*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Rbd Id
+#                               ...  PCC.Ceph Delete Rbd
+#                               ...  PCC.Ceph Wait Until Rbd Deleted
+#        [Tags]    Runonly
+#
+#        ${id}                  PCC.Ceph Get Rbd Id
+#                               ...  name=ceph-rbd-erasure-1
+#                               Pass Execution If    ${id} is ${None}    Rbd is already Deleted
+#
+#        ${response}            PCC.Ceph Delete Rbd
+#                               ...  id=${id}
+#
+#        ${status_code}         Get Response Status Code        ${response}
+#                               Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}              PCC.Ceph Wait Until Rbd Deleted
+#                               ...  id=${id}
+#                               Should Be Equal     ${status}  OK
+#
+#
+####################################################################################################################################
+#Ceph Pool Delete (Erasure coded)
+####################################################################################################################################
+#
+#    [Documentation]            *Delete Pool if it exist*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Delete Pool
+#                               ...  PCC.Ceph Wait Until Pool Deleted
+#
+#        [Tags]    Runonly
+#
+#        ############  Deleting ceph-erasure-pool-mib-4-2  ################
+#
+#        ${id}                  PCC.Ceph Get Pool Id
+#                               ...  name=ceph-erasure-pool-mib-4-2
+#                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+#
+#        ${response}            PCC.Ceph Delete Pool
+#                               ...  id=${id}
+#
+#        ${status_code}         Get Response Status Code        ${response}
+#                               Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}              PCC.Ceph Wait Until Pool Deleted
+#                               ...  id=${id}
+#                               Should Be Equal     ${status}  OK
+#
+####################################################################################################################################
+#Ceph Pool Multiple Delete
+####################################################################################################################################
+#    [Documentation]                 *Deleting all Pools*
+#                                    ...  keywords:
+#                                    ...  PCC.Ceph Delete All Pools
+#        [Tags]    Run
+#
+#        ${status}                   PCC.Ceph Delete All Pools
+#                                    Should Be Equal     ${status}  OK
