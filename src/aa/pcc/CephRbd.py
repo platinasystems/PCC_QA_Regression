@@ -39,6 +39,8 @@ class CephRbd(AaBase):
         self.hostip = None
         self.mount_folder_name = None
         self.inet_ip = None
+        self.pool_type = None
+        self.ceph_metadata_pool_id = None
         super().__init__()
 
     ###########################################################################
@@ -103,18 +105,32 @@ class CephRbd(AaBase):
 
         if self.tags:
             self.tags=eval(self.tags)
+        if self.pool_type == "replicated":
+            payload = {
 
-        payload = {
+                "ceph_pool_id":self.ceph_pool_id,
+                "ceph_cluster_id":self.ceph_cluster_id,
+                "name":self.name,
+                "size":self.size, 
+                "size_units": self.size_units,
+                "tags":self.tags, 
+                "image_feature":self.image_feature
 
-            "ceph_pool_id":self.ceph_pool_id,
-            "ceph_cluster_id":self.ceph_cluster_id,
-            "name":self.name,
-            "size":self.size, 
-            "size_units": self.size_units,
-            "tags":self.tags, 
-            "image_feature":self.image_feature
+            }
 
-        }
+        elif self.pool_type == "erasure":
+            payload = {
+
+                "ceph_pool_id":self.ceph_pool_id,
+                "ceph_cluster_id":self.ceph_cluster_id,
+                "name":self.name,
+                "size":self.size,
+                "size_units": self.size_units,
+                "tags":self.tags,
+                "image_feature":self.image_feature,
+                "ceph_metadata_pool_id":self.ceph_metadata_pool_id
+
+            }
 
         print(payload)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -135,16 +151,32 @@ class CephRbd(AaBase):
 
         for i in range(1, self.count + 1):
             name = str(self.name) + "-" + str(i)
-            payload = {
-                "ceph_pool_id":self.ceph_pool_id,
-                "ceph_cluster_id":self.ceph_cluster_id,
-                "name":name,
-                "size":self.size,
-                "size_units": self.size_units,
-                "tags":self.tags,
-                "image_feature":self.image_feature
-                }
+            if self.pool_type == "replicated":
+                payload = {
 
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":self.name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature
+
+                } 
+
+            elif self.pool_type == "erasure":
+                payload = {
+
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":self.name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature,
+                    "ceph_metadata_pool_id":self.ceph_metadata_pool_id
+
+                } 
             print(payload)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
 
@@ -251,18 +283,32 @@ class CephRbd(AaBase):
             self.tags=eval(self.tags)
 
         try:
-            payload = {
+            if self.pool_type == "replicated":
+                payload = {
+                    "id":self.id,
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":self.name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature
 
-            "id":self.id,
-            "ceph_pool_id":self.ceph_pool_id,
-            "ceph_cluster_id":self.ceph_cluster_id,
-            "name":self.name,
-            "size":self.size,
-            "size_units": self.size_units,
-            "tags":self.tags,
-            "image_feature":self.image_feature
+                }
 
-        }
+            elif self.pool_type == "erasure":
+                payload = {
+                    "id":self.id,
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":self.name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature,
+                    "ceph_metadata_pool_id":self.ceph_metadata_pool_id
+
+            }
 
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             print(str(payload))
