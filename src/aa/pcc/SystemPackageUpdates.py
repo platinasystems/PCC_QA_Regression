@@ -186,8 +186,11 @@ class SystemPackageUpdates(AaBase):
                     return "Kubernetes Resource validation unsuccessful: {}".format(validation_checks)
 
             if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
-                print("===========  Searching in repo list: RedHat Ceph stable community repository ================")
-                if re.search(r"RedHat Ceph stable community repository", str(check_repo_list_output)) and re.search("RedHat Ceph stable noarch community repository", str(check_repo_list_output)):
+                print("===========  Searching in repo list: ceph_stable/x86_64 ================")
+                #if re.search(r"RedHat Ceph stable community repository", str(check_repo_list_output)) and re.search("RedHat Ceph stable noarch community repository", str(check_repo_list_output)):
+                 
+                 if re.search(r"ceph_stable/x86_64", str(check_repo_list_output)) and re.search("ceph_stable_noarch", str(check_repo_list_output)):
+
                     validation_checks.append("OK")
 
                 print("============  Searching in gpg keys: gpg(Ceph.com (release key) ==================")
