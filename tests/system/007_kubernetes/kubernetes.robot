@@ -15,7 +15,8 @@ Login
                                     Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
-                                    
+                                    Load Server 3 Test Data    ${pcc_setup}
+
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
                                                                                                     
@@ -35,7 +36,7 @@ Create Kubernetes cluster
                                ...  k8sVersion=${K8S_VERSION}
                                ...  name=${K8S_NAME}
                                ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_NAME}","${SERVER_2_NAME}"]
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
                                ...  pools=${K8S_POOL}
                                ...  networkClusterName=${NETWORK_MANAGER_NAME}
 

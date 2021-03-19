@@ -88,29 +88,6 @@ Ceph Cluster Update- Remove node from Cluster For OS deployment
                                     Should Be Equal As Strings      ${status}    OK
 
 
-###################################################################################################################################
-Remove Node from Kubernetes cluster to perform OS deployment
-###################################################################################################################################
-       [Documentation]             *Remove Node to Kubernetes cluster*
-                               ...  Keywords:
-                              ...  PCC.K8s Update Cluster Nodes
-                              ...  PCC.K8s Get Cluster Id
-                              ...  PCC.K8s Wait Until Cluster is Ready                             
-       ${cluster_id}               PCC.K8s Get Cluster Id
-                              ...  name=${K8S_NAME}
-
-       ${response}                 PCC.K8s Update Cluster Nodes
-                              ...  cluster_id=${cluster_id}
-                              ...  name=${K8S_NAME}
-                              ...  toRemove=["${SERVER_2_NAME}"]
-                              ...  rolePolicy=auto
-
-       ${status_code}              Get Response Status Code        ${response}
-                                   Should Be Equal As Strings      ${status_code}  200
-
-       ${status}                   PCC.K8s Wait Until Cluster is Ready
-                              ...  name=${K8S_NAME}
-                                   Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Update OS Images
