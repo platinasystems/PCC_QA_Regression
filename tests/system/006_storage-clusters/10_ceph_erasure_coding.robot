@@ -639,7 +639,12 @@ Ceph Rbd Creation with Erasure Coded Pool
         ${pool_id}             PCC.Ceph Get Pool Id
                                ...  name=ceph-erasure-pool-mib-2-1
 
+	${metadata_pool_id}    PCC.Ceph Get Pool Id
+                               ...  name=pool9
+
         ${response}            PCC.Ceph Create Rbd
+			       ...  pool_type=erasure
+			       ...  ceph_metadata_pool_id=${metadata_pool_id}		
                                ...  name=ceph-rbd-erasure-1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -676,14 +681,6 @@ Get CEPH Inet IP
 RBD Mount use case (2-1 erasure coded pool)
 ###################################################################################################################################
 
-        #####  Check Replicated Pool Creation After Erasure Pool RBD Creation ####
-
-        ${status}      PCC.Check Replicated Pool Creation After Erasure Pool RBD/FS Creation
-                       ...    hostip=${SERVER_1_HOST_IP}
-                       ...    erasure_pool_name=ceph-erasure-pool-mib-2-1
-
-                       Log To Console    ${status}
-                       Should be equal as strings    ${status}    OK
 
         ######    Get Stored Size for Replicated Pool and Erasure Pool test   #######
 

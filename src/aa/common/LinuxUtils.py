@@ -1,4 +1,5 @@
 import os
+import re
 import ast
 import sys
 import json
@@ -17,6 +18,7 @@ from aa.common.Result import get_response_data
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
 from aa.pcc.Nodes import Nodes
+from aa.pcc.Cli import Cli
 
 class LinuxUtils(AaBase):
     
@@ -334,64 +336,16 @@ class LinuxUtils(AaBase):
             host_ips = [str(node['Host']) for node in get_response_data(get_nodes_response)]
             print("host_ips_list : {}".format(host_ips))
             for ip in host_ips:
-                cmd = "sudo cat /etc/os-release|grep PRETTY_NAME"
-                cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
-                                              linux_password=self.password)
-
-                serialised_status = self._serialize_response(time.time(), cmd_output)
-                serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
-
-
-                if "Ubuntu" in serialised_cmd_output:
-                    cmd = "sudo apt-get install s3cmd"
-                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
-                                         linux_password=self.password)
-
-                    serialised_status = self._serialize_response(time.time(), cmd_output)
-                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
-
-                    if "0 newly installed" or "1 newly installed" in serialised_cmd_output:
-                        status.append("OK")
-                    else:
-                        logger.console("Error in installing s3cmd on Ubuntu: {}".format(serialised_cmd_output))
-                        status.append("Error in installing s3cmd on Ubuntu")
-
-                elif "CentOS" in serialised_cmd_output:
-                    cmd = "sudo yum -y install s3cmd"
-                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
-                                         linux_password=self.password)
-
-                    serialised_status = self._serialize_response(time.time(), cmd_output)
-                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
-
-                    if "Complete!" or "Nothing to do" in serialised_cmd_output:
-                        status.append("OK")
-                    else:
-                        logger.console("Error in installing s3cmd on CentOS: {}".format(serialised_cmd_output))
-                        status.append("Error in installing s3cmd on CentOS")
-
-                elif "Debian" in serialised_cmd_output:
-                    cmd = "sudo apt-get install s3cmd"
-                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
-                                         linux_password=self.password)
-
-                    serialised_status = self._serialize_response(time.time(), cmd_output)
-                    serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
-
-                    if "0 upgraded" or "0 newly installed" or "1 newly installed" in serialised_cmd_output:
-                        status.append("OK")
-                    else:
-                        logger.console("Error in installing s3cmd on Debian: {}".format(serialised_cmd_output))
-                        status.append("Error in installing s3cmd on Debian")
-
-                else:
-                    return "Error: OS version not supported in code"
-            print("Status: {}".format(status))
-            result = len(status) > 0 and all(elem == "OK" for elem in status)
-            if result:
-                return "OK"
-            else:
-                return "Error: Installation of net-tools failed"
-
+                OS_type = Cli().get_OS_version(host_ip= ip, linux_user= self.username, linux_password = self.password)
+                if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
+                    cmd = "sudo apt-get --assume-yes install s3cmd"
+                if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
+                    cmd = "sudo yum --assume-yes install s3cmd"
+                
+                s3cmd_install = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username, linux_password=self.password)
+                print("Cmd: {} executed successfully. Output is : {}".format(cmd, str(s3cmd_install)))
+                trace("Cmd: {} executed successfully. Output is : {}".format(cmd, str(s3cmd_install)))
+            return "OK"
         except Exception as e:
-            return "Error in installing net-tools: {}".format(e)
+            print("s3cmd installation unsuccessful: {}".format(e))
+            return("s3cmd installation unsuccessful: {}".format(e))
