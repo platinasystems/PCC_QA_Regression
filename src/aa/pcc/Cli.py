@@ -465,9 +465,9 @@ class Cli(AaBase):
             serialised_status = self._serialize_response(time.time(), cmd_output)
             serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
 
-            if re.search("install ok",serialised_cmd_output):
+            if re.search("Status: install ok",serialised_cmd_output):
                 return "{} Package installed".format(self.package_name)
-            elif re.search("deinstall ok",serialised_cmd_output):
+            elif re.search("Status: deinstall ok",serialised_cmd_output):
                 return "{} Package not installed".format(self.package_name)
             else:
                 return "Error while checking {} package installation".format(self.package_name)

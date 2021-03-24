@@ -338,7 +338,7 @@ class SystemPackageUpdates(AaBase):
                     validation_checks.append("OK")
                 if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu xenial-security main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==4):
@@ -348,7 +348,7 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
                 print("===========  Searching in repo list: base/7/x86_64 ================")
-                if re.search(r"base/7/x86_64", str(check_repo_list_output)) and re.search("CentOS-7 - Extras", str(check_repo_list_output)) and re.search("updates/7/x86_64", str(check_repo_list_output)) and re.search("Extra Packages for Enterprise Linux 7 - x86_64", str(check_repo_list_output)):
+                if re.search(r"base/7/x86_64", str(check_repo_list_output)) and re.search(r"extras/7/x86_64", str(check_repo_list_output)) and re.search(r"updates/7/x86_64", str(check_repo_list_output)) and re.search(r"epel/x86_64", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 print("============  Searching in gpg keys: gpg\(Fedora EPEL (7) <epel@fedoraproject.org>\) ==================")
