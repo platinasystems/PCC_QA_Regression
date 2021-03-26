@@ -283,6 +283,7 @@ Ceph Rbd Creation After Backup Restore
                                            ...  name=rbd
                
         ${response}                             PCC.Ceph Create Rbd
+                                           ...  pool_type=replicated
                                            ...  name=${CEPH_RBD_NAME}
                                            ...  ceph_cluster_id=${cluster_id}
                                            ...  ceph_pool_id=${pool_id}
