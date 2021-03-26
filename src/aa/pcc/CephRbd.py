@@ -156,7 +156,7 @@ class CephRbd(AaBase):
 
                     "ceph_pool_id":self.ceph_pool_id,
                     "ceph_cluster_id":self.ceph_cluster_id,
-                    "name":self.name,
+                    "name":name,
                     "size":self.size,
                     "size_units": self.size_units,
                     "tags":self.tags,
@@ -169,7 +169,7 @@ class CephRbd(AaBase):
 
                     "ceph_pool_id":self.ceph_pool_id,
                     "ceph_cluster_id":self.ceph_cluster_id,
-                    "name":self.name,
+                    "name":name,
                     "size":self.size,
                     "size_units": self.size_units,
                     "tags":self.tags,
@@ -259,19 +259,19 @@ class CephRbd(AaBase):
 
         while rbd_ready == False:
             response = pcc.get_ceph_rbds(conn)
+            if time.time() > timeout:
+                return "[PCC.Ceph Wait Until Rbd Ready] Timeout"
             for data in get_response_data(response):
                 print(str(data))
                 if str(data['name']).lower() == str(self.name).lower():
                     if data['deploy_status'] == "completed":
                         rbd_ready = True
-                    if data['deploy_status'] == "failed":
-                        return "Error"
-            if time.time() > timeout:
-                raise Exception("[PCC.Ceph Wait Until Rbd Ready] Timeout")
-            trace("  Waiting until rbd : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
-            time.sleep(5)
-        time.sleep(10)
-        return "OK"
+                        return "OK"
+                    if re.search('fail',str(data['deploy_status'])):
+                        return "RBD: {} failed. Status is {}".format(data['name'], data['deploy_status'])
+                    else:
+                        trace("  Waiting until rbd : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
+                        time.sleep(5)
 
     ###########################################################################
     @keyword(name="PCC.Ceph Rbd Update")

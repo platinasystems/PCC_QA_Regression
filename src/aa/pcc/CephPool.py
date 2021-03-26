@@ -271,20 +271,20 @@ class CephPool(AaBase):
   
         while pool_ready == False:
             response = pcc.get_ceph_pools(conn)
+            if time.time() > timeout:
+                return "[PCC.Ceph Wait Until Pool Ready] Timeout"
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print(str(data))
                     if data['deploy_status'] == "completed":
                         pool_ready = True
+                        return "OK"
                     if data['deploy_status'] == "failed":
                         return "Error"
-                    
-            if time.time() > timeout:
-                raise Exception("[PCC.Ceph Wait Until Pool Ready] Timeout")
-            trace("  Waiting until pool : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
-            time.sleep(5)
-        time.sleep(10)
-        return "OK"
+                    else:
+                        trace(" Waiting until pool : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
+                        time.sleep(5)
+
 
 
     ###########################################################################
