@@ -92,74 +92,74 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                Should Be Equal As Strings      ${status}    OK
                                Sleep    5s
 
-       ####  Quota Size in MiB (12:3 ratio) ####
-       ${response}            PCC.Ceph Create Erasure Pool
-
-                               ...  name=ceph-erasure-pool-mib-12-3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=MiB
-                               ...  Datachunks=12
-                               ...  Codingchunks=3
-
-
-
-        ${status_code}          Get Response Status Code        ${response}
-                                Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-mib-12-3
-
-                               Should Be Equal As Strings      ${status}    OK
-
-
-       ${status}               PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool-mib-12-3
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                               Should Be Equal As Strings      ${status}    OK
-                               Sleep    5s
-
-       ####  Quota Size in MiB (16:4 ratio) ####
-       ${response}            PCC.Ceph Create Erasure Pool
-
-                               ...  name=ceph-erasure-pool-mib-16-4
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=MiB
-                               ...  Datachunks=16
-                               ...  Codingchunks=4
-
-
-
-        ${status_code}          Get Response Status Code        ${response}
-                                Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-mib-16-4
-
-                               Should Be Equal As Strings      ${status}    OK
-
-
-       ${status}               PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool-mib-16-4
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                               Should Be Equal As Strings      ${status}    OK
-                               Sleep    5s
-
+#       ####  Quota Size in MiB (12:3 ratio) ####
+#       ${response}            PCC.Ceph Create Erasure Pool
+#
+#                               ...  name=ceph-erasure-pool-mib-12-3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=MiB
+#                               ...  Datachunks=12
+#                               ...  Codingchunks=3
+#
+#
+#
+#        ${status_code}          Get Response Status Code        ${response}
+#                                Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+#                               ...  name=ceph-erasure-pool-mib-12-3
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#
+#
+#       ${status}               PCC.Ceph Erasure Pool Verify BE
+#                               ...  name=ceph-erasure-pool-mib-12-3
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#                               Sleep    5s
+#
+#       ####  Quota Size in MiB (16:4 ratio) ####
+#       ${response}            PCC.Ceph Create Erasure Pool
+#
+#                               ...  name=ceph-erasure-pool-mib-16-4
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=MiB
+#                               ...  Datachunks=16
+#                               ...  Codingchunks=4
+#
+#
+#
+#        ${status_code}          Get Response Status Code        ${response}
+#                                Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+#                               ...  name=ceph-erasure-pool-mib-16-4
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#
+#
+#       ${status}               PCC.Ceph Erasure Pool Verify BE
+#                               ...  name=ceph-erasure-pool-mib-16-4
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#                               Sleep    5s
+#
        #### Quota Size in MiB (4:2 ratio) ####
 
         ${response}            PCC.Ceph Create Erasure Pool
@@ -195,73 +195,73 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                Should Be Equal As Strings      ${status}    OK
                                Sleep    5s
 
-        ######### Quota Size in GiB (8:3 ratio)#########
-
-        ${response}            PCC.Ceph Create Erasure Pool
-
-                               ...  name=ceph-erasure-pool-gib-8-3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=GiB
-                               ...  Datachunks=8
-                               ...  Codingchunks=3
-
-        ${status_code}          Get Response Status Code        ${response}
-                                Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-                               Should Be Equal As Strings      ${status}    OK
-
-
-        ${status}              PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool-gib-8-3
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                               Should Be Equal As Strings      ${status}    OK
-                               Sleep    5s
-
-
-        ######### Quota Size in TiB #########
-
-        ${response}            PCC.Ceph Create Erasure Pool
-
-                               ...  name=ceph-erasure-pool-tib-8-4
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=TiB
-                               ...  Datachunks=8
-                               ...  Codingchunks=4
-
-        ${status_code}          Get Response Status Code        ${response}
-                                Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-tib-8-4
-
-                               Should Be Equal As Strings      ${status}    OK
-
-
-        ${status}              PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool-tib-8-4
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                               Should Be Equal As Strings      ${status}    OK
-                               Sleep    5s
-
+#        ######### Quota Size in GiB (8:3 ratio)#########
+#
+#        ${response}            PCC.Ceph Create Erasure Pool
+#
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=GiB
+#                               ...  Datachunks=8
+#                               ...  Codingchunks=3
+#
+#        ${status_code}          Get Response Status Code        ${response}
+#                                Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#
+#
+#        ${status}              PCC.Ceph Erasure Pool Verify BE
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#                               Sleep    5s
+#
+#
+#        ######### Quota Size in TiB #########
+#
+#        ${response}            PCC.Ceph Create Erasure Pool
+#
+#                               ...  name=ceph-erasure-pool-tib-8-4
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=${CEPH_POOL_QUOTA}
+#                               ...  quota_unit=TiB
+#                               ...  Datachunks=8
+#                               ...  Codingchunks=4
+#
+#        ${status_code}          Get Response Status Code        ${response}
+#                                Should Be Equal As Strings      ${status_code}  200
+#
+#
+#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+#                               ...  name=ceph-erasure-pool-tib-8-4
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#
+#
+#        ${status}              PCC.Ceph Erasure Pool Verify BE
+#                               ...  name=ceph-erasure-pool-tib-8-4
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#                               Sleep    5s
+#
 
         ######### Quota Size in PiB #########
 
@@ -458,170 +458,170 @@ Create erasure coded pool without quota (Negative)
                                 Should Not Be Equal As Strings      ${status_code}  200
 
 
-###################################################################################################################################
-Ceph Erasure Pool Update Quota Unit
-###################################################################################################################################
-        [Documentation]                 *Updating Ceph Pool Size*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Pool Update
-                               ...  PCC.Ceph Wait Until Pool Ready
-
-        [Tags]    Today
-
-        ${cluster_id}          PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
-                                 ...    Name=ceph-erasure-pool-gib-8-3_ec_profile
-
-        ${pool_id}             PCC.Ceph Get Erasure Pool Id
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-        ${response}            PCC.Ceph Erasure Pool Update
-                               ...  id=${pool_id}
-                               ...  name=ceph-erasure-pool-gib-8-3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=MiB
-                               ...  ErasureCodeProfileID=${erasure_profile_id}
-
-                               Log To Console    ${response}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-                               Should Be Equal As Strings      ${status}    OK
-
-###################################################################################################################################
-Ceph Erasure Pool Update Quota
-###################################################################################################################################
-    [Documentation]                 *Updating Ceph Pool Size*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Pool Update
-                               ...  PCC.Ceph Wait Until Pool Ready
-
-        [Tags]    Today
-
-        ${cluster_id}          PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
-                                 ...    Name=ceph-erasure-pool-gib-8-3_ec_profile
-
-        ${pool_id}             PCC.Ceph Get Erasure Pool Id
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-        ${response}            PCC.Ceph Erasure Pool Update
-                               ...  id=${pool_id}
-                               ...  name=ceph-erasure-pool-gib-8-3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               ...  ErasureCodeProfileID=${erasure_profile_id}
-
-                               Log To Console    ${response}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-                               Should Be Equal As Strings      ${status}    OK
-
-###################################################################################################################################
-Ceph Erasure Pool Update Erasure Coded Profile (Negative)
-###################################################################################################################################
-    [Documentation]                 *Ceph Erasure Pool Update Erasure Coded Profile*
-                                     ...  keywords:
-                                     ...  PCC.Ceph Get Cluster Id
-                                     ...  PCC.Ceph Get Pool Id
-                                     ...  PCC.Ceph Pool Update
-                                     ...  PCC.Ceph Wait Until Pool Ready
-
-
-        [Tags]    Today
-
-        ${cluster_id}          PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
-                                 ...    Name=ceph-erasure-pool-eib-4-2_ec_profile
-
-        ${pool_id}             PCC.Ceph Get Erasure Pool Id
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-        ${response}            PCC.Ceph Erasure Pool Update
-                               ...  id=${pool_id}
-                               ...  name=ceph-erasure-pool-gib-8-3
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               ...  ErasureCodeProfileID=${erasure_profile_id}
-
-                               Log To Console    ${response}
-
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
-###################################################################################################################################
-Ceph Erasure Pool Update, with special characters in Name (Negative)
-###################################################################################################################################
-    [Documentation]            *Updating Ceph Pool Size*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Pool Update
-                               ...  PCC.Ceph Wait Until Pool Ready
-
-        [Tags]    Today
-
-        ${cluster_id}          PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
-
-        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
-                                 ...    Name=ceph-erasure-pool-gib-8-3_ec_profile
-
-        ${pool_id}             PCC.Ceph Get Erasure Pool Id
-                               ...  name=ceph-erasure-pool-gib-8-3
-
-        ${response}            PCC.Ceph Erasure Pool Update
-                               ...  id=${pool_id}
-                               ...  name=@!#^&%$
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=3
-                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               ...  ErasureCodeProfileID=${erasure_profile_id}
-
-                               Log To Console    ${response}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
+####################################################################################################################################
+#Ceph Erasure Pool Update Quota Unit
+####################################################################################################################################
+#        [Documentation]                 *Updating Ceph Pool Size*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Pool Update
+#                               ...  PCC.Ceph Wait Until Pool Ready
+#
+#        [Tags]    Today
+#
+#        ${cluster_id}          PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
+#                                 ...    Name=ceph-erasure-pool-gib-8-3_ec_profile
+#
+#        ${pool_id}             PCC.Ceph Get Erasure Pool Id
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#        ${response}            PCC.Ceph Erasure Pool Update
+#                               ...  id=${pool_id}
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=MiB
+#                               ...  ErasureCodeProfileID=${erasure_profile_id}
+#
+#                               Log To Console    ${response}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Ceph Erasure Pool Update Quota
+####################################################################################################################################
+#    [Documentation]                 *Updating Ceph Pool Size*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Pool Update
+#                               ...  PCC.Ceph Wait Until Pool Ready
+#
+#        [Tags]    Today
+#
+#        ${cluster_id}          PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
+#                                 ...    Name=ceph-erasure-pool-gib-8-3_ec_profile
+#
+#        ${pool_id}             PCC.Ceph Get Erasure Pool Id
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#        ${response}            PCC.Ceph Erasure Pool Update
+#                               ...  id=${pool_id}
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+#                               ...  ErasureCodeProfileID=${erasure_profile_id}
+#
+#                               Log To Console    ${response}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#                               Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Ceph Erasure Pool Update Erasure Coded Profile (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Ceph Erasure Pool Update Erasure Coded Profile*
+#                                     ...  keywords:
+#                                     ...  PCC.Ceph Get Cluster Id
+#                                     ...  PCC.Ceph Get Pool Id
+#                                     ...  PCC.Ceph Pool Update
+#                                     ...  PCC.Ceph Wait Until Pool Ready
+#
+#
+#        [Tags]    Today
+#
+#        ${cluster_id}          PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
+#                                 ...    Name=ceph-erasure-pool-eib-4-2_ec_profile
+#
+#        ${pool_id}             PCC.Ceph Get Erasure Pool Id
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#        ${response}            PCC.Ceph Erasure Pool Update
+#                               ...  id=${pool_id}
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+#                               ...  ErasureCodeProfileID=${erasure_profile_id}
+#
+#                               Log To Console    ${response}
+#
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
+####################################################################################################################################
+#Ceph Erasure Pool Update, with special characters in Name (Negative)
+####################################################################################################################################
+#    [Documentation]            *Updating Ceph Pool Size*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Pool Update
+#                               ...  PCC.Ceph Wait Until Pool Ready
+#
+#        [Tags]    Today
+#
+#        ${cluster_id}          PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_Cluster_NAME}
+#
+#        ${erasure_profile_id}    PCC.Get Erasure Code Profile Id
+#                                 ...    Name=ceph-erasure-pool-gib-8-3_ec_profile
+#
+#        ${pool_id}             PCC.Ceph Get Erasure Pool Id
+#                               ...  name=ceph-erasure-pool-gib-8-3
+#
+#        ${response}            PCC.Ceph Erasure Pool Update
+#                               ...  id=${pool_id}
+#                               ...  name=@!#^&%$
+#                               ...  ceph_cluster_id=${cluster_id}
+#                               ...  size=${CEPH_POOL_SIZE}
+#                               ...  tags=${CEPH_POOL_TAGS}
+#                               ...  pool_type=data
+#                               ...  resilienceScheme=erasure
+#                               ...  quota=3
+#                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+#                               ...  ErasureCodeProfileID=${erasure_profile_id}
+#
+#                               Log To Console    ${response}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
 ###################################################################################################################################
 Ceph Rbd Creation with Erasure Coded Pool
 ###################################################################################################################################

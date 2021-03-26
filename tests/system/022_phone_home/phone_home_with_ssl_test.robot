@@ -22,7 +22,7 @@
 #PCC Phone Home - Install Storage
 ####################################################################################################################################
 #
-#        [Documentation]    *PCC Phone Home - Install storage * test
+#        [Documentation]    *PCC Phone Home. - Install storage * test
 #                           ...  keywords:
 #                           ...  PCC.PhoneHome Install Storage
 #

@@ -101,7 +101,7 @@ Check if Remote Syslog Package already exists, if exists delete the package
 Check that the rsyslog and rsyslog-gnutls package is installed and the services are configured to start at boot time when node role with application Remote Syslog Client is installed on a node (TCP-1617)
 ###################################################################################################################################
 
-        [Documentation]    *Check that the rsyslog and rsyslog-gnutls package is installed*
+        [Documentation]    *Check that the rsyslog and rsyslog-gnutls package is installed.*
                            ...  keywords:
                            ...  CLI.Check package installed
 
