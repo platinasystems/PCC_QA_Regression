@@ -39,6 +39,8 @@ Library                         aa.pcc.PolicyDrivenMgmt
 Library                         aa.pcc.Monitor
 Library                         aa.pcc.SystemPackageUpdates
 Library				aa.pcc.Rsyslog
+Library                         aa.pcc.Dashboard
+Library                         aa.pcc.PhoneHome
 Library                         Collections
 
 *** Keywords ***
@@ -436,6 +438,9 @@ Load Ceph Pool Data
 
         ${CEPH_POOL_TYPE}           Evaluate    $pcc_server_dict.get("pool_type", None)
                                     Set Suite Variable    ${CEPH_POOL_TYPE}
+
+	${POOL_RESILIENCE_SCHEME}   Evaluate    $pcc_server_dict.get("resilienceScheme", None)
+                                    Set Suite Variable    ${POOL_RESILIENCE_SCHEME}
 
         ${CEPH_POOL_TAGS}           Evaluate    $pcc_server_dict.get("tags", None)
                                     Set Suite Variable    ${CEPH_POOL_TAGS}

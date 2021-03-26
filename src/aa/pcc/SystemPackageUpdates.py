@@ -23,6 +23,7 @@ class SystemPackageUpdates(AaBase):
     SystemPackageUpdate
     """
     def __init__(self):
+        self.host_ips= None
         self.host_ip= None
         self.linux_user= "pcc"
         self.linux_password= "cals0ft"
@@ -119,7 +120,7 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
                 print(" ===============  Searching in repo list: deb https://download.docker.com/linux/debian stretch stable =========== ")
-                if re.search(r"deb https://download.docker.com/linux/debian stretch stable", str(check_repo_list_output)):
+                if (re.search(r"deb https://download.docker.com/linux/debian stretch stable", str(check_repo_list_output))) or (re.search(r"deb https://download.docker.com/linux/ubuntu bionic stable", str(check_repo_list_output))):
                     validation_checks.append("OK")
 
                 print("================  Searching in gpg keys: Docker Release (CE deb) ============= ")
@@ -171,7 +172,8 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
                 print(" ===============  Searching in repo list: deb http://download.ceph.com/debian-nautilus xenial main =========== ")
-                if re.search(r"deb http://download.ceph.com/debian-nautilus xenial main", str(check_repo_list_output)):
+
+                if (re.search(r"deb http://download.ceph.com/debian-nautilus xenial main", str(check_repo_list_output))) or (re.search(r"deb http://download.ceph.com/debian-nautilus bionic main", str(check_repo_list_output))):
                     validation_checks.append("OK")
 
                 print("================  Searching in gpg keys: Ceph.com (release key) <security@ceph.com> ============= ")
@@ -184,8 +186,10 @@ class SystemPackageUpdates(AaBase):
                     return "Kubernetes Resource validation unsuccessful: {}".format(validation_checks)
 
             if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
-                print("===========  Searching in repo list: RedHat Ceph stable community repository ================")
-                if re.search(r"RedHat Ceph stable community repository", str(check_repo_list_output)) and re.search("RedHat Ceph stable noarch community repository", str(check_repo_list_output)):
+                print("===========  Searching in repo list: ceph_stable/x86_64 ================")
+                #if re.search(r"RedHat Ceph stable community repository", str(check_repo_list_output)) and re.search("RedHat Ceph stable noarch community repository", str(check_repo_list_output)):
+                 
+                if re.search(r"ceph_stable/x86_64", str(check_repo_list_output)) and re.search("ceph_stable_noarch", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 print("============  Searching in gpg keys: gpg(Ceph.com (release key) ==================")
@@ -224,7 +228,7 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
                 print(" ===============  Searching in repo list: deb https://deb.frrouting.org/frr stretch frr-stable =========== ")
-                if re.search(r"deb https://deb.frrouting.org/frr stretch frr-stable", str(check_repo_list_output)):
+                if (re.search(r"deb https://deb.frrouting.org/frr stretch frr-stable", str(check_repo_list_output))) or (re.search(r"deb https://deb.frrouting.org/frr bionic frr-stable", str(check_repo_list_output))):
                     validation_checks.append("OK")
 
                 print("================  Searching in gpg keys: FRRouting Debian Repository ============= ")
@@ -238,7 +242,7 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
                 print("===========  Searching in repo list: FRRouting Packages for Enterprise Linux 7 - x86_64 ================")
-                if re.search(r"FRRouting Packages for Enterprise Linux 7 - x86_64", str(check_repo_list_output)) and re.search("FRRouting Dependencies for Enterprise Linux 7 - x86_64", str(check_repo_list_output)):
+                if re.search(r"FRRouting Packages for Enterprise Linux 7", str(check_repo_list_output)) and re.search("FRRouting Dependencies for Enterprise Linux 7", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==1):
@@ -317,7 +321,7 @@ class SystemPackageUpdates(AaBase):
                 print(" ===============  Searching in repo list:deb http://deb.debian.org/debian stretch main =========== ")
                 if re.search(r"deb http://deb.debian.org/debian stretch main", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb-src http://deb.debian.org/debian-security/ stretch/updates main", str(check_repo_list_output)):
+                if re.search(r"deb-src http://deb.debian.org/debian-security/ stretch/updates", str(check_repo_list_output)):
                     validation_checks.append("OK")
                 if re.search(r"deb http://deb.debian.org/debian stretch-updates main", str(check_repo_list_output)):
                     validation_checks.append("OK")
@@ -334,7 +338,7 @@ class SystemPackageUpdates(AaBase):
                     validation_checks.append("OK")
                 if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu xenial-security main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==4):
@@ -344,14 +348,14 @@ class SystemPackageUpdates(AaBase):
 
             if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
                 print("===========  Searching in repo list: base/7/x86_64 ================")
-                if re.search(r"base/7/x86_64", str(check_repo_list_output)) and re.search("CentOS-7 - Extras", str(check_repo_list_output)) and re.search("updates/7/x86_64", str(check_repo_list_output)) and re.search("Extra Packages for Enterprise Linux 7 - x86_64", str(check_repo_list_output)):
+                if re.search(r"base/7/x86_64", str(check_repo_list_output)) and re.search(r"extras/7/x86_64", str(check_repo_list_output)) and re.search(r"updates/7/x86_64", str(check_repo_list_output)) and re.search(r"epel/x86_64", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 print("============  Searching in gpg keys: gpg\(Fedora EPEL (7) <epel@fedoraproject.org>\) ==================")
                 if re.search(r"gpg\(Fedora EPEL (7) <epel@fedoraproject.org>\)", str(check_GPG_keys_output)) and re.search(r"Official Signing Key\) <security@centos.org>\)", str(check_GPG_keys_output)):
                     validation_checks.append("OK")
 
-                if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==2):
+                if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==1):
                     return "OK"
                 else:
                     return "OS Package repository validation unsuccessful in Redhat or CentOS: {}".format(validation_checks)
@@ -386,14 +390,14 @@ class SystemPackageUpdates(AaBase):
                 cmd_op1=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd1)
                 serialised_output1 = self._serialize_response(time.time(), cmd_op1)
                 print("serialised_output1 is : {}".format(serialised_output1))
-                cmd2= 'sudo cat /var/log/unattended-upgrades/unattended-upgrades.log | grep "installed"'
+                cmd2= 'sudo cat /var/log/unattended-upgrades/unattended-upgrades.log'
                 cmd_op2=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd2)
                 serialised_output2 = self._serialize_response(time.time(), cmd_op2)
                 print("serialised_output2 is : {}".format(serialised_output2))
-                if (re.search(r'APT::Periodic::Update-Package-Lists "0"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and (re.search(r'installed', str(serialised_output2))):
+                if (re.search(r'APT::Periodic::Update-Package-Lists "0"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and ((re.search(r'installed', str(serialised_output2))) or (re.search(r'No packages found that can be upgraded', str(serialised_output2)))):
                     return "Automatic upgrades set to No from backend"
                 
-                elif (re.search(r'APT::Periodic::Update-Package-Lists "1"', str(serialised_output1))) and (re.search(r'APT::Periodic::Unattended-Upgrade "1"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and (re.search(r'installed', str(serialised_output2))):
+                elif (re.search(r'APT::Periodic::Update-Package-Lists "1"', str(serialised_output1))) and (re.search(r'APT::Periodic::Unattended-Upgrade "1"', str(serialised_output1))) and (package_installation_check=="unattended-upgrades Package installed") and ((re.search(r'installed', str(serialised_output2)))or (re.search(r'No packages found that can be upgraded', str(serialised_output2)))):
                     return "Automatic upgrades set to Yes from backend"
                 else:
                     return "Automatic upgrades validation unsuccessful in Debian"
@@ -486,4 +490,25 @@ class SystemPackageUpdates(AaBase):
             print("Exception encountered: {}".format(e))
             return "Exception encountered: "+ str(e)
             
-    
+
+
+    ###########################################################################
+    @keyword(name="CLI.Validate Ethtool")
+    ###########################################################################
+    def validate_ethtool(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("CLI.Validate Ethtool")
+        try:
+            for host_ip in ast.literal_eval(self.host_ips):
+                trace("Host IP:{}".format(host_ip))
+                cmd = 'sudo ethtool --version'
+                cmd_op = cli_run(host_ip,self.linux_user,self.linux_password,cmd)
+                trace("Command output:{}".format(cmd_op))
+                if re.search("ethtool version",str(cmd_op)):
+                    return "OK"
+                else:
+                    return "Error: Ethtool Not Found"
+
+        except Exception as e:
+            print("Exception encountered: {}".format(e))
+            return "Exception encountered: "+ str(e)    

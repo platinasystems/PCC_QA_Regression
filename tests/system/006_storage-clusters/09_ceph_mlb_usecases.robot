@@ -100,6 +100,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -117,6 +118,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -133,6 +135,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -444,6 +447,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -715,6 +719,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -999,6 +1004,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -1283,6 +1289,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -1575,6 +1582,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #
@@ -1867,6 +1875,7 @@
 #                               ...  size=${CEPH_POOL_SIZE}
 #                               ...  tags=${CEPH_POOL_TAGS}
 #                               ...  pool_type=${CEPH_POOL_TYPE}
+#                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
 #                               ...  quota=3
 #                               ...  quota_unit=GiB
 #

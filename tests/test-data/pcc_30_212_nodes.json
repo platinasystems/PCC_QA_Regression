@@ -25,83 +25,31 @@
             	
         },
     
-    "clusterhead-1":
+     "clusterhead-1":
         {
-            "invader_name":"qa-clusterhead-11",
-            "pcc_url": "https://172.17.10.11:9999",
-            "pcc_host_ip": "172.17.10.11",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.11.11",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
+            "invader_name":"i43",
+            "pcc_url":"https://172.17.2.43:9999",
+            "pcc_host_ip":"172.17.2.43",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.43",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
         },
     
     "clusterhead-2":
         {
-            "invader_name":"qa-clusterhead-10",
-            "pcc_url": "https://172.17.10.10:9999",
-            "pcc_host_ip": "172.17.10.10",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.11.10",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
-        },
-        
-    "server-1":
-        {  
-            "server_name":"qa-server-101",
-            "pcc_url": "https://172.17.10.101:9999",
-            "pcc_host_ip": "172.17.10.101",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.11.101",
-            "mgmt_ip": "172.17.10.101/23",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
-            
-        },
-        
-    "server-2":
-        {
-            "server_name":"qa-server-100",
-            "pcc_url": "https://172.17.10.100:9999",
-            "pcc_host_ip": "172.17.10.100",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.11.100",
-            "mgmt_ip": "172.17.10.100/23",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
-        },
-	
-    "server-3":
-        {
-            "server_name":"sv69",
-            "pcc_url":"https://172.17.10.12:9999",
-            "pcc_host_ip":"172.17.10.12",
+            "invader_name":"i42",
+            "pcc_url":"https://172.17.2.42:9999",
+            "pcc_host_ip":"172.17.2.42",
             "pcc_linux_password":"cals0ft",
             "pcc_username":"pcc",
             "pcc_password":"cals0ft",
-            "bmc":"172.17.11.12",
-            "mgmt_ip":"172.17.10.12/23",
+            "bmc":"172.17.3.42",
             "bmc_user":"ADMIN",
             "bmc_pwd":"ADMIN",
             "console":"ttyS1",
@@ -109,6 +57,59 @@
             "ssh_keys":"pcc"
         },
         
+    "server-1":
+        {
+            "server_name":"sv-124",
+            "pcc_url":"https://172.17.2.124:9999",
+            "pcc_host_ip":"172.17.2.124",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.124",
+            "mgmt_ip":"172.17.2.124/23",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
+            
+            
+        },
+        
+    "server-2":
+        {
+            "server_name":"sv125",
+            "pcc_url":"https://172.17.2.125:9999",
+            "pcc_host_ip":"172.17.2.125",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.125",
+            "mgmt_ip":"172.17.2.125/23",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
+        },
+        
+    "server-3":
+        {
+            "server_name":"sv110",
+            "pcc_url":"https://172.17.2.110:9999",
+            "pcc_host_ip":"172.17.2.110",
+            "pcc_linux_password":"cals0ft",
+            "pcc_username":"pcc",
+            "pcc_password":"cals0ft",
+            "bmc":"172.17.3.110",
+            "mgmt_ip":"172.17.2.110/23",
+            "bmc_user":"ADMIN",
+            "bmc_pwd":"ADMIN",
+            "console":"ttyS1",
+            "managed_by_pcc":"true",
+            "ssh_keys":"pcc"
+        },   
+    
     "container-registry":
         {
             "name":"calsoft1",
@@ -197,20 +198,20 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-10","sv69"],
-            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.10","172.17.10.12"],
+	    "nodes":["sv125","sv-124","i42"],
+            "nodes_ip":["172.17.2.125","172.17.2.124","172.17.2.42"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
             "igwPolicy":"default",
-	    "bgp_neighbors":{"qa-clusterhead-10":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.8","remote_as":64600},{"neighbor_ip":"10.0.10.12","remote_as":64601}]},"qa-clusterhead-11":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.10","remote_as":64600},{"neighbor_ip":"10.0.10.14","remote_as":64601}]}}
+	    "bgp_neighbors":{"i42":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.8","remote_as":64600},{"neighbor_ip":"10.0.10.12","remote_as":64601}]},"i43":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.10","remote_as":64600},{"neighbor_ip":"10.0.10.14","remote_as":64601}]}}
         },
         
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["qa-server-100","qa-server-101","qa-clusterhead-10","sv69"],
-            "nodes_ip":["172.17.10.100","172.17.10.101","172.17.10.10","172.17.10.12"],
-            "tags":["iSCSI"],
+            "nodes":["sv125","sv-124","i42"],
+            "nodes_ip":["172.17.2.125","172.17.2.124","172.17.2.42"],
+            "tags":["SATA/SAS"],
             "networkClusterName":"network-pvt"
         },
   
@@ -219,8 +220,7 @@
             "name":"pool-pvt",
             "size":2,
             "tags":[],
-            "pool_type":"data",
-	    "resilienceScheme":"replicated",
+            "pool_type":"replicated",
             "quota":"1",
             "quota_unit":"MiB"
         },
@@ -246,7 +246,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "targetNodes":["qa-server-100"],
+            "targetNodes":["sv125"],
             "port":443,
             "certificateName":"rgw-crt",
             "S3Accounts":"rgw-app"
@@ -258,7 +258,7 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["qa-clusterhead-10","qa-server-100","qa-server-101"],
+            "nodes":["sv125","sv-124","i42"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
@@ -283,7 +283,7 @@
      
      "pxe-boot":
         {
-            "gateway":"172.17.10.1",            
+            "gateway":"172.17.2.1",            
             "pxe_booted_server":"0123456789",
             "adminStatus_up":"UP",
             "adminStatus_down":"DOWN"

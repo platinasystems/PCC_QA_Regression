@@ -397,7 +397,7 @@ class Cli(AaBase):
             cmd="sudo /home/pcc/platina-cli-ws/platina-cli restore -p {}  --url http://{}:9001 --id minio --secret minio123 --privateKey /home/pcc/master.gpg".format(self.pcc_password, self.restore_hostip)
             
         elif (self.backup_type == "local") and (self.backup_params == "all") and (self.restore_type == "local"):
-            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password)
+            cmd = "sudo /home/pcc/platina-cli-ws/platina-cli restore -p {} --url http://{}:9001 --id minio --secret minio123 --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password, self.host_ip)
         
         elif (self.backup_type == "local") and (self.backup_params != "all") and (self.restore_type == "local"):
             cmd = "sudo /home/pcc/platina-cli-ws/platina-cli backup -p {} -t {} --privateKey /home/pcc/platina-cli-ws/keys/local/master.gpg".format(self.pcc_password, self.backup_params)
@@ -465,9 +465,9 @@ class Cli(AaBase):
             serialised_status = self._serialize_response(time.time(), cmd_output)
             serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
 
-            if re.search("install ok",serialised_cmd_output):
+            if re.search("Status: install ok",serialised_cmd_output):
                 return "{} Package installed".format(self.package_name)
-            elif re.search("deinstall ok",serialised_cmd_output):
+            elif re.search("Status: deinstall ok",serialised_cmd_output):
                 return "{} Package not installed".format(self.package_name)
             else:
                 return "Error while checking {} package installation".format(self.package_name)
@@ -528,3 +528,84 @@ class Cli(AaBase):
                 return "Error while removing {} package".format(self.package_name)
         else:
             return "Check package remove failed"
+
+    ###########################################################################
+    @keyword(name="CLI.Backend Verification Before Restore")
+    ###########################################################################
+    def backend_verification_before_restore(self,*args,**kwargs):
+        banner("CLI.Backend Verification Before Restore")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        key_cmd="sudo sha1sum /home/pcc/platina-home/platina-system/conf/keys/system/key|cut -d ' ' -f1 > /tmp/before_restore.txt"
+        print("Command for copying sha1sum for key : "+str(key_cmd))
+        trace("Command for copying sha1sum for key : "+str(key_cmd))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, key_cmd)
+        key_cmd1="sudo sha1sum /home/pcc/platina-home/platina-system/conf/keys/system/key.pub|cut -d ' ' -f1 >>/tmp/before_restore.txt"
+        print("Command for copying sha1sum for key.pub : "+str(key_cmd1))
+        trace("Command for copying sha1sum for key.pub : "+str(key_cmd1))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, key_cmd1)
+        cert_cmd="sudo sha1sum /home/pcc/platina-home/platina-system/conf/certs/server.crt|cut -d ' ' -f1 >> /tmp/before_restore.txt"
+        print("Command for copying sha1sum for server.crt : "+str(cert_cmd))
+        trace("Command for copying sha1sum for server.crt : "+str(cert_cmd))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, cert_cmd)
+        cert_cmd1="sudo sha1sum /home/pcc/platina-home/platina-system/conf/certs/server.key|cut -d ' ' -f1 >> /tmp/before_restore.txt"
+        print("Command for copying sha1sum for server.key : "+str(cert_cmd1))
+        trace("Command for copying sha1sum for server.key : "+str(cert_cmd1))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, cert_cmd1)
+        monitor_cmd="sudo rm -rf /home/pcc/platina-home/platina-system/volumes/monitor-parquet"
+        print("Command for removing monitor folder : "+str(monitor_cmd))
+        trace("Command for removing monitor folder : "+str(monitor_cmd))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, monitor_cmd)
+        env_cmd="sudo sed -i 's/KEYMANAGER_IMAGE_VERSION.*/KEYMANAGER_IMAGE_VERSION\=v1\.6\.2/' /home/pcc/platina-home/platina-system/.env"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, env_cmd)
+        env_cmd_implement="sudo /home/pcc/platina-cli-ws/platina-cli pull -p {}".format(self.pcc_password)
+        print("Command to pull env changes : "+str(env_cmd_implement))
+        trace("Command to pull env changes : "+str(env_cmd_implement))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, env_cmd_implement)
+        env_cmd_verify="sudo docker ps -a |grep key"
+        print("Verify version : "+str(env_cmd_verify))
+        trace("Verify version : "+str(env_cmd_verify))
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, env_cmd_verify)
+        if re.search("v1.6.2", str(cmd_out)):
+                return "OK"
+        else:
+            return "Couldn't verify version for pcc-ui "
+        return "OK"
+
+    ###########################################################################
+    @keyword(name="CLI.Backend Verification After Restore")
+    ###########################################################################
+    def backend_verification_after_restore(self,*args,**kwargs):
+        banner("CLI.Backend Verification After Restore")
+        self._load_kwargs(kwargs)
+        trace("Kwargs are: " + str(kwargs))
+        failed_features=[]
+        key_cmd="sudo sha1sum /home/pcc/platina-home/platina-system/conf/keys/system/key|cut -d ' ' -f1 > /tmp/after_restore.txt"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, key_cmd)
+        key_cmd1="sudo sha1sum /home/pcc/platina-home/platina-system/conf/keys/system/key.pub|cut -d ' ' -f1 >>/tmp/after_restore.txt"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, key_cmd1)
+        cert_cmd="sudo sha1sum /home/pcc/platina-home/platina-system/conf/certs/server.crt|cut -d ' ' -f1 >> /tmp/after_restore.txt"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, cert_cmd)
+        cert_cmd1="sudo sha1sum /home/pcc/platina-home/platina-system/conf/certs/server.key|cut -d ' ' -f1 >> /tmp/after_restore.txt"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, cert_cmd1)
+        monitor_cmd="sudo test -d /home/pcc/platina-home/platina-system/volumes/monitor-parquet && echo 'True' || echo 'False'"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, monitor_cmd)
+        if re.search("True", str(cmd_out)):
+                print("Monitor backup verified !!!")
+                trace("Monitor backup verified !!!")
+        else:
+            failed_features.append("Monitor")
+        env_cmd_verify="sudo docker ps -a |grep key"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, env_cmd_verify)
+        if re.search("v1.6.2", str(cmd_out)):
+            failed_features.append("Env")
+        shasum_verify_cmd="sudo cmp /tmp/before_restore.txt /tmp/after_restore.txt"
+        cmd_out = cli_run(self.backup_hostip, self.linux_user, self.linux_password, shasum_verify_cmd)
+        if re.search("differ", str(cmd_out)):
+            failed_features.append("Key")
+            failed_features.append(("Cert"))
+        if failed_features:
+            return "Folloeing feature verification failed {}".format(failed_features)
+        else:
+            return "OK"
+        return "OK"

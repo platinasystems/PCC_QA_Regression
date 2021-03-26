@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	ceph
+	[Tags]	check
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -44,29 +44,31 @@ Upgrade PCC
                                ...  keywords:
                                ...  CLI.Pcc Down
 	[Tags]  Only_this
-	###  Making CLI Down  ####
-	${status}		CLI.Pcc Down
-					...    host_ip=${PCC_HOST_IP}
-					...    pcc_password=${PCC_SETUP_PWD}
-					...    linux_user=${PCC_LINUX_USER}
-					...    linux_password=${PCC_LINUX_PASSWORD}
-					
-					Should Be Equal As Strings    ${status}    OK
+#	###  Making CLI Down  ####
+#	${status}		CLI.Pcc Down
+#					...    host_ip=${PCC_HOST_IP}
+#					...    pcc_password=${PCC_SETUP_PWD}
+#					...    linux_user=${PCC_LINUX_USER}
+#					...    linux_password=${PCC_LINUX_PASSWORD}
+#					
+#					Should Be Equal As Strings    ${status}    OK
 	
 	### Taking PCC to stable version   ###
 	${status}       CLI.PCC Pull Code
 					...  host_ip=${PCC_HOST_IP}
 					...  linux_user=${PCC_LINUX_USER}
 					...  linux_password=${PCC_LINUX_PASSWORD}
-					...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master
+					...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli upgrade -p ${PCC_SETUP_PWD} --release v1.7.0-rc2
 
-                    Should Be Equal As Strings    ${status}    OK
+                                        #...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master
+
+                                        Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
 Login to PCC
 ###################################################################################################################################
 	[Documentation]                 *Login to PCC and load data*
-	[Tags]  ceph
+	[Tags]  check
 		${status}                               Login To PCC        testdata_key=${pcc_setup}
                                                 Should be equal as strings    ${status}    OK
 
@@ -76,7 +78,8 @@ Nodes Verification after upgrading PCC
     [Documentation]                      *Nodes Verification Back End*
                                ...  keywords:
                                ...  PCC.Node Verify Back End
-    ${status}                       PCC.Add mutliple nodes and check online
+    	[Tags]    check
+	${status}                       PCC.Add mutliple nodes and check online
                                ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}']
                                ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
 
@@ -109,7 +112,7 @@ Ceph Validation after upgrading PCC
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
@@ -120,7 +123,7 @@ Ceph Validation after upgrading PCC
                                ...  name=rgw
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
@@ -131,7 +134,7 @@ Ceph Validation after upgrading PCC
                                ...  name=rbd
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
@@ -142,7 +145,7 @@ Ceph Validation after upgrading PCC
                                ...  name=fs1
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
@@ -153,7 +156,7 @@ Ceph Validation after upgrading PCC
                                ...  name=fs2
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
@@ -164,7 +167,7 @@ Ceph Validation after upgrading PCC
                                ...  name=fs3
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
@@ -172,7 +175,7 @@ Ceph Validation after upgrading PCC
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 
         ${status}                   PCC.Ceph Wait Until Rbd Ready
@@ -187,7 +190,7 @@ Ceph Validation after upgrading PCC
                                ...  name=${CEPH_FS_NAME}
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -219,7 +222,7 @@ Network Cluster Validation after upgrading PCC
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 

@@ -47,6 +47,7 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                       ...  quota=1
                                       ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                       
@@ -189,7 +190,17 @@ Ceph Rados Add S3Account
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_Cluster_NAME}
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+	
+	${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  targetNodeIp=["${SERVER_2_HOST_IP}"]
+                                    Should Be Equal As Strings      ${backend_status}    OK
+                                    Sleep    3 minutes
+
+                            
 ###################################################################################################################################
 Create Application credential profile with application
 ###################################################################################################################################

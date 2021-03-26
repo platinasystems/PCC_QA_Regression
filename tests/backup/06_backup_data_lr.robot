@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	This
+	[Tags]	roles
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -98,30 +98,34 @@ Ceph Cluster Update After Backup Restore- Add Invader
                                     Should Be Equal As Strings      ${status}    OK    
 
 ##################################################################################################################################
-Remove Node to Kubernetes cluster After Backup Restore
+Add Node to Kubernetes cluster After Backup Restore
 ###################################################################################################################################
 
-        [Documentation]             *Remove Node to Kubernetes cluster*
-                               ...  Keywords:
-                               ...  PCC.K8s Update Cluster Nodes
-                               ...  PCC.K8s Get Cluster Id
-                               ...  PCC.K8s Wait Until Cluster is Ready
+
+        [Documentation]               *Add Node to Kubernetes cluster*
+                              ...  Keywords:
+                              ...  PCC.K8s Update Cluster Nodes
+                              ...  PCC.K8s Get Cluster Id
+                              ...  PCC.K8s Wait Until Cluster is Ready
+
+        [Tags]       k8s/scope
 
         ${cluster_id}               PCC.K8s Get Cluster Id
-                               ...  name=${K8S_NAME}
+                              ...  name=${K8S_NAME}
 
-        ${response}                 PCC.K8s Update Cluster Nodes
-                               ...  cluster_id=${cluster_id}
-                               ...  name=${K8S_NAME}
-                               ...  toRemove=["${CLUSTERHEAD_2_NAME}"]
-                               ...  rolePolicy=auto
+       ${response}                PCC.K8s Update Cluster Nodes
+                              ...  cluster_id=${cluster_id}
+                              ...  name=${K8S_NAME}
+                              ...  toAdd=["${CLUSTERHEAD_2_NAME}"]
+                              ...  rolePolicy=auto
 
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
+       ${status_code}              Get Response Status Code        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
 
-        ${status}                   PCC.K8s Wait Until Cluster is Ready
-                               ...  name=${K8S_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
+       ${status}                   PCC.K8s Wait Until Cluster is Ready
+                              ...  name=${K8S_NAME}
+                                   Should Be Equal As Strings      ${status}    OK
+
 
 
 ###################################################################################################################################
@@ -147,6 +151,7 @@ Ceph Pools After Backup Restore
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -163,6 +168,7 @@ Ceph Pools After Backup Restore
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -180,6 +186,7 @@ Ceph Pools After Backup Restore
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -196,6 +203,7 @@ Ceph Pools After Backup Restore
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -212,6 +220,7 @@ Ceph Pools After Backup Restore
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -229,6 +238,8 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts After Backu
 
      [Documentation]                             *Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts After Backup Restore*
                
+        [Tags]        roles
+
         ${status}                               PCC.Ceph Get Pcc Status
                                            ...  name=ceph-pvt
                                                 Should Be Equal As Strings      ${status}    OK
@@ -272,6 +283,7 @@ Ceph Rbd Creation After Backup Restore
                                            ...  name=rbd
                
         ${response}                             PCC.Ceph Create Rbd
+                                           ...  pool_type=replicated
                                            ...  name=${CEPH_RBD_NAME}
                                            ...  ceph_cluster_id=${cluster_id}
                                            ...  ceph_pool_id=${pool_id}
@@ -446,14 +458,16 @@ PCC Node Role Creation After Backup Restore and restore
                                               ...  keywords:
                                               ...  PCC.Add Node Role
                                               ...  PCC.Validate Node Role
+
+        [Tags]        roles
                                               
         ${owner}                              PCC.Get Tenant Id       Name=${ROOT_TENANT}
                                               
         ${template_id}                        PCC.Get Template Id    Name=${APP_1}
                                                       
         ${response}                           PCC.Add Node Role
-                                              ...    Name=${NODE_ROLE_1}
-                                              ...    Description=${NODE_ROLE_DESC_1}
+                                              ...    Name=${NODE_ROLE_2}
+                                              ...    Description=${NODE_ROLE_DESC_2}
                                               ...    templateIDs=[${template_id}]
                                               ...    owners=[${owner}]
                                               
@@ -467,7 +481,7 @@ PCC Node Role Creation After Backup Restore and restore
                                               Sleep    2s
                                               
         ${status}                             PCC.Validate Node Role
-                                              ...    Name=${NODE_ROLE_1}
+                                              ...    Name=${NODE_ROLE_2}
                                               
                                               Log To Console    ${status}
                                               Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
@@ -562,10 +576,10 @@ Create scoping object - Region After Backup Restore and restore
                                              ...  keywords:
                                              ...  PCC.Create Scope
                            
-        [Tags]    Running                  
+        [Tags]    k8s/scope                  
         ${response}                          PCC.Create Scope
                                              ...  type=region
-                                             ...  scope_name=region-1
+                                             ...  scope_name=region-2
                                              ...  description=region-description
                                              
                                              

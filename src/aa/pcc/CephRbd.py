@@ -13,6 +13,7 @@ from aa.common import PccUtility as easy
 from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data
 from aa.common.AaBase import AaBase
+from aa.common.Cli import cli_run
 
 from aa.pcc.CephCluster import CephCluster
 
@@ -38,6 +39,8 @@ class CephRbd(AaBase):
         self.hostip = None
         self.mount_folder_name = None
         self.inet_ip = None
+        self.pool_type = None
+        self.ceph_metadata_pool_id = None
         super().__init__()
 
     ###########################################################################
@@ -102,18 +105,32 @@ class CephRbd(AaBase):
 
         if self.tags:
             self.tags=eval(self.tags)
+        if self.pool_type == "replicated":
+            payload = {
 
-        payload = {
+                "ceph_pool_id":self.ceph_pool_id,
+                "ceph_cluster_id":self.ceph_cluster_id,
+                "name":self.name,
+                "size":self.size, 
+                "size_units": self.size_units,
+                "tags":self.tags, 
+                "image_feature":self.image_feature
 
-            "ceph_pool_id":self.ceph_pool_id,
-            "ceph_cluster_id":self.ceph_cluster_id,
-            "name":self.name,
-            "size":self.size, 
-            "size_units": self.size_units,
-            "tags":self.tags, 
-            "image_feature":self.image_feature
+            }
 
-        }
+        elif self.pool_type == "erasure":
+            payload = {
+
+                "ceph_pool_id":self.ceph_pool_id,
+                "ceph_cluster_id":self.ceph_cluster_id,
+                "name":self.name,
+                "size":self.size,
+                "size_units": self.size_units,
+                "tags":self.tags,
+                "image_feature":self.image_feature,
+                "ceph_metadata_pool_id":self.ceph_metadata_pool_id
+
+            }
 
         print(payload)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
@@ -134,16 +151,32 @@ class CephRbd(AaBase):
 
         for i in range(1, self.count + 1):
             name = str(self.name) + "-" + str(i)
-            payload = {
-                "ceph_pool_id":self.ceph_pool_id,
-                "ceph_cluster_id":self.ceph_cluster_id,
-                "name":name,
-                "size":self.size,
-                "size_units": self.size_units,
-                "tags":self.tags,
-                "image_feature":self.image_feature
-                }
+            if self.pool_type == "replicated":
+                payload = {
 
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature
+
+                } 
+
+            elif self.pool_type == "erasure":
+                payload = {
+
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature,
+                    "ceph_metadata_pool_id":self.ceph_metadata_pool_id
+
+                } 
             print(payload)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
 
@@ -226,19 +259,19 @@ class CephRbd(AaBase):
 
         while rbd_ready == False:
             response = pcc.get_ceph_rbds(conn)
+            if time.time() > timeout:
+                return "[PCC.Ceph Wait Until Rbd Ready] Timeout"
             for data in get_response_data(response):
                 print(str(data))
                 if str(data['name']).lower() == str(self.name).lower():
                     if data['deploy_status'] == "completed":
                         rbd_ready = True
-                    if data['deploy_status'] == "failed":
-                        return "Error"
-            if time.time() > timeout:
-                raise Exception("[PCC.Ceph Wait Until Rbd Ready] Timeout")
-            trace("  Waiting until rbd : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
-            time.sleep(5)
-        time.sleep(10)
-        return "OK"
+                        return "OK"
+                    if re.search('fail',str(data['deploy_status'])):
+                        return "RBD: {} failed. Status is {}".format(data['name'], data['deploy_status'])
+                    else:
+                        trace("  Waiting until rbd : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
+                        time.sleep(5)
 
     ###########################################################################
     @keyword(name="PCC.Ceph Rbd Update")
@@ -250,18 +283,32 @@ class CephRbd(AaBase):
             self.tags=eval(self.tags)
 
         try:
-            payload = {
+            if self.pool_type == "replicated":
+                payload = {
+                    "id":self.id,
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":self.name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature
 
-            "id":self.id,
-            "ceph_pool_id":self.ceph_pool_id,
-            "ceph_cluster_id":self.ceph_cluster_id,
-            "name":self.name,
-            "size":self.size,
-            "size_units": self.size_units,
-            "tags":self.tags,
-            "image_feature":self.image_feature
+                }
 
-        }
+            elif self.pool_type == "erasure":
+                payload = {
+                    "id":self.id,
+                    "ceph_pool_id":self.ceph_pool_id,
+                    "ceph_cluster_id":self.ceph_cluster_id,
+                    "name":self.name,
+                    "size":self.size,
+                    "size_units": self.size_units,
+                    "tags":self.tags,
+                    "image_feature":self.image_feature,
+                    "ceph_metadata_pool_id":self.ceph_metadata_pool_id
+
+            }
 
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             print(str(payload))
@@ -288,15 +335,15 @@ class CephRbd(AaBase):
             cmd= "sudo rbd map {} --pool {} --name client.admin -m {} -k /etc/ceph/ceph.client.admin.keyring".format(self.name, self.pool_name, self.inet_ip)
             
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is:{}".format(cmd,status))
-            
+            trace("cmd1: {} executed successfully and status is:{}".format(cmd,str(status)))
+            print("cmd1: {} executed successfully and status is:{}".format(cmd,str(status)))            
             time.sleep(2)
             
             #mkfs.ext4 rbd0 command execution
             cmd= "sudo mkfs.ext4 -m0 /dev/rbd0"
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd2: {} executed successfully and status is:{}".format(cmd,status))
-            
+            trace("cmd2: {} executed successfully and status is:{}".format(cmd,str(status)))
+            print("cmd2: {} executed successfully and status is:{}".format(cmd,str(status)))
             time.sleep(2)            
             return "OK"
             
@@ -316,7 +363,7 @@ class CephRbd(AaBase):
             cmd= "sudo mount /dev/rbd0 /mnt/{}".format(self.mount_folder_name)
             
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
-            print("cmd1: {} executed successfully and status is:{}".format(cmd,status))
+            trace("cmd1: {} executed successfully and status is:{}".format(cmd,status))
             
             time.sleep(5)
             return "OK"
@@ -336,19 +383,19 @@ class CephRbd(AaBase):
             cmd= "sudo umount /mnt/{}".format(self.mount_folder_name)
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             print("cmd1: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd1: {} executed successfully and status is : {}".format(cmd,status))
+            trace("cmd1: {} executed successfully and status is : {}".format(cmd,status))
             time.sleep(60*1) # Sleep for 2 minutes
             
             cmd= "sudo rbd unmap /dev/rbd0"
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             print("cmd2: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd2: {} executed successfully and status is : {}".format(cmd,status))
+            trace("cmd2: {} executed successfully and status is : {}".format(cmd,status))
             time.sleep(60*2) # Sleep for 2 minutes
             
             cmd= "sudo rm -rf /mnt/{}/".format(self.mount_folder_name)
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             print("cmd3: {} executed successfully and status is : {}".format(cmd,status))
-            logger.console("cmd3: {} executed successfully and status is : {}".format(cmd,status))
+            trace("cmd3: {} executed successfully and status is : {}".format(cmd,status))
             time.sleep(60*2) # Sleep for 2 minutes
             
             return "OK"

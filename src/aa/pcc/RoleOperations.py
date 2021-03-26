@@ -10,6 +10,7 @@ from aa.common.Utils import banner, trace, pretty_print
 from aa.common.Result import get_response_data, get_result
 from aa.common.AaBase import AaBase
 from aa.common.Cli import cli_run
+from aa.pcc.Nodes import Nodes
 
 PCC_TIMEOUT = 60*15  # 15 min
 
@@ -61,10 +62,17 @@ class RoleOperations(AaBase):
                         tmp_id=easy.get_node_role_id_by_name(conn,str(role))
                         print("Role-Id:-"+str(role)+"-"+str(tmp_id))
                         role_ids.append(tmp_id)
+                    trace("role_ids : {}".format(role_ids))
+                    if "scopeId" not in kwargs:
+                        trace("Node id is :{}".format(str(data['Id'])))
+                        get_node_response = pcc.get_node_by_id(conn,str(data['Id']))
+                        trace("get_node_response: {}".format(str(get_node_response)))
+                        self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
                     payload={
                              "Id":self.Id,
                              "Host":self.Host,
-                             "roles":role_ids
+                             "roles":role_ids,
+                             "scopeId":self.scopeId
                              }
                     print("Payload:-"+str(payload))
                     api_response=pcc.modify_node(conn, payload)
@@ -195,9 +203,15 @@ class RoleOperations(AaBase):
                             print("Role-Id to Remove:-"+str(role)+"-"+str(tmp_id))
                             if tmp_id in eval(str(role_ids)):
                                 role_ids.remove(tmp_id)
+                        if "scopeId" not in kwargs:
+                            trace("Node id is :{}".format(str(data['Id'])))
+                            get_node_response = pcc.get_node_by_id(conn,str(data['Id']))
+                            trace("get_node_response: {}".format(str(get_node_response)))
+                            self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
                         payload={
                                  "Id":self.Id,
-                                 "roles":role_ids
+                                 "roles":role_ids,
+                                 "scopeId":self.scopeId
                                  }
                         print("Payload:-"+str(payload))
                         api_response=pcc.modify_node(conn, payload)

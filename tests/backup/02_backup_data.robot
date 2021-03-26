@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]	This
+	[Tags]	cluster_head
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -95,6 +95,118 @@ Create Subnets For Network Manager
 
                                     Should Be Equal As Strings      ${status}    OK
 
+##########################################################################################################################################
+Assign and validate Cluster Head node role to the cluster heads
+###########################################################################################################################################
+
+    [Documentation]                 *Assign and validate Cluster Head node role to the cluster heads*
+                               ...  Keywords:
+                               ...  PCC.Add and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes
+                               ...  PCC.Verify Node Role On Nodes
+                               ...  CLI.Validate Platina Systems Package repository
+
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  roles=["Cluster Head","Default"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+                                    Should Be Equal As Strings      ${status_code}  OK
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                             ...    Name=Cluster Head
+                             ...    nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Platina Systems Package repository
+                              ...   host_ip=${CLUSTERHEAD_1_NAME}
+                              ...   linux_user=pcc
+                              ...   linux_password=cals0ft
+
+                                    Should Not Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Platina Systems Package repository
+                              ...   host_ip=${CLUSTERHEAD_2_NAME}
+                              ...   linux_user=pcc
+                              ...   linux_password=cals0ft
+
+                                    Should Not Be Equal As Strings    ${status}    OK
+
+        ${status}                   PCC.Node Verify Back End
+                             ...    host_ips=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                    Log To Console    ${status}
+                                    Run Keyword If  "${status}" != "OK"  Fatal Error
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Verify LLDP Neighbors
+                             ...    servers_hostip=['${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}']
+                             ...    invaders_hostip=['${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.OS Package repository
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+        
+        ${status}                   CLI.OS Package repository
+                             ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK                            
+
+        ${status}                   CLI.Validate Node Self Healing
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Node Self Healing
+                             ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Automatic Upgrades Validation
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+
+        ${status}                   PCC.Check NTP services from backend
+                              ...   targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+
+        ${status}                   CLI.Validate Ethtool
+                             ...    host_ips=['${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+                    
+
+
 ###################################################################################################################################
 Network Manager Creation 
 ###################################################################################################################################
@@ -103,6 +215,8 @@ Network Manager Creation
                                ...  PCC.Network Manager Create
                                ...  PCC.Wait Until Network Manager Ready
                                ...  PCC.Network Manager Verify BE 
+
+
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
                                ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
@@ -125,6 +239,51 @@ Network Manager Creation
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK 
+
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                               ...  Name=Network Resource
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+            
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+                                
+
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+        
+                                    Should Be Equal As Strings    ${status}    OK                            
+
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK 
+                                    
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK 
+                                    
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK  
+        
+        ${status}                   CLI.Validate Network Resource
+                               ...  host_ip=${SERVER_3_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+                
+                                    Should Be Equal As Strings    ${status}    OK                              
+                                                      
 
 ###################################################################################################################################
 Create Kubernetes cluster
@@ -164,6 +323,38 @@ Create Kubernetes cluster
 
                                     Should Be Equal As Strings      ${status}    OK
 
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                             ...    Name=Kubernetes Resource
+                             ...    nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+        
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK                            
+
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+                                    
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+        
+                                    Should Be Equal As Strings    ${status}    OK
+                                    
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+        
+                                    Should Be Equal As Strings    ${status}    OK
+                                                                        
+                            
+
+
 ###################################################################################################################################
 Ceph Cluster Create
 ###################################################################################################################################
@@ -171,6 +362,7 @@ Ceph Cluster Create
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
+
 
         ${id}                       PCC.Ceph Get Cluster Id
                               ...   name=${CEPH_CLUSTER_NAME}
@@ -200,6 +392,52 @@ Ceph Cluster Create
                                     Should Be Equal As Strings      ${status}    OK
 
 
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+        
+                                    Should Be Equal As Strings      ${status_code}  OK
+        
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${SERVER_1_NAME}
+                
+                                    Should Be Equal As Strings      ${status_code}  OK   
+                                                     
+        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+                               ...  node_name=${SERVER_2_NAME}
+                        
+                                    Should Be Equal As Strings      ${status_code}  OK                    
+
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                               ...  Name=Ceph Resource
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate CEPH Resource
+                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate CEPH Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate CEPH Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+
+
 ###################################################################################################################################
 Ceph Pools For Backup
 ###################################################################################################################################
@@ -223,6 +461,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -239,6 +478,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -256,6 +496,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -272,6 +513,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -288,6 +530,7 @@ Ceph Pools For Backup
                                            ...  size=${CEPH_POOL_SIZE}
                                            ...  tags=${CEPH_POOL_TAGS}
                                            ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                            ...  quota=1
                                            ...  quota_unit=TiB
                    
@@ -297,6 +540,27 @@ Ceph Pools For Backup
         ${status}                               PCC.Ceph Wait Until Pool Ready
                                            ...  name=fs3
                                                 Should Be Equal As Strings      ${status}    OK
+
+##################################################################################################################################
+Ceph Ceph Certificate For Rgws
+###################################################################################################################################
+
+        [Documentation]              *Ceph Ceph Certificate For Rgws*
+
+        ${cert_id}                   PCC.Get Certificate Id
+                                ...  Alias=${CEPH_RGW_CERT_NAME}
+                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there
+
+        ${response}                  PCC.Add Certificate
+                                ...  Alias=${CEPH_RGW_CERT_NAME}
+                                ...  Description=certificate-for-rgw
+                                ...  Private_key=domain.key
+                                ...  Certificate_upload=domain.crt
+
+                                     Log To Console    ${response}
+        ${result}                    Get Result    ${response}
+        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+                                     Should Be Equal As Strings    ${status}    200
 
 
 ###################################################################################################################################
@@ -348,6 +612,7 @@ Ceph Rbd Creation For Backup
                                            ...  name=rbd
                
         ${response}                             PCC.Ceph Create Rbd
+                                           ...  pool_type=replicated
                                            ...  name=${CEPH_RBD_NAME}
                                            ...  ceph_cluster_id=${cluster_id}
                                            ...  ceph_pool_id=${pool_id}
@@ -722,12 +987,23 @@ Create a policy using DNS app, assigning it to Node and Scope
                                              ...  roles=["DNS_NODE_ROLE","Default"]
                    
                                              Should Be Equal As Strings      ${response}  OK
+
+                ${node_wait_status}         PCC.Wait Until Node Ready
+                                    ...  Name=${SERVER_2_NAME}
+
+                                    Log To Console    ${node_wait_status}
+                                    Should Be Equal As Strings    ${node_wait_status}    OK
+
                    
-        ${status_code}                       PCC.Wait Until Roles Ready On Nodes
-                                             ...  node_name=${SERVER_2_NAME}
-                   
-                                             Should Be Equal As Strings      ${status_code}  OK
-		
+                ${status}                   PCC.Verify Node Role On Nodes
+                                    ...    Name=DNS_NODE_ROLE
+                                    ...    nodes=["${SERVER_2_NAME}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+	
+
+	
 		###   Updating node with Region- scope ####
 		${node_id}                           PCC.Get Node Id
                                              ...  Name=${SERVER_2_NAME}
@@ -799,3 +1075,395 @@ Verifying Policy assignment from backend
                                              
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
+
+
+###################################################################################################################################
+Create a policy using Rsyslog(without TLS), assigning it to Node and Scope
+###################################################################################################################################
+
+        [Documentation]                      *Create a policy* test
+                                             ...  keywords:
+                                             ...  PCC.Create Policy
+
+
+        [Tags]        policy
+        ###  Creating Rsyslog Policy  ####
+
+		${app_id}                   PCC.Get App Id from Policies
+                                                ...  Name=rsyslogd
+                                                Log To Console    ${app_id}
+
+        ${region_Id}               PCC.Get Scope Id
+                                   ...  scope_name=Default region
+                                   ...  parentID=
+                                       Log To Console    ${region_Id}
+                                       Set Global Variable    ${region_Id}
+
+        ${zone_Id}               PCC.Get Scope Id
+                                   ...  scope_name=Default zone
+                                   ...  parentID=${region_Id}
+                                 Log To Console    ${zone_Id}
+                                 Set Global Variable    ${zone_Id}
+
+        ${site_Id}               PCC.Get Scope Id
+                                 ...  scope_name=Default site
+                                 ...  parentID=${zone_Id}
+                                 Log To Console    ${site_Id}
+                                 Set Global Variable    ${site_Id}
+
+        ${rack_Id}               PCC.Get Scope Id
+                                 ...  scope_name=Default rack
+                                 ...  parentID=${site_Id}
+                                 Log To Console    ${rack_Id}
+                                 Set Global Variable    ${rack_Id}    
+
+
+        ${response}                 PCC.Create Policy
+                                       ...  appId=${app_id}
+                                       ...  description=rsyslog-policy
+                                       ...  scopeIds=[${rack_Id}]
+                                       ...  inputs=[{"name": "rsyslog_remote_address","value":"192.138.34.0"},{"name":"rsyslog_enable_tls","value":"false"},{"name":"rsyslog_tcp_port","value":"514"},{"name":"rsyslog_ca_certificate","value":""}]
+
+                                       Log To Console    ${response}
+                                       ${result}    Get Result    ${response}
+                                       ${status}    Get From Dictionary    ${result}    status
+                                       ${message}    Get From Dictionary    ${result}    message
+                                       Log to Console    ${message}
+                                       Should Be Equal As Strings    ${status}    200
+
+
+        #### Creating RSyslog node role ####
+
+        ${owner}                              PCC.Get Tenant Id       Name=${ROOT_TENANT}
+
+        ${template_id}                        PCC.Get Template Id    Name=RSYSLOG
+                                              Log To Console    ${template_id}
+
+        ${response}                            PCC.Add Node Role
+                                               ...    Name=Rsyslog-NR
+                                               ...    Description=Rsyslog-NR-DESC
+                                               ...    templateIDs=[${template_id}]
+                                               ...    owners=[${owner}]
+
+                                               Log To Console    ${response}
+                                               ${result}    Get Result    ${response}
+                                               ${status}    Get From Dictionary    ${result}    status
+                                               ${message}    Get From Dictionary    ${result}    message
+                                               Log to Console    ${message}
+                                               Should Be Equal As Strings    ${status}    200
+
+                                               Sleep    2s
+
+        ${status}                              PCC.Validate Node Role
+                                               ...    Name=Rsyslog-NR
+
+                                               Log To Console    ${status}
+                                               Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+
+
+
+		###  Adding Node roles on Node  ####
+
+        ${response}                         PCC.Add and Verify Roles On Nodes
+                                            ...  nodes=["${SERVER_1_NAME}"]
+                                            ...  roles=["Rsyslog-NR","Default"]
+
+                                            Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}                 PCC.Wait Until Node Ready
+                                            ...  Name=${SERVER_1_NAME}
+
+                                            Log To Console    ${node_wait_status}
+                                            Should Be Equal As Strings    ${node_wait_status}    OK
+        			                        Sleep    50s
+
+
+###################################################################################################################################
+Verifying Rsyslog Policy assignment from backend
+###################################################################################################################################
+	[Documentation]                      *Verifying Policy assignment from backend* test
+                                          ...  keywords:
+                                          ...  PCC.Create Policy
+
+
+        [Tags]        policy
+
+		##### Validate RSOP on Node ##########
+
+        ${rsyslog_policy_id}                PCC.Get Policy Id
+                                             ...  Name=rsyslogd
+                                             ...  description=rsyslog-policy
+                                             Log To Console    ${rsyslog_policy_id}
+                                             Set Global Variable    ${rsyslog_policy_id}
+
+		${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${SERVER_1_NAME}
+                                             ...  policyIDs=[${rsyslog_policy_id}]
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+		##### Validate Rsyslog from backend #########
+
+        ${status}                           CLI.Check package installed
+                                            ...    package_name=rsyslog
+                                            ...    host_ip=${SERVER_1_HOST_IP}
+                                            ...    linux_user=${PCC_LINUX_USER}
+                                            ...    linux_password=${PCC_LINUX_PASSWORD}
+
+                                            Log To Console    ${status}
+                                            Should Be Equal As Strings    ${status}    rsyslog Package installed
+
+##################################################################################################################################
+Create Automatic upgrade policy
+##################################################################################################################################
+        [Documentation]                 *Create Automatic upgrade policy*
+                                     ...  keywords:
+                                     ...  PCC.Create Policy
+                                     
+       [Tags]            cluster_head           
+           
+       ${default_region_Id}    PCC.Get Scope Id
+                               ...  scope_name=Default region
+                               Log To Console    ${default_region_Id}
+                               Set Global Variable    ${default_region_Id}
+
+       ${default_zone_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default zone
+                             ...  parentID=${default_region_Id}
+
+                             Log To Console    ${default_zone_Id}
+                             Set Global Variable    ${default_zone_Id}
+
+       ${default_site_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default site
+                             ...  parentID=${default_zone_Id}
+                             Log To Console    ${default_site_Id}
+                             Set Global Variable    ${default_site_Id}
+
+       ${default_rack_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default rack
+                             ...  parentID=${default_site_Id}
+                             Log To Console    ${default_rack_Id}
+                             Set Global Variable    ${default_rack_Id}
+
+       ${app_id}             PCC.Get App Id from Policies
+                             ...  Name=automatic-upgrades
+                             Log To Console    ${app_id}
+
+       ${response}           PCC.Create Policy
+                             ...  appId=${app_id}
+                             ...  description=Automatic-upgrade-policy
+                             ...  scopeIds=[${default_rack_Id}]
+                             ...  inputs=[{"name": "enabled","value": "true"}]
+
+                             Log To Console    ${response}
+                             ${result}    Get Result    ${response}
+                             ${status}    Get From Dictionary    ${result}    status
+                             ${message}    Get From Dictionary    ${result}    message
+                             Log to Console    ${message}
+                             Should Be Equal As Strings    ${status}    200
+
+       ${node_wait_status}   PCC.Wait Until Node Ready
+                             ...  Name=${CLUSTERHEAD_1_NAME}
+
+                             Log To Console    ${node_wait_status}
+                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_1_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_3_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+
+                ### Validation after setting automatic-upgrades to Yes ####
+
+       ${status}             CLI.Automatic Upgrades Validation
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                             Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_2_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_1_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_2_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_3_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+#
+
+
+###############################################################################################################################################
+Update Automatic upgrade policy value
+###############################################################################################################################################
+
+    [Documentation]                 *Update Automatic upgrade policy value*
+                                    ...  keywords:
+                                    ...  PCC.Create Policy
+                                    
+       [Tags]        cluster_head
+
+       ${default_region_Id}    PCC.Get Scope Id
+                               ...  scope_name=Default region
+                               Log To Console    ${default_region_Id}
+                               Set Global Variable    ${default_region_Id}
+
+       ${default_zone_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default zone
+                             ...  parentID=${default_region_Id}
+
+                             Log To Console    ${default_zone_Id}
+                             Set Global Variable    ${default_zone_Id}
+
+       ${default_site_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default site
+                             ...  parentID=${default_zone_Id}
+                             Log To Console    ${default_site_Id}
+                             Set Global Variable    ${default_site_Id}
+
+       ${default_rack_Id}    PCC.Get Scope Id
+                             ...  scope_name=Default rack
+                             ...  parentID=${default_site_Id}
+                             Log To Console    ${default_rack_Id}
+                             Set Global Variable    ${default_rack_Id}           
+
+                ### Setting automatic-upgrades policy to No
+
+       ${policy_id}    PCC.Get Policy Id
+                       ...  Name=automatic-upgrades
+                       ...  description=Automatic-upgrade-policy
+                                                Log To Console    ${policy_id}
+
+       ${app_id}            PCC.Get App Id from Policies
+                       ...  Name=automatic-upgrades
+                            Log To Console    ${app_id}
+
+
+
+       ${response}          PCC.Update Policy
+                       ...  Id=${policy_id}
+                       ...  appId=${app_id}
+                       ...  scopeIds=[${default_rack_Id}]
+                       ...  description=Automatic-upgrade-policy
+                       ...  inputs=[{"name": "enabled","value": "false"}]
+
+                            Log To Console    ${response}
+                            ${result}    Get Result    ${response}
+                            ${status}    Get From Dictionary    ${result}    status
+                            ${message}    Get From Dictionary    ${result}    message
+                            Log to Console    ${message}
+                            Should Be Equal As Strings    ${status}    200
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_1_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_1_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${SERVER_3_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+
+
+                ### Validation after setting automatic-upgrades to No ####
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_1_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_2_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_1_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_2_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                             Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+#
+#       ${status}            CLI.Automatic Upgrades Validation
+#                    ...     host_ip=${SERVER_3_HOST_IP}
+#                    ...     linux_user=pcc
+#                    ...     linux_password=cals0ft
+#
+#                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+

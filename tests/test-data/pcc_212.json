@@ -13,7 +13,7 @@
             "read_only_password":"readonly@123",
             "setup_password":"vRcek8jqNBOtYKqA",
             "setup_username":"Road_Runner",
-	    "setup_upgrade_cmd":"sudo /home/pcc/platina-cli run -u Road_Runner -p vRcek8jqNBOtYKqA --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Road_Runner -rp vRcek8jqNBOtYKqA --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release release-branch.pcc1.6 --pruneVolumes"
+            "setup_upgrade_cmd":"sudo /home/pcc/platina-cli-ws/platina-cli run -u Road_Runner -p vRcek8jqNBOtYKqA --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Road_Runner --rp vRcek8jqNBOtYKqA --pruneVolumes --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release v1.7.0-rc3"
         },
     
     "i28":	
@@ -211,7 +211,7 @@
             "name":"ceph-pvt",
             "nodes":["sv125","sv-124","i43"],
             "nodes_ip":["172.17.2.124","172.17.2.125","172.17.2.43"],
-            "tags":["SATA/SAS"],
+            "tags":["All"],
             "networkClusterName":"network-pvt"
         },
   
@@ -220,7 +220,8 @@
             "name":"pool-pvt",
             "size":2,
             "tags":[],
-            "pool_type":"replicated",
+            "pool_type":"data",
+	    "resilienceScheme":"replicated",
             "quota":"1",
             "quota_unit":"MiB"
         },

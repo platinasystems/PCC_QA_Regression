@@ -1,4 +1,5 @@
 import os
+import re
 import ast
 import sys
 import json
@@ -17,6 +18,7 @@ from aa.common.Result import get_response_data
 from platina_sdk import pcc_api as pcc
 from aa.common import PccUtility as easy
 from aa.pcc.Nodes import Nodes
+from aa.pcc.Cli import Cli
 
 class LinuxUtils(AaBase):
     
@@ -317,3 +319,33 @@ class LinuxUtils(AaBase):
             print("node_names argument is missing")
             return "node_name argument is missing"
 
+
+    ###################################################################################################
+    @keyword(name="Install s3cmd command")
+    ###################################################################################################
+
+    def install_s3cmd(self,*args, **kwargs):
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        print("Kwargs are: {}".format(kwargs))
+        try:
+            host_ips = []
+            status = []
+            get_nodes_response = Nodes().get_nodes(**kwargs)
+            host_ips = [str(node['Host']) for node in get_response_data(get_nodes_response)]
+            print("host_ips_list : {}".format(host_ips))
+            for ip in host_ips:
+                OS_type = Cli().get_OS_version(host_ip= ip, linux_user= self.username, linux_password = self.password)
+                if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
+                    cmd = "sudo apt-get --assume-yes install s3cmd"
+                if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
+                    cmd = "sudo yum --assume-yes install s3cmd"
+                
+                s3cmd_install = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username, linux_password=self.password)
+                print("Cmd: {} executed successfully. Output is : {}".format(cmd, str(s3cmd_install)))
+                trace("Cmd: {} executed successfully. Output is : {}".format(cmd, str(s3cmd_install)))
+            return "OK"
+        except Exception as e:
+            print("s3cmd installation unsuccessful: {}".format(e))
+            return("s3cmd installation unsuccessful: {}".format(e))

@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]    delete	
+	[Tags]    Debug 
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -135,10 +135,7 @@ Re-assigning ROOT to Node
                        ...    ids=${server1_id}
 
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
@@ -148,7 +145,9 @@ Deleting Maas From Nodes
                                ...  Keywords:
                                ...  PCC.Delete and Verify Roles On Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
-        ${response}                 PCC.Delete and Verify Roles On Nodes
+        [Tags]    debug
+
+	${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  roles=["Baremetal Management Node"]
                                     Should Be Equal As Strings      ${response}  OK
@@ -214,7 +213,7 @@ Ceph Cluster Delete
 ###################################################################################################################################
 BE Ceph Cleanup
 ###################################################################################################################################
-
+	[Tags]    Debug
         ${status}                   PCC.Ceph Cleanup BE
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                ...  user=${PCC_LINUX_USER}
@@ -349,15 +348,15 @@ Delete All Profiles
                        Log To Console    ${response}
 
 ###################################################################################################################################
-PCC Multiple Tenant deletion
+Delete All Tenants
 ###################################################################################################################################
 
         [Documentation]    *PCC Multiple Tenant deletion* test
                            ...  keywords:
                            ...  PCC.Delete Multiple Tenants
         
-        ${status}    PCC.Delete Multiple Tenants
-                       ...    Tenant_list=["${TENANT1}"]
+        ${status}    PCC.Delete All Tenants
+                      
 
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK    Not Deleted
@@ -382,7 +381,13 @@ Policy driven management cleanup
                              Should Be Equal As Strings    ${status}    OK
 
                                 ####  Delete All Locations  ####
-                ${response}    PCC.Delete Scope
+                ${status}      PCC.Check Scope Creation From PCC
+                               ...  scope_name=region-1
+
+                               Log To Console    ${status}
+                               Pass Execution If    "${status}"    "Scope with name region-1 not found on PCC"
+
+		${response}    PCC.Delete Scope
                                ...  scope_name=region-1
                                ...  parentID=
 

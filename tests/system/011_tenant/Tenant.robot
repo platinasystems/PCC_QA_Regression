@@ -451,10 +451,7 @@ Pcc Tenant Assignment
                        ...    ids=${server3_id}
                       
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
         
                      
@@ -510,10 +507,7 @@ Pcc Tenant Un-Assignment
                        ...    ids=${server3_id}
                       
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################

@@ -37,7 +37,7 @@ class ErasureCoded(AaBase):
         self.password = "cals0ft"
         self.erasure_pool_name = None
         self.rbd_name = None
-
+        self.pool_name = None
 
         super().__init__()
 
@@ -329,6 +329,7 @@ class ErasureCoded(AaBase):
         except Exception as e:
             trace("Error in get_stored_size: {}".format(e))
 
+
     ###############################################################################################################
     @keyword(name="PCC.Flush replicated pool storage to erasure coded pool")
     ###############################################################################################################
@@ -348,3 +349,30 @@ class ErasureCoded(AaBase):
 
         except Exception as e:
             trace("Error in flush_storage: {}".format(e))
+
+    ###############################################################################################################
+    @keyword(name="PCC.Get Stored Size for Erasure Pool")
+    ###############################################################################################################
+
+    def get_stored_size_erasure_pool(self, *args, **kwargs):
+        banner("Get Stored Size for Erasure Pool")
+        self._load_kwargs(kwargs)
+        try:
+            cmd= "sudo ceph df detail | grep -w {}".format(self.pool_name)
+            erasure_pool_stored_size = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
+            serialised_erasure_pool_stored_size = self._serialize_response(time.time(), erasure_pool_stored_size)
+            cmd_output = str(serialised_erasure_pool_stored_size['Result']['stdout']).replace('\n', '').strip()
+
+            splitting = cmd_output.split()
+            print("splitting: {}".format(splitting))
+
+            print("value of erasure pool: {}".format(splitting[3]))
+            print("Size of erasure pool: {}".format(splitting[4]))
+
+            size_of_erasure_pool = convert(eval(splitting[3]), splitting[4])
+            print("Size of erasure pool is: {}".format(size_of_erasure_pool))
+
+            return size_of_erasure_pool
+
+        except Exception as e:
+            trace("Error in get_stored_size_erasure_pool: {}".format(e))

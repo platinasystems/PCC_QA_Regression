@@ -55,7 +55,7 @@ Network Manager Update after Upgrade
         ${response}                 PCC.Network Manager Update
                                ...  id=${network_id}
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -68,7 +68,7 @@ Network Manager Update after Upgrade
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -81,7 +81,7 @@ Network Manager Update after Upgrade
 		${response}                 PCC.Network Manager Update
                                ...  id=${network_id}
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -179,7 +179,7 @@ Ceph Cluster Update - Add Invader- After Upgrade
 
         ${response}                 PCC.Ceph Cluster Update
                                ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -192,7 +192,7 @@ Ceph Cluster Update - Add Invader- After Upgrade
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK       
                                     
 ###################################################################################################################################
@@ -235,18 +235,18 @@ Down And Up The Interface And Check For Ceph - After Upgrade
                                
         ${status}                   PCC.Set Interface Down
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Set Interface Up
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
                                     
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -315,7 +315,8 @@ Ceph Pool Edit Name - After Upgrade
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
-                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+			       ...  pool_type=${CEPH_POOL_TYPE}
                                ...  quota=1
                                ...  quota_unit=TiB
                                
@@ -354,6 +355,7 @@ Ceph Pool Ugrade Quota Unit - After Upgrade
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+			       ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=PiB
                                
@@ -447,7 +449,7 @@ Ceph Rados Update Port - After Upgrade
                                     Should Be Equal As Strings      ${status}    OK   
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 #####################################################################################################################################
@@ -578,13 +580,13 @@ Ceph Crush Map Validation
     [Tags]    ceph
 
         ${status}    CLI.Validate CEPH Crush Map From Backend
-                     ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["region-1"]}
-                     ...  hostip=${SERVER_1_HOST_IP}
+                     ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["region-1"]}
+                     ...  hostip=${SERVER_3_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 
        ${status}    CLI.Validate CEPH Crush Map From Backend
-                    ...  node_location={"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["region-1"]}
+                    ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_2_NAME}":["region-1"]}
                     ...  hostip=${SERVER_2_HOST_IP}
 
                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
@@ -599,7 +601,7 @@ Ceph Storage Type Validation
 
         ${status}    CLI.Validate CEPH Storage Type
                      ...  storage_types=['filestore']
-                     ...  hostip=${SERVER_1_HOST_IP}
+                     ...  hostip=${SERVER_3_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
@@ -619,7 +621,7 @@ Ceph Architecture- Nodes and OSDs
 
         ${status}    PCC.Ceph Nodes OSDs Architecture Validation
                      ...  name=${CEPH_CLUSTER_NAME}
-                     ...  hostip=${SERVER_1_HOST_IP}
+                     ...  hostip=${SERVER_3_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 							

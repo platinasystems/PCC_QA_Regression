@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_218
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-      [Tags]    Last
+      [Tags]    kc
 
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
@@ -97,7 +97,21 @@ Check if PCC assign the Default node role to the node when a node is added to PC
 
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
+	
+	#### Check Node Self Healing ####
+	${status}    CLI.Validate Node Self Healing
+		     ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+		     ...    linux_user=pcc
+		     ...    linux_password=cals0ft
+		     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
 
+	${status}    CLI.Validate Node Self Healing
+                     ...    host_ip=${SERVER_1_HOST_IP}
+                     ...    linux_user=pcc
+                     ...    linux_password=cals0ft
+                     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
 
 ################################################################################################################################################################
 Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the cluster head(TCP-1587, 1660, 1661, 1662)
@@ -228,64 +242,69 @@ Backend Validations after node roles addition (Includes TCP-1610)
 
                                          Should Be Equal As Strings    ${status}    OK
 
-###############################################################################################################################################
-Reboot Node and check Backend Validations after node is up (TCP-1684)
-###############################################################################################################################################
-        [Documentation]                 *Backend validations*
-                               ...  Keywords:
-
-                [Tags]    Only
-                ${status}        Restart node
-                                         ...    hostip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    username=pcc
-                     ...    password=cals0ft
-                                         ...    time_to_wait=240
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-
-                ${status}    CLI.Validate Kubernetes Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate CEPH Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Platina Systems Package repository
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.OS Package repository
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Node Self Healing
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
+################################################################################################################################################
+#Reboot Node and check Backend Validations after node is up (TCP-1684)
+################################################################################################################################################
+#        [Documentation]                 *Backend validations*
+#                               ...  Keywords:
+#
+#                [Tags]    Only
+#                ${status}        Restart node
+#                                         ...    hostip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    username=pcc
+#			                 ...    password=cals0ft
+#                                         ...    time_to_wait=240
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#		
+#		${node_wait_status}    PCC.Wait Until Node Ready
+#                               ...  Name=${CLUSTERHEAD_1_NAME}
+#
+#                               Log To Console    ${node_wait_status}
+#                               Should Be Equal As Strings    ${node_wait_status}    OK
+#
+#                ${status}    CLI.Validate Kubernetes Resource
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate CEPH Resource
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate Network Resource
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate Platina Systems Package repository
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.OS Package repository
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
+#                ${status}    CLI.Validate Node Self Healing
+#                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                         ...    linux_user=pcc
+#                     ...    linux_password=cals0ft
+#
+#                                         Should Be Equal As Strings    ${status}    OK
+#
 
 ###############################################################################################################################################
 Check if an user is able to define a policy to disable Automatic Daily Updates(TCP-1603, 1604)
@@ -327,7 +346,7 @@ Check if an user is able to define a policy to disable Automatic Daily Updates(T
                                           ...  appId=${app_id}
                                           ...  description=Automatic-upgrade-policy
                                           ...  scopeIds=[${default_rack_Id}]
-                                          ...  inputs=[{"name": "enabled","value": "yes"}]
+                                          ...  inputs=[{"name": "enabled","value": "true"}]
 
                                           Log To Console    ${response}
                                           ${result}    Get Result    ${response}
@@ -371,7 +390,7 @@ Check if an user is able to define a policy to disable Automatic Daily Updates(T
                        ...  appId=${app_id}
                        ...  scopeIds=[${default_rack_Id}]
                        ...  description=Automatic-upgrade-policy
-                       ...  inputs=[{"name": "enabled","value": "no"}]
+                       ...  inputs=[{"name": "enabled","value": "false"}]
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -509,7 +528,7 @@ Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes reso
 
                 ${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Cluster Head","Default", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
+                               ...  roles=["Cluster Head", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -587,3 +606,41 @@ Backend Validations after node roles deletion
                      ...    linux_password=cals0ft
 
                                          Should Not Be Equal As Strings    ${status}    OK
+
+###############################################################################################################################################
+System Package Updates cleanup
+###############################################################################################################################################
+            #### Unassign loactions from policies ####
+
+                ${status}    PCC.Unassign Locations Assigned from All Policies
+
+                           Log To Console    ${status}
+                           Should Be Equal As Strings    ${status}    OK
+
+            #### Wait until all nodes are ready ####
+
+                ${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+		${status}     PCC.Delete All Policies
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings    ${status}    OK
+
+###############################################################################################################################################
+Ethtool Backend Validation
+###############################################################################################################################################
+        [Documentation]                 *Backend validations*
+                               ...  Keywords: CLI.Validate Ethtool
+
+        [Tags]        kc
+
+        ${status}                   CLI.Validate Ethtool
+                             ...    host_ips=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                             ...    linux_user=pcc
+                             ...    linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+

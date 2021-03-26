@@ -39,7 +39,10 @@ class CephPool(AaBase):
         self.storage_pool_id= None
         self.mode = None
         self.type = None
-        
+        self.data_pool_name= None
+        self.cache_pool_name= None
+        self.resilienceScheme= None
+
         super().__init__()
 
     ###########################################################################
@@ -118,7 +121,8 @@ class CephPool(AaBase):
                 temp["size"] = data["size"]
                 temp["tags"] = []
                 temp["ceph_cluster_id"] = data["ceph_cluster_id"]
-                temp["pool_type"] = data["pool_type"]
+                temp["type"] = data["type"]
+                temp["resilienceScheme"] = data["resilienceScheme"]
                 temp["quota"] = data["quota"]
                 temp["quota_unit"] =  data["quota_unit"]
         return temp
@@ -147,7 +151,8 @@ class CephPool(AaBase):
                     temp["size"] = data["size"]
                     temp["tags"] = ["tags"]
                     temp["ceph_cluster_id"] = data["ceph_cluster_id"]
-                    temp["pool_type"] = data["pool_type"]
+                    temp["type"] = data["type"]
+                    temp["resilienceScheme"] = data["resilienceScheme"]
                     temp["quota"] = data["quota"]
                     temp["quota_unit"] =  data["quota_unit"]
             if len(temp)!=0:        
@@ -176,7 +181,8 @@ class CephPool(AaBase):
             "size":self.size,
             "tags":self.tags,
             "ceph_cluster_id":self.ceph_cluster_id,
-            "pool_type":self.pool_type,
+            "type":self.pool_type,
+            "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
             "quota_unit":self.quota_unit
         }
@@ -213,7 +219,8 @@ class CephPool(AaBase):
                 "size":self.size,
                 "tags":self.tags,
                 "ceph_cluster_id":self.ceph_cluster_id,
-                "pool_type":self.pool_type,
+                "type":self.pool_type,
+                "resilienceScheme":self.resilienceScheme,
                 "quota":self.quota,
                 "quota_unit":self.quota_unit
                 }
@@ -264,20 +271,20 @@ class CephPool(AaBase):
   
         while pool_ready == False:
             response = pcc.get_ceph_pools(conn)
+            if time.time() > timeout:
+                return "[PCC.Ceph Wait Until Pool Ready] Timeout"
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print(str(data))
                     if data['deploy_status'] == "completed":
                         pool_ready = True
+                        return "OK"
                     if data['deploy_status'] == "failed":
                         return "Error"
-                    
-            if time.time() > timeout:
-                raise Exception("[PCC.Ceph Wait Until Pool Ready] Timeout")
-            trace("  Waiting until pool : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
-            time.sleep(5)
-        time.sleep(10)
-        return "OK"
+                    else:
+                        trace(" Waiting until pool : %s is Ready, currently: %s" % (data['name'], data['progressPercentage']))
+                        time.sleep(5)
+
 
 
     ###########################################################################
@@ -355,7 +362,8 @@ class CephPool(AaBase):
             "size":self.size,
             "tags":self.tags,
             "ceph_cluster_id":self.ceph_cluster_id,
-            "pool_type":self.pool_type,
+            "type":self.pool_type,
+            "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
             "quota_unit":self.quota_unit
              }
@@ -443,7 +451,7 @@ class CephPool(AaBase):
                     "quota": self.quota,
                     "quota_unit": self.quota_unit,
                     "tags":ast.literal_eval(self.tags),
-                    "pool_type":self.pool_type,
+                    "resilienceScheme":self.resilienceScheme,
                     "ceph_cluster_id":self.ceph_cluster_id
 		  }
         trace("Payload is :{}".format(payload))
@@ -469,7 +477,7 @@ class CephPool(AaBase):
                     "quota": self.quota,
                     "quotaUnit": self.quota_unit,
                     "tags":ast.literal_eval(self.tags),
-                    "pool_type":self.pool_type,
+                    "resilienceScheme":self.resilienceScheme,
                     "ceph_cluster_id":self.ceph_cluster_id
                   }
         response = pcc.update_ceph_cache_pool(conn, data=payload,id=str(self.id))
@@ -489,3 +497,29 @@ class CephPool(AaBase):
 		
         response = get_response_data(pcc.delete_ceph_cache_pool_by_id(conn, str(id)))
         return response
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Validate storage and cache pool relation")
+    ###########################################################################
+    def validate_storage_and_cache_pool_relation(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Validate storage and cache pool relation")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        validation=[]
+        get_all_pools_response = pcc.get_ceph_pools_by_cluster_id(conn,str(self.ceph_cluster_id))
+        trace("get_all_pools_response: {}".format(get_all_pools_response))
+        for data in get_response_data(get_all_pools_response):
+            if (data['name']==self.data_pool_name) and (data['cachePool']['name']==self.cache_pool_name):
+                validation.append("OK")
+            if (data['name']==self.cache_pool_name) and (data['storagePool']['name']==self.data_pool_name):
+                validation.append("OK")
+        trace("Validation status: {}".format(validation))
+        if (len(validation)==2) and (len(validation) > 0 and all(elem == "OK" for elem in validation)):
+            return "OK"
+        else:
+            return "Validation failed for datapool- {} and cache_pool- {}".format(self.data_pool_name,self.cache_pool_name)
+

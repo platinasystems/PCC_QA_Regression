@@ -11,14 +11,17 @@ Login to PCC.
 ###################################################################################################################################
 
         [Documentation]    *Login to PCC* test
-        [Tags]    Only
+        [Tags]    Set
         ${status}        Login To PCC    ${pcc_setup}
                          Should Be Equal    ${status}  OK
-			
-			 Load PCC Test Data    ${pcc_setup}
+
+			             Load PCC Test Data    ${pcc_setup}
                          Load Clusterhead 1 Test Data    ${pcc_setup}
                          Load Clusterhead 2 Test Data    ${pcc_setup}
-                         Load Server 1 Test Data    ${pcc_setup}
+                         Load Ceph Cluster Data    ${pcc_setup}
+		         Load K8s Data    ${pcc_setup}
+			 Load i28 Data    ${pcc_setup}
+		         Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
                          Load Server 3 Test Data    ${pcc_setup}
                          Load Network Manager Data    ${pcc_setup}
@@ -27,9 +30,9 @@ Login to PCC.
                          Load i28 Data    ${pcc_setup}
                          Load OS-Deployment Data    ${pcc_setup}
 
-        ${server3_id}    PCC.Get Node Id    Name=${SERVER_3_NAME}
-                         Log To Console    ${server3_id}
-                         Set Global Variable    ${server3_id}
+        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
+                         Log To Console    ${server2_id}
+                         Set Global Variable    ${server2_id}
 
 
 ######################################################################################################################################
@@ -45,6 +48,47 @@ Login to PCC.
 #                 Log To Console    ${status}
 #                 Should be equal as strings    ${status}    OK
 #
+
+###################################################################################################################################
+Ceph Cluster Update- Remove node from Cluster For OS deployment
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+
 ###################################################################################################################################
 Update OS Images
 ###################################################################################################################################
@@ -52,13 +96,13 @@ Update OS Images
         [Documentation]    *Update OS Images* test
                            ...  keywords:
                            ...  PCC.Update OS Images
-        [Tags]    Only
+        #[Tags]    OS
 
         ${result}      PCC.Update OS Images
                        ...    setup_password=${PCC_SETUP_PWD}
                        ...    pcc_username=${PCC_USERNAME}
-		       ...    pcc_password=${PCC_PASSWORD}	
-		       ...    host_ip=${PCC_HOST_IP}
+                       ...    pcc_password=${PCC_PASSWORD}
+                       ...    host_ip=${PCC_HOST_IP}
                        ...    username=${PCC_LINUX_USER}
                        ...    password=${PCC_LINUX_PASSWORD}
 
@@ -71,7 +115,7 @@ Add Public Key
 
 
         [Documentation]    *Add Public Key* test
-
+	#[Tags]    OS
         ${key_id}    PCC.Get OpenSSH Key Id
                      ...    Name=${PUBLIC_KEY_ALIAS}
 
@@ -95,7 +139,7 @@ Adding Maas+LLDP To Invaders
                                ...  Keywords:
                                ...  PCC.Add and Verify Roles On Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
-
+	#[Tags]    OS
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  roles=["Default","Baremetal Management Node"]
@@ -114,19 +158,19 @@ Verify Provision Ready Status and update node, if not ready (TC-1)
 ###################################################################################################################################
 
     [Documentation]    *Verify Provision Ready Status and update node, if not ready* test
-
+    #[Tags]    Set
     ${response}    PCC.Update Node for OS Deployment
 
-                   ...    Id=${server3_id}
-                   ...    Node_name=${SERVER_3_NAME}
-                   ...    Name=${SERVER_3_NAME}
-                   ...    host_ip=${SERVER_3_HOST_IP}
-                   ...    bmc_ip=${SERVER_3_BMC}
-                   ...    bmc_user=${SERVER_3_BMCUSER}
-                   ...    bmc_users=["${SERVER_3_BMCUSER}"]
-                   ...    bmc_password=${SERVER_3_BMCPWD}
-                   ...    server_console=${SERVER_3_CONSOLE}
-                   ...    managed=${SERVER_3_MANAGED_BY_PCC}
+                   ...    Id=${server2_id}
+                   ...    Node_name=${SERVER_2_NAME}
+                   ...    Name=${SERVER_2_NAME}
+                   ...    host_ip=${SERVER_2_HOST_IP}
+                   ...    bmc_ip=${SERVER_2_BMC}
+                   ...    bmc_user=${SERVER_2_BMCUSER}
+                   ...    bmc_users=["${SERVER_2_BMCUSER}"]
+                   ...    bmc_password=${SERVER_2_BMCPWD}
+                   ...    server_console=${SERVER_2_CONSOLE}
+                   ...    managed=${SERVER_2_MANAGED_BY_PCC}
 
                    Log To Console    ${response}
                    ${result}    Get Result    ${response}
@@ -140,10 +184,10 @@ Update OS details (centos78) - Brownfield
 ###################################################################################################################################
 
     [Documentation]    *Update OS details (centos78) - Brownfield* test
-
+    #[Tags]    Set
     ${response}           PCC.Update OS details
 
-                          ...    Id=[${server3_id}]
+                          ...    Id=[${server2_id}]
                           ...    image_name=${IMAGE_1_NAME}
                           ...    locale=${LOCALE}
                           ...    time_zone=${TIME_ZONE}
@@ -166,9 +210,9 @@ Wait Until Node Ready (centos78) - Brownfield
 ###################################################################################################################################
 
     [Documentation]    *Wait Until Node Ready (centos78) - Brownfield* test
-
+    #[Tags]    Set
     ${status}    PCC.Wait Until Node Ready
-                 ...    Name=${SERVER_3_NAME}
+                 ...    Name=${SERVER_2_NAME}
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
@@ -179,9 +223,9 @@ Verify OS details from PCC (centos78) - Brownfield
 ###################################################################################################################################
 
     [Documentation]    *Verify OS details from PCC* test
-
+    #[Tags]    Set
     ${status}    PCC.Verify OS details from PCC
-                 ...  Name=${SERVER_3_NAME}
+                 ...  Name=${SERVER_2_NAME}
                  ...  image_name=${IMAGE_1_NAME}
 
                  Log To Console    ${status}
@@ -194,16 +238,12 @@ Set Password on Server (CentOS)
 ##################################################################################################################################
 
     [Documentation]    *Set Password on Server* test
-
+    [Tags]    Set
     ${status}    PCC.Set password on Server
-                 ...  key_name=${KEY_NAME}
-                 ...  admin_user=${ADMIN_USER}
-                 ...  host_ip=${SERVER_3_HOST_IP}
-                 ...  password=${SERVER_3_PWD}
-                 ...  i28_username=${i28_USERNAME}
-                 ...  i28_hostip=${i28_HOST_IP}
-                 ...  i28_password=${i28_PASSWORD}
-
+                 ...  host_ip=172.17.2.28
+                 ...  set_password_server=${SERVER_2_HOST_IP}
+                 ...  password=${SERVER_2_PWD}
+		 ...  username=${SERVER_2_UNAME}
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
@@ -280,16 +320,16 @@ Verify Provision Ready Status and update node, if not ready (TC-2)
     [Tags]    Only
     ${response}    PCC.Update Node for OS Deployment
 
-                   ...    Id=${server3_id}
-                   ...    Node_name=${SERVER_3_NAME}
-                   ...    Name=${SERVER_3_NAME}
-                   ...    host_ip=${SERVER_3_HOST_IP}
-                   ...    bmc_ip=${SERVER_3_BMC}
-                   ...    bmc_user=${SERVER_3_BMCUSER}
-                   ...    bmc_users=["${SERVER_3_BMCUSER}"]
-                   ...    bmc_password=${SERVER_3_BMCPWD}
-                   ...    server_console=${SERVER_3_CONSOLE}
-                   ...    managed=${SERVER_3_MANAGED_BY_PCC}
+                   ...    Id=${server2_id}
+                   ...    Node_name=${SERVER_2_NAME}
+                   ...    Name=${SERVER_2_NAME}
+                   ...    host_ip=${SERVER_2_HOST_IP}
+                   ...    bmc_ip=${SERVER_2_BMC}
+                   ...    bmc_user=${SERVER_2_BMCUSER}
+                   ...    bmc_users=["${SERVER_2_BMCUSER}"]
+                   ...    bmc_password=${SERVER_2_BMCPWD}
+                   ...    server_console=${SERVER_2_CONSOLE}
+                   ...    managed=${SERVER_2_MANAGED_BY_PCC}
 
                    Log To Console    ${response}
                    ${result}    Get Result    ${response}
@@ -306,7 +346,7 @@ Update OS details (ubuntu-bionic) - Brownfield
     [Tags]    Only
     ${response}           PCC.Update OS details
 
-                          ...    Id=[${server3_id}]
+                          ...    Id=[${server2_id}]
                           ...    image_name=${IMAGE_2_NAME}
                           ...    locale=${LOCALE}
                           ...    time_zone=${TIME_ZONE}
@@ -332,7 +372,7 @@ Wait Until Node Ready (ubuntu-bionic) - Brownfield
     [Documentation]    *Wait Until Node Ready (ubuntu-bionic) - Brownfield* test
     [Tags]    Only
     ${status}    PCC.Wait Until Node Ready
-                 ...    Name=${SERVER_3_NAME}
+                 ...    Name=${SERVER_2_NAME}
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
@@ -345,29 +385,27 @@ Verify OS details from PCC (ubuntu-bionic) - Brownfield
     [Documentation]    *Verify OS details from PCC (ubuntu-bionic)* test
     [Tags]    Only
     ${status}    PCC.Verify OS details from PCC
-                 ...  Name=${SERVER_3_NAME}
+                 ...  Name=${SERVER_2_NAME}
                  ...  image_name=${IMAGE_2_NAME}
 
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    True
 
+
 ###################################################################################################################################
-Set Password on Server (Ubuntu)
+Set Password on Server (CentOS)
 ##################################################################################################################################
 
     [Documentation]    *Set Password on Server* test
-    [Tags]    Only
+    [Tags]    Set
     ${status}    PCC.Set password on Server
-                 ...  key_name=${KEY_NAME}
-                 ...  admin_user=${ADMIN_USER}
-                 ...  host_ip=${SERVER_3_HOST_IP}
-                 ...  password=${SERVER_3_PWD}
-                 ...  i28_username=${i28_USERNAME}
-                 ...  i28_hostip=${i28_HOST_IP}
-                 ...  i28_password=${i28_PASSWORD}
-
+                 ...  host_ip=172.17.2.28
+                 ...  set_password_server=${SERVER_2_HOST_IP}
+                 ...  password=${SERVER_2_PWD}
+                 ...  username=${SERVER_2_UNAME}
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
+
 
 ###################################################################################################################################
 Network Manager Refresh and Verify After Brownfield OS Deployment(ubuntu-focal)

@@ -96,27 +96,27 @@ Ceph Cluster Creation without selecting any nodes (Negative)
                                    Should Not Be Equal As Strings  ${status_code}  200
         ${message}                 Get Response Message        ${response}
 
-###################################################################################################################################
-Ceph Cluster Creation without tags (Negative)
-###################################################################################################################################
-    [Documentation]                *Creating a cluster - without tags*
-                              ...  keywords:
-                              ...  PCC.Ceph Create Cluster
-
-        ${id}                      PCC.Ceph Get Cluster Id
-                              ...  name=${CEPH_CLUSTER_NAME}
-                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
-
-        ${response}                PCC.Ceph Create Cluster
-                              ...  name=${CEPH_CLUSTER_NAME}
-                              ...  nodes=${CEPH_CLUSTER_NODES}
-                              ...  tags=[]
-                              ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}             Get Response Status Code  ${response}
-                                   Should Not Be Equal As Strings  ${status_code}  200
-        ${message}                 Get Response Message        ${response}
-
+####################################################################################################################################
+#Ceph Cluster Creation without tags (Negative)
+####################################################################################################################################
+#    [Documentation]                *Creating a cluster - without tags*
+#                              ...  keywords:
+#                              ...  PCC.Ceph Create Cluster
+#
+#        ${id}                      PCC.Ceph Get Cluster Id
+#                              ...  name=${CEPH_CLUSTER_NAME}
+#                                   Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+#
+#        ${response}                PCC.Ceph Create Cluster
+#                              ...  name=${CEPH_CLUSTER_NAME}
+#                              ...  nodes=${CEPH_CLUSTER_NODES}
+#                              ...  tags=[]
+#                              ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+#
+#        ${status_code}             Get Response Status Code  ${response}
+#                                   Should Not Be Equal As Strings  ${status_code}  200
+#        ${message}                 Get Response Message        ${response}
+#
 ###################################################################################################################################
 Ceph Cluster with one node (Negative)
 ###################################################################################################################################
@@ -242,7 +242,7 @@ Ceph Cluster Update - Add Invader
 
         ${response}                 PCC.Ceph Cluster Update
                                ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -256,7 +256,7 @@ Ceph Cluster Update - Add Invader
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -320,7 +320,7 @@ Ceph Cluster Update - Remove 2 Mons Nodes
 
         ${response}                 PCC.Ceph Cluster Update
                                ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -334,8 +334,15 @@ Ceph Cluster Update - Remove 2 Mons Nodes
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
+
+	#### Wiping the drives after node removal #######
+	#${status}                   PCC.Ceph Cleanup BE
+        #                       ...  nodes_ip=["${SERVER_2_HOST_IP}"]
+        #                       ...  user=${PCC_LINUX_USER}
+        #                       ...  password=${PCC_LINUX_PASSWORD}
+        #                            Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 #Reboot Node And Verify Ceph Is Intact
@@ -389,18 +396,18 @@ Down And Up The Interface And Check For Ceph
 
         ${status}                   PCC.Set Interface Down
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Set Interface Up
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -548,4 +555,41 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
 #                                    Should Not Be Equal As Strings      ${status_code}  200
 #
 
+###################################################################################################################################
+Ceph Cluster Update - Assign all existing nodes to CEPH cluster
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update - Add Invade*
+                               ...  keyword:
+                               ...  PCC.Ceph Get Cluster Id
+                               ...  PCC.Ceph Cluster Update
+                               ...  PCC.Ceph Wait Until Cluster Ready
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK

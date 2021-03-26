@@ -135,10 +135,7 @@ Re-assigning ROOT to Node
                        ...    ids=${server1_id}
 
                        Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
@@ -211,17 +208,17 @@ Ceph Cluster Delete
         ${status}                   PCC.Ceph Delete All Cluster
                                     Should be equal as strings    ${status}    OK
 
-###################################################################################################################################
-BE Ceph Cleanup
-###################################################################################################################################
-
-        ${status}                   PCC.Ceph Cleanup BE
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-
-                                    Should be equal as strings    ${status}    OK
-
+####################################################################################################################################
+#BE Ceph Cleanup
+####################################################################################################################################
+#
+#        ${status}                   PCC.Ceph Cleanup BE
+#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#
+#                                    Should be equal as strings    ${status}    OK
+#
 ###################################################################################################################################
 Network Manager Delete
 ###################################################################################################################################

@@ -182,6 +182,7 @@ class Nodes(AaBase):
             (dict) Response: Get Node response after Tenant is assigned (includes any errors)
         """
         self._load_kwargs(kwargs)
+        trace("Kwargs are :{}".format(kwargs))
         banner("PCC.Assign Tenant to Node")
         node_payload = {"tenant" : self.tenant_id,
                    "ids" : [self.ids]
@@ -189,7 +190,7 @@ class Nodes(AaBase):
         
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         response = pcc.update_tenant_to_node(conn, data=node_payload)
-        return self.get_nodes(conn)
+        return response
 
     ###########################################################################
     @keyword(name="PCC.Delete Node")
@@ -327,6 +328,9 @@ class Nodes(AaBase):
         banner("PCC.Update Node [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("Kwargs are: {}".format(kwargs))
+        if "scopeId" not in kwargs:
+            get_node_response = self.get_node(conn,self.Id)
+            self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
         if "roles" in kwargs:
             self.roles = ast.literal_eval(self.roles)
         payload = {
@@ -492,39 +496,47 @@ class Nodes(AaBase):
         sys_cllector_cmd="sudo systemctl status systemCollector"
         frr_cmd="sudo service frr status|head -10"
 
-        failed_host=[]
-
+        failed_host={}
+        successful_host = {}
         if self.host_ips:
             for host_ip in eval(str(self.host_ips)):
-                logger.console("Verifying services for host {} .....".format(host_ip))
-                pcc_agent_output=cli_run(host_ip,self.user,self.password,pcc_agent_cmd)
-                sys_collector_output=cli_run(host_ip,self.user,self.password,sys_cllector_cmd)   
-                logger.console("Pcc Agent Output: {}".format(pcc_agent_output))
-                logger.console("System Collector Output: {}".format(sys_collector_output))
-                #frr_output=cli_run(host_ip,self.user,self.password,frr_cmd)
-                #logger.console("Frr Service Output: {}".format(frr_output))
-                #if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output) and re.search("running",str(frr_output))):
-                if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output)):
-                    continue
-                else:
-                    
-                    failed_host.append(host_ip)
-                    continue                
+                successful_host[host_ip]="OK"
+                for i in range(1,37):
+                    logger.console("Verifying services for host {} .....".format(host_ip))
+                    pcc_agent_output=cli_run(host_ip,self.user,self.password,pcc_agent_cmd)
+                    sys_collector_output=cli_run(host_ip,self.user,self.password,sys_cllector_cmd)   
+                    logger.console("Pcc Agent Output: {}".format(pcc_agent_output))
+                    logger.console("System Collector Output: {}".format(sys_collector_output))
+                    #frr_output=cli_run(host_ip,self.user,self.password,frr_cmd)
+                    #logger.console("Frr Service Output: {}".format(frr_output))
+                    #if re.search("running",str(pcc_agent_output)) and re.search("running",str(sys_collector_output) and re.search("running",str(frr_output))):
+                    if re.search("running", str(pcc_agent_output)) and re.search("running", str(sys_collector_output)):
+                        print("===== pccagent and systemCollector are running for {} =======".format(host_ip))
+                        failed_host[host_ip]="OK"
+                        break
+                    if re.search("inactive", str(pcc_agent_output)) or re.search("inactive", str(sys_collector_output)):
+                        time.sleep(10)
+                        failed_host[host_ip]="inactive"
+                        print("===== Services inactive found for {}. Retrying:{}...=======".format(host_ip,i))
+                        continue
+                    if re.search("service could not be found", str(pcc_agent_output)) or re.search("service could not be found",str(sys_collector_output)):
+                        time.sleep(10)
+                        failed_host[host_ip]="service not found"
+                        print("====== Services not found for {}. Retrying:{}...=======".format(host_ip,i))
+                        continue
         else:
             print("Host list is empty, please provide the host ip in a list for eg. host_ips=['000.00.0.00']")
-            
-        if failed_host:  
-            print("Service are down for {}".format(failed_host))
-            BuiltIn().fatal_error('Stoping the exectuion, Nodes are not properly added please check !!!')
-            return "Error"
-        else:
+        print("Failed host is :{} and successful host is :{}".format(failed_host,successful_host))            
+        if failed_host==successful_host:
             return "OK"
+        else:
+            BuiltIn().fatal_error('Stoping the exectuion, Nodes are not properly added please check !!!')
+            return "Error:Node backend status is {}".format(failed_host)
 
     ###########################################################################
     @keyword(name="PCC.Node Verify Back End After Deletion")
     ###########################################################################
     def verify_node_back_end_after_deletion(self, *args, **kwargs):
-
         banner("PCC.Node Verify Back End After Deletion")
         self._load_kwargs(kwargs)
         print("Kwargs:{}".format(kwargs))
@@ -559,7 +571,8 @@ class Nodes(AaBase):
             return "Error"
         else:
             return "OK"
-            
+
+
     #verifying sn and model number from front-end to backend        
     ###########################################################################
     @keyword(name="PCC.Node Verify Model And Serial Number")

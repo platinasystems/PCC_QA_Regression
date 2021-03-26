@@ -15,7 +15,8 @@ Login
                                     Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
-                                    
+                                    Load Server 3 Test Data    ${pcc_setup}
+
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
                                                                                                     
@@ -35,7 +36,7 @@ Create Kubernetes cluster
                                ...  k8sVersion=${K8S_VERSION}
                                ...  name=${K8S_NAME}
                                ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=${K8S_NODES}
+                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
                                ...  pools=${K8S_POOL}
                                ...  networkClusterName=${NETWORK_MANAGER_NAME}
 
@@ -146,27 +147,27 @@ Add Node to Kubernetes cluster
                               ...  name=${K8S_NAME}
                                    Should Be Equal As Strings      ${status}    OK
 
-##################################################################################################################################
-Reboot Node And Verify K8s Is Intact
-##################################################################################################################################
-    [Documentation]                 *Verifying K8s cluster BE*
-                               ...  keywords:
-                               ...  PCC.K8s Verify BE
-                               ...  Restart node
-                               
-    ${restart_status}               Restart node
-                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
-                               ...  time_to_wait=240
-                                    Log to console    ${restart_status}
-                                    Should Be Equal As Strings    ${restart_status}    OK
-
-        ${status}                   PCC.K8s Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-
-                                    Should Be Equal As Strings      ${status}    OK
-                                    
+###################################################################################################################################
+#Reboot Node And Verify K8s Is Intact
+###################################################################################################################################
+#    [Documentation]                 *Verifying K8s cluster BE*
+#                               ...  keywords:
+#                               ...  PCC.K8s Verify BE
+#                               ...  Restart node
+#                               
+#    ${restart_status}               Restart node
+#                               ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+#                               ...  time_to_wait=240
+#                                    Log to console    ${restart_status}
+#                                    Should Be Equal As Strings    ${restart_status}    OK
+#
+#        ${status}                   PCC.K8s Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#                                    
 ###################################################################################################################################
 Down And Up The Interface And Check For K8s
 ###################################################################################################################################
@@ -178,12 +179,12 @@ Down And Up The Interface And Check For K8s
                                
         ${status}                   PCC.Set Interface Down
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Set Interface Up
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  interface_name="enp130s0"
+                               ...  interface_name="enp129s0"
                                     Should Be Equal As Strings      ${status}  OK
                                     
         ${status}                   PCC.K8s Verify BE

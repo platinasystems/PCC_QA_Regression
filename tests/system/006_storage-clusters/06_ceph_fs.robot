@@ -968,6 +968,7 @@ Pool released from RBD is used for creating/updating CephFS
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
@@ -1043,7 +1044,7 @@ Mount FS test case
 
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
-                       ...    hostip=${SERVER_2_HOST_IP}
+                       ...    hostip=${CLUSTERHEAD_1_HOST_IP}
 
                        Log To Console    ${inet_ip}
                        Set Global Variable    ${inet_ip}
@@ -1073,6 +1074,7 @@ Mount FS test case
                        ...    hostip=${SERVER_2_HOST_IP}
                        ...    user=${PCC_LINUX_USER}
                        ...    password=${PCC_LINUX_PASSWORD}
+		       ...    inet_ip=${inet_ip}
 
                        Log To Console    ${status}
                        Should be equal as strings    ${status}    OK
