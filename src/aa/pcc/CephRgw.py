@@ -46,6 +46,7 @@ class CephRgw(AaBase):
         self.fileName="rgwFile"
         self.control_cidr=None
         self.data_cidr=None
+        self.ceph_cluster_name = None
 
 
     ###########################################################################
@@ -208,9 +209,9 @@ class CephRgw(AaBase):
 
         gateway_ready = False
         timeout = time.time() + PCCSERVER_TIMEOUT
-  
+        ceph_cluster_id = str(easy.get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
         while gateway_ready == False:
-            response = pcc.get_ceph_rgws(conn)
+            response = pcc.get_ceph_rgws(conn, ceph_cluster_id)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
                     print("Response To Look :-"+str(data))
@@ -244,10 +245,10 @@ class CephRgw(AaBase):
 
         Id_found_in_list_of_rgws = True
         timeout = time.time() + PCCSERVER_TIMEOUT
-
+        ceph_cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.ceph_cluster_name)
         while Id_found_in_list_of_rgws == True:
             Id_found_in_list_of_rgws = False
-            response=get_response_data(pcc.get_ceph_rgws(conn))
+            response=get_response_data(pcc.get_ceph_rgws(conn,ceph_cluster_id))
             print("Response:"+str(response))
             if response!=None:
                 for data in response:
@@ -273,8 +274,8 @@ class CephRgw(AaBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-        
-        response = pcc.get_ceph_rgws(conn)
+        ceph_cluster_id = str(easy.get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))        
+        response = pcc.get_ceph_rgws(conn, ceph_cluster_id)
         print("Rgw Response:"+str(response))
         if not get_response_data(response):
             print("No Rgw found for delete")

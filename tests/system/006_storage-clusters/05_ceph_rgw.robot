@@ -323,6 +323,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                     
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -376,6 +377,7 @@ Ceph Rados Add S3Account
                                     
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -409,6 +411,7 @@ Ceph Rados Update Port
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK   
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -444,6 +447,7 @@ Ceph Rados Update Nodes (Add Node)
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -518,6 +522,7 @@ Ceph Rados Gateway Delete
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
@@ -550,6 +555,7 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -783,6 +789,7 @@ Ceph Rados Remove S3Account (ServiceIp As Default)
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+ 			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -808,6 +815,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
@@ -841,6 +849,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Ready
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK      
 #
 #        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1066,6 +1075,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Ready
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK  
 #
 #        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1091,6 +1101,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Deleted
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 #        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
@@ -1130,6 +1141,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Deleted
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 ###################################################################################################################################
@@ -1167,6 +1179,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Deleted
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK
 #                                   
 #                                    
@@ -1193,6 +1206,7 @@ Ceph Rados Create with Multiple Nodes
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1226,6 +1240,7 @@ Ceph Rados Remove One Node
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt	
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1251,6 +1266,7 @@ Ceph Rados Gateway Delete
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
@@ -1281,6 +1297,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1306,6 +1323,7 @@ Ceph Rados Gateway Delete
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt	
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
@@ -1389,6 +1407,7 @@ Ceph Rados Gateway Delete
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Deleted
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK
 #                                    
 ######################################################################################################################################

@@ -298,52 +298,52 @@ Ceph Cluster Update - Add Invader
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
 #                                    Should Be Equal As Strings      ${status}    OK
 
-##################################################################################################################################
-Ceph Cluster Update - Remove 2 Mons Nodes
 ###################################################################################################################################
-    [Documentation]                 *Ceph Cluster Update - Add Invade*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  nodes=["${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-        ${message}                  Get Response Message        ${response}
-
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Ceph Verify BE
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
-                                    Should Be Equal As Strings      ${status}    OK
-
-	#### Wiping the drives after node removal #######
-	#${status}                   PCC.Ceph Cleanup BE
-        #                       ...  nodes_ip=["${SERVER_2_HOST_IP}"]
-        #                       ...  user=${PCC_LINUX_USER}
-        #                       ...  password=${PCC_LINUX_PASSWORD}
-        #                            Should be equal as strings    ${status}    OK
-
+#Ceph Cluster Update - Remove 2 Mons Nodes
+####################################################################################################################################
+#    [Documentation]                 *Ceph Cluster Update - Add Invade*
+#                               ...  keyword:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Cluster Update
+#                               ...  PCC.Ceph Wait Until Cluster Ready
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#
+#        ${response}                 PCC.Ceph Cluster Update
+#                               ...  id=${id}
+#                               ...  nodes=["${SERVER_3_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${message}                  Get Response Message        ${response}
+#
+#        ${status}                   PCC.Ceph Wait Until Cluster Ready
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Ceph Verify BE
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}"]
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#	#### Wiping the drives after node removal #######
+#	#${status}                   PCC.Ceph Cleanup BE
+#        #                       ...  nodes_ip=["${SERVER_2_HOST_IP}"]
+#        #                       ...  user=${PCC_LINUX_USER}
+#        #                       ...  password=${PCC_LINUX_PASSWORD}
+#        #                            Should be equal as strings    ${status}    OK
+#
 ###################################################################################################################################
 #Reboot Node And Verify Ceph Is Intact
 ###################################################################################################################################

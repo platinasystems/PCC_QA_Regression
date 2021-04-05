@@ -57,36 +57,36 @@ Ceph Pool For Rgws
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=pool-for-app-credentials
                                            Should Be Equal As Strings      ${status}    OK
-###################################################################################################################################
-Create and Delete Metadata Application credential profile without application for 20 times
-###################################################################################################################################
-
-        [Documentation]               *Create Metadata Profile* test
-                                      ...  keywords:
-                                      ...  PCC.Add Metadata Profile
-
-        FOR    ${i}    IN RANGE    1    20
-
-                ${response}                   PCC.Add Metadata Profile
-                                              ...    Name=test_app_credential
-                                              ...    Type=ceph
-                                              ...    Username=profile_without_app
-                                              ...    Email=profile_without_app@gmail.com
-                                              ...    Active=True
-
-                                              Log To Console    ${response}
-                                              ${result}    Get Result    ${response}
-                                              ${status}    Get From Dictionary    ${result}    status
-                                              ${message}    Get From Dictionary    ${result}    message
-                                              Log to Console    ${message}
-                                              Should Be Equal As Strings    ${status}    200
-
-
-                 ${response}    PCC.Delete All Profiles
-
-                                Log To Console    ${response}
-        END
-
+####################################################################################################################################
+#Create and Delete Metadata Application credential profile without application for 20 times
+####################################################################################################################################
+#
+#        [Documentation]               *Create Metadata Profile* test
+#                                      ...  keywords:
+#                                      ...  PCC.Add Metadata Profile
+#
+#        FOR    ${i}    IN RANGE    1    20
+#
+#                ${response}                   PCC.Add Metadata Profile
+#                                              ...    Name=test_app_credential
+#                                              ...    Type=ceph
+#                                              ...    Username=profile_without_app
+#                                              ...    Email=profile_without_app@gmail.com
+#                                              ...    Active=True
+#
+#                                              Log To Console    ${response}
+#                                              ${result}    Get Result    ${response}
+#                                              ${status}    Get From Dictionary    ${result}    status
+#                                              ${message}    Get From Dictionary    ${result}    message
+#                                              Log to Console    ${message}
+#                                              Should Be Equal As Strings    ${status}    200
+#
+#
+#                 ${response}    PCC.Delete All Profiles
+#
+#                                Log To Console    ${response}
+#        END
+#
 ###################################################################################################################################
 Create Metadata Application credential profile without application For Rados
 ###################################################################################################################################
