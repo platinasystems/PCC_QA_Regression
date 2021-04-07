@@ -3,7 +3,7 @@
 Resource    pcc_resources.robot
 
 *** Variables ***
-${pcc_setup}    pcc_30
+${pcc_setup}    pcc_226
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -13,7 +13,7 @@ Login to PCC
 
         [Documentation]    *Login to PCC* test
 
-        [Tags]    Running
+        [Tags]    Mount_test
         ${status}        Login To PCC    ${pcc_setup}
 
                          Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -67,7 +67,7 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                ...  pool_type=data
                                ...  resilienceScheme=erasure
                                ...  quota=3
-                               ...  quota_unit=MiB
+                               ...  quota_unit=GiB
                                ...  Datachunks=2
                                ...  Codingchunks=1
 
@@ -682,7 +682,7 @@ RBD Mount use case (2-1 erasure coded pool)
 ###################################################################################################################################
 	
 	[Documentation]    *RBD Mount test cases with erasure pool* test
-	[Tags]    Running
+	[Tags]    Mount_test
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
                        ...    hostip=${CLUSTERHEAD_1_HOST_IP}
@@ -692,7 +692,7 @@ RBD Mount use case (2-1 erasure coded pool)
 
         ###  Get Stored size before mount  ###
         ${size_erasure_pool_before_mount}      PCC.Get Stored Size for Erasure Pool
-                                                  ...    hostip=${SERVER_1_HOST_IP}
+                                                  ...    hostip=${SERVER_2_HOST_IP}
                                                   ...    pool_name=ceph-erasure-pool-mib-2-1
                                                   Log To Console    ${size_erasure_pool_before_mount}
                                                   Set Suite Variable    ${size_erasure_pool_before_mount}
@@ -702,7 +702,7 @@ RBD Mount use case (2-1 erasure coded pool)
 
         ${status}    Create mount folder
                      ...    mount_folder_name=test_rbd_mnt
-                     ...    hostip=${SERVER_1_HOST_IP}
+                     ...    hostip=${SERVER_2_HOST_IP}
                      ...    user=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
 
@@ -713,7 +713,7 @@ RBD Mount use case (2-1 erasure coded pool)
 		     ...    name=ceph-rbd-erasure-1
 		     ...    pool_name=pool9
 		     ...    inet_ip=${inet_ip}
-		     ...    hostip=${SERVER_1_HOST_IP}
+		     ...    hostip=${SERVER_2_HOST_IP}
                      ...    username=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
 		     Log To Console    ${status}
@@ -722,7 +722,7 @@ RBD Mount use case (2-1 erasure coded pool)
 		
 		${status}      PCC.Mount RBD to Mount Point
                        ...    mount_folder_name=test_rbd_mnt
-                       ...    hostip=${SERVER_1_HOST_IP}
+                       ...    hostip=${SERVER_2_HOST_IP}
                        ...    username=${PCC_LINUX_USER}
                        ...    password=${PCC_LINUX_PASSWORD}
 
@@ -735,7 +735,7 @@ RBD Mount use case (2-1 erasure coded pool)
                        ...    dummy_file_name=test_rbd_mnt_4mb.bin
                        ...    dummy_file_size=4MiB
                        ...    mount_folder_name=test_rbd_mnt
-                       ...    hostip=${SERVER_1_HOST_IP}
+                       ...    hostip=${SERVER_2_HOST_IP}
                        ...    user=${PCC_LINUX_USER}
                        ...    password=${PCC_LINUX_PASSWORD}  
 
@@ -747,7 +747,7 @@ RBD Mount use case (2-1 erasure coded pool)
 
         ###  Get Stored size after mount  ###
         ${size_erasure_pool_after_mount}     PCC.Get Stored Size for Erasure Pool
-                                                ...    hostip=${SERVER_1_HOST_IP}
+                                                ...    hostip=${SERVER_2_HOST_IP}
                                                 ...    pool_name=ceph-erasure-pool-mib-2-1
 
                                                 Log To Console    ${size_erasure_pool_after_mount}
@@ -757,7 +757,7 @@ RBD Mount use case (2-1 erasure coded pool)
 		###  Unmount and unmap RBD  ###
 		${status}		PCC.Unmount and Unmap RBD
 						...    mount_folder_name=test_rbd_mnt
-						...    hostip=${SERVER_1_HOST_IP}
+						...    hostip=${SERVER_2_HOST_IP}
                         ...    username=${PCC_LINUX_USER}
                         ...    password=${PCC_LINUX_PASSWORD}
 						
@@ -766,7 +766,7 @@ RBD Mount use case (2-1 erasure coded pool)
 						
 		${status}    Remove dummy file
                      ...    dummy_file_name=test_rbd_mnt_4mb.bin
-                     ...    hostip=${SERVER_1_HOST_IP} 
+                     ...    hostip=${SERVER_2_HOST_IP} 
 		     ...    user=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
 					 Log To Console    ${status}

@@ -57,36 +57,36 @@ Ceph Pool For Rgws
         ${status}                          PCC.Ceph Wait Until Pool Ready
                                       ...  name=pool-for-app-credentials
                                            Should Be Equal As Strings      ${status}    OK
-###################################################################################################################################
-Create and Delete Metadata Application credential profile without application for 20 times
-###################################################################################################################################
-
-        [Documentation]               *Create Metadata Profile* test
-                                      ...  keywords:
-                                      ...  PCC.Add Metadata Profile
-
-        FOR    ${i}    IN RANGE    1    20
-
-                ${response}                   PCC.Add Metadata Profile
-                                              ...    Name=test_app_credential
-                                              ...    Type=ceph
-                                              ...    Username=profile_without_app
-                                              ...    Email=profile_without_app@gmail.com
-                                              ...    Active=True
-
-                                              Log To Console    ${response}
-                                              ${result}    Get Result    ${response}
-                                              ${status}    Get From Dictionary    ${result}    status
-                                              ${message}    Get From Dictionary    ${result}    message
-                                              Log to Console    ${message}
-                                              Should Be Equal As Strings    ${status}    200
-
-
-                 ${response}    PCC.Delete All Profiles
-
-                                Log To Console    ${response}
-        END
-
+####################################################################################################################################
+#Create and Delete Metadata Application credential profile without application for 20 times
+####################################################################################################################################
+#
+#        [Documentation]               *Create Metadata Profile* test
+#                                      ...  keywords:
+#                                      ...  PCC.Add Metadata Profile
+#
+#        FOR    ${i}    IN RANGE    1    20
+#
+#                ${response}                   PCC.Add Metadata Profile
+#                                              ...    Name=test_app_credential
+#                                              ...    Type=ceph
+#                                              ...    Username=profile_without_app
+#                                              ...    Email=profile_without_app@gmail.com
+#                                              ...    Active=True
+#
+#                                              Log To Console    ${response}
+#                                              ${result}    Get Result    ${response}
+#                                              ${status}    Get From Dictionary    ${result}    status
+#                                              ${message}    Get From Dictionary    ${result}    message
+#                                              Log to Console    ${message}
+#                                              Should Be Equal As Strings    ${status}    200
+#
+#
+#                 ${response}    PCC.Delete All Profiles
+#
+#                                Log To Console    ${response}
+#        END
+#
 ###################################################################################################################################
 Create Metadata Application credential profile without application For Rados
 ###################################################################################################################################
@@ -159,9 +159,10 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
                                     
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_Cluster_NAME}
-                                    Should Be Equal As Strings      ${status}    OK       
+	${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  ceph_cluster_name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
 
 #####################################################################################################################################
 Ceph Rados Add S3Account 
@@ -174,6 +175,7 @@ Ceph Rados Add S3Account
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -193,6 +195,7 @@ Ceph Rados Add S3Account
 	
 	${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -216,6 +219,7 @@ Create Application credential profile with application
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
+		       ...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Add Metadata Profile
                        ...    Name=profile_with_app
@@ -316,6 +320,7 @@ Get the Application credential profiles with additional data for a specific appl
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
+			...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Get Profiles with additional data for specific application
                        ...    Type=ceph
@@ -388,6 +393,7 @@ Describe Application credential Profiles per type and application
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
+			...  ceph_cluster_name=ceph-pvt
         
         ${response}    PCC.Describe Profiles per type and application
                        ...    Type=ceph
@@ -481,6 +487,7 @@ Create multiple Application credential profile with same application
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
+			...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Add Metadata Profile
                        ...    Name=profile_with_app_multiple
@@ -517,6 +524,7 @@ Create Application credential profile with same application using duplicate user
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
+			...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Add Metadata Profile
                        ...    Name=profile_with_app_duplicate_uname
@@ -543,7 +551,8 @@ Fetching RGW ID before backup
                                         Should Be Equal As Strings      ${status}    OK
 
          ${RGW_id_before_backup}        PCC.Ceph Get Rgw Id
-                                        ...    name=${CEPH_RGW_NAME}                           
+                                        ...    name=${CEPH_RGW_NAME}
+					...  ceph_cluster_name=ceph-pvt                           
                                         Log To Console    ${RGW_id_before_backup}
                                         Set Global Variable    ${RGW_id_before_backup}    
                                              
@@ -555,12 +564,14 @@ Fetching RGW ID before backup
 #
 #        ${response}                 PCC.Ceph Delete Rgw
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
 #
 #        ${status}                   PCC.Ceph Wait Until Rgw Deleted
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                                    Should Be Equal As Strings      ${status}    OK
 #                                    
 #                                    Log to Console    Sleeping

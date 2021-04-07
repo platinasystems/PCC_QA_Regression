@@ -985,7 +985,8 @@ Pool released from RBD is used for creating/updating CephFS
                                ...  name=fs-1
 
         ${response}                 PCC.Ceph Create Rbd
-                               ...  name=fs-rbd
+                               ...  pool_type=replicated
+			       ...  name=fs-rbd
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
                                ...  size=${CEPH_RBD_SIZE}
