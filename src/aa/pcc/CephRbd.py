@@ -340,7 +340,7 @@ class CephRbd(AaBase):
             time.sleep(2)
             
             #mkfs.ext4 rbd0 command execution
-            cmd= "sudo mkfs.ext4 -m0 /dev/rbd0"
+            cmd= "sudo mkfs.ext4 /dev/rbd0"
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,linux_password=self.password)
             trace("cmd2: {} executed successfully and status is:{}".format(cmd,str(status)))
             print("cmd2: {} executed successfully and status is:{}".format(cmd,str(status)))
