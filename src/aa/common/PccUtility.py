@@ -232,7 +232,7 @@ def get_ceph_fs_id_by_name(conn:dict, Name:str)->int:
     except Exception as e:
         return {"Error": str(e)}
 
-def get_ceph_rgw_id_by_name(conn:dict, Name:str)->int:
+def get_ceph_rgw_id_by_name(conn:dict, Name:str, Ceph_cluster_name:str)->int:
     """
     Get Id of Ceph Rgw with matching Name from PCC
     [Args]
@@ -244,7 +244,8 @@ def get_ceph_rgw_id_by_name(conn:dict, Name:str)->int:
         (dict) Error response: If Exception occured
     """
     try:
-        list_of_ceph_rgws = pcc.get_ceph_rgws(conn)['Result']['Data']
+        ceph_cluster_id = str(get_ceph_cluster_id_by_name(conn, Name=Ceph_cluster_name))
+        list_of_ceph_rgws = pcc.get_ceph_rgws(conn,ceph_cluster_id)['Result']['Data']
         for ceph_rgw in list_of_ceph_rgws:
             if str(ceph_rgw['name']).lower() == str(Name).lower():
                 return ceph_rgw['ID']
@@ -528,6 +529,27 @@ def get_metadata_profile_id_by_name(conn:dict, Name:str)->int:
         return None
     except Exception as e:
         return {"Error": str(e)} 
+
+def get_app_credentials_profile_id_by_name(conn:dict, Name:str)->int:
+    """
+    Get App credentials Profile Id by Name
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of the App credential profile
+    [Returns]
+        (int) Id: Id of the matchining App credential profile, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+
+    try:
+        profiles_list = pcc.get_application_credential_profiles(conn)['Result']['Data']
+        for profile in profiles_list:
+            if str(profile['name']) == str(Name):
+                return profile['id']
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
 
 ## Alerts
 def get_alert_id_by_name(conn:dict, Name:str)->int:

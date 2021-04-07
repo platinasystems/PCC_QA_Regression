@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-        
+        [Tags]    This
                                             Load Ceph Rgw Data    ${pcc_setup}
                                             Load Ipam Data    ${pcc_setup}
 					    Load Ceph Pool Data    ${pcc_setup}
@@ -33,7 +33,7 @@ Ceph Pool For Rgws
                                       ...  PCC.Ceph Get Cluster Id
                                       ...  PCC.Ceph Create Pool
                                       ...  PCC.Ceph Wait Until Pool Ready
-
+	#[Tags]    This
         ${status}                          PCC.Ceph Get Pcc Status
                                       ...  name=ceph-pvt
                                            Should Be Equal As Strings      ${status}    OK
@@ -135,7 +135,7 @@ Create Application credential profile without application For Rados
         [Documentation]               *Create Metadata Profile* test
                                       ...  keywords:
                                       ...  PCC.Add Metadata Profile
-            
+        #[Tags]    This
         ${response}                   PCC.Add Metadata Profile
                                       ...    Name=${CEPH_RGW_S3ACCOUNTS}
                                       ...    Type=ceph
@@ -155,7 +155,7 @@ Ceph Ceph Certificate For Rgws
 ###################################################################################################################################
 
         [Documentation]              *Ceph Ceph Certificate For Rgws*
-          
+        #[Tags]    This
         ${cert_id}                   PCC.Get Certificate Id
                                 ...  Alias=${CEPH_RGW_CERT_NAME}
                                      Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
@@ -305,7 +305,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
-
+	#[Tags]    This
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
@@ -337,6 +337,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #
 #        ${rgw_id}                   PCC.Ceph Get Rgw Id
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #     
 #        ${response}                 PCC.Ceph Update Rgw
 #                               ...  ID=${rgw_id}
@@ -354,13 +355,14 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 Ceph Rados Add S3Account 
 #####################################################################################################################################
      [Documentation]                *Ceph Rados Gateway Update*
-
+	#[Tags]    This
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -388,13 +390,14 @@ Ceph Rados Add S3Account
 Ceph Rados Update Port 
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
-
+	[Tags]    This
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -431,6 +434,7 @@ Ceph Rados Update Nodes (Add Node)
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -482,6 +486,7 @@ Ceph Rados Update Nodes (Add Node)
 #
 #        ${rgw_id}                   PCC.Ceph Get Rgw Id
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #     
 #        ${response}                 PCC.Ceph Update Rgw
 #                               ...  ID=${rgw_id}
@@ -515,6 +520,7 @@ Ceph Rados Gateway Delete
   
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -574,9 +580,11 @@ Create Rgw Configuration File (ServiceIp As Default)
                                            Sleep    3 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
+				      ...  ceph_cluster_name=ceph-pvt
 
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
+				      ...  ceph_cluster_name=ceph-pvt
 
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
@@ -774,6 +782,7 @@ Ceph Rados Remove S3Account (ServiceIp As Default)
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -808,6 +817,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
  
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}    
         ${message}                  Get Response Message        ${response} 
@@ -872,9 +882,11 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Sleep    2 minutes
 #        ${accessKey}                       PCC.Ceph Get Rgw Access Key
 #                                      ...  name=${CEPH_RGW_NAME}
+#				       ...  ceph_cluster_name=ceph-pvt	
 #
 #        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
 #                                      ...  name=${CEPH_RGW_NAME}
+#				       ...  ceph_cluster_name=ceph-pvt	
 #
 #        ${status}                          PCC.Ceph Rgw Configure
 #                                      ...  accessKey=${accessKey}
@@ -897,9 +909,11 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                                           Sleep    2 minutes
 #        ${accessKey}                       PCC.Ceph Get Rgw Access Key
 #                                      ...  name=${CEPH_RGW_NAME}
+#					...  ceph_cluster_name=ceph-pvt
 #
 #        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
 #                                      ...  name=${CEPH_RGW_NAME}
+#					...  ceph_cluster_name=ceph-pvt
 #
 #        ${status}                          PCC.Ceph Rgw Configure
 #                                      ...  pcc=${SERVER_2_HOST_IP}
@@ -1060,6 +1074,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #
 #        ${rgw_id}                   PCC.Ceph Get Rgw Id
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #     
 #        ${response}                 PCC.Ceph Update Rgw
 #                               ...  ID=${rgw_id}
@@ -1094,6 +1109,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 # 
 #        ${response}                 PCC.Ceph Delete Rgw
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #
 #        ${status_code}              Get Response Status Code        ${response}    
 #        ${message}                  Get Response Message        ${response} 
@@ -1135,6 +1151,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                             
 #        ${response}                 PCC.Ceph Delete Rgw
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
@@ -1173,6 +1190,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 #                             
 #        ${response}                 PCC.Ceph Delete Rgw
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
@@ -1224,6 +1242,7 @@ Ceph Rados Remove One Node
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -1259,6 +1278,7 @@ Ceph Rados Gateway Delete
                              
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}  
         ${message}                  Get Response Message        ${response}   
@@ -1316,6 +1336,7 @@ Ceph Rados Gateway Delete
                              
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response} 
         ${message}                  Get Response Message        ${response}    
@@ -1353,9 +1374,11 @@ Ceph Rados Gateway Delete
 #                                    
 #        ${accessKey}                PCC.Ceph Get Rgw Access Key
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                              
 #        ${secretKey}                PCC.Ceph Get Rgw Secret Key
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                               
 #        ${status}                   PCC.Ceph Rgw Configure
 #                               ...  accessKey=${accessKey}
@@ -1401,6 +1424,7 @@ Ceph Rados Gateway Delete
 #                             
 #        ${response}                 PCC.Ceph Delete Rgw
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #
 #        ${status_code}              Get Response Status Code        ${response}     
 #                                    Should Be Equal As Strings      ${status_code}  200
@@ -1432,9 +1456,11 @@ Ceph Rados Gateway Delete
 #                                    
 #        ${accessKey}                PCC.Ceph Get Rgw Access Key
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                              
 #        ${secretKey}                PCC.Ceph Get Rgw Secret Key
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #                               
 #        ${status}                   PCC.Ceph Rgw Configure
 #                               ...  accessKey=${accessKey}
@@ -1456,6 +1482,7 @@ Ceph Rados Gateway Delete
 #                                    
 #        ${rgw_id}                   PCC.Ceph Get Rgw Id
 #                               ...  name=${CEPH_RGW_NAME}
+#				...  ceph_cluster_name=ceph-pvt
 #     
 #        ${response}                 PCC.Ceph Update Rgw
 #                               ...  ID=${rgw_id}

@@ -61,7 +61,7 @@ class CephRgw(AaBase):
         except Exception as e:
             raise e
 
-        rados_id = easy.get_ceph_rgw_id_by_name(conn,self.name)
+        rados_id = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
         return rados_id
 
     ###########################################################################
@@ -139,9 +139,22 @@ class CephRgw(AaBase):
         if self.S3Accounts!=None or self.S3Accounts!=[]:
             tmp_cert={}
             for cert in eval(str(self.S3Accounts)):
-                cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
-                tmp_cert[str(cert_id)]={}
+                cert_id=str(easy.get_app_credentials_profile_id_by_name(conn,cert))
+                print("Output of app_credentials_profile_id: {}".format(cert_id))
+                if (cert_id!= None) and ("Error" not in cert_id):
+                    tmp_cert[str(cert_id)]={}
+                else:
+                    cert_id=str(easy.get_metadata_profile_id_by_name(conn,cert))
+                    print("Output of metadata_profile_id: {}".format(cert_id))
+                    tmp_cert[str(cert_id)]={}
             self.S3Accounts=tmp_cert
+
+        #if self.S3Accounts!=None or self.S3Accounts!=[]:
+        #    tmp_cert={}
+        #    for cert in eval(str(self.S3Accounts)):
+        #        cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
+        #        tmp_cert[str(cert_id)]={}
+        #    self.S3Accounts=tmp_cert
         
         tmp_node=[]
         if self.targetNodes!=[] or self.targetNodes!='':
@@ -188,7 +201,7 @@ class CephRgw(AaBase):
         if self.ID == None and self.name==None:
             return {"Error": "[PCC.Ceph Delete Cluster]: Id of the cluster is not specified."}
         
-        self.ID=easy.get_ceph_rgw_id_by_name(conn,self.name)
+        self.ID = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
 
         return pcc.delete_ceph_rgw_by_id(conn, str(self.ID))
 
@@ -317,7 +330,7 @@ class CephRgw(AaBase):
         except Exception as e:
             raise e
 
-        rados_id = easy.get_ceph_rgw_id_by_name(conn,self.name)
+        rados_id = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
         print("RadosId:"+str(rados_id))
         key_data = get_response_data(pcc.get_profiles_with_additional_data_for_specific_application(conn,"ceph",str(rados_id)))
         print("Response:"+str(key_data))
@@ -345,7 +358,7 @@ class CephRgw(AaBase):
         except Exception as e:
             raise e
 
-        rados_id = easy.get_ceph_rgw_id_by_name(conn,self.name)
+        rados_id = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
         key_data = get_response_data(pcc.get_profiles_with_additional_data_for_specific_application(conn,"ceph",str(rados_id)))
         print("Response:"+str(key_data))
         print("Secret Key:"+str(key_data[0]['profile']["secretKey"]))
