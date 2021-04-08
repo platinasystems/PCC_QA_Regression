@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]    delete	
+        [Tags]    Run_this
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -166,7 +166,10 @@ Ceph Rgw Delete Multiple
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
+        [Tags]    Run_this
+
         ${status}                   PCC.Ceph Delete All Rgw
+                                ...  ceph_cluster_name=ceph-pvt
                                     Should be equal as strings    ${status}    OK
 
 
@@ -196,6 +199,8 @@ Ceph Pool Multiple Delete
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  CC.Ceph Delete All Pools
+        [Tags]    Run_this
+
         ${status}                   PCC.Ceph Delete All Pools
                                     Should be equal as strings    ${status}    OK
 
@@ -205,8 +210,22 @@ Ceph Cluster Delete
     [Documentation]                 *Delete cluster if it exist*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Cluster
-        ${status}                   PCC.Ceph Delete All Cluster
-                                    Should be equal as strings    ${status}    OK
+        [Tags]    Run_this
+        ${ceph_cluster_deletion_status}    PCC.Ceph Delete All Cluster
+                                           Should be equal as strings    ${ceph_cluster_deletion_status}    OK
+
+####################################################################################################################################
+#Ceph Cluster Force Delete (if cluster not deleted)
+####################################################################################################################################
+#    [Documentation]                 *Delete cluster if it exist*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Force Delete All Cluster
+#        [Tags]    Run_this
+#        Run Keyword If ${ceph_cluster_deletion_status}!="OK"
+#                ${ceph_cluster_deletion_status}    PCC.Ceph Delete All Cluster
+#                                                   ...    forceRemove=True
+#                                                   Should be equal as strings    ${ceph_cluster_deletion_status}    OK
+#
 
 ####################################################################################################################################
 #BE Ceph Cleanup
@@ -225,6 +244,7 @@ Network Manager Delete
     [Documentation]                 *Delete Network Manager if it exist*
                                ...  keywords:
                                ...  PCC.Network Manager Delete All
+        [Tags]    Run_this
         ${status}                   PCC.Network Manager Delete All
                                     Should be equal as strings    ${status}    OK
 
@@ -234,6 +254,7 @@ Delete Multiple Subnet
     [Documentation]                 *Delete IPAM Subnet*
                                ...  keywords:
                                ...  PCC.Ipam Subnet Delete All
+        [Tags]    Run_this
         ${status}                   PCC.Ipam Subnet Delete All
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -301,6 +322,8 @@ Cleanup all certificates from PCC
     [Documentation]                 *Cleanup all certificates*
                                ...  keywords:
                                ...  PCC.Delete All Certificates
+        [Tags]    Run_this
+
         ${status}                   PCC.Delete All Certificates
 
                                     Log To Console    ${status}
@@ -312,6 +335,7 @@ Cleanup all keys from PCC
     [Documentation]                 *Cleanup all keys*
                                ...  keywords:
                                ...  PCC.Delete All Keys
+        [Tags]    Run_this
         ${status}                   PCC.Delete All Keys
 
                                     Log To Console    ${status}
@@ -346,15 +370,15 @@ Delete All Profiles
                        Log To Console    ${response}
 
 ###################################################################################################################################
-PCC Multiple Tenant deletion
+Delete All Tenants
 ###################################################################################################################################
 
         [Documentation]    *PCC Multiple Tenant deletion* test
                            ...  keywords:
-                           ...  PCC.Delete Multiple Tenants
-        
-        ${status}    PCC.Delete Multiple Tenants
-                       ...    Tenant_list=["${TENANT1}"]
+                           ...  PCC.Delete All Tenants
+        [Tags]    Run_this
+        ${status}    PCC.Delete All Tenants
+
 
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK    Not Deleted
@@ -395,7 +419,7 @@ Delete Nodes
 #####################################################################################################################################
 
     [Documentation]    *Delete Nodes* test
-    [Tags]    delete
+    [Tags]    Run_this
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
 
@@ -408,6 +432,7 @@ Nodes Verification Back End (Services should not be active)
     [Documentation]                      *Nodes Verification Back End*
                                     ...  keywords:
                                     ...  PCC.Node Verify Back End
+        [Tags]    Run_this
         ${status}                   PCC.Node Verify Back End After Deletion
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Not Be Equal As Strings      ${status}    OK

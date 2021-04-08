@@ -331,9 +331,11 @@ class CephCluster(AaBase):
         except Exception as e:
             raise e
   
-        payload={"forceRemove":False}
+        if str(self.forceRemove).lower()=="true":
+            payload={"forceRemove":True}
+        else:
+            payload={"forceRemove":False}
         print("Payload:"+str(payload))
-        
         response = pcc.get_ceph_clusters(conn)
         for data in get_response_data(response):
             print("Response To Look :-"+str(data))
