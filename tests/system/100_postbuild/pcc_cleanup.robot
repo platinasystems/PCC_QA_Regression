@@ -214,18 +214,32 @@ Ceph Cluster Delete
         ${ceph_cluster_deletion_status}    PCC.Ceph Delete All Cluster
                                            Should be equal as strings    ${ceph_cluster_deletion_status}    OK
 
-####################################################################################################################################
-#Ceph Cluster Force Delete (if cluster not deleted)
-####################################################################################################################################
-#    [Documentation]                 *Delete cluster if it exist*
-#                               ...  keywords:
-#                               ...  PCC.Ceph Force Delete All Cluster
-#        [Tags]    Run_this
-#        Run Keyword If ${ceph_cluster_deletion_status}!="OK"
-#                ${ceph_cluster_deletion_status}    PCC.Ceph Delete All Cluster
-#                                                   ...    forceRemove=True
-#                                                   Should be equal as strings    ${ceph_cluster_deletion_status}    OK
-#
+###################################################################################################################################
+Ceph Cluster Force Delete (if cluster not deleted)
+###################################################################################################################################
+    [Documentation]                 *Delete cluster if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Force Delete All Cluster
+        [Tags]    Run_this
+	${ceph_cluster_id}    PCC.Ceph Get Cluster Id
+			      ...    name=ceph-pvt
+			      Log To Console    ${ceph_cluster_id}
+			      Pass Execution If    ${ceph_cluster_id} is ${None}    
+	
+	${response}    PCC.Ceph Delete Cluster
+		       ...    forceRemove=True
+		       ...    id=${ceph_cluster_id}
+		       Log To Console    ${response}
+		       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+	${cluster_deletion_wait_status}    PCC.Ceph Wait Until Cluster Deleted
+					   ...    id=${ceph_cluster_id}
+					   Log To Console    ${cluster_deletion_wait_status}
+					   Should be equal as strings    ${cluster_deletion_wait_status}    OK	
 
 ####################################################################################################################################
 #BE Ceph Cleanup
