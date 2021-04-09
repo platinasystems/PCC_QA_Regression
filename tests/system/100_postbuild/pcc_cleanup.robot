@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-        [Tags]    Run_this
+        [Tags]    Force_delete
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -220,11 +220,11 @@ Ceph Cluster Force Delete (if cluster not deleted)
     [Documentation]                 *Delete cluster if it exist*
                                ...  keywords:
                                ...  PCC.Ceph Force Delete All Cluster
-        [Tags]    Run_this
+        [Tags]    Force_delete
 	${ceph_cluster_id}    PCC.Ceph Get Cluster Id
 			      ...    name=ceph-pvt
 			      Log To Console    ${ceph_cluster_id}
-			      Pass Execution If    ${ceph_cluster_id} is ${None}    
+			      Pass Execution If    ${ceph_cluster_id} is ${None}    ${ceph_cluster_id} ceph cluster already present     
 	
 	${response}    PCC.Ceph Delete Cluster
 		       ...    forceRemove=True
