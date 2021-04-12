@@ -11,7 +11,7 @@ Login to PCC.
 ###################################################################################################################################
 
         [Documentation]    *Login to PCC* test
-        [Tags]    Set
+        [Tags]    Disable
         ${status}        Login To PCC    ${pcc_setup}
                          Should Be Equal    ${status}  OK
 
@@ -371,6 +371,23 @@ Set Password on Server (CentOS)
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
+<<<<<<< HEAD
+=======
+###################################################################################################################################
+Disable Firewall on CentOS
+##################################################################################################################################
+
+    [Documentation]   	*Disable firewall on CentOS* test
+    [Tags]    Disable    
+    ${status}    Cli.Disable Firewall
+    		 ...  host_ip=${SERVER_2_HOST_IP}
+		 ...  linux_user=${SERVER_2_UNAME}
+		 ...  linux_password=${SERVER_2_PWD}
+		  Log To Console    ${status}
+                  Should be equal as strings    ${status}    OK
+
+
+>>>>>>> disablefirewall
 ###################################################################################################################################
 Network Manager Refresh and Verify After Brownfield OS Deployment(centos78)
 ###################################################################################################################################
@@ -397,3 +414,44 @@ Network Manager Refresh and Verify After Brownfield OS Deployment(centos78)
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_2_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
+<<<<<<< HEAD
+=======
+
+###################################################################################################################################
+#Network Manager Update After Brownfield OS Deployment(ubuntu-focal)
+####################################################################################################################################
+#    [Documentation]                 *Network Manager Update Interfaces For Server Not Falling In DataCIDR*
+#                               ...  keywords:
+#                               ...  PCC.Get Network Manager Id
+#                               ...  PCC.Network Manager Update
+#                               ...  PCC.Wait Until Network Manager Ready
+#                               ...  PCC.Network Manager Verify BE
+#
+#        ${network_id}               PCC.Get Network Manager Id
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#
+#        ${response}                 PCC.Network Manager Update
+#                               ...  id=${network_id}
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                               ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_1_NAME}"]
+#                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+#                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
+#                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Wait Until Network Manager Ready
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Health Check Network Manager
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Network Manager Verify BE
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+#                                    Should Be Equal As Strings      ${status}  OK
+
+>>>>>>> disablefirewall

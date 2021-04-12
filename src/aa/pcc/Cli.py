@@ -609,3 +609,41 @@ class Cli(AaBase):
         else:
             return "OK"
         return "OK"
+
+    ###########################################################################
+    @keyword(name="CLI.Disable Firewall")
+    ###########################################################################
+    def disable_firewall(self, *args, **kwargs):
+        """
+        Disable Firewall
+        [Args]
+            (str) host_ip:
+            (str) linux_password:
+            (str) linux_user:
+        [Returns]
+            (str) OK if command successful, stderr output if there's an error
+        """
+        self._load_kwargs(kwargs)
+        print("kwargs"+str(kwargs))
+        banner("CLI.Disable Firewall ip=%s" % self.host_ip)
+        
+        OS_type = self.get_OS_version(host_ip= self.host_ip, linux_user= self.linux_user, linux_password = self.linux_password)
+
+        if re.search("Ubuntu",str(OS_type)) or re.search("Debian",str(OS_type)):
+            cmd = "sudo ufw disable"
+            cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.linux_user,linux_password=self.linux_password)
+            print("Command: {} executed successfully and output is :{}".format(cmd, cmd_output))
+            return "OK"
+
+        elif re.search("Red Hat",str(OS_type)) or re.search("CentOS",str(OS_type)):
+            cmd1 = "sudo systemctl stop firewalld"
+            cmd2 = "sudo systemctl disable firewalld"
+
+            resp1 = cli_run(cmd1, self.host_ip, self.linux_user, self.linux_password)
+            resp2 = cli_run(cmd2, self.host_ip, self.linux_user, self.linux_password)
+            print("Command executed successfully and Response1 is " + str(resp1))
+            print("Command executed successfully and Response2 is " + str(resp2))
+            return "OK"
+        else:
+            return "OS type not specified"
+
