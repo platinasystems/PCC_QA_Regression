@@ -246,7 +246,7 @@ Verify CR creation successful from backend : TCP-825
         [Documentation]    *Verify CR creation successful from backend* test
                            ...  keywords:
                            ...  Is Docker Container Up
-                           ...  aa.common.LinuxUtils.Is FQDN reachable
+                           ...  pcc_qa.common.LinuxUtils.Is FQDN reachable
                            ...  Is Port Used 
         
         
@@ -285,7 +285,7 @@ Verify CR creation successful from backend : TCP-825
                      Log to Console    ${container_up_result5}
                      Should Be Equal As Strings    ${container_up_result5}    OK
                      
-        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+        ${FQDN_reachability_result}    pcc_qa.common.LinuxUtils.Is FQDN reachable
                      ...    FQDN_name=${CR_FQDN}
                      ...    hostip=${host_ip}
                      
@@ -647,7 +647,7 @@ Cleanup Container Registry after login as Tenant user
 #                           ...  keywords:
 #                           ...  Check if image exists in local repo
 #                           ...  Delete image from local repo, if exists
-#                           ...  aa.common.LinuxUtils.Is FQDN reachable
+#                           ...  pcc_qa.common.LinuxUtils.Is FQDN reachable
 #
 #        [Tags]    Negative
 #
@@ -661,7 +661,7 @@ Cleanup Container Registry after login as Tenant user
 #                       Log to Console    ${return}
 #                       Should Be Equal As Strings    ${return}    OK
 #
-#        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+#        ${FQDN_reachability_result}    pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                             ...    FQDN_name=${CR_FQDN}
 #                             ...    hostip=${host_ip}
 #

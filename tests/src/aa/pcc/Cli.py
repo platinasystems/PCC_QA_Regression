@@ -5,13 +5,13 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
-from aa.common import PccUtility as easy
-from aa.common.Utils import banner, trace, pretty_print
-from aa.common.Result import get_response_data, get_result
-from aa.common.AaBase import AaBase
-from aa.common.Cli import *
+from pcc_qa.common import PccUtility as easy
+from pcc_qa.common.Utils import banner, trace, pretty_print
+from pcc_qa.common.Result import get_response_data, get_result
+from pcc_qa.common.PccBase import PccBase
+from pcc_qa.common.Cli import *
 
-class Cli(AaBase):
+class Cli(PccBase):
     """ 
     Cli
     """

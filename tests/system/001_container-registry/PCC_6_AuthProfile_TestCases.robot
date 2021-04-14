@@ -187,7 +187,7 @@ Verify CR creation successful from backend
         [Documentation]    *Verify CR creation successful from backend* test
                            ...  keywords:
                            ...  Is Docker Container Up
-                           ...  aa.common.LinuxUtils.Is FQDN reachable
+                           ...  pcc_qa.common.LinuxUtils.Is FQDN reachable
                            ...  Is Port Used
         
         
@@ -226,7 +226,7 @@ Verify CR creation successful from backend
                      Log to Console    ${container_up_result5}
                      Should Be Equal As Strings    ${container_up_result5}    OK
                      
-        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+        ${FQDN_reachability_result}    pcc_qa.common.LinuxUtils.Is FQDN reachable
                      ...    FQDN_name=${CR_FQDN}
                      ...    hostip=${host_ip}
                      

@@ -8,17 +8,17 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccUtility as easy
+from pcc_qa.common import PccUtility as easy
 
-from aa.common.Utils import banner, trace, pretty_print
-from aa.common.Result import get_response_data
-from aa.common.AaBase import AaBase
+from pcc_qa.common.Utils import banner, trace, pretty_print
+from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.PccBase import PccBase
 
-from aa.pcc.CephCluster import CephCluster
+from pcc_qa.pcc.CephCluster import CephCluster
 
 PCCSERVER_TIMEOUT = 60*6
 
-class CephRbd(AaBase):
+class CephRbd(PccBase):
 
     def __init__(self):
 

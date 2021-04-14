@@ -8,7 +8,7 @@ pipeline {
     environment {
         VERSION = '1.0.0'
         MOTOR_TEST_RUNNER = "mplatina/motor-test-runner:${VERSION}"
-        RUN_MOTOR = "/usr/local/bin/run-aa.sh"
+        RUN_MOTOR = "/usr/local/bin/run-pcc_qa.sh"
         PCC_KEY = "pcc_242"
     }
 
@@ -28,7 +28,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
-                    sh "docker run -v ${WORKSPACE}:/aa ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} ${MOTOR_TEST_NAME}"
+                    sh "docker run -v ${WORKSPACE}:/PCC_QA_Regression ${MOTOR_TEST_RUNNER} ${RUN_MOTOR} ${MOTOR_TEST_NAME}"
                 }
             }
         }  

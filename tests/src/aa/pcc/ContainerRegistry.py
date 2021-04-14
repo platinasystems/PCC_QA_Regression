@@ -5,15 +5,15 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccUtility as easy
+from pcc_qa.common import PccUtility as easy
 
-from aa.common.AaBase import AaBase
-from aa.common.Utils import banner, trace, pretty_print
-from aa.common.Result import get_response_data
+from pcc_qa.common.PccBase import PccBase
+from pcc_qa.common.Utils import banner, trace, pretty_print
+from pcc_qa.common.Result import get_response_data
 #from motorframework.api import nodes
-from aa.pcc.Nodes import Nodes
+from pcc_qa.pcc.Nodes import Nodes
 
-class ContainerRegistry(AaBase):
+class ContainerRegistry(PccBase):
     def __init__(self):
         # Robot arguments definitions
 
