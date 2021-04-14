@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
 from os.path import abspath, dirname, join
 
-PROJECT_NAME = "pcc_qa"
+PROJECT_NAME = "PCC_QA_Regression"
+SOURCE_PATH = "pcc_qa"
 LICENSE = 'MIT'
-SOURCE_DIR = join("src", PROJECT_NAME)
+SOURCE_DIR = join("src", SOURCE_PATH)
 PROJECT_GIT_URL = "https://github.com/platinasystems/" + PROJECT_NAME
 AUTHOR_NAME = "mplatina"
 AUTHOR_EMAIL = "mplatina@platinasystems.com"
@@ -52,6 +53,6 @@ setup(
     install_requires = REQUIREMENTS,
     classifiers = CLASSIFIERS,
     data_files=[
-        ('robot', ['src/' + PROJECT_NAME + "/robot/pcc_resources.robot"])
+        ('robot', ['src/' + SOURCE_PATH + "/robot/pcc_resources.robot"])
     ]
 )
