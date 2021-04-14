@@ -99,7 +99,7 @@ Login to PCC
 #        [Documentation]    *Verify CR from backend* test
 #                           ...  keywords:
 #                           ...  Is Docker Container Up
-#                           ...  aa.common.LinuxUtils.Is FQDN reachable
+#                           ...  pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                           ...  Is Port Used
 #        
 #                      
@@ -139,7 +139,7 @@ Login to PCC
 #                     Log to Console    ${container_up_result5}
 #                     Should Be Equal As Strings    ${container_up_result5}    OK
 #                     
-#        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+#        ${FQDN_reachability_result}    pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                     ...    FQDN_name=${CR_FQDN}
 #                     ...    hostip=${host_ip}
 #                     
@@ -228,7 +228,7 @@ Login to PCC
 #        [Documentation]    *Verify CR from backend* test
 #                           ...  keywords:
 #                           ...  Is Docker Container Up
-#                           ...  aa.common.LinuxUtils.Is FQDN reachable
+#                           ...  pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                           ...  Is Port Used 
 #                            
 #                      
@@ -267,7 +267,7 @@ Login to PCC
 #                     Log to Console    ${container_up_result5}
 #                     Should Be Equal As Strings    ${container_up_result5}    OK
 #                     
-#        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+#        ${FQDN_reachability_result}    pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                     ...    FQDN_name=${CR_FQDN}
 #                     ...    hostip=${host_ip}
 #                     
@@ -356,7 +356,7 @@ Login to PCC
 #        [Documentation]    *Verify CR from backend* test
 #                           ...  keywords:
 #                           ...  Is Docker Container Up
-#                           ...  aa.common.LinuxUtils.Is FQDN reachable
+#                           ...  pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                           ...  Is Port Used
 #                      
 #        ${container_up_result1}    Is Docker Container Up 
@@ -394,7 +394,7 @@ Login to PCC
 #                     Log to Console    ${container_up_result5}
 #                     Should Be Equal As Strings    ${container_up_result5}    OK
 #                     
-#        ${FQDN_reachability_result}    aa.common.LinuxUtils.Is FQDN reachable
+#        ${FQDN_reachability_result}    pcc_qa.common.LinuxUtils.Is FQDN reachable
 #                     ...    FQDN_name=${CR_FQDN}
 #                     ...    hostip=${host_ip}
 #                     

@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Run Tests') {
             steps {
-                sh "docker run -v ${WORKSPACE}:/aa ${MOTOR_TEST_RUNNER} robot -x /aa/output/robot.xml --outputdir /aa/output /aa/pipeline/containers/motor-test-base/motor-test-base.robot"
+                sh "docker run -v ${WORKSPACE}:/PCC_QA_Regression ${MOTOR_TEST_RUNNER} robot -x /PCC_QA_Regression/output/robot.xml --outputdir /PCC_QA_Regression/output /PCC_QA_Regression/pipeline/containers/motor-test-base/motor-test-base.robot"
             }
         }
         stage('Publish Test Results') {

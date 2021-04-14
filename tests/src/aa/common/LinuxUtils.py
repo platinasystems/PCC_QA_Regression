@@ -9,16 +9,16 @@ from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 
-from aa.common.AaBase import AaBase
-from aa.common.Utils import banner, trace, debug, pretty_print
-from aa.common.Cli import cli_run
-from aa.common.Result import get_response_data
+from pcc_qa.common.PccBase import PccBase
+from pcc_qa.common.Utils import banner, trace, debug, pretty_print
+from pcc_qa.common.Cli import cli_run
+from pcc_qa.common.Result import get_response_data
 
 from platina_sdk import pcc_api as pcc
-from aa.common import PccUtility as easy
-from aa.pcc.Nodes import Nodes
+from pcc_qa.common import PccUtility as easy
+from pcc_qa.pcc.Nodes import Nodes
 
-class LinuxUtils(AaBase):
+class LinuxUtils(PccBase):
     
     
     def __init__(self):
