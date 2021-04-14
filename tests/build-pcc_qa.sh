@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ -z "$MOTOR_HOME" ]; 
-  then export MOTOR_HOME="/home/jenkins/aa";
+  then export MOTOR_HOME="/home/jenkins/PCC_QA_Regression";
 fi
 echo "MOTOR_HOME=$MOTOR_HOME"
 cd $MOTOR_HOME
