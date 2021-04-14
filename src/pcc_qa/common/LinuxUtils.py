@@ -340,7 +340,7 @@ class LinuxUtils(PccBase):
                 if re.search("Debian",str(OS_type)) or re.search("Ubuntu",str(OS_type)):
                     cmd = "sudo apt-get --assume-yes install s3cmd"
                 if re.search("Red Hat Enterprise",str(OS_type)) or re.search("CentOS",str(OS_type)):
-                    cmd = "sudo yum --assume-yes install s3cmd"
+                    cmd = "sudo yum -y install s3cmd"
                 
                 s3cmd_install = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username, linux_password=self.password)
                 print("Cmd: {} executed successfully. Output is : {}".format(cmd, str(s3cmd_install)))

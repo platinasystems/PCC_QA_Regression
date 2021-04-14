@@ -168,7 +168,9 @@ Ceph Rgw Delete Multiple
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
+
         ${status}                   PCC.Ceph Delete All Rgw
+                               ...  ceph_cluster_name=ceph-pvt
                                     Should be equal as strings    ${status}    OK
 
 
