@@ -639,7 +639,7 @@ Verify CR creation successful from frontend and backend after restore
                                     Log to Console    ${container_up_result5}
                                     Should Be Equal As Strings    ${container_up_result5}    OK
                      
-        ${FQDN_reachability_result}     aa.common.LinuxUtils.Is FQDN reachable
+        ${FQDN_reachability_result}     pcc_qa.common.LinuxUtils.Is FQDN reachable
                                         ...    FQDN_name=${CR_FQDN}
                                         ...    hostip=${host_ip}
                      
