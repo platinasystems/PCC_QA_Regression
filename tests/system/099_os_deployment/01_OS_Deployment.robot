@@ -371,23 +371,19 @@ Set Password on Server (CentOS)
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
 
-<<<<<<< HEAD
-=======
 ###################################################################################################################################
 Disable Firewall on CentOS
 ##################################################################################################################################
 
-    [Documentation]   	*Disable firewall on CentOS* test
-    [Tags]    Disable    
+    [Documentation]     *Disable firewall on CentOS* test
+    [Tags]    Disable
     ${status}    Cli.Disable Firewall
-    		 ...  host_ip=${SERVER_2_HOST_IP}
-		 ...  linux_user=${SERVER_2_UNAME}
-		 ...  linux_password=${SERVER_2_PWD}
-		  Log To Console    ${status}
+                 ...  host_ip=${SERVER_2_HOST_IP}
+                 ...  linux_user=${SERVER_2_UNAME}
+                 ...  linux_password=${SERVER_2_PWD}
+                  Log To Console    ${status}
                   Should be equal as strings    ${status}    OK
 
-
->>>>>>> disablefirewall
 ###################################################################################################################################
 Network Manager Refresh and Verify After Brownfield OS Deployment(centos78)
 ###################################################################################################################################
@@ -414,8 +410,6 @@ Network Manager Refresh and Verify After Brownfield OS Deployment(centos78)
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_2_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
-<<<<<<< HEAD
-=======
 
 ###################################################################################################################################
 #Network Manager Update After Brownfield OS Deployment(ubuntu-focal)
@@ -453,5 +447,3 @@ Network Manager Refresh and Verify After Brownfield OS Deployment(centos78)
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
-
->>>>>>> disablefirewall
