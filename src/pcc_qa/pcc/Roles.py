@@ -26,32 +26,32 @@ class Roles(PccBase):
         self.templateNames = None
         super().__init__()
 
-        ###########################################################################
-        @keyword(name="PCC.Add Read Only Role")
-        ###########################################################################
-        def add_read_only_role(self, *args, **kwargs):
-            """
-            Add Role
+    ###########################################################################
+    @keyword(name="PCC.Add Read Only Role")
+    ###########################################################################
+    def add_read_only_role(self, *args, **kwargs):
+        """
+        Add Role
 
-            [Args]
-                (str) Name: Name of the Role
-                (str) description: of the Role
-                (list) groupOperations: List of dictionaries containing ids of ops
-                (int) owner
+        [Args]
+            (str) Name: Name of the Role
+            (str) description: of the Role
+            (list) groupOperations: List of dictionaries containing ids of ops
+            (int) owner
 
-            [Returns]
-                (dict) Response: Add Role response (includes any errors)
-            """
-            self._load_kwargs(kwargs)
-            banner("PCC.Add Role [Name=%s]" % self.Name)
-            conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            payload = {
-                "name": self.Name,
-                "description": self.Description,
-                "owner": int(self.owner),
-                "groupOperations":[{"id":1},{"id":3},{"id":5},{"id":7},{"id":9}]
-            }
-            return pcc.add_role(conn,payload)
+        [Returns]
+            (dict) Response: Add Role response (includes any errors)
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Add Role [Name=%s]" % self.Name)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        payload = {
+            "name": self.Name,
+            "description": self.Description,
+            "owner": int(self.owner),
+            "groupOperations":[{"id":1},{"id":3},{"id":5},{"id":7},{"id":9}]
+        }
+        return pcc.add_role(conn,payload)
 
 
     ###########################################################################

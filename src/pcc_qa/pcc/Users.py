@@ -32,37 +32,37 @@ class Roles(PccBase):
          "email": "anurag.jain@calsoftinc.com", "roleID": 8, "active": true,
          "source": "https://172.17.2.218:9999/gui/setPass", "protect": false}
         '''
-        ###########################################################################
-        @keyword(name="PCC.Add Read Only User")
-        ###########################################################################
-        def add_read_only_user(self, *args, **kwargs):
-            """
-            Add User
-            """
-            self._load_kwargs(kwargs)
-            banner("PCC.Add User [Name=%s]" % self.UserName)
-            conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            payload = {
-                "firstname": self.FirstName,
-                "Lastname": self.LastName,
-                "email": self.Email,
-                "roleID": self.Role_ID,
-                "active": 'true'
-            }
-            return pcc.add_user(conn,payload)
+    ###########################################################################
+    @keyword(name="PCC.Add Read Only User")
+    ###########################################################################
+    def add_read_only_user(self, *args, **kwargs):
+        """
+        Add User
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Add User [Name=%s]" % self.UserName)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        payload = {
+            "firstname": self.FirstName,
+            "Lastname": self.LastName,
+            "email": self.Email,
+            "roleID": self.Role_ID,
+            "active": 'true'
+        }
+        return pcc.add_user(conn,payload)
 
-        ###########################################################################
-        @keyword(name="PCC.Create User Password")
-        ###########################################################################
-        def create_user_password(self, *args, **kwargs):
-            """
-            Create User Password
-            """
-            self._load_kwargs(kwargs)
-            banner("PCC.Add User [Name=%s]" % self.Link)
-            conn = BuiltIn().get_variable_value("${password_token}")
+    ###########################################################################
+    @keyword(name="PCC.Create User Password")
+    ###########################################################################
+    def create_user_password(self, *args, **kwargs):
+        """
+        Create User Password
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Add User [Name=%s]" % self.Link)
+        conn = BuiltIn().get_variable_value("${password_token}")
 
-            payload = {"password": self.Password}
+        payload = {"password": self.Password}
 
 
-            return pcc.add_user(conn,payload)
+        return pcc.add_user(conn,payload)

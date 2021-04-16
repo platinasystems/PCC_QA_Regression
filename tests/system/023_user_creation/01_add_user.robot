@@ -104,7 +104,7 @@ PCC-Get-Link-From-Gmail
                            ...  keywords:
                            ...  PCC.Add Read Only User
 
-        ${password_token}     PCC.Add Read Only User
+        ${password_token}     PCC.Get Link From Gmail
                               ...     Email=calsoftplatina@gmail.com
 
                               Log To Console    ${password_token}
