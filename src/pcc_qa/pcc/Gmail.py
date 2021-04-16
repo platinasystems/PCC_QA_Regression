@@ -14,7 +14,7 @@ from pcc_qa.common.PccBase import PccBase
 
 class Gmail(PccBase):
     """
-    Roles
+    Gmail
     """
 
     def __init__(self):

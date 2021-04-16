@@ -10,7 +10,7 @@ from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.PccBase import PccBase
 
-class Roles(PccBase):
+class Users(PccBase):
     """ 
     Roles
     """

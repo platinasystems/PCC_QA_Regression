@@ -62,15 +62,15 @@ PCC-Read-Only-Role-Creation
         ${owner}        PCC.Get Tenant Id
                         ...    Name=${TENANT1}
 
-        ${response}     PCC.Add Read Only Role
-                        ...     Name=readonly
-                        ...     Description=readonlyroles
-                        ...     owner=${owner}
+        ${response}    PCC.Add Read Only Role
+                       ...     Name=readonly
+                       ...     Description=readonlyroles
+                       ...     owner=${owner}
 
-                        Log To Console    ${response}
-                        ${result}    Get Result    ${response}
-                        ${status}    Get From Dictionary    ${response}    StatusCode
-                        Should Be Equal As Strings    ${status}    200
+                       Log To Console   ${response}
+                       ${result}    Get Result  ${response}
+                       ${status}    Get From Dictionary     ${response}     StatusCode
+                       Should Be Equal As Strings       ${status}      200
 
 
 ###################################################################################################################################
@@ -82,14 +82,14 @@ PCC-Read-Only-User-Creation
                            ...  PCC.Get Role Id
                            ...  PCC.Add Read Only User
 
-        ${roleID}        PCC.Get Role Id
-                        ...    Name=readOnly
+        ${roleID}    PCC.Get Role Id
+                     ...    Name=readOnly
 
-        ${response}     PCC.Add Read Only User
-                        ...     FirstName=calsoft
-                        ...     LastName=platina
-                        ...     Email=calsoftplatina@gmail.com
-                        ...     Role_ID=${roleID}
+        ${response}    PCC.Add Read Only User
+                       ...     FirstName=calsoft
+                       ...     LastName=platina
+                       ...     Email=calsoftplatina@gmail.com
+                       ...     Role_ID=${roleID}
 
                         Log To Console    ${response}
                         ${result}    Get Result    ${response}
