@@ -23,7 +23,9 @@ Library                         pcc_qa.pcc.CephRgw
 Library                         pcc_qa.pcc.Cli
 Library                         pcc_qa.pcc.Kubernetes
 Library                         pcc_qa.pcc.OpenSSHKeys
-Library                         pcc_qa.pcc.Rogit pullles
+Library                         pcc_qa.pcc.Roles
+Library                         pcc_qa.pcc.Gmail
+Library                         pcc_qa.pcc.Users
 Library                         pcc_qa.pcc.RoleOperations
 Library                         pcc_qa.pcc.Interfaces
 Library                         pcc_qa.pcc.Alerting
@@ -38,13 +40,7 @@ Library                         pcc_qa.pcc.PolicyDrivenMgmt
 Library                         pcc_qa.pcc.Monitor
 Library                         pcc_qa.pcc.SystemPackageUpdates
 Library				            pcc_qa.pcc.Rsyslog
-Library                         pcc_qa.pcc.Dashboard
-Library                         pcc_qa.pcc.PhoneHome
-Library                         pcc_qa.pcc.Users
-Library				            pcc_qa.pcc.Gmail
-Library                         pcc_qa.pcc.Roles
 Library                         Collections
-
 
 *** Keywords ***
 ###################################################################################################################################
@@ -441,9 +437,6 @@ Load Ceph Pool Data
 
         ${CEPH_POOL_TYPE}           Evaluate    $pcc_server_dict.get("pool_type", None)
                                     Set Suite Variable    ${CEPH_POOL_TYPE}
-
-	${POOL_RESILIENCE_SCHEME}   Evaluate    $pcc_server_dict.get("resilienceScheme", None)
-                                    Set Suite Variable    ${POOL_RESILIENCE_SCHEME}
 
         ${CEPH_POOL_TAGS}           Evaluate    $pcc_server_dict.get("tags", None)
                                     Set Suite Variable    ${CEPH_POOL_TAGS}
