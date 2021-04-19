@@ -26,9 +26,9 @@ PCC-Tenant-Creation
 ###################################################################################################################################
 
         [Documentation]    *Create Tenant* test
-                           ...  keywords:
-                           ...  PCC.Get Tenant Id
-                           ...  PCC.Add Tenant
+                           ...    keywords:
+                           ...    PCC.Get Tenant Id
+                           ...    PCC.Add Tenant
 
         ${parent_id}    PCC.Get Tenant Id
                         ...    Name=${ROOT_TENANT}
@@ -55,12 +55,12 @@ PCC-Read-Only-Role-Creation
 ###################################################################################################################################
 
         [Documentation]    *Create Read Only Role* test
-                           ...  keywords:
-                           ...  PCC.Get Tenant Id
-                           ...  PCC.Add Read Only Role
+                           ...    keywords:
+                           ...    PCC.Get Tenant Id
+                           ...    PCC.Add Read Only Role
 
-        ${owner}        PCC.Get Tenant Id
-                        ...    Name=${TENANT1}
+        ${owner}    PCC.Get Tenant Id
+                    ...    Name=${TENANT1}
 
 
         ${response}    PCC.Add Read Only Role
