@@ -17,7 +17,7 @@ class Users(PccBase):
 
     def __init__(self):
         self.Username = None
-        self.Tenant_ID = None
+        self.Tenant = None
         self.FirstName = None
         self.LastName = None
         self.Email = None
@@ -40,15 +40,19 @@ class Users(PccBase):
         Add User
         """
         self._load_kwargs(kwargs)
+        print("Kwargs are:{}".format(kwargs))
         banner("PCC.Add User [Name=%s]" % self.Username)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("conn is {}".format(conn))
         payload = {
             "firstname": self.FirstName,
             "Lastname": self.LastName,
             "username": self.Username,
             "roleID": self.Role_ID,
+            "tenant": self.Tenant,
             "active": 'true'
         }
+        print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
 
     ###########################################################################
@@ -59,10 +63,13 @@ class Users(PccBase):
         Create User Password
         """
         self._load_kwargs(kwargs)
+        print("Kwargs are:{}".format(kwargs))
         banner("PCC.Add User [password=%s]" % self.Password)
         conn = BuiltIn().get_variable_value("${password_token}")
+        print("conn is {}".format(conn))
 
         payload = {"password": self.Password}
+        print("payload is {}".format(payload))
 
 
         return pcc.add_user_password(conn,payload)

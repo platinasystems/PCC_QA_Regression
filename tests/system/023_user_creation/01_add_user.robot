@@ -83,6 +83,9 @@ PCC-Read-Only-User-Creation
                            ...  PCC.Get Role Id
                            ...  PCC.Add Read Only User
 
+        ${tenant}    PCC.Get Tenant Id
+                    ...    Name=${TENANT1}
+
         ${roleID}    PCC.Get Role Id
                      ...    Name=readonly
 
@@ -90,6 +93,7 @@ PCC-Read-Only-User-Creation
                        ...     FirstName=calsoft
                        ...     LastName=platina
                        ...     Username=calsoftplatina@gmail.com
+                       ...     Tenant=${tenant}
                        ...     Role_ID=${roleID}
 
                         Log To Console    ${response}
@@ -110,7 +114,7 @@ PCC-Get-Link-From-Gmail
                            ...  PCC.Add Read Only User
 
         ${password_token}     PCC.Get Link From Gmail
-#                              ...   Email=calsoftplatina@gmail.com
+                              ...   Email=calsoftplatina@gmail.com
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}

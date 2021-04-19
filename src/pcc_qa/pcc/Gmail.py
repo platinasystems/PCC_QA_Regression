@@ -19,7 +19,7 @@ class Gmail(PccBase):
 
     def __init__(self):
         self.Email = None
-        self.Password =None
+#        self.Password =None
         super().__init__()
 
     ###########################################################################
@@ -27,8 +27,13 @@ class Gmail(PccBase):
     ###########################################################################
     def get_link_from_gmail(self, *args, **kwargs):
 
+        self._load_kwargs(kwargs)
+        print("Kwargs are:{}".format(kwargs))
+        banner("PCC.Add User [email=%s]" % self.Email)
+
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
-        mail.login('platinasystems@gmail.com', 'plat1n@!')
+        #mail.login('platinasystems@gmail.com', 'plat1n@!')
+        mail.login(self.Email, 'plat1n@!')
         mail.list()
         # Out: list of "folders" aka labels in gmail.
         mail.select("inbox")  # connect to inbox.
