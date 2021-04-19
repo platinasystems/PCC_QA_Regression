@@ -44,13 +44,20 @@ class Users(PccBase):
         banner("PCC.Add User [Name=%s]" % self.Username)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("conn is {}".format(conn))
+
+        '''
+        
+        {"firstname": "calsoft","lastname": "platina","username": "calsoftplatina@gmail.com",
+        "email": "calsoftplatina@gmail.com", "roleID": 74,"tenant": 77,"active": true}
+        '''
         payload = {
             "firstname": self.FirstName,
-            "Lastname": self.LastName,
+            "lastname": self.LastName,
             "username": self.Username,
+            "email": self.Username,
             "roleID": self.Role_ID,
             "tenant": self.Tenant,
-            "active": 'true'
+            "active": "true"
         }
         print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
