@@ -92,7 +92,9 @@ class Roles(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Get Role Id by Name [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        role_list = pcc.get_user_roles(conn)['Result']['Data']
+        #role_list = pcc.get_user_roles(conn)['Result']['Data']
+        role_list = pcc.get_user_roles(conn)['Result']
+        print('role_list= ',role_list)
         try:
             for role in role_list:
                 if str(role['Name']) == str(self.Name):
