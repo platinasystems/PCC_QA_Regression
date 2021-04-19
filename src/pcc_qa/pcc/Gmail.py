@@ -12,20 +12,20 @@ from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.PccBase import PccBase
 
-class Gmail:
+class Gmail(PccBase):
     """
     Gmail
     """
 
     def __init__(self):
         self.Email = None
-        #self.Password =None
+        self.Password =None
         super().__init__()
 
     ###########################################################################
     @keyword(name="PCC.Get Link From Gmail")
     ###########################################################################
-    def get_link_from_gmail(self, Email):
+    def get_link_from_gmail(self, *args, **kwargs):
 
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
         mail.login(self.Email, 'plat1n@!')
