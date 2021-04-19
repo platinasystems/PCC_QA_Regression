@@ -16,7 +16,7 @@ class Users(PccBase):
     """
 
     def __init__(self):
-        self.UserName = None
+        self.Username = None
         self.Tenant_ID = None
         self.FirstName = None
         self.LastName = None
@@ -40,7 +40,7 @@ class Users(PccBase):
         Add User
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Add User [Name=%s]" % self.UserName)
+        banner("PCC.Add User [Name=%s]" % self.Username)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         payload = {
             "firstname": self.FirstName,
