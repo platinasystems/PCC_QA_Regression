@@ -59,7 +59,7 @@ class Users(PccBase):
         Create User Password
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Add User [token=%s]" % self.Token)
+        banner("PCC.Add User [password=%s]" % self.Password)
         conn = BuiltIn().get_variable_value("${password_token}")
 
         payload = {"password": self.Password}
