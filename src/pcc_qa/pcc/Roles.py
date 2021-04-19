@@ -97,8 +97,8 @@ class Roles(PccBase):
         print('role_list= ',role_list)
         try:
             for role in role_list:
-                if str(role['Name']) == str(self.Name):
-                    return role['Id']
+                if str(role['name']) == str(self.Name):
+                    return role['id']
             return None
         except Exception as e:
             return {"Error": str(e)}
