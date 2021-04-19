@@ -89,7 +89,7 @@ PCC-Read-Only-User-Creation
         ${response}    PCC.Add Read Only User
                        ...     FirstName=calsoft
                        ...     LastName=platina
-                       ...     Email=calsoftplatina@gmail.com
+                       ...     Username=calsoftplatina@gmail.com
                        ...     Role_ID=${roleID}
 
                         Log To Console    ${response}
@@ -106,7 +106,7 @@ PCC-Get-Link-From-Gmail
                            ...  PCC.Add Read Only User
 
         ${password_token}     PCC.Get Link From Gmail
-                              ...   Email=calsoftplatina@gmail.com
+#                              ...   Email=calsoftplatina@gmail.com
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}

@@ -28,7 +28,7 @@ class Gmail(PccBase):
     def get_link_from_gmail(self, *args, **kwargs):
 
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
-        mail.login(self.Email, 'plat1n@!')
+        mail.login('platinasystems@gmail.com', 'plat1n@!')
         mail.list()
         # Out: list of "folders" aka labels in gmail.
         mail.select("inbox")  # connect to inbox.
@@ -43,12 +43,13 @@ class Gmail(PccBase):
         raw_email = data[0][1]  # here's the body, which is raw text of the whole email
         # including headers and alternate payloads
         raw_email = str(raw_email)
-        raw_email=raw_email.split(str(chr(34)))
+        raw_email = raw_email.split(str(chr(34)))
 
         print(raw_email)
 
         for line in raw_email[::-1]:
             if line.startswith('https:'):
+                print(line)
                 token = line.split('token=')[-1]
                 print(token)
                 return token
