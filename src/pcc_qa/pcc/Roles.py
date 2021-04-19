@@ -45,6 +45,7 @@ class Roles(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Add Role [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("conn is {}".format(conn))
         payload = {
             "name": self.Name,
             "description": self.Description,
@@ -73,6 +74,7 @@ class Roles(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Add Role [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("conn is {}".format(conn))
         return easy.add_role(conn, self.Name, self.Description, self.owner, self.groupOperations)
 
     ###########################################################################

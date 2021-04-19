@@ -50,7 +50,7 @@ class Users(PccBase):
             "username": self.Username,
             "roleID": self.Role_ID,
             "tenant": self.Tenant,
-            "active": 'true'
+            "active": true
         }
         print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
