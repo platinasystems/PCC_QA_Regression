@@ -45,7 +45,7 @@ class Users(PccBase):
         payload = {
             "firstname": self.FirstName,
             "Lastname": self.LastName,
-            "email": self.Email,
+            "username": self.Email,
             "roleID": self.Role_ID,
             "active": 'true'
         }
