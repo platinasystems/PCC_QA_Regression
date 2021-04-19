@@ -84,7 +84,7 @@ PCC-Read-Only-User-Creation
                            ...  PCC.Add Read Only User
 
         ${roleID}    PCC.Get Role Id
-                     ...    Name=readOnly
+                     ...    Name=readonly
 
         ${response}    PCC.Add Read Only User
                        ...     FirstName=calsoft
