@@ -65,4 +65,4 @@ class Users(PccBase):
         payload = {"password": self.Password}
 
 
-        return pcc.add_user(conn,payload)
+        return pcc.add_user_password(conn,payload)
