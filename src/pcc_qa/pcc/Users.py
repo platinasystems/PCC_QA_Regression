@@ -12,7 +12,7 @@ from pcc_qa.common.PccBase import PccBase
 
 class Users(PccBase):
     """ 
-    Roles
+    Users
     """
 
     def __init__(self):
