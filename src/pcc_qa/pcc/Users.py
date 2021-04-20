@@ -63,7 +63,24 @@ class Users(PccBase):
         print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
 
+    ###########################################################################
+    @keyword(name="PCC.Delete User")
+    ###########################################################################
+    def delete_user(self, *args, **kwargs):
+        """
+        Delete User
+        """
+        self._load_kwargs(kwargs)
+        print("Kwargs are:{}".format(kwargs))
+        banner("PCC.Add User [Name=%s]" % self.Username)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("conn is {}".format(conn))
 
+        payload = {
+            "username": self.Username
+        }
+        print("payload is {}".format(payload))
+        return pcc.delete_user(conn, payload)
 
     ###########################################################################
     @keyword(name="PCC.Create User Password")
