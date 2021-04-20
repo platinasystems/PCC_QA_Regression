@@ -22,7 +22,7 @@ Login to PCC
 
 
 ###################################################################################################################################
-PCC-Tenant-Creation
+PCC-Tenant Creation
 ###################################################################################################################################
 
         [Documentation]    *Create Tenant* test
@@ -51,7 +51,7 @@ PCC-Tenant-Creation
 
 
 ###################################################################################################################################
-PCC-Read-Only-Role-Creation
+PCC Read Only Role Creation
 ###################################################################################################################################
 
         [Documentation]    *Create Read Only Role* test
@@ -75,7 +75,7 @@ PCC-Read-Only-Role-Creation
 
 
 ###################################################################################################################################
-PCC-Read-Only-User-Creation
+PCC-Read Only User Creation
 ###################################################################################################################################
 
         [Documentation]    *Create Read Only User* test
@@ -89,7 +89,7 @@ PCC-Read-Only-User-Creation
         ${roleID}    PCC.Get Role Id
                      ...    Name=readonly
 
-        ${response}    PCC.Add Read Only User
+        ${response}    PCC.Add User
                        ...     FirstName=calsoft
                        ...     LastName=platina
                        ...     Username=calsoftplatina@gmail.com
@@ -106,7 +106,7 @@ PCC-Read-Only-User-Creation
 
 
 ###################################################################################################################################
-PCC-Get-Link-From-Gmail
+PCC-Get Link From Gmail Read Only User
 ###################################################################################################################################
 
         [Documentation]    *Get Link From Gmail* test
@@ -122,7 +122,7 @@ PCC-Get-Link-From-Gmail
 
 
 ###################################################################################################################################
-PCC-Create Password
+PCC-Create Read Only User Password
 ###################################################################################################################################
 
         [Documentation]    *Create Password* test
@@ -130,10 +130,74 @@ PCC-Create Password
                            ...  PCC.Create User Password
 
         ${response}     PCC.Create User Password
-                        ...     Password=admin
+                        ...     Password=readonly@123
 
                         Log To Console    ${response}
                         ${result}    Get Result    ${response}
                         ${status}    Get From Dictionary    ${response}    StatusCode
                         Should Be Equal As Strings    ${status}    200
 
+
+
+###################################################################################################################################
+PCC-Admin User Creation
+###################################################################################################################################
+
+        [Documentation]    *Create Read Only User* test
+                           ...  keywords:
+                           ...  PCC.Get Role Id
+                           ...  PCC.Add Read Only User
+
+        ${tenant}    PCC.Get Tenant Id
+                    ...    Name=${TENANT1}
+
+        ${roleID}    PCC.Get Role Id
+                     ...    Name=ADMIN
+
+        ${response}    PCC.Add User
+                       ...     FirstName=platina
+                       ...     LastName=systems
+                       ...     Username=platinasystems@gmail.com
+                       ...     Tenant=${tenant}
+                       ...     Role_ID=${roleID}
+
+                        Log To Console    ${response}
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${response}    StatusCode
+                        Should Be Equal As Strings    ${status}    200
+
+                        Sleep  10s
+
+
+
+###################################################################################################################################
+PCC-Get Link From Gmail Admin User
+###################################################################################################################################
+
+        [Documentation]    *Get Link From Gmail* test
+                           ...  keywords:
+                           ...  PCC.Add Read Only User
+
+        ${password_token}     PCC.Get Link From Gmail
+                              ...   Email=platinasystems@gmail.com
+
+                              Log To Console    ${password_token}
+                              Set Suite Variable    ${password_token}
+
+
+
+###################################################################################################################################
+PCC-Create Read Only User Password
+###################################################################################################################################
+
+        [Documentation]    *Create Password* test
+                           ...  keywords:
+                           ...  PCC.Create User Password
+
+        ${response}     PCC.Create User Password
+                        ...     Password=calsoft@123
+
+                        Log To Console    ${response}
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${response}    StatusCode
+                        Should Be Equal As Strings    ${status}    200

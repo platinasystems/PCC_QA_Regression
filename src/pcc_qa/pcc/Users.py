@@ -33,9 +33,9 @@ class Users(PccBase):
          "source": "https://172.17.2.218:9999/gui/setPass", "protect": false}
         '''
     ###########################################################################
-    @keyword(name="PCC.Add Read Only User")
+    @keyword(name="PCC.Add User")
     ###########################################################################
-    def add_read_only_user(self, *args, **kwargs):
+    def add_user(self, *args, **kwargs):
         """
         Add User
         """
@@ -62,6 +62,8 @@ class Users(PccBase):
         }
         print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
+
+
 
     ###########################################################################
     @keyword(name="PCC.Create User Password")
