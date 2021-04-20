@@ -72,7 +72,7 @@ class Users(PccBase):
         """
         self._load_kwargs(kwargs)
         print("Kwargs are:{}".format(kwargs))
-        banner("PCC.Add User [Name=%s]" % self.Username)
+        banner("PCC.Delete User [Name=%s]" % self.Username)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("conn is {}".format(conn))
 
@@ -80,7 +80,7 @@ class Users(PccBase):
             "username": self.Username
         }
         print("payload is {}".format(payload))
-        return pcc.delete_user(conn, payload)
+        return pcc.delete_user(conn,data = payload)
 
     ###########################################################################
     @keyword(name="PCC.Create User Password")
