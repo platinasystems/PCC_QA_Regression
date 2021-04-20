@@ -80,12 +80,14 @@ class Users(PccBase):
         '''
 
 
+
         banner("PCC.Add User [password=%s]" % self.Password)
         conn = BuiltIn().get_variable_value("${password_token}")
         print("conn is {}".format(conn))
+        conn_dict = {'token':conn}
 
         payload = {"password": self.Password}
         print("payload is {}".format(payload))
 
 
-        return pcc.add_user_password(conn,payload)
+        return pcc.add_user_password(conn_dict,payload)
