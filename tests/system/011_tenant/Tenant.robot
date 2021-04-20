@@ -448,7 +448,7 @@ Pcc Tenant Assignment
                      
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant_id=${tenant_id}
-                       ...    ids=${server3_id}
+                       ...    ids=${server2_id}
                       
                        Log To Console    ${response}
                        ${status}    Get From Dictionary    ${response}    StatusCode
@@ -456,7 +456,7 @@ Pcc Tenant Assignment
         
                      
         ${status}    PCC.Validate Tenant Assigned to Node
-                     ...    Name=${SERVER_3_NAME}
+                     ...    Name=${SERVER_2_NAME}
                      ...    Tenant_Name=${TENANT5}
                      
                      Log To Console    ${status}

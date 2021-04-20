@@ -168,7 +168,9 @@ Ceph Rgw Delete Multiple
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
+
         ${status}                   PCC.Ceph Delete All Rgw
+                               ...  ceph_cluster_name=ceph-pvt
                                     Should be equal as strings    ${status}    OK
 
 
@@ -397,3 +399,16 @@ Policy driven management cleanup
                                ${message}   Get From Dictionary    ${result}    message
                                Log To Console    ${message}
                                Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Disable Firewall on CentOS
+##################################################################################################################################
+
+    [Documentation]     *Disable firewall on CentOS* test
+    [Tags]    Disable
+    ${status}    Cli.Disable Firewall
+                 ...  host_ip=${SERVER_2_HOST_IP}
+                 ...  linux_user=${SERVER_2_UNAME}
+                 ...  linux_password=${SERVER_2_PWD}
+                  Log To Console    ${status}
+                  Should be equal as strings    ${status}    OK
