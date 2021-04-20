@@ -32,7 +32,7 @@ class Gmail(PccBase):
         banner("PCC.Add User [email=%s]" % self.Email)
 
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
-        #mail.login('platinasystems@gmail.com', 'plat1n@!')
+        #mail.login('calsoftplatina@gmail.com', 'plat1n@!')
         mail.login(self.Email, 'plat1n@!')
         mail.list()
         # Out: list of "folders" aka labels in gmail.

@@ -57,7 +57,8 @@ class Users(PccBase):
             "email": self.Username,
             "roleID": self.Role_ID,
             "tenant": self.Tenant,
-            "active": "true"
+            "active": "true",
+            "source":"https://172.17.3.226:9999/gui/setPass"
         }
         print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
@@ -71,6 +72,14 @@ class Users(PccBase):
         """
         self._load_kwargs(kwargs)
         print("Kwargs are:{}".format(kwargs))
+
+        '''
+        {'session': <requests.sessions.Session object at 0x7f776ea29438>, 
+        'token': 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYxOTQzMTgwOSwiaWF0IjoxNjE4ODI3MDA5fQ.8s9mmyLKhTMk8PIqk4jDCiFtV7QqOFLxH0nNwhpIYRnAWrq7CCvh_a3WhRUP_AU2P7WzE_fsBLmxzc-aJfCQJA', 
+        'url': 'https://172.17.3.226:9999', 'proxies': {}, 'options': {'insecure': False, 'use_session': True}}
+        '''
+
+
         banner("PCC.Add User [password=%s]" % self.Password)
         conn = BuiltIn().get_variable_value("${password_token}")
         print("conn is {}".format(conn))
