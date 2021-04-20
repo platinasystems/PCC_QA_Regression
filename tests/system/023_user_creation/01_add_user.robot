@@ -88,6 +88,7 @@ PCC-Read Only User Creation
 
         ${roleID}    PCC.Get Role Id
                      ...    Name=readonly
+                     ...    Owner=${tenant}
 
         ${response}    PCC.Add User
                        ...     FirstName=calsoft
@@ -164,6 +165,7 @@ PCC-Admin User Creation
 
         ${roleID}    PCC.Get Role Id
                      ...    Name=ADMIN
+                     ...    Owner=${tenant}
 
         ${response}    PCC.Add User
                        ...     FirstName=platina

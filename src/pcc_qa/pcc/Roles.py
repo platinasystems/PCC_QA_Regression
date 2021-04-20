@@ -24,6 +24,7 @@ class Roles(PccBase):
         self.owner = None
         self.templateIDs = []
         self.templateNames = None
+        self.Owner=None
         super().__init__()
 
     ###########################################################################
@@ -99,7 +100,7 @@ class Roles(PccBase):
         print('role_list= ',role_list)
         try:
             for role in role_list:
-                if str(role['name']) == str(self.Name):
+                if (str(role['owner']) == str(self.Owner)) and (str(role['name']) == str(self.Name)):
                     return role['id']
             return None
         except Exception as e:
