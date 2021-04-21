@@ -26,7 +26,7 @@ PCC Version
 	${pcc_ver}                  PCC.Get PCC Version
                                 ...  user=${PCC_LINUX_USER}
                                 ...  password=${PCC_LINUX_PASSWORD}
-                                ...  nodes_ip=${PCC_HOST_IP}
+                                ...  hostip=${PCC_HOST_IP}
 
                                 Log To Console    ${pcc_ver}
 
@@ -41,7 +41,7 @@ Ceph Version
 	${ceph_ver}                 PCC.Get Ceph Version
                                 ...  user=${SERVER_1_UNAME}
                                 ...  password=${SERVER_1_PWD}
-                                ...  nodes_ip=${SERVER_1_HOST_IP}
+                                ...  hostip=${SERVER_1_HOST_IP}
 
                                 Log To Console    ${ceph_ver}
 
@@ -53,9 +53,9 @@ K8s Version
                                ...  keywords:
                                ...  PCC.Get K8s Version
 
-	${ceph_ver}                 PCC.Get K8s Version
+	${k8s_ver}                 PCC.Get K8s Version
                                 ...  user=${CLUSTERHEAD_1_UNAME}
                                 ...  password=${CLUSTERHEAD_1_PWD}
-                                ...  nodes_ip=${CLUSTERHEAD_1_HOST_IP}
+                                ...  hostip=${CLUSTERHEAD_1_HOST_IP}
 
-                                Log To Console    ${ceph_ver}
+                                Log To Console    ${k8s_ver}
