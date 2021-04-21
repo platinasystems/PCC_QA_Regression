@@ -43,7 +43,7 @@ class Pcc(PccBase):
         try:
             print("Kwargs are: {}".format(kwargs))
             # Get Pcc Version
-            cmd = "docker exec -it pccserver ./pccserver --version"
+            cmd = "docker exec -t pccserver ./pccserver --version"
             status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
             print("cmd: {} executed successfully and status is: {}".format(cmd, status))
             return status
