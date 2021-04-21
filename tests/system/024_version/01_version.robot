@@ -18,12 +18,12 @@ Login
 ###################################################################################################################################
 PCC Version
 ###################################################################################################################################
-    [Documentation]                 *PCC Version*
+    [Documentation]             *PCC Version*
                                ...  keywords:
                                ...  PCC.Get PCC Version
 
 
-	${pcc_ver}                    PCC.Get PCC Version
+	${pcc_ver}                  PCC.Get PCC Version
                                 ...  user=${PCC_LINUX_USER}
                                 ...  password=${PCC_LINUX_PASSWORD}
                                 ...  nodes_ip=${PCC_HOST_IP}
@@ -34,11 +34,11 @@ PCC Version
 ###################################################################################################################################
 Ceph Version
 ###################################################################################################################################
-    [Documentation]                 *Ceph Version*
+    [Documentation]             *Ceph Version*
                                ...  keywords:
                                ...  PCC.Get Ceph Version
 
-	${ceph_ver}                    PCC.Get Ceph Version
+	${ceph_ver}                 PCC.Get Ceph Version
                                 ...  user=${SERVER_1_UNAME}
                                 ...  password=${SERVER_1_PWD}
                                 ...  nodes_ip=${SERVER_1_HOST_IP}
@@ -49,11 +49,11 @@ Ceph Version
 ###################################################################################################################################
 K8s Version
 ###################################################################################################################################
-    [Documentation]                 *K8s Version*
+    [Documentation]             *K8s Version*
                                ...  keywords:
                                ...  PCC.Get K8s Version
 
-	${ceph_ver}                    PCC.Get K8s Version
+	${ceph_ver}                 PCC.Get K8s Version
                                 ...  user=${CLUSTERHEAD_1_UNAME}
                                 ...  password=${CLUSTERHEAD_1_PWD}
                                 ...  nodes_ip=${CLUSTERHEAD_1_HOST_IP}
