@@ -45,6 +45,7 @@ class Kubernetes(PccBase):
         self.nodes_ip= None
         self.user="pcc"
         self.password="cals0ft"
+        self.hostip = None
     
         super().__init__()
 
@@ -357,3 +358,35 @@ class Kubernetes(PccBase):
                 print("Could not verify K8s on "+str(ip))
                 return "Error"
         return "OK"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Get K8s Version")
+    ###############################################################################################################
+
+    def get_k8s_version(self, *args, **kwargs):
+        banner("Get K8s Version")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            # Get Ceph Version
+            #cmd = "kubectl version"
+            #status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+            #print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+            #return status
+
+            print("Kwargs are: {}".format(kwargs))
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            print("conn is {}".format(conn))
+
+            k8s_list = pcc.get_kubernetes(conn)
+            print("k8s_list is {}".format(k8s_list))
+
+            k8s_ver_list = {}
+            for data in k8s_list["Result"]["Data"]:
+                print("portus version of portus {} is {} ".format(data["name"], data["k8sVersion"]))
+                k8s_ver_list[data["name"]] = data["k8sVersion"]
+            print("k8s_ver_list is {}".format(k8s_ver_list))
+            return k8s_ver_list
+
+        except Exception as e:
+            trace("Error in getting k8s version: {}".format(e))

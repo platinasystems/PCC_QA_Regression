@@ -50,6 +50,7 @@ class CephCluster(PccBase):
         self.operation_to_perform = None
         self.storage_types= None
         self.node_location = None
+        self.Ceph_Cluster_Name= None
         super().__init__()
 
     ###########################################################################
@@ -913,3 +914,42 @@ class CephCluster(PccBase):
             return "Error"
         else:
             return node_ip
+
+    ###############################################################################################################
+    @keyword(name="PCC.Get Ceph Version")
+    ###############################################################################################################
+
+    def get_ceph_version(self, *args, **kwargs):
+        banner("Get Ceph Version")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            # Get Ceph Version
+            #cmd = "ceph -v"
+            #status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+            #print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+            #return status
+
+            banner("PCC.Get Ceph Version [Name=%s]" % self.Ceph_Cluster_Name)
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            print("conn is {}".format(conn))
+            ceph_ID = easy.get_ceph_cluster_id_by_name(conn,self.Ceph_Cluster_Name)
+            print("ceph_ID is {}".format(ceph_ID))
+
+            ceph_node_list = pcc.get_ceph_version_list(conn,str(ceph_ID))
+            print("ceph_node_list is {}".format(ceph_node_list))
+
+            '''
+            "ceph_version":"ceph version 14.2.20 (36274af6eb7f2a5055f2d53ad448f2694e9046a0) nautilus (stable)",
+            "hostname":"qa-clusterhead-10"
+            '''
+
+            ceph_ver_list ={}
+            for node_data in ceph_node_list["Result"]["Data"]:
+                print("ceph_version of hostname {} is {} ".format(node_data["hostname"],node_data["ceph_version"]))
+                ceph_ver_list[node_data["hostname"]] = node_data["ceph_version"]
+            print("ceph_ver_list is {}".format(ceph_ver_list))
+            return ceph_ver_list
+
+        except Exception as e:
+            trace("Error in getting ceph version: {}".format(e))

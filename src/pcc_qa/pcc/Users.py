@@ -25,6 +25,7 @@ class Users(PccBase):
         self.Active = None
         self.Token = None
         self.Password = None
+        self.Source = None
         super().__init__()
 
         '''
@@ -49,7 +50,7 @@ class Users(PccBase):
         
         {"firstname": "calsoft","lastname": "platina","username": "calsoftplatina@gmail.com",
         "email": "calsoftplatina@gmail.com", "roleID": 74,"tenant": 77,"active": true}
-        '''
+        
         payload = {
             "firstname": self.FirstName,
             "lastname": self.LastName,
@@ -59,6 +60,21 @@ class Users(PccBase):
             "tenant": self.Tenant,
             "active": "true",
             "source":"https://172.17.3.226:9999/gui/setPass"
+        }
+        
+        Source=${PCC_URL}
+        self.Source
+        '''
+        pcc_source = self.Source + "/gui/setPass"
+        payload = {
+            "firstname": self.FirstName,
+            "lastname": self.LastName,
+            "username": self.Username,
+            "email": self.Username,
+            "roleID": self.Role_ID,
+            "tenant": self.Tenant,
+            "active": "true",
+            "source": pcc_source
         }
         print("payload is {}".format(payload))
         return pcc.add_user(conn,payload)
