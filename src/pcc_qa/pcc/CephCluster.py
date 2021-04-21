@@ -913,3 +913,21 @@ class CephCluster(PccBase):
             return "Error"
         else:
             return node_ip
+
+    ###############################################################################################################
+    @keyword(name="PCC.Get Ceph Version")
+    ###############################################################################################################
+
+    def get_ceph_version(self, *args, **kwargs):
+        banner("Get Ceph Version")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            # Get Ceph Version
+            cmd = "ceph -v"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+            print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+            return status
+
+        except Exception as e:
+            trace("Error in getting ceph version: {}".format(e))

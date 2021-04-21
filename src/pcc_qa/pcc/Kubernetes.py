@@ -357,3 +357,21 @@ class Kubernetes(PccBase):
                 print("Could not verify K8s on "+str(ip))
                 return "Error"
         return "OK"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Get K8s Version")
+    ###############################################################################################################
+
+    def get_ceph_version(self, *args, **kwargs):
+        banner("Get K8s Version")
+        self._load_kwargs(kwargs)
+        try:
+            print("Kwargs are: {}".format(kwargs))
+            # Get Ceph Version
+            cmd = "kubectl version"
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+            print("cmd: {} executed successfully and status is: {}".format(cmd, status))
+            return status
+
+        except Exception as e:
+            trace("Error in getting k8s version: {}".format(e))
