@@ -45,6 +45,7 @@ class Kubernetes(PccBase):
         self.nodes_ip= None
         self.user="pcc"
         self.password="cals0ft"
+        self.hostip = None
     
         super().__init__()
 

@@ -27,9 +27,9 @@ class Pcc(PccBase):
 
         # Robot arguments definitions
 
-        self.nodes_ip=[]
         self.user="pcc"
         self.password="cals0ft"
+        self.hostip = None
 
         super().__init__()
 
