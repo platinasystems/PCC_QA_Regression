@@ -937,6 +937,7 @@ class CephCluster(PccBase):
             print("ceph_ID is {}".format(ceph_ID))
 
             ceph_node_list = pcc.get_ceph_version_list(conn,str(ceph_ID))
+            print("ceph_node_list is {}".format(ceph_node_list))
 
             '''
             "ceph_version":"ceph version 14.2.20 (36274af6eb7f2a5055f2d53ad448f2694e9046a0) nautilus (stable)",
@@ -947,6 +948,7 @@ class CephCluster(PccBase):
             for node_data in ceph_node_list["Data"]:
                 print("ceph_version of hostname {} is {} ".format(node_data["hostname"],node_data["ceph_version"]))
                 ceph_ver_list[node_data["hostname"]] = node_data["ceph_version"]
+            print("ceph_ver_list is {}".format(ceph_ver_list))
             return ceph_ver_list
 
         except Exception as e:
