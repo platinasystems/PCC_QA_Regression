@@ -562,7 +562,7 @@ class ContainerRegistry(PccBase):
             logger.console("Error in wait for CR deletion with id: {}".format(e))
 
 ###############################################################################################################
-    @keyword(name="PCC.Get Portus Versionn")
+    @keyword(name="PCC.Get Portus Version")
     ###############################################################################################################
 
     def get_portus_version(self, *args, **kwargs):
