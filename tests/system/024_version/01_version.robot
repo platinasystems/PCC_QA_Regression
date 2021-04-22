@@ -38,7 +38,7 @@ Portus Version
                                ...  keywords:
                                ...  PCC.Get Ceph Version
 
-	${ceph_ver_list}                 PCC.Get Portus Version
+	${ceph_ver_list}            PCC.Get Portus Version
 								...  Name=${CEPH_CLUSTER_NAME}
 
 #                                ...  user=${SERVER_1_UNAME}
