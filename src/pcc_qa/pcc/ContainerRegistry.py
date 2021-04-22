@@ -561,7 +561,7 @@ class ContainerRegistry(PccBase):
         except Exception as e:
             logger.console("Error in wait for CR deletion with id: {}".format(e))
 
-###############################################################################################################
+    ###############################################################################################################
     @keyword(name="PCC.Get Portus Version")
     ###############################################################################################################
 
@@ -576,14 +576,14 @@ class ContainerRegistry(PccBase):
             print("conn is {}".format(conn))
 
             portus_list = pcc.get_portus(conn)
-            print("ceph_node_list is {}".format(portus_list))
+            print("portus_list is {}".format(portus_list))
 
             portus_ver_list ={}
             for data in portus_list["Result"]["Data"]:
                 print("portus version of portus {} is {} ".format(data["name"],data["portusInfo"]["portusVersion"]))
                 portus_ver_list[data["name"]] = data["portusInfo"]["portusVersion"]
-            print("ceph_ver_list is {}".format(portus_ver_list))
+            print("portus_ver_list is {}".format(portus_ver_list))
             return portus_ver_list
 
         except Exception as e:
-            trace("Error in getting ceph version: {}".format(e))
+            trace("Error in getting portus version: {}".format(e))
