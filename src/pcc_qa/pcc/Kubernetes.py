@@ -375,8 +375,6 @@ class Kubernetes(PccBase):
             #return status
 
             print("Kwargs are: {}".format(kwargs))
-
-            banner("PCC.Get portus Version [Name=%s]" % self.Name)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             print("conn is {}".format(conn))
 
