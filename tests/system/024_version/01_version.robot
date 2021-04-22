@@ -11,6 +11,7 @@ Login
 									Load PCC Test Data      ${pcc_setup}
 									Load Clusterhead 1 Test Data    ${pcc_setup}
 									Load Server 1 Test Data    ${pcc_setup}
+									Load Ceph Cluster Data    ${pcc_setup}
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
@@ -38,12 +39,14 @@ Ceph Version
                                ...  keywords:
                                ...  PCC.Get Ceph Version
 
-	${ceph_ver}                 PCC.Get Ceph Version
-                                ...  user=${SERVER_1_UNAME}
-                                ...  password=${SERVER_1_PWD}
-                                ...  hostip=${SERVER_1_HOST_IP}
+	${ceph_ver_list}                 PCC.Get Ceph Version
+								...  Ceph_Cluster_Name=${CEPH_CLUSTER_NAME}
 
-                                Log To Console    ${ceph_ver}
+#                                ...  user=${SERVER_1_UNAME}
+#                                ...  password=${SERVER_1_PWD}
+#                                ...  hostip=${SERVER_1_HOST_IP}
+
+                                Log To Console    ${ceph_ver_list}
 
 
 ###################################################################################################################################

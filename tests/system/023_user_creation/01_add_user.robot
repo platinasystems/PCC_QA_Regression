@@ -18,6 +18,7 @@ Login to PCC
         ${status}        Login To PCC    ${pcc_setup}
 
                          Load Tenant Data    ${pcc_setup}
+                         Load PCC Test Data      ${testdata_key}
 
 
 
@@ -96,6 +97,7 @@ PCC-Read Only User Creation
                        ...     Username=calsoftplatina@gmail.com
                        ...     Tenant=${tenant}
                        ...     Role_ID=${roleID}
+                       ...     Source=${PCC_URL}
 
                         Log To Console    ${response}
                         ${result}    Get Result    ${response}
@@ -162,6 +164,7 @@ PCC-Admin User Creation
                        ...     Username=platinasystems@gmail.com
                        ...     Tenant=${tenant}
                        ...     Role_ID=${roleID}
+                       ...     Source=${PCC_URL}
 
                         Log To Console    ${response}
                         ${result}    Get Result    ${response}
