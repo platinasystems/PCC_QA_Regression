@@ -945,7 +945,7 @@ class CephCluster(PccBase):
             '''
 
             ceph_ver_list ={}
-            for node_data in ceph_node_list["Data"]:
+            for node_data in ceph_node_list["Result"]["Data"]:
                 print("ceph_version of hostname {} is {} ".format(node_data["hostname"],node_data["ceph_version"]))
                 ceph_ver_list[node_data["hostname"]] = node_data["ceph_version"]
             print("ceph_ver_list is {}".format(ceph_ver_list))
