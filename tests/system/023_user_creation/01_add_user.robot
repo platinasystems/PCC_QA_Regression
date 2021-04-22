@@ -18,7 +18,6 @@ Login to PCC
         ${status}        Login To PCC    ${pcc_setup}
 
                          Load Tenant Data    ${pcc_setup}
-                         Load PCC Test Data      ${testdata_key}
 
 
 
