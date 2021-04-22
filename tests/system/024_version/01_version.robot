@@ -31,6 +31,22 @@ PCC Version
 
                                 Log To Console    ${pcc_ver}
 
+###################################################################################################################################
+Portus Version
+###################################################################################################################################
+    [Documentation]             *Portus Version*
+                               ...  keywords:
+                               ...  PCC.Get Ceph Version
+
+	${ceph_ver_list}                 PCC.Get Portus Version
+								...  Name=${CEPH_CLUSTER_NAME}
+
+#                                ...  user=${SERVER_1_UNAME}
+#                                ...  password=${SERVER_1_PWD}
+#                                ...  hostip=${SERVER_1_HOST_IP}
+
+                                Log To Console    ${ceph_ver_list}
+
 
 ###################################################################################################################################
 Ceph Version
@@ -62,3 +78,5 @@ K8s Version
                                 ...  hostip=${CLUSTERHEAD_1_HOST_IP}
 
                                 Log To Console    ${k8s_ver}
+
+
