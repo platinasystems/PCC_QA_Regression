@@ -13,7 +13,7 @@
             "read_only_password":"readonly@123",
             "setup_password":"1m1pAscj0O3IaKRN",
             "setup_username":"Hippety_Hopper",
-            "setup_upgrade_cmd":"sudo /home/pcc/platina-cli-ws/platina-cli run -u Hippety_Hopper -p 1m1pAscj0O3IaKRN --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Hippety_Hopper --rp 1m1pAscj0O3IaKRN --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master --pruneVolumes"
+            "setup_upgrade_cmd":"sudo /home/pcc/platina-cli-ws/platina-cli run -u Hippety_Hopper -p 1m1pAscj0O3IaKRN --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Hippety_Hopper --rp 1m1pAscj0O3IaKRN --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release v1.7.0 --pruneVolumes"
         },
 
     "i28":
