@@ -16,20 +16,6 @@ Login
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
 
-###################################################################################################################################
-PCC Version
-###################################################################################################################################
-    [Documentation]             *PCC Version*
-                               ...  keywords:
-                               ...  PCC.Get PCC Version
-
-
-	${pcc_ver}                  PCC.Get PCC Version
-                                ...  user=${PCC_LINUX_USER}
-                                ...  password=${PCC_LINUX_PASSWORD}
-                                ...  hostip=${PCC_HOST_IP}
-
-                                Log To Console    ${pcc_ver}
 
 ###################################################################################################################################
 Portus Version
@@ -37,10 +23,6 @@ Portus Version
     [Documentation]             *Portus Version*
 
 	${ceph_ver_list}            PCC.Get Portus Version
-
-#                                ...  user=${SERVER_1_UNAME}
-#                                ...  password=${SERVER_1_PWD}
-#                                ...  hostip=${SERVER_1_HOST_IP}
 
                                 Log To Console    ${ceph_ver_list}
 
@@ -53,11 +35,8 @@ Ceph Version
                                ...  PCC.Get Ceph Version
 
 	${ceph_ver_list}                 PCC.Get Ceph Version
-								...  Ceph_Cluster_Name=${CEPH_CLUSTER_NAME}
+								...  name=${CEPH_CLUSTER_NAME}
 
-#                                ...  user=${SERVER_1_UNAME}
-#                                ...  password=${SERVER_1_PWD}
-#                                ...  hostip=${SERVER_1_HOST_IP}
 
                                 Log To Console    ${ceph_ver_list}
 

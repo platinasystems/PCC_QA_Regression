@@ -50,7 +50,6 @@ class CephCluster(PccBase):
         self.operation_to_perform = None
         self.storage_types= None
         self.node_location = None
-        self.Ceph_Cluster_Name= None
         super().__init__()
 
     ###########################################################################
@@ -930,10 +929,10 @@ class CephCluster(PccBase):
             #print("cmd: {} executed successfully and status is: {}".format(cmd, status))
             #return status
 
-            banner("PCC.Get Ceph Version [Name=%s]" % self.Ceph_Cluster_Name)
+            banner("PCC.Get Ceph Version [Name=%s]" % self.name)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             print("conn is {}".format(conn))
-            ceph_ID = easy.get_ceph_cluster_id_by_name(conn,self.Ceph_Cluster_Name)
+            ceph_ID = easy.get_ceph_cluster_id_by_name(conn,self.name)
             print("ceph_ID is {}".format(ceph_ID))
 
             ceph_node_list = pcc.get_ceph_version_list(conn,str(ceph_ID))

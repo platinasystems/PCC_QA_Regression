@@ -18,6 +18,11 @@ Login to PCC
         ${status}        Login To PCC    ${pcc_setup}
 
                          Load Tenant Data    ${pcc_setup}
+                         
+                         Load Container Registry Data    ${pcc_setup}
+                         
+                         Load PCC Test Data    ${pcc_setup}
+                         
 
 
 
@@ -34,8 +39,8 @@ PCC-Tenant Creation
                         ...    Name=${ROOT_TENANT}
 
         ${response}    PCC.Add Tenant
-                       ...    Name=${TENANT1}
-                       ...    Description=${TENANT1_DESC}
+                       ...    Name=${CR_TENANT_USER}
+                       ...    Description=CR_TENANT_DESC
                        ...    Parent_id=${parent_id}
 
                        Log To Console    ${response}
@@ -44,7 +49,7 @@ PCC-Tenant Creation
                        Should Be Equal As Strings    ${status}    200
 
         ${status}    PCC.Validate Tenant
-                     ...    Name=${TENANT1}
+                     ...    Name=${CR_TENANT_USER}
 
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
@@ -60,7 +65,7 @@ PCC Read Only Role Creation
                            ...    PCC.Add Read Only Role
 
         ${owner}    PCC.Get Tenant Id
-                    ...    Name=${TENANT1}
+                    ...    Name=${CR_TENANT_USER}
 
 
         ${response}    PCC.Add Read Only Role
@@ -84,7 +89,7 @@ PCC-Read Only User Creation
                            ...  PCC.Add Read Only User
 
         ${tenant}    PCC.Get Tenant Id
-                    ...    Name=${TENANT1}
+                    ...    Name=${CR_TENANT_USER}
 
         ${roleID}    PCC.Get Role Id
                      ...    Name=readonly
@@ -93,7 +98,7 @@ PCC-Read Only User Creation
         ${response}    PCC.Add User
                        ...     FirstName=calsoft
                        ...     LastName=platina
-                       ...     Username=calsoftplatina@gmail.com
+                       ...     Username=${READONLY_USER_PCC_USERNAME}
                        ...     Tenant=${tenant}
                        ...     Role_ID=${roleID}
                        ...     Source=${PCC_URL}
@@ -116,7 +121,7 @@ PCC-Get Link From Gmail Read Only User
                            ...  PCC.Add Read Only User
 
         ${password_token}     PCC.Get Link From Gmail
-                              ...   Email=calsoftplatina@gmail.com
+                              ...   Email=${READONLY_USER_PCC_USERNAME}
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}
@@ -132,7 +137,7 @@ PCC-Create Read Only Password
                            ...  PCC.Create User Password
 
         ${response}     PCC.Create User Password
-                        ...     Password=readonly@123
+                        ...     Password=${READONLY_USER_PCC_PWD}
 
                         Log To Console    ${response}
                         ${result}    Get Result    ${response}
@@ -151,7 +156,7 @@ PCC-Admin User Creation
                            ...  PCC.Add Read Only User
 
         ${tenant}    PCC.Get Tenant Id
-                    ...    Name=${TENANT1}
+                    ...    Name=${CR_TENANT_USER}
 
         ${roleID}    PCC.Get Role Id
                      ...    Name=ADMIN
@@ -160,7 +165,7 @@ PCC-Admin User Creation
         ${response}    PCC.Add User
                        ...     FirstName=platina
                        ...     LastName=systems
-                       ...     Username=platinasystems@gmail.com
+                       ...     Username=${TENANT_USER_PCC_USERNAME}
                        ...     Tenant=${tenant}
                        ...     Role_ID=${roleID}
                        ...     Source=${PCC_URL}
@@ -183,7 +188,7 @@ PCC-Get Link From Gmail Admin User
                            ...  PCC.Add Read Only User
 
         ${password_token}     PCC.Get Link From Gmail
-                              ...   Email=platinasystems@gmail.com
+                              ...   Email=${TENANT_USER_PCC_USERNAME}
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}
@@ -199,7 +204,7 @@ PCC-Create Admin User Password
                            ...  PCC.Create User Password
 
         ${response}     PCC.Create User Password
-                        ...     Password=calsoft@123
+                        ...     Password=${TENANT_USER_PCC_PWD}
 
                         Log To Console    ${response}
                         ${result}    Get Result    ${response}
@@ -210,55 +215,3 @@ PCC-Create Admin User Password
 
 
 
-
-
-###################################################################################################################################
-PCC-Users Deletion
-###################################################################################################################################
-
-        [Documentation]    *Delete Admin User* test
-                           ...  keywords:
-                           ...  PCC.Delete User
-
-        ${response}    PCC.Delete User
-                       ...     Username=calsoftplatina@gmail.com
-
-                        Log To Console    ${response}
-                        ${result}    Get Result    ${response}
-                        ${status}    Get From Dictionary    ${response}    StatusCode
-                        Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Delete User
-                       ...     Username=platinasystems@gmail.com
-
-                        Log To Console    ${response}
-                        ${result}    Get Result    ${response}
-                        ${status}    Get From Dictionary    ${response}    StatusCode
-                        Should Be Equal As Strings    ${status}    200
-
-
-###################################################################################################################################
-PCC-Tenant Deletion
-###################################################################################################################################
-
-        [Documentation]    *Create Tenant* test
-                           ...    keywords:
-                           ...    PCC.Get Tenant Id
-                           ...    PCC.Add Tenant
-
-        ${tenant_id}    PCC.Get Tenant Id
-                        ...    Name=${TENANT1}
-
-        ${response}    PCC.Delete Tenant
-                       ...    Id=${tenant_id}
-
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${status}    PCC.Validate Tenant
-                     ...    Name=${TENANT1}
-
-                     Log To Console    ${status}
-                     Should Not Be Equal As Strings    ${status}    OK
