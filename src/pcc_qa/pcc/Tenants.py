@@ -299,10 +299,10 @@ class Tenants(PccBase):
             trace("tenant_names: {}".format(tenant_names))
             if tenant_names == ['ROOT']:
                 return "OK"
-            elif tenant_names == ['ROOT','Tenant_6']:
+            elif tenant_names == ['ROOT']:
                 return "OK"
             else:
-                tenants_to_be_deleted = set(tenant_names)- set(['ROOT','Tenant_6'])
+                tenants_to_be_deleted = set(tenant_names)- set(['ROOT'])
                 trace("tenants_to_be_deleted: {}".format(tenants_to_be_deleted))
                 for tenant in list(tenants_to_be_deleted):
                     trace("Deleting tenant: {}".format(tenant))
@@ -311,7 +311,7 @@ class Tenants(PccBase):
                     if response['StatusCode'] == 200:
                         continue
                     else:
-                        return Error
+                        return "Error"
                 return "OK"
         except Exception as e:
             return {"Error: {}".format(e)} 
