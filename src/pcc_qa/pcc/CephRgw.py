@@ -288,7 +288,7 @@ class CephRgw(PccBase):
         except Exception as e:
             raise e
         ceph_cluster_id = str(easy.get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
-        if ceph_cluster_id==None:
+        if ceph_cluster_id=="None":
             return "OK"
         response = pcc.get_ceph_rgws(conn, ceph_cluster_id)
         print("Rgw Response:"+str(response))

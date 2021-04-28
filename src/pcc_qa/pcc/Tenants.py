@@ -308,6 +308,8 @@ class Tenants(PccBase):
                     trace("Deleting tenant: {}".format(tenant))
                     tenant_id = self.get_tenant_id(Name=tenant)
                     response = self.delete_tenant(Id= str(tenant_id))
+                    print("tenant name : {}".format(tenant))
+                    print("Response : {}".format(response))
                     if response['StatusCode'] == 200:
                         continue
                     else:
