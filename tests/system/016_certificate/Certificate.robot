@@ -9,7 +9,7 @@ ${pcc_setup}    pcc_212
 ###################################################################################################################################
 Login to PCC 
 ###################################################################################################################################
-                
+        [Tags]        cert        
         
         [Documentation]    *Login to PCC* test        
         
@@ -21,7 +21,7 @@ Login to PCC
 ###################################################################################################################################
 Add Certificate with Private Keys
 ###################################################################################################################################
-                
+        [Tags]        cert        
         
         [Documentation]    *Add Certificate* test
         
@@ -36,6 +36,13 @@ Add Certificate with Private Keys
                        ${result}    Get Result    ${response}
                        ${status}    Get From Dictionary    ${result}    statusCodeValue
                        Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Get Certificates
+                       ...  Alias=Cert_with_pvt_cert
+
+                       Log To Console    ${response}
+                       Should Be Equal As Strings    ${response}    OK
+
 
 ###################################################################################################################################
 Fetching Certificate ID before backup
@@ -63,5 +70,12 @@ Add Certificate without Private Keys
                        ${result}    Get Result    ${response}
                        ${status}    Get From Dictionary    ${result}    statusCodeValue
                        Should Be Equal As Strings    ${status}    200
-                       
+                      
+        ${response}    PCC.Get Certificates
+                       ...  Alias=Cert_without_pvt_cert
+
+                       Log To Console    ${response}
+                       Should Be Equal As Strings    ${response}    OK
+
+ 
 

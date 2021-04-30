@@ -690,6 +690,7 @@ class Nodes(PccBase):
                     
                     update_resp = pcc.modify_node(conn, payload)
                     update_response_status.append(update_resp['StatusCode'])
+                    print("update response status : {}".format(update_response_status))
                 update_result = len(update_response_status) > 0 and all(elem == 200 for elem in update_response_status)
                 banner("Node names : {}".format(node_names))
                 for names in node_names:

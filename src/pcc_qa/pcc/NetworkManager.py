@@ -364,6 +364,8 @@ class NetworkManager(PccBase):
         
         success_chk=[]
         failed_chk=[]
+        success_control_chk=[]
+        failed_control_chk=[]
         cmd="sudo vtysh -c 'sh ip ospf nei'  && ip addr sh control0"
         for ip in eval(str(self.nodes_ip)):
             print("________________________")
@@ -372,18 +374,31 @@ class NetworkManager(PccBase):
             network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))
             print("Data Retrieve:"+str(network_check))
             print("Word to search"+str(self.dataCIDR[0:11]))
+            print("Word to search"+str(self.controlCIDR[0:8]))
             if re.search(self.dataCIDR[0:11],str(network_check)):
                 success_chk.append(ip)         
             else:
                 failed_chk.append(ip)
-                    
-        if len(success_chk)==len(eval(str(self.nodes_ip))):
+
+            if re.search(self.controlCIDR[0:8],str(network_check)):
+                success_control_chk.append(ip)
+                
+            else:
+                failed_control_chk.append(ip)
+            print("success_control_chk:{}".format(success_control_chk))    
+        if len(success_chk)==len(eval(str(self.nodes_ip))) and len(success_control_chk)==len(eval(str(self.nodes_ip))):
             print("Backend verification successfuly done for : {}".format(success_chk))
             return "OK"
                                  
         if failed_chk:  
             print("Network is not properly set for {}".format(failed_chk))     
             return "Error"
+        else:
+            return "OK"
+
+        if failed_control_chk:
+            print("Network is not properly set for {}".format(failed_control_chk))
+            return "Error: ControlCIDR not found"
         else:
             return "OK"
 
