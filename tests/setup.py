@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 from os.path import abspath, dirname, join
 
-PROJECT_NAME = "aa"
+PROJECT_NAME = "PCC_QA_Regressiong"
 LICENSE = 'MIT'
 SOURCE_DIR = join("src", PROJECT_NAME)
 PROJECT_GIT_URL = "https://github.com/platinasystems/" + PROJECT_NAME
@@ -39,7 +39,7 @@ setup(
     package_dir={'': 'src'},
     packages= find_namespace_packages(where="src"),
     scripts=[ 
-        join(SOURCE_DIR, 'scripts', 'run-aa.sh')
+        join(SOURCE_DIR, 'scripts', 'run-pcc_qa.sh')
         ],
     version = VERSION,
     license = LICENSE,

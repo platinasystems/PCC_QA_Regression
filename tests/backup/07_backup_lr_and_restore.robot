@@ -79,7 +79,7 @@ Prune Volumes And Perform Fresh Install
                               ...  host_ip=172.17.2.242
                               ...  linux_user=${PCC_LINUX_USER}
                               ...  linux_password=${PCC_LINUX_PASSWORD}
-                              ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u Hippety_Hopper -p 1m1pAscj0O3IaKRN --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Hippety_Hopper --rp 1m1pAscj0O3IaKRN --prtKey /home/pcc/i28-keys/i28-key --pblKey /home/pcc/i28-keys/i28-key.pub --release v1.7.0-rc3
+                              ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u Hippety_Hopper -p 1m1pAscj0O3IaKRN --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Hippety_Hopper --rp 1m1pAscj0O3IaKRN --prtKey /home/pcc/i28-keys/i28-key --pblKey /home/pcc/i28-keys/i28-key.pub --release v1.7.0
 
                                    Should Be Equal     ${result}       OK
 
