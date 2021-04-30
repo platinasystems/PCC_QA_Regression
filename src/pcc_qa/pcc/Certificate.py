@@ -127,19 +127,4 @@ class Certificate(PccBase):
             return {"Error": str(e)}
         
         
-    ###########################################################################################################
-    @keyword(name="PCC.Get Certificates")
-    ###########################################################################################################
-    def get_certificate(self, *args, **kwargs):
-        banner("PCC.Get Certificates")
-        self._load_kwargs(kwargs)
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        certificate_list = pcc.get_certificates(conn)['Result']
-        print("Certificates:{}".format(certificate_list))
-        try:
-            for certificate in certificate_list:
-                if str(certificate['alias']) == str(self.Alias):
-                    return "OK"
-            return "Error : Certificate Not Found"
-        except Exception as e:
-            return {"Error": str(e)}        
+        

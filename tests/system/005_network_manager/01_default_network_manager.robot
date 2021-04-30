@@ -10,7 +10,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-        
+
                                     Load Ipam Data    ${pcc_setup}
                                     Load K8s Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -98,7 +98,6 @@ Network Manager Creation with same ControlCIDR and DataCIDR
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_DATA_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -125,14 +124,12 @@ Network Manager Delete and Verify PCC (Network Manager with same ControlCIDR and
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_DATA_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Not Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
 Set Interfaces For Server Falling in DataCIDR
 ###################################################################################################################################
-        
     [Documentation]                 *Set Interfaces For Server Falling in DataCIDR*
                                ...  keywords:
                                ...  PCC.Interface Set 1D Link
@@ -289,7 +286,6 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -355,7 +351,6 @@ Network Manager Update (Interfaces For Server Falling in DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -383,7 +378,6 @@ Network Manager Refresh (Interfaces For Server Falling in DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -410,7 +404,6 @@ Network Manager Delete (Interfaces For Server Falling in DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Not Be Equal As Strings      ${status}  OK
 
@@ -572,7 +565,6 @@ Network Manager Creation (Interfaces For Server Not Falling In DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -627,7 +619,6 @@ Network Manager Update (Interfaces For Server Not Falling In DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -655,7 +646,6 @@ Network Manager Refresh (Interfaces For Server Not Falling In DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -682,7 +672,6 @@ Network Manager Delete (Interfaces For Server Not Falling In DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Not Be Equal As Strings      ${status}  OK
 
@@ -843,7 +832,6 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR)
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -889,7 +877,6 @@ Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
 
          ${status}                  PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
@@ -928,7 +915,6 @@ Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR)
 #
 #        ${status}                   PCC.Network Manager Verify BE
 #                               ...  nodes_ip=["${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-#                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
 #                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                    Should Be Equal As Strings      ${status}  OK
 #
@@ -965,7 +951,6 @@ Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) (Ad
 
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 

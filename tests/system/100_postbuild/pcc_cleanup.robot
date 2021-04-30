@@ -9,7 +9,6 @@ ${pcc_setup}                 pcc_212
 Login
 ###################################################################################################################################
         [Tags]    Force_delete
-                                    Load PCC Test Data        ${pcc_setup}
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -383,31 +382,6 @@ Delete All Profiles
         ${response}    PCC.Delete All Profiles
 
                        Log To Console    ${response}
-                       
-###################################################################################################################################
-PCC-Users Deletion
-###################################################################################################################################
-
-        [Documentation]    *Delete Admin User* test
-                           ...  keywords:
-                           ...  PCC.Delete User
-
-        ${response}    PCC.Delete User
-                       ...     Username=${READONLY_USER_PCC_USERNAME}
-
-                        Log To Console    ${response}
-                        ${result}    Get Result    ${response}
-                        ${status}    Get From Dictionary    ${response}    StatusCode
-                        Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Delete User
-                       ...     Username=${TENANT_USER_PCC_USERNAME}
-
-                        Log To Console    ${response}
-                        ${result}    Get Result    ${response}
-                        ${status}    Get From Dictionary    ${response}    StatusCode
-                        Should Be Equal As Strings    ${status}    200
-
 
 ###################################################################################################################################
 Delete All Tenants
@@ -476,4 +450,3 @@ Nodes Verification Back End (Services should not be active)
         ${status}                   PCC.Node Verify Back End After Deletion
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Not Be Equal As Strings      ${status}    OK
-

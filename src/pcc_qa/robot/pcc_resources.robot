@@ -4,6 +4,7 @@ Library                         pcc_qa.common.Result
 Library                         pcc_qa.common.TestData
 Library                         pcc_qa.common.LinuxUtils
 Library                         pcc_qa.common.DockerUtils
+
 Library                         pcc_qa.pcc.Login
 Library                         pcc_qa.pcc.Certificate
 Library                         pcc_qa.pcc.Applications
@@ -23,6 +24,7 @@ Library                         pcc_qa.pcc.CephRgw
 Library                         pcc_qa.pcc.Cli
 Library                         pcc_qa.pcc.Kubernetes
 Library                         pcc_qa.pcc.OpenSSHKeys
+Library                         pcc_qa.pcc.Roles
 Library                         pcc_qa.pcc.RoleOperations
 Library                         pcc_qa.pcc.Interfaces
 Library                         pcc_qa.pcc.Alerting
@@ -39,12 +41,7 @@ Library                         pcc_qa.pcc.SystemPackageUpdates
 Library				            pcc_qa.pcc.Rsyslog
 Library                         pcc_qa.pcc.Dashboard
 Library                         pcc_qa.pcc.PhoneHome
-Library                         pcc_qa.pcc.Users
-Library				            pcc_qa.pcc.Gmail
-Library                         pcc_qa.pcc.Roles
-Library                         pcc_qa.pcc.Pcc
 Library                         Collections
-
 
 *** Keywords ***
 ###################################################################################################################################

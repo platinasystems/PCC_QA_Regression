@@ -11,7 +11,7 @@ from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.PccBase import PccBase
 
 class Roles(PccBase):
-    """
+    """ 
     Roles
     """
 
@@ -24,36 +24,8 @@ class Roles(PccBase):
         self.owner = None
         self.templateIDs = []
         self.templateNames = None
-        self.Owner=None
         super().__init__()
 
-    ###########################################################################
-    @keyword(name="PCC.Add Read Only Role")
-    ###########################################################################
-    def add_read_only_role(self, *args, **kwargs):
-        """
-        Add Role
-
-        [Args]
-            (str) Name: Name of the Role
-            (str) description: of the Role
-            (list) groupOperations: List of dictionaries containing ids of ops
-            (int) owner
-
-        [Returns]
-            (dict) Response: Add Role response (includes any errors)
-        """
-        self._load_kwargs(kwargs)
-        banner("PCC.Add Role [Name=%s]" % self.Name)
-        conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        print("conn is {}".format(conn))
-        payload = {
-            "name": self.Name,
-            "description": self.Description,
-            "owner": int(self.owner),
-            "groupOperations":[{"id":1},{"id":3},{"id":5},{"id":7},{"id":9}]
-        }
-        return pcc.add_user_role(conn,payload)
 
 
     ###########################################################################
@@ -75,7 +47,6 @@ class Roles(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Add Role [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        print("conn is {}".format(conn))
         return easy.add_role(conn, self.Name, self.Description, self.owner, self.groupOperations)
 
     ###########################################################################
@@ -95,13 +66,11 @@ class Roles(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Get Role Id by Name [Name=%s]" % self.Name)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        #role_list = pcc.get_user_roles(conn)['Result']['Data']
-        role_list = pcc.get_user_roles(conn)['Result']
-        print('role_list= ',role_list)
+        role_list = pcc.get_roles(conn)['Result']['Data']
         try:
             for role in role_list:
-                if (str(role['owner']) == str(self.Owner)) and (str(role['name']) == str(self.Name)):
-                    return role['id']
+                if str(role['Name']) == str(self.Name):
+                    return role['Id']
             return None
         except Exception as e:
             return {"Error": str(e)}

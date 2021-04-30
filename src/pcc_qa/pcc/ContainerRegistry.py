@@ -560,29 +560,3 @@ class ContainerRegistry(PccBase):
                 
         except Exception as e:
             logger.console("Error in wait for CR deletion with id: {}".format(e))
-
-    ###############################################################################################################
-    @keyword(name="PCC.Get Portus Version")
-    ###############################################################################################################
-
-    def get_portus_version(self, *args, **kwargs):
-        banner("Get portus Version")
-        self._load_kwargs(kwargs)
-        try:
-            print("Kwargs are: {}".format(kwargs))
-
-            conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            print("conn is {}".format(conn))
-
-            portus_list = pcc.get_portus(conn)
-            print("portus_list is {}".format(portus_list))
-
-            portus_ver_list ={}
-            for data in portus_list["Result"]["Data"]:
-                print("portus version of portus {} is {} ".format(data["name"],data["portusInfo"]["portusVersion"]))
-                portus_ver_list[data["name"]] = data["portusInfo"]["portusVersion"]
-            print("portus_ver_list is {}".format(portus_ver_list))
-            return portus_ver_list
-
-        except Exception as e:
-            trace("Error in getting portus version: {}".format(e))
