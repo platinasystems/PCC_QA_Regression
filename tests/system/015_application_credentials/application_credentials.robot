@@ -10,7 +10,8 @@ ${pcc_setup}    pcc_215
 Login to PCC 
 ###################################################################################################################################
                 
-        
+        [Tags]        app
+
         [Documentation]    *Login to PCC* test
         
         
@@ -24,6 +25,7 @@ Login to PCC
 ###################################################################################################################################
 Create Application credential profile without application
 ###################################################################################################################################
+        [Tags]        app
 
         [Documentation]    *Create Metadata Profile* test
                            ...  keywords:
@@ -45,6 +47,13 @@ Create Application credential profile without application
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
                        
+        ${response}   PCC.Describe Profile By Id
+                      ...  Name=profile_without_app
+                      Log To Console    $response}
+                      ${result}    Get Result    ${response}
+                      ${status}    Get From Dictionary    ${result}    status
+                      Should Be Equal As Strings    ${status}    200
+
                        
 ##To Do
 ###################################################################################################################################

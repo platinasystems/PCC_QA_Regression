@@ -126,3 +126,22 @@ class OpenSSHKeys(PccBase):
                 return "All keys not deleted: {}".format(keys_deletion_status)
         except Exception as e:
             return {"Error": str(e)}
+
+
+    ###########################################################################################################
+    @keyword(name="PCC.Get Open SSH Key")
+    ###########################################################################################################
+    def get_open_ssh_key(self, *args, **kwargs):
+        banner("PCC.Get Open SSH Key")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        get_openSSH_keys_list = pcc.get_keys(conn)['Result']
+        print("Open SSH key list:{}".format(get_openSSH_keys_list))
+        try:
+            for get_openSSH_keys in get_openSSH_keys_list:
+                if str(get_openSSH_keys['alias']) == str(self.Alias):
+                    return "OK"
+            return "Error: Open SSH key not found"
+        except Exception as e:
+            return {"Error": str(e)}
+

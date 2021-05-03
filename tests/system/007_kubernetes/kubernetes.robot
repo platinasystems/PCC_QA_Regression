@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+        [Tags]        wordapp
                                     Load K8s Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -253,4 +253,79 @@ Fetching K8s ID before backup
          ${K8s_cluster_id_before_backup}        PCC.K8s Get Cluster Id
                                                 ...  name=${K8S_NAME}                            
                                                 Log To Console    ${K8s_cluster_id_before_backup}
-                                                Set Global Variable    ${K8s_cluster_id_before_backup}      
+                                    
+            Set Global Variable    ${K8s_cluster_id_before_backup}      
+
+
+###################################################################################################################################
+Add Wordpress App To K8 Cluster trial
+###################################################################################################################################
+        [Documentation]             *Add App Kubernetes cluster*
+                               ...  Keywords:
+                               ...  PCC.K8s Get Cluster Id
+                               ...  PCC.K8s Add App
+                               ...  PCC.K8s Wait Until Cluster is Ready
+        [Tags]        wordpress                       
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=k8s
+
+        ${response}                 PCC.K8s Add App
+                               ...  storage_class_name=sc-15-re-pool1-rbd-provisioner
+                               ...  replica=1
+                               ...  external_ip=3.3.3.3
+                               ...  access_mode=ReadWriteOnce
+                               ...  cluster_id=${cluster_id}
+                               ...  appName=wordpress-mysql-stateful
+                               ...  appNamespace=wordpress-mysql-stateful
+                               ...  gitUrl=https://github.com/platinasystems/devops
+                               ...  gitRepoPath=helm-charts
+                               ...  gitBranch=master
+                               ...  label=wordpress-mysql-stateful
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=k8s
+                                    Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Add Wordpress App To K8 Cluster
+###################################################################################################################################
+        [Documentation]             *Add App Kubernetes cluster*
+                               ...  Keywords:
+                               ...  PCC.K8s Get Cluster Id
+                               ...  PCC.K8s Add App
+                               ...  PCC.K8s Wait Until Cluster is Ready
+        [Tags]        wordapp
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8S_NAME}
+
+        ${pool_id}                  PCC.Ceph Get Pool Id
+                               ...  name=${K8S_POOL}
+
+        ${sc_name}                  PCC.K8s Get Storage Class Name
+                               ...  cluster_id=${cluster_id}
+                               ...  pool_id=${pool_id}
+
+        ${response}                 PCC.K8s Add App
+                               ...  storage_class_name=${sc_name}
+                               ...  replica=${k8s_wordpress_replica}
+                               ...  external_ip=${k8s_wordpress_external_ip}
+                               ...  access_mode=${k8s_wordpress_access_mode}
+                               ...  cluster_id=${cluster_id}
+                               ...  appName=${k8s_wordpress_appname}
+                               ...  appNamespace=${k8s_wordpress_appname}
+                               ...  gitUrl= ${K8S_GITURL}
+                               ...  gitRepoPath=${K8S_GITREPOPATH}
+                               ...  gitBranch=${K8S_GITBRANCH}
+                               ...  label=${k8s_wordpress_appname}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+

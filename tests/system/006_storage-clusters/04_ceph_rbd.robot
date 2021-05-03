@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
- 	[Tags]    Map
+ 	[Tags]    rbd_bk
                                     Load Ceph Rbd Data    ${pcc_setup}
                                     Load Ceph Pool Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -1648,3 +1648,19 @@ Fetching RBD ID before backup
                                     ...  name=rbd-5                            
                                     Log To Console    ${rbd_id_before_backup}
                                     Set Global Variable    ${rbd_id_before_backup}  
+
+
+###################################################################################################################################
+Verify RBD From Backend
+###################################################################################################################################
+        [Documentation]                 *Verify RBD From Backend*
+                                       ...  keywords:
+                                       ...  PCC.Ceph Verify RBD From Backend
+
+        [Tags]        rbd_bk
+        ${status}            PCC.Ceph Verify RBD From Backend
+         		             ...  pool_name=pool-1
+         		             ...  rbd=["rbd","rbd-1"]
+         		             ...  targetNodeIp=${SERVER_1_HOST_IP}
+         		             Log To Console    ${status}
+                             Should be equal as strings    ${status}    OK

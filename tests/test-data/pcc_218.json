@@ -197,13 +197,17 @@
             "cniPlugin":"kube-router",
             "nodes":["sjc01-pd1-lf06","node-sv13","sv12"],
             "networkClusterName":"network-pvt",
-            "pools":[],
+            "pools":"k8s-pool",
             "appName":"nginxapp",
             "appNamespace":"nginxapp",
             "gitUrl":"https://github.com/platinasystems/devops",
             "gitRepoPath":"helm-charts",
             "gitBranch":"master",
-            "label":"nginxapp"
+            "label":"nginxapp",
+	    "wordpress_app_name":"wordpress-mysql-stateful",
+            "replica":"1",
+            "external_ip": "3.3.3.3",
+            "access_mode":"ReadWriteOnce"
         },
         
     "os_deployment":

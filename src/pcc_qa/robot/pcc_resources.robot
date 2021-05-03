@@ -23,6 +23,7 @@ Library                         pcc_qa.pcc.CephRgw
 Library                         pcc_qa.pcc.Cli
 Library                         pcc_qa.pcc.Kubernetes
 Library                         pcc_qa.pcc.OpenSSHKeys
+Library                         pcc_qa.pcc.Rogit pullles
 Library                         pcc_qa.pcc.RoleOperations
 Library                         pcc_qa.pcc.Interfaces
 Library                         pcc_qa.pcc.Alerting
@@ -768,6 +769,19 @@ Load K8s Data
 
         ${K8S_CLUSTER_NETWORK}      Evaluate    $pcc_server_dict.get("networkClusterName", None)
                                     Set Suite Variable    ${K8S_CLUSTER_NETWORK}
+
+        ${k8s_wordpress_replica}    Evaluate    $pcc_server_dict.get("replica", None)
+                                    Set Suite Variable    ${k8s_wordpress_replica}
+
+        ${k8s_wordpress_external_ip}    Evaluate    $pcc_server_dict.get("external_ip", None)
+                                        Set Suite Variable    ${k8s_wordpress_external_ip}
+
+        ${k8s_wordpress_access_mode}    Evaluate    $pcc_server_dict.get("access_mode", None)
+                                        Set Suite Variable    ${k8s_wordpress_access_mode}
+
+        ${k8s_wordpress_appname}       Evaluate    $pcc_server_dict.get("wordpress_app_name", None)
+                                       Set Suite Variable    ${k8s_wordpress_appname}
+
                                     
 ###################################################################################################################################
 Load OS-Deployment Data

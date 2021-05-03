@@ -35,6 +35,12 @@ Add Public Key
                        ${status}    Get From Dictionary    ${result}    statusCodeValue
                        Should Be Equal As Strings    ${status}    200
 
+        ${response}    PCC.Get Open SSH Key
+                       ...  Alias=${PUBLIC_KEY_ALIAS}
+
+                       Log To Console    ${response}
+                       Should Be Equal As Strings    ${response}    OK
+
 ###################################################################################################################################
 Fetching Keys ID before backup
 ###################################################################################################################################                         

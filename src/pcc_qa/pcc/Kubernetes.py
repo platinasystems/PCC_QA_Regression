@@ -1,6 +1,7 @@
 import time
 import re
 import json
+import base64
 
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -46,7 +47,11 @@ class Kubernetes(PccBase):
         self.user="pcc"
         self.password="cals0ft"
         self.hostip = None
-    
+        self.storage_class_name = None
+        self.replica = None
+        self.external_ip = None
+        self.access_mode = None
+        self.pool_id = None 
         super().__init__()
 
 
@@ -276,14 +281,47 @@ class Kubernetes(PccBase):
         banner("PCC.K8s Add App")
         self._load_kwargs(kwargs)
 
-        payload = [{
-            "appName": self.appName,
-            "appNamespace": self.appNamespace,
-            "gitUrl": self.gitUrl,
-            "gitRepoPath": self.gitRepoPath,
-            "gitBranch": self.gitBranch,
-            "label": self.label
-        }]
+        if self.appName == "wordpress-mysql-stateful":
+            helm_val_file = '''
+            STORAGE_CLASS_NAME: {}
+            REPLICAS: {}
+            EXTERNAL_IP: {}
+            ACCESS_MODE: {}
+            '''.format(self.storage_class_name,self.replica,self.external_ip,self.access_mode)
+
+            trace("Helm value file :{}".format(helm_val_file))
+            message_bytes = helm_val_file.encode('ascii')
+            base64_bytes =str(base64.b64encode(message_bytes)).replace("b'","").replace("'","")
+            trace("Base64 :{}".format(base64_bytes))
+
+            payload = [{
+                "appName": self.appName,
+                "appNamespace": self.appNamespace,
+                "gitUrl": self.gitUrl,
+                "gitRepoPath": self.gitRepoPath,
+                "gitBranch": self.gitBranch,
+                "helmValuesFile": base64_bytes,
+                "label": self.label
+            }]
+        else:
+            payload = [{
+                "appName": self.appName,
+                "appNamespace": self.appNamespace,
+                "gitUrl": self.gitUrl,
+                "gitRepoPath": self.gitRepoPath,
+                "gitBranch": self.gitBranch,
+                "label": self.label
+            }]
+
+
+#        payload = [{
+#            "appName": self.appName,
+#            "appNamespace": self.appNamespace,
+#            "gitUrl": self.gitUrl,
+#            "gitRepoPath": self.gitRepoPath,
+#            "gitBranch": self.gitBranch,
+#            "label": self.label
+ #       }]
         print("Payload:-"+str(payload))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return pcc.add_kubernetes_app(conn,str(self.cluster_id),payload)
@@ -390,3 +428,23 @@ class Kubernetes(PccBase):
 
         except Exception as e:
             trace("Error in getting k8s version: {}".format(e))
+
+    ###########################################################################
+    @keyword(name="PCC.K8s Get Storage Class Name")
+    ###########################################################################
+    def get_k8s_storage_class_name(self,*args,**kwargs):
+        banner("PCC.K8s Get Storage Class Name")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            get_sc_list = pcc.get_kubernetes_strgclasses_by_id(conn,str(self.cluster_id))
+            trace("Storage class response:{}".format(get_sc_list))
+            #for data in get_response_data(get_sc_list):
+            for data in get_sc_list["Result"]["Data"]:
+                trace("Data:{}".format(data))
+                if str(self.pool_id) == str(data["cephPoolId"]):
+                    return data["sc_name"]
+            else:
+                return "Error: Storage class not found"
+        except Exception as e:
+            raise e

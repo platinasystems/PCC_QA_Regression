@@ -260,14 +260,19 @@
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
             "nodes":["i43","sv-124","sv125"],
-            "pools":[],
+            "pools":"k8s-pool",
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
             "appNamespace":"nginxapp",
             "gitUrl":"https://github.com/platinasystems/devops",
             "gitRepoPath":"helm-charts",
             "gitBranch":"master",
-            "label":"nginxapp"
+            "label":"nginxapp",
+	    "wordpress_app_name":"wordpress-mysql-stateful",
+            "replica":"1",
+            "external_ip": "3.3.3.3",
+            "access_mode":"ReadWriteOnce"
+
         },
         
     "os_deployment":

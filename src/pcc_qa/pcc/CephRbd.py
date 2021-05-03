@@ -41,6 +41,9 @@ class CephRbd(PccBase):
         self.inet_ip = None
         self.pool_type = None
         self.ceph_metadata_pool_id = None
+        self.rbd = None
+        self.targetNodeIp = None
+
         super().__init__()
 
     ###########################################################################
@@ -401,3 +404,31 @@ class CephRbd(PccBase):
             return "OK"
         except Exception as e:
                 trace("Error in unmount_and_unmap_rbd: {}".format(e))
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Verify RBD From Backend")
+    ###########################################################################
+    def ceph_verify_rbd_from_backend(self,*args,**kwargs):
+        banner("PCC.Ceph Verify RBD From Backend")
+        self._load_kwargs(kwargs)
+        try:
+            success=[]
+            fail=[]
+            cmd="sudo rbd ls {}".format(self.pool_name)
+            print("Command:"+str(cmd))
+            rbd_list_cmd=cli_run(self.targetNodeIp,self.username,self.password,cmd)
+            rbd_list=self._serialize_response(time.time(),rbd_list_cmd)['Result']['stdout'].strip().split('\n')
+            print("List of RBDs {}:{}".format(self.pool_name,rbd_list))
+            trace("List of RBDs {}:{}".format(self.pool_name,rbd_list))
+            for rbd in rbd_list:
+                if rbd in self.rbd:
+                    success.append(rbd)
+                else:
+                    fail.append(rbd)
+            if len(fail)==0:
+                return "OK"
+            else:
+                return "Error: RBD not found"
+        except Exception as e:
+            raise e
+
