@@ -123,3 +123,27 @@ class Roles(PccBase):
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return pcc.delete_role_by_id(conn, self.Id)
+
+    ###########################################################################
+    @keyword(name="PCC.Validate Role")
+    ###########################################################################
+    def validate_role_by_name(self, *args, **kwargs):
+        """
+        Validate Role
+            (str) Name: Name of the Role
+        [Returns]
+            "OK" if Name is found
+        """
+        self._load_kwargs(kwargs)
+        banner("PCC.Get Role Id by Name [Name=%s]" % self.Name)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        # role_list = pcc.get_user_roles(conn)['Result']['Data']
+        role_list = pcc.get_user_roles(conn)['Result']
+        print('role_list= {}'.format(role_list))
+        try:
+            for role in role_list:
+                if str(role['name']) == str(self.Name):
+                    return "OK"
+            return "Error"
+        except Exception as e:
+            return {"Error": str(e)}

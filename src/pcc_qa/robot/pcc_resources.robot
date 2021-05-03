@@ -74,6 +74,22 @@ Login To PCC
 
 
 ###################################################################################################################################
+Login To User
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}=None        ${user_name}=None       ${user_password}=None
+
+        [Documentation]         *Login to PCC* - obtain token
+                                Log To Console          **** Login To PCC ****
+
+                                Load PCC Test Data      ${testdata_key}
+
+        ${PCC_CONN}             PCC.Login               url=${PCC_URL}   username=${user_name}    password=${user_password}
+
+        ${login_success}        Set Variable If  "${PCC_CONN}" == "None"  ERROR  OK
+    [Return]                    ${login_success}
+
+
+###################################################################################################################################
 Load PCC Test Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_key}    

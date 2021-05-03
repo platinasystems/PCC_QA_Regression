@@ -285,6 +285,21 @@ class CephCluster(PccBase):
     ###########################################################################
     def ceph_cleanup_be(self,**kwargs):
         self._load_kwargs(kwargs)
+        lvm_list = "sudo lvs | grep ceph | awk '{print $1}'"
+        for ip in self.nodes_ip:
+            trace("======== cmd: {} is getting executed ========".format(lvm_list))
+            print("======== cmd: {} is getting executed ========".format(lvm_list))
+            lvm_op = cli_run(ip,self.user,self.password,lvm_list)
+            trace("lvm_op: {}".format(str(lvm_op)))
+            print("lvm_op: {}".format(str(lvm_op)))
+            serialized_drives = str(self._serialize_response(time.time(), lvm_op)['Result']['stdout']).strip().split('\n')[1:]
+            trace("serialized_drives: {}".format(serialized_drives))
+            print("serialized_drives: {}".format(serialized_drives))
+            vg_remove = "sudo vgremove -f " + " ".join(serialized_drives)
+            vg_remove_op = cli_run(ip, self.user, self.password, vg_remove)
+            trace("vg remove output:{}".format(str(vg_remove_op)))
+            print("vg remove output:{}".format(str(vg_remove_op)))
+            time.sleep(5)
         cmd1 = "sudo lsblk | grep 'disk' | awk '{print $1}'"
         
         for ip in self.nodes_ip:
