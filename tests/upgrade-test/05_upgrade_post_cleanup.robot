@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-	[Tags]    delete	
+
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
                                     Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
@@ -39,25 +39,25 @@ Login
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should be equal as strings    ${status}    OK
 
-        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
-                         Log To Console    ${server1_id}
-                         Set Global Variable    ${server1_id}
+        ${server1_id}                PCC.Get Node Id    Name=${SERVER_1_NAME}
+                                    Log To Console    ${server1_id}
+                                    Set Global Variable    ${server1_id}
 
-        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
-                         Log To Console    ${server2_id}
-                         Set Global Variable    ${server2_id}
+        ${server2_id}                PCC.Get Node Id    Name=${SERVER_2_NAME}
+                                    Log To Console    ${server2_id}
+                                    Set Global Variable    ${server2_id}
 
-        ${server3_id}    PCC.Get Node Id    Name=${SERVER_3_NAME}
-                         Log To Console    ${server3_id}
-                         Set Global Variable    ${server3_id}
+        ${server3_id}                PCC.Get Node Id    Name=${SERVER_3_NAME}
+                                    Log To Console    ${server3_id}
+                                    Set Global Variable    ${server3_id}
 
-        ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
-                          Log To Console    ${invader1_id}
-                          Set Global Variable    ${invader1_id}
+        ${invader1_id}                PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
+                                    Log To Console    ${invader1_id}
+                                    Set Global Variable    ${invader1_id}
 
-        ${invader2_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
-                          Log To Console    ${invader2_id}
-                          Set Global Variable    ${invader2_id}
+        ${invader2_id}                PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
+                                    Log To Console    ${invader2_id}
+                                    Set Global Variable    ${invader2_id}
 
 ###################################################################################################################################
 Ceph K8s Multiple
@@ -65,78 +65,74 @@ Ceph K8s Multiple
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  PCC.K8s Delete All Cluster
-        ${status}                   PCC.K8s Delete All Cluster
+        ${status}                    PCC.K8s Delete All Cluster
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Cleanup Auth Profiles after login as Admin user
 ###################################################################################################################################
 
-        [Documentation]    *Clean-up Auth Profiles* test
-                           ...  keywords:
-                           ...  PCC.Delete All Auth Profile
-        [Tags]    Tenant
-        ########  Cleanup Auth Profile   ################################################################################
+        [Documentation]             *Clean-up Auth Profiles* test
+                                   ...  keywords:
+                                   ...  PCC.Delete All Auth Profile
 
-        ${result}    PCC.Delete All Auth Profile
+        ${result}                    PCC.Delete All Auth Profile
 
-                     Log to Console    ${result}
-                     Should Be Equal As Strings    ${result}    OK
+                                    Log to Console    ${result}
+                                    Should Be Equal As Strings    ${result}    OK
 
                      #Sleep    1 minutes
 
-        ${cr_id}                         PCC.Get CR Id
-                                         ...    Name=${CR_NAME}
-                                         Pass Execution If    ${cr_id} is ${None}    ${CR_NAME} Not Present on PCC
+        ${cr_id}                    PCC.Get CR Id
+                                    ...    Name=${CR_NAME}
+                                    Pass Execution If    ${cr_id} is ${None}    ${CR_NAME} Not Present on PCC
 
-                ${status}    PCC.CR Wait For CR updation
-                     ...    Name=${CR_NAME}
+        ${status}                   PCC.CR Wait For CR updation
+                                    ...    Name=${CR_NAME}
 
-                     Log to Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK
+                                     Log to Console    ${status}
+                                     Should Be Equal As Strings    ${status}    OK
 
 ####################################################################################################################################
 Cleanup Container Registry after login as Admin user
 ####################################################################################################################################
 
-        [Documentation]    *Cleanup all CR* test
-                           ...  keywords:
-                           ...  PCC.Clean all CR
-                           ...  PCC.Wait for deletion of CR
-        ${result}    PCC.Clean all CR
+        [Documentation]             *Cleanup all CR* test
+                                       ...  keywords:
+                                       ...  PCC.Clean all CR
+                                       ...  PCC.Wait for deletion of CR
+        ${result}                   PCC.Clean all CR
 
-                     Log to Console    ${result}
-                     Should Be Equal As Strings    ${result}    OK
+                                    Log to Console    ${result}
+                                    Should Be Equal As Strings    ${result}    OK
 
 
-        ${result}    PCC.Wait for deletion of CR
+        ${result}                   PCC.Wait for deletion of CR
 
-                     Log to Console    ${result}
-                     Should Be Equal As Strings    ${result}    OK
+                                    Log to Console    ${result}
+                                    Should Be Equal As Strings    ${result}    OK
 
 ####################################################################################################################################
 Re-assigning ROOT to Node
 ####################################################################################################################################
 
-        [Documentation]    *Re-assigning ROOT user to Node* test
-                           ...  keywords:
-                           ...  PCC.Get Tenant Id
-                           ...  PCC.Assign Tenant to Node
-        ########  Getting ROOT ID   #######################################################################################
+        [Documentation]             *Re-assigning ROOT user to Node* test
+                                   ...  keywords:
+                                   ...  PCC.Get Tenant Id
+                                   ...  PCC.Assign Tenant to Node
 
-        ${tenant_id}    PCC.Get Tenant Id
-                        ...    Name=ROOT
-                        Set Global Variable    ${tenant_id}
+        ${tenant_id}                 PCC.Get Tenant Id
+                                    ...    Name=ROOT
+                                    Set Global Variable    ${tenant_id}
 
-        ########  Assigning Tenant to Node   ################################################################################
 
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${server1_id}
+        ${response}                  PCC.Assign Tenant to Node
+                                    ...    tenant=${tenant_id}
+                                    ...    ids=${server2_id}
 
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
+                                    Log To Console    ${response}
+                                    ${status}    Get From Dictionary    ${response}    StatusCode
+                                    Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
 Deleting Maas From Nodes
@@ -166,21 +162,27 @@ Ceph Rgw Delete Multiple
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
-        
-	${status}                   PCC.Wait Until All Nodes Are Ready
+
+	${status}                    PCC.Wait Until All Nodes Are Ready
 
                                     Log To Console    ${status}
                                     Should Be Equal As Strings      ${status}  OK
 
-	${status}                   PCC.Ceph Wait Until Rgw Ready
-                               ...  name=${CEPH_RGW_NAME}
-                                    Should Be Equal As Strings      ${status}    OK   
+	${status}                    PCC.Ceph Wait Until Rgw Ready
+                                    ...  name=${CEPH_RGW_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
-        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+    ${backend_status}            PCC.Ceph Rgw Verify BE Creation
+                                    ...  targetNodeIp=['${SERVER_3_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 				    Sleep    120s
-	${status}                   PCC.Ceph Delete All Rgw
+
+	${backend_status}            PCC.Ceph Rgw Verify BE Creation
+                                    ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                                    Should Be Equal As Strings      ${backend_status}    OK
+				    Sleep    120s
+
+	${status}                    PCC.Ceph Delete All Rgw
                                     Should be equal as strings    ${status}    OK
 
 
@@ -256,31 +258,32 @@ Cleanup features associated to Node
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
                                ...  PCC.Cleanup features associated to Node
-        ${parent1_Id}    PCC.Get Scope Id
-                        ...  scope_name=Default region
-                        Log To Console    ${parent1_Id}
 
-        ${parent2_Id}    PCC.Get Scope Id
-                        ...  scope_name=Default zone
-                        ...  parentID=${parent1_Id}
-                        Log To Console    ${parent2_Id}
+        ${parent1_Id}                PCC.Get Scope Id
+                                    ...  scope_name=Default region
+                                    Log To Console    ${parent1_Id}
 
-        ${parent3_Id}    PCC.Get Scope Id
-                        ...  scope_name=Default site
-                        ...  parentID=${parent2_Id}
+        ${parent2_Id}               PCC.Get Scope Id
+                                    ...  scope_name=Default zone
+                                    ...  parentID=${parent1_Id}
+                                    Log To Console    ${parent2_Id}
 
-                        Log To Console    ${parent3_Id}
+        ${parent3_Id}               PCC.Get Scope Id
+                                    ...  scope_name=Default site
+                                    ...  parentID=${parent2_Id}
 
-        ${scope_id}    PCC.Get Scope Id
-                       ...  scope_name=Default rack
-                       ...  parentID=${parent3_Id}
+                                    Log To Console    ${parent3_Id}
 
-                       Log To Console    ${scope_id}
+        ${scope_id}                 PCC.Get Scope Id
+                                    ...  scope_name=Default rack
+                                    ...  parentID=${parent3_Id}
 
-                ${status}       PCC.Cleanup features associated to Node
-                                                ...    scopeId=${scope_id}
-                                                Log To Console    ${status}
-                                                Should Be Equal As Strings      ${status}  OK
+                                    Log To Console    ${scope_id}
+
+        ${status}                   PCC.Cleanup features associated to Node
+                                    ...    scopeId=${scope_id}
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
 
 ####################################################################################################################################
 Wait Until All Nodes Are Ready
@@ -291,21 +294,21 @@ Wait Until All Nodes Are Ready
         ${status}                   PCC.Wait Until All Nodes Are Ready
 
                                     Log To Console    ${status}
-                                                                        Should Be Equal As Strings      ${status}  OK
+                                    Should Be Equal As Strings      ${status}  OK
 
 
 ###################################################################################################################################
 Delete All Node Roles
 ###################################################################################################################################
 
-        [Documentation]    *Delete All Node Roles* test
-                           ...  keywords:
-                           ...  PCC.Delete all Node roles
-        [Tags]    Only
-        ${status}    PCC.Delete all Node roles
+        [Documentation]             *Delete All Node Roles* test
+                                   ...  keywords:
+                                   ...  PCC.Delete all Node roles
 
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node roles still exists
+        ${status}                  PCC.Delete all Node roles
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK    Node roles still exists
 
 ####################################################################################################################################
 Cleanup all certificates from PCC
@@ -313,10 +316,10 @@ Cleanup all certificates from PCC
     [Documentation]                 *Cleanup all certificates*
                                ...  keywords:
                                ...  PCC.Delete All Certificates
-        ${status}                   PCC.Delete All Certificates
+        ${status}                  PCC.Delete All Certificates
 
                                     Log To Console    ${status}
-                                                                        Should be equal as strings    ${status}    OK
+                                    Should be equal as strings    ${status}    OK
 
 ####################################################################################################################################
 Cleanup all keys from PCC
@@ -327,87 +330,86 @@ Cleanup all keys from PCC
         ${status}                   PCC.Delete All Keys
 
                                     Log To Console    ${status}
-                                                                        Should be equal as strings    ${status}    OK
+                                    Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Delete All Node Groups
 ###################################################################################################################################
 
-        [Documentation]    *Delete All Node Groups* test
-                           ...  keywords:
-                           ...  PCC.Get Tenant Id
-                           ...  PCC.Add Node Group
-                           ...  PCC.Validate Node Group
-        [Tags]    Only
-        ${status}    PCC.Delete all Node groups
+        [Documentation]             *Delete All Node Groups* test
+                                   ...  keywords:
+                                   ...  PCC.Get Tenant Id
+                                   ...  PCC.Add Node Group
+                                   ...  PCC.Validate Node Group
 
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node group still exists
+        ${status}                  PCC.Delete all Node groups
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK    Node group still exists
 
 ###################################################################################################################################
 Delete All Profiles
 ###################################################################################################################################
 
-        [Documentation]    *PCC.Delete All Profiles* test
-                           ...  keywords:
-                           ...  PCC.Delete All Profiles
+        [Documentation]             *PCC.Delete All Profiles* test
+                                   ...  keywords:
+                                   ...  PCC.Delete All Profiles
 
-        ${response}    PCC.Delete All Profiles
+        ${response}                PCC.Delete All Profiles
 
-                       Log To Console    ${response}
+                                   Log To Console    ${response}
 
 ###################################################################################################################################
 Delete All Tenants
 ###################################################################################################################################
 
-        [Documentation]    *PCC Multiple Tenant deletion* test
-                           ...  keywords:
-                           ...  PCC.Delete Multiple Tenants
-        
-        ${status}    PCC.Delete All Tenants
-                      
+         [Documentation]            *PCC Multiple Tenant deletion* test
+                                   ...  keywords:
+                                   ...  PCC.Delete Multiple Tenants
 
-                       Log To Console    ${status}
-                       Should Be Equal As Strings    ${status}    OK    Not Deleted
+        ${status}                  PCC.Delete All Tenants
+
+                                   Log To Console    ${status}
+                                   Should Be Equal As Strings    ${status}    OK    Not Deleted
 
 ###################################################################################################################################
 Policy driven management cleanup
 ###################################################################################################################################
 
-                [Documentation]    *Policy driven management cleanup* test
-                           ...  keywords:
-                           ...  PCC.Delete Multiple Tenants
-                ###  Unassign locations from policies  ###
-                ${status}    PCC.Unassign Locations Assigned from All Policies
+        [Documentation]            *Policy driven management cleanup* test
+                                   ...  keywords:
+                                   ...  PCC.Delete Multiple Tenants
 
-                             Log to Console    ${status}
-                             Should Be Equal As Strings    ${status}    OK
+        ${status}                  PCC.Unassign Locations Assigned from All Policies
+
+                                    Log to Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
 
                                 ####  Delete All Policies  ####
-                ${status}    PCC.Delete All Policies
+        ${status}                  PCC.Delete All Policies
 
-                             Log To Console    ${status}
-                             Should Be Equal As Strings    ${status}    OK
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
 
                                 ####  Delete All Locations  ####
-                ${response}    PCC.Delete Scope
-                               ...  scope_name=region-1
-                               ...  parentID=
+        ${response}                  PCC.Delete Scope
+                                    ...  scope_name=region-1
+                                    ...  parentID=
 
-                               Log To Console    ${response}
-                               ${result}    Get Result    ${response}
-                               ${status}    Get From Dictionary    ${result}    status
-                               ${message}   Get From Dictionary    ${result}    message
-                               Log To Console    ${message}
-                               Should Be Equal As Strings    ${status}    200
+                                    Log To Console    ${response}
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${result}    status
+                                    ${message}   Get From Dictionary    ${result}    message
+                                    Log To Console    ${message}
+                                    Should Be Equal As Strings    ${status}    200
 
 
 #####################################################################################################################################
 Delete Nodes
 #####################################################################################################################################
 
-    [Documentation]    *Delete Nodes* test
-    [Tags]    delete
+        [Documentation]            *Delete Nodes* test
+
 
         ${status}                  PCC.Delete mutliple nodes and wait until deletion
 
@@ -417,9 +419,34 @@ Delete Nodes
 ###################################################################################################################################
 Nodes Verification Back End (Services should not be active)
 ###################################################################################################################################
-    [Documentation]                      *Nodes Verification Back End*
+        [Documentation]                  *Nodes Verification Back End*
                                     ...  keywords:
                                     ...  PCC.Node Verify Back End
+
         ${status}                   PCC.Node Verify Back End After Deletion
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Not Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+PCC-Users Deletion
+###################################################################################################################################
+
+        [Documentation]             *Delete Admin User* test
+                                   ...  keywords:
+                                   ...  PCC.Delete User
+
+        ${response}                 PCC.Delete User
+                                    ...  Username=${READONLY_USER_PCC_USERNAME}
+
+                                    Log To Console    ${response}
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${response}    StatusCode
+                                    Should Be Equal As Strings    ${status}    200
+
+        ${response}                 PCC.Delete User
+                                    ...     Username=${TENANT_USER_PCC_USERNAME}
+
+                                    Log To Console    ${response}
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${response}    StatusCode
+                                    Should Be Equal As Strings    ${status}    200
