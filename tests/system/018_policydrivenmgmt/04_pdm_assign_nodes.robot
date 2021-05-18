@@ -24,7 +24,7 @@ Login to PCC
                          Load Node Groups Data    ${pcc_setup}
 
 ###################################################################################################################################
-Apply location -rack on single node by using edit button
+Apply location -rack on single node by using edit button: TCP-1403
 ###################################################################################################################################
 
         [Documentation]    *Apply location on single node by using edit button * test
@@ -74,7 +74,7 @@ Apply location -rack on single node by using edit button
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Check if a scope cannot be deleted if it has nodes assigned
+Check if a scope cannot be deleted if it has nodes assigned:TCP-1396
 ###################################################################################################################################
 
         [Documentation]    *Check if a scope cannot be deleted if it has nodes assigned* test
@@ -114,7 +114,7 @@ Check if a scope cannot be deleted if it has nodes assigned
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Apply location -site on single node by using edit button
+Apply location -site on single node by using edit button:TCP-1404
 ###################################################################################################################################
 
         [Documentation]    *Apply location -site on single node by using edit button * test
@@ -158,7 +158,7 @@ Apply location -site on single node by using edit button
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Apply location -zone on single node by using edit button - Bugfiled -PCC2698
+Apply location -zone on single node by using edit button:TCP-1405
 ###################################################################################################################################
 
         [Documentation]    *Apply location -zone on single node by using edit button * test
@@ -191,7 +191,7 @@ Apply location -zone on single node by using edit button - Bugfiled -PCC2698
                        Should Not Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Apply location - region on single node by using edit button - Bugfiled -PCC2698
+Apply location - region on single node by using edit button: TCP-1406
 ###################################################################################################################################
 
         [Documentation]    *Apply location - region on single node by using edit button * test
@@ -219,7 +219,7 @@ Apply location - region on single node by using edit button - Bugfiled -PCC2698
                        Should Not Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Apply location on multiple nodes - considered region (Negative) - Bugfiled -PCC2698
+Apply location on multiple nodes - considered region (Negative):TCP-1402
 ###################################################################################################################################
 
         [Documentation]    *Apply location on multiple nodes - considered region (Negative) * test
@@ -239,7 +239,7 @@ Apply location on multiple nodes - considered region (Negative) - Bugfiled -PCC2
                        Should Not Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Apply location on multiple nodes - considered zone (Negative) - Bugfiled -PCC2698
+Apply location on multiple nodes - considered zone (Negative):TCP-1401
 ###################################################################################################################################
 
         [Documentation]    *Apply location on multiple nodes - considered zone (Negative) * test
@@ -263,7 +263,7 @@ Apply location on multiple nodes - considered zone (Negative) - Bugfiled -PCC269
                        Should Not Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Apply location on multiple nodes - considered site
+Apply location on multiple nodes - considered site:TCP-1400
 ###################################################################################################################################
 
         [Documentation]    *Apply location on multiple nodes - considered site* test
@@ -299,7 +299,7 @@ Apply location on multiple nodes - considered site
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Apply location on multiple nodes - considered rack
+Apply location on multiple nodes - considered rack:TCP-1399
 ###################################################################################################################################
 
         [Documentation]    *Apply location on multiple nodes - considered rack* test
@@ -340,7 +340,7 @@ Apply location on multiple nodes - considered rack
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Re-assign default location to multiple nodes
+Re-assign default location to multiple nodes:TCP-1431
 ###################################################################################################################################
 
         [Documentation]    *Re-assign default location to multiple nodes* test
@@ -381,7 +381,7 @@ Re-assign default location to multiple nodes
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Check if a rack can be deleted if it does not have nodes assigned
+Check if a rack can be deleted if it does not have nodes assigned:TCP-1392
 ###################################################################################################################################
 
         [Documentation]    *Check if a rack can be deleted if it does not have nodes assigned* test
@@ -422,7 +422,7 @@ Check if a rack can be deleted if it does not have nodes assigned
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Check if a site can be deleted if its child rack does not have nodes assigned
+Check if a site can be deleted if its child rack does not have nodes assigned:TCP-1393
 ###################################################################################################################################
 
         [Documentation]    *Check if a site can be deleted if its child rack does not have nodes assigned* test
@@ -455,7 +455,7 @@ Check if a site can be deleted if its child rack does not have nodes assigned
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Check if a zone can be deleted if its child rack does not have nodes assigned
+Check if a zone can be deleted if its child rack does not have nodes assigned:TCP-1394
 ###################################################################################################################################
 
         [Documentation]    *Check if a zone can be deleted if its child rack does not have nodes assigned* test
@@ -484,7 +484,7 @@ Check if a zone can be deleted if its child rack does not have nodes assigned
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Delete default zone under default region
+Delete default zone under default region:TCP-1757
 ###################################################################################################################################
 
         [Documentation]    *Check if a zone can be deleted if its child rack does not have nodes assigned* test
@@ -512,7 +512,7 @@ Delete default zone under default region
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 ###################################################################################################################################
-Check if a region can be deleted if its child rack does not have nodes assigned
+Check if a region can be deleted if its child rack does not have nodes assigned:TCP-1395
 ###################################################################################################################################
 
         [Documentation]    *Check if a region can be deleted if its child rack does not have nodes assigned* test
@@ -535,7 +535,7 @@ Check if a region can be deleted if its child rack does not have nodes assigned
                               Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Delete All Node Roles
+Delete All Node Roles:TCP-1756
 ###################################################################################################################################
 
         [Documentation]    *Delete All Node Roles* test
@@ -549,7 +549,7 @@ Delete All Node Roles
                      Should Be Equal As Strings    ${status}    OK    Node role still exists
 
 ###################################################################################################################################
-Delete All Policies
+Delete All Policies:TCP-1443
 ###################################################################################################################################
 
         [Documentation]    *Delete All Policies* test

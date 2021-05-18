@@ -28,7 +28,7 @@ Login to PCC
                          
                          
 ###################################################################################################################################
-Create node role with DNS client application
+Create node role with DNS client application:TCP-1428
 ###################################################################################################################################
 
         [Documentation]    *Create node role with DNS client application* test
@@ -63,7 +63,7 @@ Create node role with DNS client application
                      Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
                      
 ###################################################################################################################################
-Create node role with NTP client application
+Create node role with NTP client application:TCP-1429
 ###################################################################################################################################
 
         [Documentation]    *Create node role with NTP client application* test
@@ -98,7 +98,7 @@ Create node role with NTP client application
                      Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
                      
 ###################################################################################################################################
-Create node role with SNMPv2 client application
+Create node role with SNMPv2 client application:TCP-1430
 ###################################################################################################################################
 
         [Documentation]    *Create node role with SNMPv2 client application* test
@@ -134,7 +134,7 @@ Create node role with SNMPv2 client application
                      Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
                      
 ###################################################################################################################################
-Associate DNS, NTP, SNMPv2 client node role with a node
+Associate DNS, NTP, SNMPv2 client node role with a node:TCP-1428, TCP-1429, TCP-1430
 ###################################################################################################################################
     [Documentation]                 *Associate DNS, NTP, SNMPv2 client node role with a node*
                                ...  Keywords:
@@ -161,7 +161,7 @@ Associate DNS, NTP, SNMPv2 client node role with a node
                                Should Be Equal As Strings    ${node_wait_status}    OK
                                       
 ###################################################################################################################################
-Filter all policy-enabled apps
+Filter all policy-enabled apps:TCP-1759
 ###################################################################################################################################
 
         [Documentation]    *Filter all policy-enabled apps* test
@@ -179,7 +179,7 @@ Filter all policy-enabled apps
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Removing Node Roles From Nodes
+Removing Node Roles From Nodes:TCP-1758
 ###################################################################################################################################
     [Documentation]                 *Removing Node Roles From Nodes*
                                ...  Keywords:
