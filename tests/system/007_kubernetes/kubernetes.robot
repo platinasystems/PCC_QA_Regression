@@ -21,7 +21,7 @@ Login
                                     Should Be Equal     ${status}  OK
                                                                                                     
 ###################################################################################################################################
-Create Kubernetes cluster
+Create Kubernetes cluster:TCP-179,TCP-140
 ###################################################################################################################################
         [Documentation]             *Create Kubernetes cluster*
                                ...  Keywords:
@@ -43,23 +43,14 @@ Create Kubernetes cluster
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
 
-###################################################################################################################################
-Kubernetes Cluster Verification PCC
-###################################################################################################################################
-        [Documentation]             *Kubernetes Cluster Verification PCC*
-                               ...  Keywords:
-                               ...  PCC.K8s Wait Until Cluster is Ready
+################################# Kubernetes Cluster Verification PCC ################################################################
         
         ${status}                   PCC.K8s Wait Until Cluster is Ready
                                ...  name=${K8S_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-###################################################################################################################################
-K8s Cluster Verification Back End
-###################################################################################################################################
-    [Documentation]                 *Verifying K8s cluster BE*
-                               ...  keywords:
-                               ...  PCC.K8s Verify BE
+################################ K8s Cluster Verification Back End #################################################################
+
 
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
@@ -69,7 +60,7 @@ K8s Cluster Verification Back End
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Add App To K8 Cluster
+Add App To K8 Cluster:TCP-141
 ###################################################################################################################################
         [Documentation]             *Add App Kubernetes cluster*
                                ...  Keywords:
@@ -97,7 +88,7 @@ Add App To K8 Cluster
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Delete App To K8 Cluster
+Delete App To K8 Cluster:TCP-158
 ###################################################################################################################################
         [Documentation]             *Delete App Kubernetes cluster*
                                ...  Keywords:
@@ -123,7 +114,7 @@ Delete App To K8 Cluster
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Add Node to Kubernetes cluster
+Add Node to Kubernetes cluster:TCP-142
 ###################################################################################################################################
        [Documentation]             *Add Node to Kubernetes cluster*
                                ...  Keywords:
@@ -148,7 +139,7 @@ Add Node to Kubernetes cluster
                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-#Reboot Node And Verify K8s Is Intact
+#Reboot Node And Verify K8s Is Intact:TCP-175
 ###################################################################################################################################
 #    [Documentation]                 *Verifying K8s cluster BE*
 #                               ...  keywords:
@@ -169,7 +160,7 @@ Add Node to Kubernetes cluster
 #                                    Should Be Equal As Strings      ${status}    OK
 #                                    
 ###################################################################################################################################
-Down And Up The Interface And Check For K8s
+Down And Up The Interface And Check For K8s:TCP-183
 ###################################################################################################################################
         [Documentation]             *Down And Up The Interface And Check For Ceph*
                                ...  Keywords:
@@ -195,7 +186,7 @@ Down And Up The Interface And Check For K8s
                                     Should Be Equal As Strings      ${status}    OK    
                                     
 ##################################################################################################################################
-#Remove Node to Kubernetes cluster
+#Remove Node to Kubernetes cluster:TCP-151
 ####################################################################################################################################
 #
 #        [Documentation]             *Remove Node to Kubernetes cluster*
@@ -221,7 +212,7 @@ Down And Up The Interface And Check For K8s
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 ##################################################################################################################################
-#Upgrade K8 Cluster Version
+#Upgrade K8 Cluster Version:TCP-159
 ####################################################################################################################################     
 #        [Documentation]             *Upgrade K8 Cluster Version* 
 #                               ...  Keywords:
