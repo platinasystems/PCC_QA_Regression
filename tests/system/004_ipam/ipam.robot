@@ -177,7 +177,7 @@ Update subnet
                                     Should Be Equal As Strings      ${status}    OK  
  
 ###################################################################################################################################
-Create IPAM ControlCIDR Subnet 
+Create IPAM ControlCIDR Subnet : TCP-1773 
 ###################################################################################################################################
     [Documentation]                 *Create IPAM Subnet*
                                ...  keywords:
@@ -200,7 +200,7 @@ Create IPAM ControlCIDR Subnet
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Create IPAM DataCIDR Subnet
+Create IPAM DataCIDR Subnet : TCP-1774
 ###################################################################################################################################
     [Documentation]                 *Create IPAM Subnet*
                                ...  keywords:
