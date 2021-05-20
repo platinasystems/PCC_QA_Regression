@@ -466,3 +466,34 @@ class NetworkManager(PccBase):
             return "Error"
         else:
             return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Network Manager verify From Event log")
+    ###########################################################################
+    def network_manager_verify_from_event_log(self, *args, **kwargs):
+        banner("PCC.Network Manager verify From Event log")
+        self._load_kwargs(kwargs)
+        print("Kwargs:" + str(self.name))
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            print("conn is {}".format(conn))
+
+            event_response = pcc.get_event_log(conn)
+            #print("Event response : {}".format(event_response))
+            print("Event data : {}".format(event_response["Result"]["Data"]))
+            nw_id =self.get_network_clusters_id(self.name)
+            for data in event_response["Result"]["Data"]:
+                nw_name= self.name + "(id:{})".format(nw_id)
+                print("nw_name: {}".format(nw_name))
+                if data["type"] == "network.cluster" and data["metadata"]["ClusterName"] == nw_name:
+                    print("\n\n############################# Network cluster - Info ###############################\n\n")
+                    print("Info : {}".format(data["metadata"]["Info"]))
+                    if data["metadata"]["Result"] == "ok":
+                        return "OK"
+                    else:
+                        return "Error"
+            return "No data found...!!"
+
+        except Exception as e:
+            raise e

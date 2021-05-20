@@ -824,3 +824,34 @@ class Nodes(PccBase):
                 return "Wait Until Node ready status is: {}".format(node_ready_status)
         except Exception as e:
             return "Exception encountered: {}".format(e)
+
+
+    ###########################################################################
+    @keyword(name="PCC.FRR status on nodes")
+    ###########################################################################
+    def frr_status_on_nodes(self, *args, **kwargs):
+        banner("PCC.Network Manager verify From Event log")
+        self._load_kwargs(kwargs)
+        print("Kwargs:" + str(self.Names))
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            print("conn is {}".format(conn))
+
+            for node in eval(str(self.Names)):
+                print("\n\n########################################## {} ###########################################\n\n".format(node))
+                node_id = easy.get_node_id_by_name(conn,node)
+                print("node is is : {}".format(node_id))
+                frr_response = pcc.get_node_audit_status(conn,str(node_id))
+                print("FRR response : {}".format(frr_response))
+                print("FRR data : {}".format(frr_response["Result"]["Data"]))
+
+                for apps in frr_response["Result"]["Data"]:
+                    if apps["AppName"] == "frr":
+                        frr_data=apps["MetaData"]["Detail"]
+                        for detail in frr_data:
+                            print("\n\n############################# {} ###################################\n\n".format(detail))
+                            print(frr_data[detail])
+            return None
+        except Exception as e:
+            raise e
