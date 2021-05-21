@@ -23,7 +23,7 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-Check if PCC have a new entry under the applications list to represent the packages (TCP-1576,1577,1578,1580,1581,1609)
+Check if PCC have a new entry under the applications list to represent the packages:TCP-1576,TCP-1577,TCP-1578,TCP-1580,TCP-1581,TCP-1609
 ###################################################################################################################################
 
 
@@ -34,7 +34,7 @@ Check if PCC have a new entry under the applications list to represent the packa
                                Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Check if PCC define default node role for the following to include Platina Systems Package Repository (TCP-1582,1583,1584,1585)
+Check if PCC define default node role for the following to include Platina Systems Package Repository:TCP-1582,TCP-1583,TCP-1584,TCP-1585
 ###################################################################################################################################
 
         ## Check for Cluster Head node role
@@ -67,7 +67,7 @@ Check if PCC define default node role for the following to include Platina Syste
 
 
 #################################################################################################################################################################
-Check if PCC assign the Default node role to the node when a node is added to PCC and Cluster Head node role when clusterhead is added to PCC(TCP-1586,1587,1591)
+Check if PCC assign the Default node role to the node when a node is added to PCC and Cluster Head node role when clusterhead is added to PCC:TCP-1586,TCP-1587,TCP-1591
 #################################################################################################################################################################
 
         [Documentation]    *Check if PCC assign the Default node role to the node when a node is added to PCC* test
@@ -114,7 +114,7 @@ Check if PCC assign the Default node role to the node when a node is added to PC
                      Should be equal as strings    ${status}    OK
 
 ################################################################################################################################################################
-Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the cluster head(TCP-1587, 1660, 1661, 1662)
+Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the cluster head:TCP-1587,TCP-1660,TCP-1661,TCP-1662
 ################################################################################################################################################################
     [Documentation]                 *Check if user is able to assign the Cluster Head node role to the cluster head*
                                ...  Keywords:
@@ -180,7 +180,7 @@ Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes reso
                      Should Be Equal As Strings    ${status}    OK
 
 ###############################################################################################################################################
-Backend Validations after node roles addition (Includes TCP-1610)
+Backend Validations after node roles addition :TCP-1610
 ###############################################################################################################################################
         [Documentation]                 *Backend validations*
                                ...  Keywords:
@@ -307,7 +307,7 @@ Backend Validations after node roles addition (Includes TCP-1610)
 #
 
 ###############################################################################################################################################
-Check if an user is able to define a policy to disable Automatic Daily Updates(TCP-1603, 1604)
+Check if an user is able to define a policy to disable Automatic Daily Updates: TCP-1603,TCP-1604
 ###############################################################################################################################################
 
     [Documentation]                 *Check if an user is able to define a policy to disable Automatic Daily Updates*
@@ -415,7 +415,7 @@ Check if an user is able to define a policy to disable Automatic Daily Updates(T
                                                 Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
 
 #################################################################################################################################################################
-Remove a node from PCC on which node roles are installed and check backend repo exists after deletion(TCP-1686)
+Remove a node from PCC on which node roles are installed and check backend repo exists after deletion: TCP-1686
 #################################################################################################################################################################
 
         [Documentation]    *Remove a node from PCC on which node roles are installed and check backend repo exists after deletion* test
@@ -469,7 +469,7 @@ Remove a node from PCC on which node roles are installed and check backend repo 
 
 
 ###############################################################################################################################################
-Check Automatic Upgrades policy accept invalid value for Enable/disable automatic upgrades field(TCP-1606)
+Check Automatic Upgrades policy accept invalid value for Enable/disable automatic upgrades field:TCP-1606
 ###############################################################################################################################################
 
     [Documentation]                 *Check if an user is able to define a policy to disable Automatic Daily Updates*
@@ -518,7 +518,7 @@ Check Automatic Upgrades policy accept invalid value for Enable/disable automati
                                           Should Not Be Equal As Strings    ${status}    200
 
 ###############################################################################################################################################
-Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the clusterhead(TCP-1598, 1599, 1600, 1601)
+Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the clusterhead:TCP-1598,TCP-1599,TCP-1600,TCP-1601
 ###############################################################################################################################################
     [Documentation]                 *Check if user is able to remove the Cluster Head node role to the cluster head*
                                ...  Keywords:
