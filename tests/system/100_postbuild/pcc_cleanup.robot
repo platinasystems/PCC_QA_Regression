@@ -139,6 +139,42 @@ Re-assigning ROOT to Node
                        ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server3_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader1_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}        PCC.Wait Until All Nodes Are Ready
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
+
 ###################################################################################################################################
 Deleting Maas From Nodes
 ###################################################################################################################################
@@ -442,17 +478,6 @@ Policy driven management cleanup
                              Log To Console    ${status}
                              Should Be Equal As Strings    ${status}    OK
 
-                                ####  Delete All Locations  ####
-                ${response}    PCC.Delete Scope
-                               ...  scope_name=region-1
-                               ...  parentID=
-
-                               Log To Console    ${response}
-                               ${result}    Get Result    ${response}
-                               ${status}    Get From Dictionary    ${result}    status
-                               ${message}   Get From Dictionary    ${result}    message
-                               Log To Console    ${message}
-                               Should Be Equal As Strings    ${status}    200
 
 #####################################################################################################################################
 Delete Nodes

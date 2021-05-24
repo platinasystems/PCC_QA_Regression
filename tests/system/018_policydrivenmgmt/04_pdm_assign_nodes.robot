@@ -369,7 +369,7 @@ Re-assign default location to multiple nodes:TCP-1431
                         Log To Console    ${scope_id}
 
         ${status}      PCC.Apply scope to multiple nodes
-                       ...  node_names=['${SERVER_2_NAME}','${SERVER_1_NAME}']
+                       ...  node_names=['${SERVER_2_NAME}','${SERVER_1_NAME}','${SERVER_3_NAME}','${CLUSTERHEAD_1_NAME}','${CLUSTERHEAD_2_NAME}']
                        ...  scopeId=${scope_id}
 
                        Log to Console    ${status}
