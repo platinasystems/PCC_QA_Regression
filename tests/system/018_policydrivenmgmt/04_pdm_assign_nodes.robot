@@ -232,7 +232,7 @@ Apply location on multiple nodes - considered region (Negative):TCP-1402
 
 
         ${status}      PCC.Apply scope to multiple nodes
-                       ...  node_names=['${SERVER_2_NAME}','${SERVER_1_NAME}']
+                       ...  node_names=['${SERVER_2_NAME}','${CLUSTERHEAD_1_NAME}']
                        ...  scopeId=${scope_id}
 
                        Log to Console    ${status}
@@ -256,7 +256,7 @@ Apply location on multiple nodes - considered zone (Negative):TCP-1401
                         Log To Console    ${scope_id}
 
         ${status}      PCC.Apply scope to multiple nodes
-                       ...  node_names=['${SERVER_2_NAME}','${SERVER_1_NAME}']
+                       ...  node_names=['${SERVER_2_NAME}','${CLUSTERHEAD_1_NAME}']
                        ...  scopeId=${scope_id}
 
                        Log to Console    ${status}
@@ -287,7 +287,7 @@ Apply location on multiple nodes - considered site:TCP-1400
                         Log To Console    ${scope_id}
 
         ${status}      PCC.Apply scope to multiple nodes
-                       ...  node_names=['${SERVER_2_NAME}','${SERVER_1_NAME}']
+                       ...  node_names=['${SERVER_2_NAME}','${CLUSTERHEAD_1_NAME}']
                        ...  scopeId=${scope_id}
 
                        Log to Console    ${status}
@@ -328,7 +328,7 @@ Apply location on multiple nodes - considered rack:TCP-1399
                         Log To Console    ${scope_id}
 
         ${status}      PCC.Apply scope to multiple nodes
-                       ...  node_names=['${SERVER_2_NAME}','${SERVER_1_NAME}']
+                       ...  node_names=['${SERVER_2_NAME}','${CLUSTERHEAD_1_NAME}']
                        ...  scopeId=${scope_id}
 
                        Log to Console    ${status}

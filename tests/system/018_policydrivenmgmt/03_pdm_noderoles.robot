@@ -144,7 +144,7 @@ Associate DNS, NTP, SNMPv2 client node role with a node:TCP-1428, TCP-1429, TCP-
         [Tags]    Only
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_2_NAME}"]
-                               ...  roles=["DNS_NODE_ROLE", "SNMPv2_NODE_ROLE","NTP_NODE_ROLE"]
+                               ...  roles=["DNS_NODE_ROLE", "SNMPv2_NODE_ROLE","NTP_NODE_ROLE","Default"]
                                     
                                     Should Be Equal As Strings      ${response}  OK
 
