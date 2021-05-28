@@ -1,6 +1,6 @@
 *** Settings ***
 Library    Process
-Library    zephyr-intergration.py
+Library    zephyr-system.py
 
 *** Test Cases ***
 Marking Test Case Result in Zephyr
