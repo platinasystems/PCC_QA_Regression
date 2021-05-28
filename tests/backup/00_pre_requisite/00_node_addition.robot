@@ -33,7 +33,27 @@ Add Nodes
 
                                     Log To Console    ${status}
 				    Should be equal as strings    ${status}    OK
-				    Sleep    180s
+
+    ${status}                 PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+
+#################################################################################################################################################################
+Verify Default node role is installed
+#################################################################################################################################################################
+
+        [Documentation]    *Verify Default node role is installed* test
+
+        #### Checking if PCC assign the Default node role to the node when a node is added to PCC #####
+        ${status}    PCC.Verify Node Role On Nodes
+                     ...    Name=Default
+                     ...    nodes=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+
 
 ###################################################################################################################################
 Nodes Verification Back End (Services should be running and active)
@@ -43,7 +63,7 @@ Nodes Verification Back End (Services should be running and active)
                                     ...  PCC.Node Verify Back End
 
 
-    [Tags]        backend
+
 
         ${status}                   PCC.Node Verify Back End
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]

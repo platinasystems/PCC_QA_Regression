@@ -60,8 +60,35 @@ Login
                           Log To Console    ${invader2_id}
                           Set Global Variable    ${invader2_id}
 
+
 ###################################################################################################################################
-Ceph K8s Multiple
+Delete App To Kubernetes Cluster
+###################################################################################################################################
+        [Documentation]             *Delete App Kubernetes cluster*
+                               ...  Keywords:
+                               ...  PCC.K8s Get Cluster Id
+                               ...  PCC.K8s Delete App
+                               ...  PCC.K8s Wait Until Cluster is Ready
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8S_NAME}
+
+        ${app_id}                   PCC.K8s Get App Id
+                               ...  appName=${k8s_wordpress_appname}
+
+        ${response}                 PCC.K8s Delete App
+                               ...  cluster_id=${cluster_id}
+                               ...  appIds=${app_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Ceph K8s Multiple : TCP-139
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
@@ -95,7 +122,7 @@ Cleanup Auth Profiles after login as Admin user
                      Should Be Equal As Strings    ${status}    OK
                           
 ####################################################################################################################################
-Cleanup Container Registry after login as Admin user
+Cleanup Container Registry after login as Admin user :TCP-839
 ####################################################################################################################################
         
         [Documentation]    *Cleanup all CR* test
@@ -114,30 +141,66 @@ Cleanup Container Registry after login as Admin user
                      Log to Console    ${result}
                      Should Be Equal As Strings    ${result}    OK
                                           
+
 ####################################################################################################################################
-Re-assigning ROOT to Node 
+Re-assigning ROOT to Node
 ####################################################################################################################################
-        
+
         [Documentation]    *Re-assigning ROOT user to Node* test
                            ...  keywords:
-                           ...  PCC.Get Tenant Id   
-                           ...  PCC.Assign Tenant to Node                   
-                     
-        ########  Getting ROOT ID   #######################################################################################  
-                   
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Assign Tenant to Node
+        ########  Getting ROOT ID   #######################################################################################
+
         ${tenant_id}    PCC.Get Tenant Id
                         ...    Name=ROOT
-                        Set Global Variable    ${tenant_id} 
-        
-        ########  Assigning Tenant to Node   ################################################################################                
-                        
+                        Set Global Variable    ${tenant_id}
+
+        ########  Assigning Tenant to Node   ################################################################################
+
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant=${tenant_id}
                        ...    ids=${server1_id}
-                      
+
                        Log To Console    ${response}
                        ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server3_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader1_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}        PCC.Wait Until All Nodes Are Ready
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
  
 ###################################################################################################################################
 Deleting Maas From Nodes
@@ -178,7 +241,8 @@ Delete Key
                        Should Be Equal As Strings    ${status}    200
                        
 
-                       
+##################################################################################################################################
+Delete Profiles                       
 ###################################################################################################################################
 
         [Documentation]    *PCC.Delete All Profiles* test
@@ -196,38 +260,39 @@ Delete Key
 ###################################################################################################################################
 Ceph Rgw Delete Multiple
 ###################################################################################################################################
-    [Documentation]                 *Ceph Rbd Delete Multiple*
+    [Documentation]                 *Ceph RGW Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
 
         ${status}                   PCC.Ceph Delete All Rgw
                                     Should be equal as strings    ${status}    OK
 
+
+##################################################################################################################
+Cepf FS unmount
+##################################################################################################################
+
+        ###  Unmount FS and removing file created while FS mount ###
+        ${status}      PCC.Unmount FS
+                       ...    hostip=${SERVER_3_HOST_IP}
+                       ...    user=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}
+                       ...    mount_folder_name=test_fs_mnt
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK
+
+         ${status}    Remove dummy file
+                     ...    dummy_file_name=test_fs_mnt_1mb.bin
+                     ...    hostip=${SERVER_3_HOST_IP}
+                     ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+
+		     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
 ###################################################################################################################################
-Delete Certificate
-###################################################################################################################################
-                
-        
-        [Documentation]    *Delete Certificate* test
-        [Tags]    Cert
-        
-                       
-        ${response}    PCC.Delete Certificate
-                       ...  Alias=Cert_with_pvt_cert
-  
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-                       
-        ${response}    PCC.Delete Certificate
-                       ...  Alias=${CEPH_RGW_CERT_NAME}
-  
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-                                                           
-###################################################################################################################################
-Ceph Fs Delete
+Ceph Fs Delete : TCP-808
 ###################################################################################################################################
     [Documentation]                 *Delete Fs if it exist*   
                                ...  keywords:
@@ -235,9 +300,33 @@ Ceph Fs Delete
 
         ${status}                   PCC.Ceph Delete All Fs
                                     Should be equal as strings    ${status}    OK
+
+###################################################################################################################
+Ceph Rbd Unmout
+###################################################################################################################
+
+		###  Unmount and unmap RBD  ###
+		${status}		PCC.Unmount and Unmap RBD
+						...    mount_folder_name=test_rbd_mnt
+						...    hostip=${SERVER_3_HOST_IP}
+                        ...    username=${PCC_LINUX_USER}
+                        ...    password=${PCC_LINUX_PASSWORD}
+
+						Log To Console    ${status}
+                        Should be equal as strings    ${status}    OK
+
+		${status}    Remove dummy file
+                     ...    dummy_file_name=test_rbd_mnt_4mb.bin
+                     ...    hostip=${SERVER_3_HOST_IP}
+					 ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+					 Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
+
                                     
 ###################################################################################################################################
-Ceph Rbd Delete Multiple
+Ceph Rbd Delete Multiple : TCP-571
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
@@ -249,7 +338,7 @@ Ceph Rbd Delete Multiple
                                
 
 ###################################################################################################################################
-Ceph Pool Multiple Delete
+Ceph Pool Multiple Delete: TCP-572,TCP-573
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
@@ -259,7 +348,7 @@ Ceph Pool Multiple Delete
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Ceph Cluster Delete
+Ceph Cluster Delete : TCP-574
 ###################################################################################################################################
     [Documentation]                 *Delete cluster if it exist*
                                ...  keywords:
@@ -298,25 +387,70 @@ Delete Multiple Subnet
 
         ${status}                   PCC.Ipam Subnet Delete All                          
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
-PCC Multiple Tenant deletion
+PCC-Users Deletion : TCP-332
 ###################################################################################################################################
 
-        [Documentation]    *PCC Multiple Tenant deletion* test
+        [Documentation]    *Delete Admin User* test
                            ...  keywords:
-                           ...  PCC.Delete Multiple Tenants
-        
-        [Tags]    Delete
-                           
-        ${status}    PCC.Delete Multiple Tenants
-                       ...    Tenant_list=["${TENANT1}"] 
-                       
-                       Log To Console    ${status}
-                       Should Be Equal As Strings    ${status}    OK    Not Deleted
-					   
+                           ...  PCC.Delete User
+
+        ${response}    PCC.Delete User
+                       ...     Username=${READONLY_USER_PCC_USERNAME}
+
+                        Log To Console    ${response}
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${response}    StatusCode
+                        Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Delete User
+                       ...     Username=${TENANT_USER_PCC_USERNAME}
+
+                        Log To Console    ${response}
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${response}    StatusCode
+                        Should Be Equal As Strings    ${status}    200
+
+###############################################################################################################################
+Delete All Tenants :TCP-478
 ###################################################################################################################################
-Policy driven management cleanup
+    [Documentation]                 *Deleting all Tenants*
+                               ...  keywords:
+                               ...  PCC.Delete All Tenants
+
+         ${status}                  PCC.Delete All Tenants
+                                    Should be equal as strings    ${status}    OK    All Tenants Not deleted
+
+##################################################################################################################
+Assign default node role to nodes
+##################################################################################################################
+    [Documentation]                 *Associate DNS, NTP, SNMPv2 client node role with a node*
+                               ...  Keywords:
+                               ...  PCC.Add and Verify Roles On Nodes
+                               ...  PCC.Wait Until Roles Ready On Nodes
+
+
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=['${CLUSTERHEAD_1_NAME}','${CLUSTERHEAD_2_NAME}','${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
+                               ...  roles=["Default"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                  PCC.Verify Node Role On Nodes
+                                   ...    Name=Default
+                                   ...    nodes=['${CLUSTERHEAD_1_NAME}','${CLUSTERHEAD_2_NAME}','${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
+                                   Log To Console    ${status}
+                                   Should Be Equal As Strings    ${status}    OK
+
+
+
+###################################################################################################################################
+Policy driven management cleanup :TCP-1442
 ###################################################################################################################################
 		
 		[Documentation]    *Policy driven management cleanup* test
@@ -454,7 +588,7 @@ Wait Until All Nodes Are Ready
                                     Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Delete All Node Roles
+Delete All Node Roles :TCP-1756
 ###################################################################################################################################
 
         [Documentation]    *Delete All Node Roles* test
@@ -468,7 +602,7 @@ Delete All Node Roles
                      Should Be Equal As Strings    ${status}    OK    Node group still exists
 
 ###################################################################################################################################
-Delete All Node Groups
+Delete All Node Groups :TCP-361
 ###################################################################################################################################
 
         [Documentation]    *Delete All Node Groups* test
@@ -486,7 +620,7 @@ Delete All Node Groups
 
                                                                                                                                           
 #####################################################################################################################################
-Delete Nodes
+Delete Nodes :TCP-240
 #####################################################################################################################################
 
     [Documentation]    *Delete Nodes* test                 
@@ -509,3 +643,37 @@ Nodes Verification Back End (Services should not be active)
         ${status}                   PCC.Node Verify Back End After Deletion
                                     ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Not Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Alert Delete Raw Rule :TCP-1088
+###################################################################################################################################
+    [Documentation]                 *Alert Delete Raw Rule *
+                               ...  Keywords:
+                               ...  PCC.Alert Delete Rule
+                               ...  PCC.Alert Verify Rule
+
+        ${status}                   PCC.Alert Delete All Rule
+                                    Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Delete Certificate : TCP-1233
+###################################################################################################################################
+
+
+        [Documentation]    *Delete Certificate* test
+        [Tags]    Cert
+
+
+        ${response}    PCC.Delete Certificate
+                       ...  Alias=Cert_with_pvt_cert
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Delete Certificate
+                       ...  Alias=${CEPH_RGW_CERT_NAME}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+

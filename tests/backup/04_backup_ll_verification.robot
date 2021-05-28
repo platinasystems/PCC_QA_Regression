@@ -62,6 +62,45 @@ Login
                                     Set Global Variable    ${invader2_id}
 
 
+
+###################################################################################################################################
+Verify Certificate Authority Public Certificate
+###################################################################################################################################
+
+        [Documentation]    *Verify Certificate* test
+
+
+        ${response}    PCC.Get Certificates
+                       ...  Alias=Cert_without_pvt_cert
+                       Log To Console    ${response}
+                       Should Be Equal As Strings    ${response}    OK
+
+###################################################################################################################################
+Verify Certificate with Private Keys
+###################################################################################################################################
+
+        [Documentation]    *Verify Certificate* test
+
+        ${response}    PCC.Get Certificates
+                       ...  Alias=Cert_with_pvt_cert
+                       Log To Console    ${response}
+                       Should Be Equal As Strings    ${response}    OK
+
+
+###################################################################################################################################
+Verify OpenSSH Public Key
+###################################################################################################################################
+
+        [Documentation]    *Verify Public Key* test
+
+
+        ${response}    PCC.Get Open SSH Key
+                       ...  Alias=${PUBLIC_KEY_ALIAS}
+                       Log To Console    ${response}
+                       Should Be Equal As Strings    ${response}    OK
+
+
+
 ###################################################################################################################################
 Nodes Verification after restoring PCC
 ###################################################################################################################################
@@ -80,6 +119,27 @@ Nodes Verification after restoring PCC
                                ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
+###################################################################################################################################
+Check internet reachability from nodes
+###################################################################################################################################
+
+        ${status}                   PCC.Verify Default IgwPolicy BE
+                               ...  nodes=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Verify Maas on Invader after restore
+###################################################################################################################################
+    [Documentation]                *Verify Maas on Invader*
+                                   ...  Keywords:
+                                   ...  PCC.Maas Verify BE
+
+    ${response}                PCC.Maas Verify BE
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               Should Be Equal As Strings      ${response}  OK
 
 ##########################################################################################################################################
 Validate Cluster Head and Default node role after restore
@@ -451,6 +511,62 @@ Ceph Validation after restoring PCC
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+
+###################################################################################################################################
+Ceph Crush Map Validation after restoring PCC
+###################################################################################################################################
+    [Documentation]                 *Ceph Crush Map Validation*
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Crush Map From Backend
+
+
+        ${status}                   CLI.Validate CEPH Crush Map From Backend
+                               ...  node_location={"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                               ...  hostip=${SERVER_2_HOST_IP}
+
+                                    Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+
+
+	    ${status}                   CLI.Validate CEPH Crush Map From Backend
+                               ...  node_location={"${SERVER_2_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"]}
+		                       ...  hostip=${SERVER_1_HOST_IP}
+
+                                    Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
+
+###################################################################################################################################
+Ceph Storage Type Validation after restoring PCC
+###################################################################################################################################
+    [Documentation]                 *Ceph Storage Type Validation*
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Storage Type
+
+        ${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['bluestore']
+                     ...  hostip=${SERVER_2_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+
+	    ${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['bluestore']
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Ceph Architecture- Nodes and OSDs -after restoring PCC
+###################################################################################################################################
+    [Documentation]                 *Ceph Architecture Node OSDs*
+                               ...  keywords:
+                               ...  PCC.Ceph Nodes OSDs Architecture Validation
+
+
+        ${status}    PCC.Ceph Nodes OSDs Architecture Validation
+                     ...  name=${CEPH_CLUSTER_NAME}
+                     ...  hostip=${SERVER_1_HOST_IP}
+
+                     Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Subnet Validation after restoring PCC
 ###################################################################################################################################
@@ -484,6 +600,7 @@ Network Cluster Validation after restoring PCC
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Health Check Network Manager
@@ -676,12 +793,68 @@ PCC-Tenant-Validation after restore
                                     ...  keywords:
                                     ...  PCC.Add Tenant
 
-        ${status}                   PCC.Validate Tenant
-                                    ...    Name=${TENANT1}
-                                    
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings    ${status}    OK
-					 
+        ${status}    PCC.Validate Tenant
+                     ...    Name=${CR_TENANT_USER}
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+
+        ${status}    PCC.Validate Tenant
+                     ...    Name=${TENANT5}
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+
+##################################################################################################################
+PCC Read Only Role Validation after restore
+##################################################################################################################
+
+        ${status}    PCC.Validate Role
+                       ...    Name=readonly
+                       Log To Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
+PCC-Validate Read Only User login
+###################################################################################################################################
+
+    [Documentation]                *Create Password* test
+                                   ...  keywords:
+                                   ...  Login To User
+                                   ...  Login To PCC
+
+
+    ${status}                Login To User
+						     ...  ${pcc_setup}
+						     ...  ${READONLY_USER_PCC_USERNAME}
+						     ...  ${READONLY_USER_PCC_PWD}
+
+						     Should Be Equal As Strings      ${status}    OK
+
+    ${status}                Login To PCC    ${pcc_setup}
+                             Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+PCC-Validate Tenant User (Admin) login
+###################################################################################################################################
+
+    [Documentation]                *Create Password* test
+                                   ...  keywords:
+                                   ...  Login To User
+                                   ...  Login To PCC
+
+    ${status}                Login To User
+						     ...  ${pcc_setup}
+						     ...  ${TENANT_USER_PCC_USERNAME}
+						     ...  ${TENANT_USER_PCC_PWD}
+
+						     Should Be Equal As Strings      ${status}    OK
+
+    ${status}                Login To PCC    ${pcc_setup}
+                             Should Be Equal As Strings      ${status}    OK
+
+
+
 ###################################################################################################################################
 PCC Node Group Validation after restore
 ###################################################################################################################################
@@ -712,19 +885,6 @@ Add Certificate with Private Keys for backup and restore
                                             Should Be Equal As Strings    ${certificate_id_before_backup}    ${certificate_id_after_backup}
 										   
 										   
-###################################################################################################################################
-Create scoping object - Region for backup and restore
-###################################################################################################################################
-
-        [Documentation]             *Create scoping object - Region* test
-                                    ...  keywords:
-                                    ...  PCC.Create Scope
-            
-        ${status}                   PCC.Check Scope Creation From PCC
-                                    ...  scope_name=region-1
-                                    
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings    ${status}    OK
 					   
 ###################################################################################################################################
 Validate Node role and its assignment on nodes after restore
@@ -734,66 +894,162 @@ Validate Node role and its assignment on nodes after restore
                                     ...  keywords:
                                     ...  PCC.Create Policy
 
-        [Tags]    policy
-        
-        ${status}                   PCC.Validate Node Role
-                                    ...    Name=DNS_NODE_ROLE
-                                    
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
-					 
-        ${status}                   PCC.Verify Node Role On Nodes
-                                    ...    Name=DNS_NODE_ROLE
-                                    ...    nodes=["${SERVER_2_NAME}"]
+        ${status}              PCC.Verify Node Role On Nodes
+                               ...    Name=DNS_NODE_ROLE
+                               ...    nodes=["${CLUSTERHEAD_2_NAME}"]
+                               Log To Console    ${status}
+                               Should Be Equal As Strings    ${status}    OK
 
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
+        ${status}              PCC.Verify Node Role On Nodes
+                               ...    Name=SNMPv2_NODE_ROLE
+                               ...    nodes=["${CLUSTERHEAD_2_NAME}"]
+                               Log To Console    ${status}
+                               Should Be Equal As Strings    ${status}    OK
+
+        ${status}              PCC.Verify Node Role On Nodes
+                               ...    Name=NTP_NODE_ROLE
+                               ...    nodes=["${CLUSTERHEAD_2_NAME}"]
+                               Log To Console    ${status}
+                               Should Be Equal As Strings    ${status}    OK
+
+        ${status}              PCC.Verify Node Role On Nodes
+                               ...    Name=Rsyslog-NR
+                               ...    nodes=["${CLUSTERHEAD_2_NAME}"]
+                               Log To Console    ${status}
+                               Should Be Equal As Strings    ${status}    OK
+
+        ${status}              PCC.Verify Node Role On Nodes
+                               ...    Name=Default
+                               ...    nodes=["${CLUSTERHEAD_2_NAME}"]
+                               Log To Console    ${status}
+                               Should Be Equal As Strings    ${status}    OK
 
 
-
-	${status_code}              PCC.Wait Until Roles Ready On Nodes
-                                    ...  node_name=${SERVER_2_NAME}
-        
-                                    Should Be Equal As Strings      ${status_code}  OK
 		
 		
 							   
 ###################################################################################################################################
-Verifying Policy assignment from backend
+
+###################################################################################################################################
+Verifying DNS client Policy assignment from backend
 ###################################################################################################################################
 
-	[Tags]    policy
-		
-		##### Validate RSOP on Node ##########
+                ##### Validate RSOP on Node ##########
 
-        ${dns_rack_policy_id}       PCC.Get Policy Id
-                                    ...  Name=dns
-                                    ...  description=dns-policy-description
-                                    Log To Console    ${dns_rack_policy_id}
-                                    Set Global Variable    ${dns_rack_policy_id}
-								  
-	${status}                   PCC.Validate RSOP of a node
-                                    ...  node_name=${SERVER_2_NAME}
-                                    ...  policyIDs=[${dns_rack_policy_id}]
-                
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings      ${status}  OK
-		
-		##### Validate DNS from backend #########
+        ${dns_rack_policy_id}                PCC.Get Policy Id
+                                             ...  Name=dns
+                                             ...  description=dns-policy-description
+                                             Log To Console    ${dns_rack_policy_id}
+                                             Set Global Variable    ${dns_rack_policy_id}
 
-        ${node_wait_status}         PCC.Wait Until Node Ready
-                                    ...  Name=${SERVER_2_NAME}
-        
-                                    Log To Console    ${node_wait_status}
-                                    Should Be Equal As Strings    ${node_wait_status}    OK
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                                             ...  policyIDs=[${dns_rack_policy_id}]
 
-        ${status}                   PCC.Validate DNS From Backend
-                                    ...  host_ip=${SERVER_2_HOST_IP}
-                                    ...  search_list=['8.8.8.8']
-                                
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings      ${status}  OK
-					
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+                ##### Validate DNS from backend #########
+
+        ${node_wait_status}                  PCC.Wait Until Node Ready
+                                             ...  Name=${CLUSTERHEAD_2_NAME}
+
+                                             Log To Console    ${node_wait_status}
+                                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}                            PCC.Validate DNS From Backend
+                                             ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                                             ...  search_list=['8.8.8.8']
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Verifying NTP client Policy assignment from backend
+###################################################################################################################################
+
+                ##### Validate RSOP on Node ##########
+
+        ${ntp_rack_policy_id}                PCC.Get Policy Id
+                                             ...  Name=ntp
+                                             ...  description=ntp-policy-description
+                                             Log To Console    ${ntp_rack_policy_id}
+                                             Set Global Variable    ${ntp_rack_policy_id}
+
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                                             ...  policyIDs=[${ntp_rack_policy_id}]
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+
+
+                ##### Check NTP services from backend #####
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${CLUSTERHEAD_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}                PCC.Check NTP services from backend
+                                 ...  targetNodeIp=['${CLUSTERHEAD_2_HOST_IP}']
+
+                                 Log To Console    ${status}
+                                 Should Be Equal As Strings      ${status}  OK
+
+                ##### Validate NTP from backend #########
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${CLUSTERHEAD_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}     PCC.Validate NTP From Backend
+                      ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                      ...  time_zone=America/Chicago
+
+                      Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Verifying SNMP client Policy assignment from backend
+###################################################################################################################################
+
+                ##### Validate RSOP on Node ##########
+
+        ${snmp_rack_policy_id}                PCC.Get Policy Id
+                                             ...  Name=snmp
+                                             ...  description=SNMP_v2
+                                             Log To Console    ${snmp_rack_policy_id}
+                                             Set Global Variable    ${snmp_rack_policy_id}
+
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                                             ...  policyIDs=[${snmp_rack_policy_id}]
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+
+                ##### Validate SNMPv2 from backend #########
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${CLUSTERHEAD_2_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}     PCC.Validate SNMP from backend
+                      ...  snmp_version=snmpv2
+                      ...  community_string=snmpv2_community_string
+                      ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                      ...  node_name=${CLUSTERHEAD_2_NAME}
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings      ${status}  OK
+
 
 ###################################################################################################################################
 Verifying Rsyslog Policy assignment from backend
@@ -803,7 +1059,6 @@ Verifying Rsyslog Policy assignment from backend
                                           ...  PCC.Create Policy
 
 
-        [Tags]        rsyslog
 
                 ##### Validate RSOP on Node ##########
 
@@ -813,8 +1068,8 @@ Verifying Rsyslog Policy assignment from backend
                                              Log To Console    ${rsyslog_policy_id}
                                              Set Global Variable    ${rsyslog_policy_id}
 
-        ${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_1_NAME}
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_2_NAME}
                                              ...  policyIDs=[${rsyslog_policy_id}]
 
                                              Log To Console    ${status}
@@ -824,11 +1079,38 @@ Verifying Rsyslog Policy assignment from backend
 
         ${status}                           CLI.Check package installed
                                             ...    package_name=rsyslog
-                                            ...    host_ip=${SERVER_1_HOST_IP}
+                                            ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
                                             ...    linux_user=${PCC_LINUX_USER}
                                             ...    linux_password=${PCC_LINUX_PASSWORD}
 
                                             Log To Console    ${status}
                                             Should Be Equal As Strings    ${status}    rsyslog Package installed
 
- 
+###################################################################################################################################
+Verify Automatic Upgrades client app
+###################################################################################################################################
+
+
+       ${status}            CLI.Automatic Upgrades Validation
+                            ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
+                            ...    linux_user=pcc
+                            ...    linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+
+
+###################################################################################################################################
+Alert Verify Raw Rule
+###################################################################################################################################
+    [Documentation]                 *Alert Verify Raw Rule*
+                               ...  Keywords:
+                               ...  PCC.Alert Verify Rule
+
+        ${status}                   PCC.Alert Verify Raw Rule
+                               ...  name=FreeSwap
+                               ...  auth_data=${PCC_CONN}
+                               ...  setup_ip=${PCC_HOST_IP}
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+
+                                    Should Be Equal As Strings      ${status}    OK

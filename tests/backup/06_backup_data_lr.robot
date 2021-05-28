@@ -98,7 +98,7 @@ Ceph Cluster Update After Backup Restore- Add Invader
                                     Should Be Equal As Strings      ${status}    OK    
 
 ##################################################################################################################################
-Add Node to Kubernetes cluster After Backup Restore
+Add Node to Kubernetes cluster After Backup Restore :TCP-142
 ###################################################################################################################################
 
 
@@ -256,6 +256,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts After Backu
                
         ${status}                               PCC.Ceph Wait Until Rgw Ready
                                            ...  name=${CEPH_RGW_NAME}
+                                           ...  ceph_cluster_name=ceph-pvt
                                                 Should Be Equal As Strings      ${status}    OK
                
         ${backend_status}                       PCC.Ceph Rgw Verify BE Creation
@@ -591,149 +592,9 @@ Create scoping object - Region After Backup Restore and restore
                                              Should Be Equal As Strings    ${status}    200
                                              
         ${status}                             PCC.Check Scope Creation From PCC
-                                             ...  scope_name=region-1
+                                             ...  scope_name=region-2
                                              
                                              Log To Console    ${status}
                                              Should Be Equal As Strings    ${status}    OK
 					   
 ###################################################################################################################################
-Create a policy using DNS app, assigning it to Node and Scope
-###################################################################################################################################
-
-        [Documentation]                      *Create a policy* test
-                                             ...  keywords:
-                                             ...  PCC.Create Policy
-        
-        [Tags]    Only
-        ###  Creating Policy  ####
-		${app_id}                    PCC.Get App Id from Policies
-                                             ...  Name=dns
-                                             Log To Console    ${app_id}
-                       
-        ${parent1_id}                         PCC.Get Scope Id
-                                             ...  scope_name=region-1                       
-                                   
-        ${response}                          PCC.Create Policy
-                                             ...  appId=${app_id}
-                                             ...  description=dns-policy-description
-                                             ...  scopeIds=[${parent1_id}]                       
-                                             
-                                             Log To Console    ${response}
-                                             ${result}    Get Result    ${response}
-                                             ${status}    Get From Dictionary    ${result}    status
-                                             ${message}    Get From Dictionary    ${result}    message
-                                             Log to Console    ${message}
-                                             Should Be Equal As Strings    ${status}    200
-		
-		###  Creating Node Role  ####
-		
-		${owner}                             PCC.Get Tenant Id       Name=${ROOT_TENANT}
-                                             
-        ${template_id}                       PCC.Get Template Id    Name=DNS
-                                             Log To Console    ${template_id}
-                                             
-        ${response}                          PCC.Add Node Role
-                                             ...    Name=DNS_NODE_ROLE
-                                             ...    Description=DNS_NR_DESC
-                                             ...    templateIDs=[${template_id}]
-                                             ...    owners=[${owner}]
-                                             
-                                             Log To Console    ${response}
-                                             ${result}    Get Result    ${response}
-                                             ${status}    Get From Dictionary    ${result}    status
-                                             ${message}    Get From Dictionary    ${result}    message
-                                             Log to Console    ${message}
-                                             Should Be Equal As Strings    ${status}    200
-                                             
-                                             Sleep    2s
-                                             
-        ${status}                            PCC.Validate Node Role
-                                             ...    Name=DNS_NODE_ROLE
-                                             
-                                             Log To Console    ${status}
-                                             Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
-					 
-		###  Adding Node roles on Node  ####
-		
-		${response}                          PCC.Add and Verify Roles On Nodes
-                                             ...  nodes=["${SERVER_2_NAME}"]
-                                             ...  roles=["DNS_NODE_ROLE","Default"]
-                   
-                                             Should Be Equal As Strings      ${response}  OK
-                   
-        ${status_code}                       PCC.Wait Until Roles Ready On Nodes
-                                             ...  node_name=${SERVER_2_NAME}
-                   
-                                             Should Be Equal As Strings      ${status_code}  OK
-		
-		###   Updating node with Region- scope ####
-		${node_id}                           PCC.Get Node Id
-                                             ...  Name=${SERVER_2_NAME}
-                                             Log To Console    ${node_id}
-                                 
-        ${parent1_Id}                        PCC.Get Scope Id
-                                             ...  scope_name=region-1
-                                             Log To Console    ${parent1_Id}
-                     
-        ${parent2_Id}                        PCC.Get Scope Id
-                                             ...  scope_name=Default zone
-                                             ...  parentID=${parent1_Id}
-                                             Log To Console    ${parent2_Id}
-                     
-        ${scope_id}                          PCC.Get Scope Id
-                                             ...  scope_name=Default site
-                                             ...  parentID=${parent2_Id}
-                                     
-                                             Log To Console    ${scope_id}
-                                     
-        ${response}                          PCC.Update Node
-                                             ...  Id=${node_id}
-                                             ...  Name=${SERVER_2_NAME}
-                                             ...  scopeId=${scope_id}
-                                             
-                                             Log To Console    ${response}
-                                             ${result}    Get Result    ${response}
-                                             ${status}    Get From Dictionary    ${result}    status
-                                             ${message}    Get From Dictionary    ${result}    message
-                                             Log to Console    ${message}
-                                             Should Be Equal As Strings    ${status}    200
-                                 
-		${node_wait_status}                  PCC.Wait Until Node Ready
-                                             ...  Name=${SERVER_2_NAME}
-                 
-                                             Log To Console    ${node_wait_status}
-                                             Should Be Equal As Strings    ${node_wait_status}    OK
-							   
-###################################################################################################################################
-Verifying Policy assignment from backend
-###################################################################################################################################
-	[Tags]	This		
-		##### Validate RSOP on Node ##########
-
-        ${dns_rack_policy_id}                PCC.Get Policy Id
-                                             ...  Name=dns
-                                             ...  description=dns-policy-description
-                                             Log To Console    ${dns_rack_policy_id}
-                                             Set Global Variable    ${dns_rack_policy_id}
-                                             
-		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
-                                             ...  policyIDs=[${dns_rack_policy_id}]
-             
-                                             Log To Console    ${status}
-                                             Should Be Equal As Strings      ${status}  OK
-		
-		##### Validate DNS from backend #########
-
-        ${node_wait_status}                  PCC.Wait Until Node Ready
-                                             ...  Name=${SERVER_2_NAME}
-                                             
-                                             Log To Console    ${node_wait_status}
-                                             Should Be Equal As Strings    ${node_wait_status}    OK
-                                             
-        ${status}                            PCC.Validate DNS From Backend
-                                             ...  host_ip=${SERVER_2_HOST_IP}
-                                             ...  search_list=['8.8.8.8']
-                                             
-                                             Log To Console    ${status}
-                                             Should Be Equal As Strings      ${status}  OK

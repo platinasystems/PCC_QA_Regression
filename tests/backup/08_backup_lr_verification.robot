@@ -162,6 +162,7 @@ Ceph Validation after restoring PCC
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
+                               ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -222,6 +223,7 @@ Network Cluster Validation after restoring PCC
         ${status}                   PCC.Network Manager Verify BE
                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+                               ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
 
         ${status}                   PCC.Health Check Network Manager
@@ -404,43 +406,109 @@ Validate Node role and its assignment on nodes after restore
                                     Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
 					 
 		${status_code}              PCC.Wait Until Roles Ready On Nodes
-                                    ...  node_name=${SERVER_2_NAME}
+                                    ...  node_name=${CLUSTERHEAD_2_NAME}
         
                                     Should Be Equal As Strings      ${status_code}  OK
-		
-		
-							   
+
+
 ###################################################################################################################################
-Verifying Policy assignment from backend
+Verifying DNS client Policy assignment from backend
 ###################################################################################################################################
-		
-		##### Validate RSOP on Node ##########
 
-        ${dns_rack_policy_id}       PCC.Get Policy Id
-                                    ...  Name=dns
-                                    ...  description=dns-policy-description
-                                    Log To Console    ${dns_rack_policy_id}
-                                    Set Global Variable    ${dns_rack_policy_id}
-								  
-		${status}                   PCC.Validate RSOP of a node
-                                    ...  node_name=${SERVER_2_NAME}
-                                    ...  policyIDs=[${dns_rack_policy_id}]
-                
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings      ${status}  OK
-		
-		##### Validate DNS from backend #########
+                ##### Validate RSOP on Node ##########
 
-        ${node_wait_status}         PCC.Wait Until Node Ready
-                                    ...  Name=${SERVER_2_NAME}
-        
-                                    Log To Console    ${node_wait_status}
-                                    Should Be Equal As Strings    ${node_wait_status}    OK
+        ${dns_rack_policy_id}                PCC.Get Policy Id
+                                             ...  Name=dns
+                                             ...  description=dns-policy-description
+                                             Log To Console    ${dns_rack_policy_id}
+                                             Set Global Variable    ${dns_rack_policy_id}
 
-        ${status}                   PCC.Validate DNS From Backend
-                                    ...  host_ip=${SERVER_2_HOST_IP}
-                                    ...  search_list=['8.8.8.8']
-                                
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings      ${status}  OK
-					 
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                                             ...  policyIDs=[${dns_rack_policy_id}]
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK
+
+                ##### Validate DNS from backend #########
+
+        ${node_wait_status}                  PCC.Wait Until Node Ready
+                                             ...  Name=${CLUSTERHEAD_2_NAME}
+
+                                             Log To Console    ${node_wait_status}
+                                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}                            PCC.Validate DNS From Backend
+                                             ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                                             ...  search_list=['8.8.8.8']
+
+                                             Log To Console    ${status}
+                                             Should Be Equal As Strings      ${status}  OK	
+							  
+###########################################################################################################################################
+Update Automatic upgrade policy value
+###########################################################################################################################################
+
+    [Documentation]                 *Update Automatic upgrade policy value*
+                                    ...  keywords:
+                                    ...  PCC.Create Policy
+
+        ${parent1_Id}    PCC.Get Scope Id
+                         ...  scope_name=region-1
+
+        ${parent2_Id}    PCC.Get Scope Id
+                         ...  scope_name=zone-1
+                         ...  parentID=${parent1_Id}
+
+        ${parent3_Id}    PCC.Get Scope Id
+                         ...  scope_name=site-1
+                         ...  parentID=${parent2_Id}
+
+                         Log To Console    ${parent3_Id}
+
+        ${scope_id}     PCC.Get Scope Id
+                        ...  scope_name=rack-1
+                        ...  parentID=${parent3_Id}
+                ### Setting automatic-upgrades policy to Yes
+
+       ${policy_id}    PCC.Get Policy Id
+                       ...  Name=automatic-upgrades
+                       ...  description=Automatic-upgrade-policy
+                                                Log To Console    ${policy_id}
+
+       ${app_id}            PCC.Get App Id from Policies
+                       ...  Name=automatic-upgrades
+                            Log To Console    ${app_id}
+
+
+
+       ${response}          PCC.Update Policy
+                       ...  Id=${policy_id}
+                       ...  appId=${app_id}
+                       ...  scopeIds=[${scope_id}]
+                       ...  description=Automatic-upgrade-policy
+                       ...  inputs=[{"name": "enabled","value": "true"}]
+
+                            Log To Console    ${response}
+                            ${result}    Get Result    ${response}
+                            ${status}    Get From Dictionary    ${result}    status
+                            ${message}    Get From Dictionary    ${result}    message
+                            Log to Console    ${message}
+                            Should Be Equal As Strings    ${status}    200
+
+       ${node_wait_status}  PCC.Wait Until Node Ready
+                       ...  Name=${CLUSTERHEAD_2_NAME}
+
+                            Log To Console    ${node_wait_status}
+                            Should Be Equal As Strings    ${node_wait_status}    OK
+
+                ### Validation after setting automatic-upgrades to Yes ####
+
+
+       ${status}            CLI.Automatic Upgrades Validation
+                    ...     host_ip=${CLUSTERHEAD_2_HOST_IP}
+                    ...     linux_user=pcc
+                    ...     linux_password=cals0ft
+
+                            Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+ 

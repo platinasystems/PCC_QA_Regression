@@ -23,7 +23,6 @@ Library                         pcc_qa.pcc.CephRgw
 Library                         pcc_qa.pcc.Cli
 Library                         pcc_qa.pcc.Kubernetes
 Library                         pcc_qa.pcc.OpenSSHKeys
-Library                         pcc_qa.pcc.Rogit pullles
 Library                         pcc_qa.pcc.RoleOperations
 Library                         pcc_qa.pcc.Interfaces
 Library                         pcc_qa.pcc.Alerting

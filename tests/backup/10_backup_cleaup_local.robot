@@ -5,20 +5,6 @@ Resource    pcc_resources.robot
 ${pcc_setup}                 pcc_212
 
 *** Test Cases ***
-###################################################################################################################################
-Login
-###################################################################################################################################
-
-        ## aa_infra
-                                    Load Clusterhead 1 Test Data        ${pcc_setup}
-                                    Load Clusterhead 2 Test Data        ${pcc_setup}
-                                    Load Server 2 Test Data        ${pcc_setup}
-                                    Load Server 1 Test Data        ${pcc_setup}
-                                    Load Server 3 Test Data        ${pcc_setup}
-
-        ${status}                   Login To PCC        testdata_key=${pcc_setup}
-                                    Should Be Equal     ${status}  OK
-
 
 ##################################################################################################################################
 Prune Volumes And Perform Fresh Install

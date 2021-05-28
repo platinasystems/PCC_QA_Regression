@@ -26,14 +26,14 @@ Login
 
 
 ##################################################################################################################################
-Ceph Ceph Certificate For Rgws
+Ceph Certificate For Rgws
 ###################################################################################################################################
 
         [Documentation]              *Ceph Ceph Certificate For Rgws*
           
         ${cert_id}                   PCC.Get Certificate Id
                                 ...  Alias=${CEPH_RGW_CERT_NAME}
-                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there        
+                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there
 
         ${response}                  PCC.Add Certificate
                                 ...  Alias=${CEPH_RGW_CERT_NAME}
@@ -73,3 +73,16 @@ Ceph Ceph Certificate For Rgws
 #                            ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_2_HOST_IP}"]
 #
 #                                 Should Be Equal     ${result}       OK
+
+#####################################################################################################################################
+Install net-tools on nodes
+#####################################################################################################################################
+
+    [Documentation]    *Install net-tools on nodes* test
+    [Tags]    add
+
+    ${status}    Install net-tools command
+
+
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    OK

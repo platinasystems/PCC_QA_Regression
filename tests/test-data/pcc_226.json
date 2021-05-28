@@ -259,7 +259,7 @@
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
             "nodes":["qa-clusterhead-10","qa-server-100","qa-server-101"],
-            "pools":"k8s-pool",
+            "pools":["k8s-pool"],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
             "appNamespace":"nginxapp",

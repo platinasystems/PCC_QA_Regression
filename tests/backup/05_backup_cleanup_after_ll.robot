@@ -86,7 +86,7 @@ Cleanup Auth Profiles after login as Admin user
                                 Should Be Equal As Strings    ${status}    OK
                           
 ####################################################################################################################################
-Cleanup Container Registry after login as Admin user
+Cleanup Container Registry after login as Admin user: TCP-839
 ####################################################################################################################################
         
         [Documentation]         *Cleanup all CR* test
@@ -147,7 +147,7 @@ Delete Key
                                     Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Delete All Node Groups
+Delete All Node Groups :TCP-361
 ###################################################################################################################################
 
         [Documentation]             *Delete All Node Groups* test
@@ -162,7 +162,7 @@ Delete All Node Groups
                                     Should Be Equal As Strings    ${status}    OK    Node group still exists  
                      
 ###################################################################################################################################
-Delete All Profiles
+Delete All Profiles : TCP-1443
 ###################################################################################################################################
 
         [Documentation]             *PCC.Delete All Profiles* test
@@ -183,7 +183,7 @@ Ceph Rgw Delete Multiple
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Delete Certificate
+Delete Certificate : TCP-1233
 ###################################################################################################################################
                 
         
@@ -196,9 +196,56 @@ Delete Certificate
                                     Log To Console    ${response}
                                     ${status}    Get From Dictionary    ${response}    StatusCode
                                     Should Be Equal As Strings    ${status}    200
+
+##################################################################################################################
+Cepf FS unmount
+##################################################################################################################
+
+        ###  Unmount FS and removing file created while FS mount ###
+        ${status}      PCC.Unmount FS
+                       ...    hostip=${SERVER_2_HOST_IP}
+                       ...    user=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}
+                       ...    mount_folder_name=test_fs_mnt
+
+                       Log To Console    ${status}
+                       Should be equal as strings    ${status}    OK
+
+         ${status}    Remove dummy file
+                     ...    dummy_file_name=test_fs_mnt_1mb.bin
+                     ...    hostip=${SERVER_2_HOST_IP}
+                     ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+
+		     Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
+
+###################################################################################################################
+Ceph Rbd Unmout
+###################################################################################################################
+
+		###  Unmount and unmap RBD  ###
+		${status}		PCC.Unmount and Unmap RBD
+						...    mount_folder_name=test_rbd_mnt
+						...    hostip=${SERVER_2_HOST_IP}
+                        ...    username=${PCC_LINUX_USER}
+                        ...    password=${PCC_LINUX_PASSWORD}
+
+						Log To Console    ${status}
+                        Should be equal as strings    ${status}    OK
+
+		${status}    Remove dummy file
+                     ...    dummy_file_name=test_rbd_mnt_4mb.bin
+                     ...    hostip=${SERVER_2_HOST_IP}
+					 ...    user=${PCC_LINUX_USER}
+                     ...    password=${PCC_LINUX_PASSWORD}
+					 Log To Console    ${status}
+                     Should be equal as strings    ${status}    OK
+
                                                                                                 
-#######################             ############################################################################################################
-Ceph Fs Delete
+###################################################################################################################################
+Ceph Fs Delete : TCP-808
 ###################################################################################################################################
     [Documentation]                 *Delete Fs if it exist*   
                                ...  keywords:
@@ -208,7 +255,7 @@ Ceph Fs Delete
                                     Should be equal as strings    ${status}    OK
                                     
 ###################################################################################################################################
-Ceph Rbd Delete Multiple
+Ceph Rbd Delete Multiple : TCP-571
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
@@ -220,17 +267,203 @@ Ceph Rbd Delete Multiple
                                
 
 ###################################################################################################################################
-Ceph Pool Multiple Delete
+Ceph Pool Multiple Delete: TCP-572,TCP-573
 ###################################################################################################################################
-    [Documentation]                 *Deleting all Pools*
-                               ...  keywords:
-                               ...  CC.Ceph Delete All Pools
-                               
-        ${status}                   PCC.Ceph Delete All Pools
-                                    Should be equal as strings    ${status}    OK
+
+        #rbd
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=rbd
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+        #rgw
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=rgw
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+        #fs1
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=fs1
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+        #fs2
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=fs2
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+        #fs3
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=fs3
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+        #rgw-erasure-pool
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=rgw-erasure-pool
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+        #${CEPH_RGW_POOLNAME}
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=${CEPH_RGW_POOLNAME}
+                               Pass Execution If    ${id} is ${None}    Pool is alredy Deleted
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+
+###################################################################################################################################
+PCC-Users Deletion : TCP-332
+###################################################################################################################################
+
+        [Documentation]    *Delete Admin User* test
+                           ...  keywords:
+                           ...  PCC.Delete User
+
+        ${response}    PCC.Delete User
+                       ...     Username=${READONLY_USER_PCC_USERNAME}
+
+                        Log To Console    ${response}
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${response}    StatusCode
+                        Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Delete User
+                       ...     Username=${TENANT_USER_PCC_USERNAME}
+
+                        Log To Console    ${response}
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${response}    StatusCode
+                        Should Be Equal As Strings    ${status}    200
+
+
+####################################################################################################################################
+Re-assigning ROOT to Node
+####################################################################################################################################
+
+        [Documentation]    *Re-assigning ROOT user to Node* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Assign Tenant to Node
+        ########  Getting ROOT ID   #######################################################################################
+
+        ${tenant_id}    PCC.Get Tenant Id
+                        ...    Name=ROOT
+                        Set Global Variable    ${tenant_id}
+
+        ########  Assigning Tenant to Node   ################################################################################
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server1_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server3_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader1_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}        PCC.Wait Until All Nodes Are Ready
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
+
 
 ###############################################################################################################################
-Delete All Tenants
+Delete All Tenants :TCP-478
 ###################################################################################################################################
     [Documentation]                 *Deleting all Tenants*
                                ...  keywords:
@@ -238,3 +471,15 @@ Delete All Tenants
 
          ${status}                  PCC.Delete All Tenants
                                     Should be equal as strings    ${status}    OK    All Tenants Not deleted                                   
+
+###################################################################################################################################
+Alert Delete Raw Rule :TCP-1088
+###################################################################################################################################
+    [Documentation]                 *Alert Delete Raw Rule *
+                               ...  Keywords:
+                               ...  PCC.Alert Delete Rule
+                               ...  PCC.Alert Verify Rule
+
+        ${status}                   PCC.Alert Delete All Rule
+                                    Should Be Equal As Strings      ${status}  OK
+
