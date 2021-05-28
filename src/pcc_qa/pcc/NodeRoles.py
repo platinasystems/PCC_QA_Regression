@@ -141,6 +141,7 @@ class NodeRoles(PccBase):
         except Exception as e:
             return {"Error": str(e)}
             
+            
     ###########################################################################
     @keyword(name="PCC.Verify Node Role On Nodes")
     ###########################################################################
@@ -159,21 +160,36 @@ class NodeRoles(PccBase):
         
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         node_role_id = self.get_node_role_id(conn,Name= self.Name)
+        print("Node role id : {}".format(node_role_id))
+        default_noderoles_status=[]
+        default_noderoles_not_exists = []
         for node in ast.literal_eval(self.nodes):
             print("Node from user is: {}".format(node))
             response = pcc.get_nodes(conn)
+            print("Response data: {}".format(get_response_data(response)))
             for data in get_response_data(response):
                 self.Id=data['Id']
                 self.Host=data['Host']
                 print("node name from pcc: {}".format(data['Name']).lower())
-                if str(data['Name']).lower() == str(node).lower():
-                    if data['roles'] == None:
-                        return "No roles present on node"
-                    if node_role_id in data['roles']:
-                        return "OK"
+                if str(data['Host']) == str(node):
+                    print("data Host : {}".format(data['Host']))
+                    if data['roles'] == []:
+                        default_noderoles_status.append("No roles present on node  : {}".format(node))
+                        default_noderoles_not_exists.append("No roles present on node")
+                    elif node_role_id in data['roles']:
+                        default_noderoles_status.append("OK")
                     else:
-                        return "Node role {} not present on node: {}".format(self.Name, node)
-            
+                        default_noderoles_status.append("Default Node role {} not present on node: {}".format(self.Name, node))
+                        default_noderoles_not_exists.append("Default Node role {} not present on node: {}".format(self.Name, node))
+        print("Default node role status on nodes {}".format(default_noderoles_status))
+        print("Node roles not exist {}".format(default_noderoles_not_exists))
+        if default_noderoles_not_exists:
+            return "Error : Default node role is not present on all nodes"
+        else:
+            return "OK"
+
+
+
     ###########################################################################
     @keyword(name="PCC.Delete Node Role")
     ###########################################################################        

@@ -198,6 +198,7 @@ class CephFs(PccBase):
 
         for ip in self.nodes_ip:
             output=cli_run(ip,self.user,self.password,ceph_be_cmd)
+            print("ceph fs output of ip {} is {}".format(ip,output))
             if re.search(self.name,str(output)):
                 continue
             else:

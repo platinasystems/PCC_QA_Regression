@@ -332,13 +332,13 @@ class SystemPackageUpdates(PccBase):
 
             if re.search("Ubuntu",str(OS_type)):
                 print(" ===============  Searching in repo list:deb http://us.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse =========== ")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu/ bionic main restricted", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates main restricted", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://security.ubuntu.com/ubuntu bionic-security main restricted", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==4):

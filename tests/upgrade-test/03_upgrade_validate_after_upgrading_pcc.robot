@@ -58,7 +58,7 @@ Upgrade PCC
 					         ...  host_ip=${PCC_HOST_IP}
 					         ...  linux_user=${PCC_LINUX_USER}
 					         ...  linux_password=${PCC_LINUX_PASSWORD}
-					         ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli upgrade -p ${PCC_SETUP_PWD} --release stable
+					         ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli upgrade -p ${PCC_SETUP_PWD} --release v1.7.1-rc1
 
                              #...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master
 
@@ -262,10 +262,23 @@ Verify Maas on Invader
                                    ...  PCC.Maas Verify BE
 
     ${response}                PCC.Maas Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                Should Be Equal As Strings      ${response}  OK
+
+
+###################################################################################################################################
+Check App catalog for all the existing apps
+###################################################################################################################################
+
+
+        ${status}                   PCC.Validate Applications Present on PCC
+                               ...  app_list=['LLDP', 'Baremetal Services', 'ETHTOOL', 'DNS client', 'NTP client', 'RSYSLOG client', 'SNMP agent', 'OS Package Repository', 'Docker Community Package Repository', 'Ceph Community Package Repository', 'FRRouting Community Package Repository', 'Platina Systems Package Repository', 'Automatic Upgrades', 'Node Self Healing']
+
+                               Log To Console   ${status}
+                               Should Be Equal As Strings    ${status}    OK
+
 
 ###################################################################################################################################
 PCC-Tenant-Validation For Upgrade and restore
@@ -300,9 +313,10 @@ PCC-Validate Read Only User login
 						     Should Be Equal As Strings      ${status}    OK
 
     ${status}                Login To PCC    ${pcc_setup}
+                             Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC-Validate Admin User login
+PCC-Validate Tenant User (Admin) login
 ###################################################################################################################################
 
     [Documentation]                *Create Password* test
@@ -318,6 +332,7 @@ PCC-Validate Admin User login
 						     Should Be Equal As Strings      ${status}    OK
 
     ${status}                Login To PCC    ${pcc_setup}
+                             Should Be Equal As Strings      ${status}    OK
 
 
 ###################################################################################################################################
@@ -331,7 +346,7 @@ Pcc Verification for Tenant Assignment(SERVER_2_NAME)
 
     ${status}                PCC.Validate Tenant Assigned to Node
                              ...    Name=${SERVER_2_NAME}
-                             ...    Tenant_Name=${TENANT5}
+                             ...    Tenant_Name=${CR_TENANT_USER}
 
                              Log To Console    ${status}
                              Should Be Equal As Strings    ${status}    OK
@@ -445,7 +460,7 @@ Verifying DNS client Policy assignment from backend
                                              Set Global Variable    ${dns_rack_policy_id}
 
 		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${dns_rack_policy_id}]
 
                                              Log To Console    ${status}
@@ -454,13 +469,13 @@ Verifying DNS client Policy assignment from backend
 		##### Validate DNS from backend #########
 
         ${node_wait_status}                  PCC.Wait Until Node Ready
-                                             ...  Name=${SERVER_2_NAME}
+                                             ...  Name=${CLUSTERHEAD_1_NAME}
 
                                              Log To Console    ${node_wait_status}
                                              Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}                            PCC.Validate DNS From Backend
-                                             ...  host_ip=${SERVER_2_HOST_IP}
+                                             ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
                                              ...  search_list=['8.8.8.8']
 
                                              Log To Console    ${status}
@@ -479,7 +494,7 @@ Verifying NTP client Policy assignment from backend
                                              Set Global Variable    ${ntp_rack_policy_id}
 
 		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${ntp_rack_policy_id}]
 
                                              Log To Console    ${status}
@@ -490,13 +505,13 @@ Verifying NTP client Policy assignment from backend
 		##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}                PCC.Check NTP services from backend
-                                 ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                                 ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}']
 
                                  Log To Console    ${status}
                                  Should Be Equal As Strings      ${status}  OK
@@ -504,16 +519,18 @@ Verifying NTP client Policy assignment from backend
 		##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
                       ...  time_zone=America/Chicago
 
                       Should Be Equal As Strings      ${status}  OK
+
+
 
 ###################################################################################################################################
 Verifying SNMP client Policy assignment from backend
@@ -523,49 +540,35 @@ Verifying SNMP client Policy assignment from backend
 
         ${snmp_rack_policy_id}                PCC.Get Policy Id
                                              ...  Name=snmp
-                                             ...  description=snmp-policy-description
+                                             ...  description=SNMP_v2
                                              Log To Console    ${snmp_rack_policy_id}
                                              Set Global Variable    ${snmp_rack_policy_id}
 
 		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${snmp_rack_policy_id}]
 
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
 
 
-
-		##### Check SNMP services from backend #####
-
-        ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
-
-                               Log To Console    ${node_wait_status}
-                               Should Be Equal As Strings    ${node_wait_status}    OK
-
-        ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
-
-                      Log To Console    ${status}
-                      Should Be Equal As Strings      ${status}  OK
-
 		##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
-                      ...  community_string=community_string
-                      ...  host_ip=${SERVER_2_HOST_IP}
-                      ...  node_name=${SERVER_2_NAME}
+                      ...  community_string=snmpv2_community_string
+                      ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                      ...  node_name=${CLUSTERHEAD_1_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
+
 
 
 ###################################################################################################################################
@@ -586,7 +589,7 @@ Verifying Rsyslog Policy assignment from backend
                                              Set Global Variable    ${rsyslog_policy_id}
 
 		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${rsyslog_policy_id}]
 
                                              Log To Console    ${status}
@@ -596,7 +599,7 @@ Verifying Rsyslog Policy assignment from backend
 
         ${status}                           CLI.Check package installed
                                             ...    package_name=rsyslog
-                                            ...    host_ip=${SERVER_2_HOST_IP}
+                                            ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                             ...    linux_user=${PCC_LINUX_USER}
                                             ...    linux_password=${PCC_LINUX_PASSWORD}
 
@@ -610,7 +613,7 @@ Verifying Automatic Upgrade Policy assignment from backend
 	   ### Validation after setting automatic-upgrades to No ####
 
        ${status}            CLI.Automatic Upgrades Validation
-                            ...     host_ip=${SERVER_2_HOST_IP}
+                            ...     host_ip=${CLUSTERHEAD_1_HOST_IP}
                             ...     linux_user=pcc
                             ...     linux_password=cals0ft
 
@@ -706,27 +709,28 @@ Verify Ceph Cluster
         ${status}                   PCC.Ceph Verify BE
                                     ...  user=${PCC_LINUX_USER}
                                     ...  password=${PCC_LINUX_PASSWORD}
-                                    ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
+                                    ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
+
 
 ###################################################################################################################################
 Ceph Crush Map Validation
 ###################################################################################################################################
     [Documentation]                 *Ceph Crush Map Validation*
-                                    ...  keywords:
-                                    ...  CLI.Validate CEPH Crush Map From Backend
+                               ...  keywords:
+                               ...  CLI.Validate CEPH Crush Map From Backend
 
 
         ${status}                   CLI.Validate CEPH Crush Map From Backend
-                                    ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${CLUSTERHEAD_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
-                                    ...  hostip=${SERVER_3_HOST_IP}
+                               ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                               ...  hostip=${SERVER_3_HOST_IP}
 
                                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 
 
 	    ${status}                   CLI.Validate CEPH Crush Map From Backend
-                                    ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${CLUSTERHEAD_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
-		                            ...  hostip=${CLUSTERHEAD_2_NAME}
+                               ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"]}
+		                       ...  hostip=${SERVER_1_HOST_IP}
 
                                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 
@@ -739,14 +743,14 @@ Ceph Storage Type Validation
                                     ...  CLI.Validate CEPH Storage Type
 
         ${status}    CLI.Validate CEPH Storage Type
-                     ...  storage_types=['filestore']
+                     ...  storage_types=['bluestore']
                      ...  hostip=${SERVER_3_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
 	    ${status}    CLI.Validate CEPH Storage Type
-                     ...  storage_types=['filestore']
-                     ...  hostip=${SERVER_2_HOST_IP}
+                     ...  storage_types=['bluestore']
+                     ...  hostip=${SERVER_1_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
@@ -761,7 +765,7 @@ Verify Ceph Architecture- Nodes and OSDs
 
         ${status}    PCC.Ceph Nodes OSDs Architecture Validation
                      ...  name=${CEPH_CLUSTER_NAME}
-                     ...  hostip=${SERVER_2_HOST_IP}
+                     ...  hostip=${SERVER_1_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
@@ -776,10 +780,9 @@ Verify Ceph Pools After Upgrade
                                                 ...  PCC.Ceph Wait Until Pool Ready
 
 
-
         ${status}                               PCC.Ceph Pool Verify BE
                                                 ...  name=rbd
-                                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -787,7 +790,7 @@ Verify Ceph Pools After Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                                 ...  name=rgw
-                                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -795,7 +798,7 @@ Verify Ceph Pools After Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                                 ...  name=fs1
-                                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -804,7 +807,7 @@ Verify Ceph Pools After Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                                 ...  name=fs2
-                                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -812,21 +815,21 @@ Verify Ceph Pools After Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                                 ...  name=fs3
-                                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
 
         ${status}                               PCC.Ceph Pool Verify BE
                                                 ...  name=k8s-pool
-                                                ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
 
         ${status}              PCC.Ceph Pool Verify BE
                                ...  name=rgw-erasure-pool
-                               ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                log to console                  ${status}
                                Should Be Equal As Strings      ${status}    OK
 
@@ -843,7 +846,7 @@ Verify Ceph Rados Gateway With EC Pool Without S3 Accounts After Upgrade
                                                 Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
-Verify Ceph Rados Gateway  With Replicated Pool With S3 Accounts
+Verify Ceph Rados Gateway With Replicated Pool With S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                *Verify Ceph Rados Gateway *
@@ -883,6 +886,21 @@ Verify File Is Upload on Pool (ServiceIp As Default)
                                            ...  targetNodeIp=${SERVER_2_HOST_IP}
 
                                            Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Verify RBD From Backend
+###################################################################################################################################
+        [Documentation]                 *Verify RBD From Backend*
+                                       ...  keywords:
+                                       ...  PCC.Ceph Verify RBD From Backend
+
+
+
+        ${status}            PCC.Ceph Verify RBD From Backend
+                              ...  pool_name=rbd
+                              ...  rbd=["${CEPH_RBD_NAME}"]
+                              ...  targetNodeIp=${CLUSTERHEAD_2_HOST_IP}
+                             Log To Console    ${status}
+                             Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Verify Ceph Fs from backend
@@ -896,7 +914,7 @@ Verify Ceph Fs from backend
                                      ...  name=${CEPH_FS_NAME}
                                      ...  user=${PCC_LINUX_USER}
                                      ...  password=${PCC_LINUX_PASSWORD}
-                                     ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                     ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}"}]
 
                                      Should Be Equal As Strings      ${status}    OK
 

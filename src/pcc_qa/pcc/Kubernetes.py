@@ -68,14 +68,14 @@ class Kubernetes(PccBase):
             node_id=easy.get_node_id_by_name(conn,node_name)
             tmp_node.append({"id":node_id})
         self.nodes=tmp_node
-
+        print("self.nodes {}".format(self.nodes))
         tmp_pool=[]
         if self.pools:
             for pool in eval(str(self.pools)):
                  tmp_pool.append(easy.get_ceph_pool_id_by_name(conn,pool))
                  
         self.pools=tmp_pool
-        
+        print("self.pools {}".format(self.pools))
         if self.networkClusterName:
             self.networkClusterId=easy.get_network_clusters_id_by_name(conn,self.networkClusterName)
         

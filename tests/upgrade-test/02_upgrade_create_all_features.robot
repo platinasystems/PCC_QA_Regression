@@ -8,6 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
+    [Tags]        assign
                                                 Load Clusterhead 1 Test Data        ${pcc_setup}
                                                 Load Clusterhead 2 Test Data        ${pcc_setup}
                                                 Load Server 2 Test Data        ${pcc_setup}
@@ -34,55 +35,32 @@ Login
                                                 Load Tenant Data    ${pcc_setup}
                                                 Load Node Roles Data    ${pcc_setup}
                                                 Load Node Groups Data    ${pcc_setup}
-						                        Load PCC Test Data    ${pcc_setup}
+                                                                        Load PCC Test Data    ${pcc_setup}
 
-###################################################################################################################################
-Downgrade PCC
-###################################################################################################################################
-	[Documentation]                 *Downgrade PCC*
-                               ...  keywords:
-                               ...  CLI.Pcc Down
-
-	###  Making CLI Down  ####
-	${status}		CLI.Pcc Down
-					...    host_ip=${PCC_HOST_IP}
-					...    pcc_password=${PCC_SETUP_PWD}
-					...    linux_user=${PCC_LINUX_USER}
-					...    linux_password=${PCC_LINUX_PASSWORD}
-
-					Should Be Equal As Strings    ${status}    OK
-
-	### Taking PCC to lower version   ###
-	${status}       CLI.PCC Pull Code
-					...  host_ip=${PCC_HOST_IP}
-					...  linux_user=${PCC_LINUX_USER}
-					...  linux_password=${PCC_LINUX_PASSWORD}
-					...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release v1.7.0 --pruneVolumes
-
-                    Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
 Login to PCC
 ###################################################################################################################################
-	[Documentation]                 *Login to PCC and load data*
+        [Documentation]                 *Login to PCC and load data*
+        [Tags]        assign
 
-		${status}                               Login To PCC        testdata_key=${pcc_setup}
+                ${status}                               Login To PCC        testdata_key=${pcc_setup}
                                                 Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Create scoping object - Region
+Create scoping object - Region:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Region* test
                            ...  keywords:
                            ...  PCC.Create Scope
 
+        #Create scoping object - Region
 
         ${response}    PCC.Create Scope
                        ...  type=region
                        ...  scope_name=region-1
                        ...  description=region-description
-
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -97,13 +75,16 @@ Create scoping object - Region
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK
 
+
 ###################################################################################################################################
-Create scoping object - Zone
+Create scoping object - Zone:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 ###################################################################################################################################
 
-        [Documentation]    *Create scoping object - Region* test
+        [Documentation]    *Create scoping object - Zone* test
                            ...  keywords:
                            ...  PCC.Create Scope
+
+        #Create scoping object - Zone
 
 
         ${parent_Id}    PCC.Get Scope Id
@@ -129,14 +110,16 @@ Create scoping object - Zone
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK
 
+
 ###################################################################################################################################
-Create scoping object - Site
+Create scoping object - Site:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Site* test
                            ...  keywords:
                            ...  PCC.Create Scope
 
+        #Create scoping object - Site
 
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
@@ -166,13 +149,17 @@ Create scoping object - Site
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK
 
+
 ###################################################################################################################################
-Create scoping object - Rack
+Create scoping object - Rack:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Rack* test
                            ...  keywords:
                            ...  PCC.Create Scope
+
+
+        #Create scoping object - Rack
 
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
@@ -207,24 +194,36 @@ Create scoping object - Rack
                        Should Be Equal As Strings    ${status}    OK
 
 
+
 #####################################################################################################################################
-Add Nodes and assign the node(server2) to a rack
+Add Nodes :TCP-236
 #####################################################################################################################################
 
     [Documentation]                 *Add Nodes Test*
 
-
+    [Tags]        assign
     ${status}       PCC.Add mutliple nodes and check online
-					...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}']
-					...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
+                                        ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}']
+                                        ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
 
-					Log To Console    ${status}
-					Run Keyword If  "${status}" != "OK"  Fatal Error
-					Should be equal as strings    ${status}    OK
+                                        Log To Console    ${status}
+                                        Run Keyword If  "${status}" != "OK"  Fatal Error
+                                        Should be equal as strings    ${status}    OK
 
-		${node_id}    PCC.Get Node Id
-	                      ...  Name=${SERVER_2_NAME}
-	                      Log To Console    ${node_id}
+
+                ${status}     PCC.Wait Until All Nodes Are Ready
+
+                              Log To Console    ${status}
+                              Should Be Equal As Strings    ${status}    OK
+
+#####################################################################################################################################
+Assign the node (CLUSTERHEAD_1_NAME) to a rack :TCP-241,TCP-1469
+#####################################################################################################################################
+        [Tags]        assign
+
+                ${node_id}    PCC.Get Node Id
+                              ...  Name=${CLUSTERHEAD_1_NAME}
+                              Log To Console    ${node_id}
 
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
@@ -245,8 +244,9 @@ Add Nodes and assign the node(server2) to a rack
 
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
-                       ...  Name=${SERVER_2_NAME}
+                       ...  Name=${CLUSTERHEAD_1_NAME}
                        ...  scopeId=${scope_id}
+
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -255,7 +255,7 @@ Add Nodes and assign the node(server2) to a rack
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-		${status}     PCC.Wait Until All Nodes Are Ready
+                ${status}     PCC.Wait Until All Nodes Are Ready
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
@@ -270,19 +270,841 @@ Nodes Verification Back End (Services should be running and active)
                                     ...  PCC.Node Verify Back End
 
 
-		${status}       PCC.Node Verify Back End
-						...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-						Log To Console    ${status}
-						Run Keyword If  "${status}" != "OK"  Fatal Error
-						Should Be Equal As Strings      ${status}    OK
+                ${status}       PCC.Node Verify Back End
+                                                ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                Log To Console    ${status}
+                                                Run Keyword If  "${status}" != "OK"  Fatal Error
+                                                Should Be Equal As Strings      ${status}    OK
+
+
+#Installing net-tools on nodes
+
+#####################################################################################################################################
+Install net-tools on nodes
+#####################################################################################################################################
+
+    [Documentation]    *Install net-tools on nodes* test
+
+
+    ${status}    Install net-tools command
+
+
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    OK
+
+
+#Installing s2cmd on nodes
+
+#####################################################################################################################################
+Install s3cmd utility on nodes
+#####################################################################################################################################
+
+    [Documentation]    *Install s3cmd on nodes* test
+
+
+    ${status}    Install s3cmd command
+
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    OK
+
+##### Uncommenting interface cleanup code for pcc242 nodes ######
+
+###################################################################################################################################
+Set Interfaces For ${CLUSTERHEAD_1_NAME}
+###################################################################################################################################
+    [Documentation]                *Set Interfaces For ${CLUSTERHEAD_1_NAME}(i43)*
+                                   ...  keywords:
+                                   ...  PCC.Interface Set 1D Link
+                                   ...  PCC.Interface Apply
+                                   ...  PCC.Interface Verify PCC
+                                   ...  PCC.Wait Until Interface Ready
+
+    ${response}                PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth5
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=40000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+                                  Sleep    10s
+
+    ${response}                PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+
+    ${status}                PCC.Wait Until Interface Ready
+                             ...  node_name=${CLUSTERHEAD_1_NAME}
+                             ...  interface_name=xeth5
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${status}                PCC.Interface Verify PCC
+                             ...  node_name=${CLUSTERHEAD_1_NAME}
+                             ...  interface_name=xeth5
+                             ...  assign_ip=[]
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${response}                PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth1-1
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+                                  Sleep    10s
+
+    ${response}                PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+
+    ${status}                PCC.Wait Until Interface Ready
+                             ...  node_name=${CLUSTERHEAD_1_NAME}
+                             ...  interface_name=xeth1-1
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${status}                PCC.Interface Verify PCC
+                             ...  node_name=${CLUSTERHEAD_1_NAME}
+                             ...  interface_name=xeth1-1
+                             ...  assign_ip=[]
+                             ...  cleanUp=yes
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${response}                PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  interface_name=xeth1-2
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+                                  Sleep    10s
+
+    ${response}                PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_1_NAME}
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+
+    ${status}                PCC.Wait Until Interface Ready
+                             ...  node_name=${CLUSTERHEAD_1_NAME}
+                             ...  interface_name=xeth1-2
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${status}                PCC.Interface Verify PCC
+                             ...  node_name=${CLUSTERHEAD_1_NAME}
+                             ...  interface_name=xeth1-2
+                             ...  assign_ip=[]
+                             ...  cleanUp=yes
+                             Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Set Interfaces For ${CLUSTERHEAD_2_NAME}
+###################################################################################################################################
+    [Documentation]                *Set Interfaces For ${CLUSTERHEAD_2_NAME} (i42)*
+                                   ...  keywords:
+                                   ...  PCC.Interface Set 1D Link
+                                   ...  PCC.Interface Apply
+                                   ...  PCC.Interface Verify PCC
+                                   ...  PCC.Wait Until Interface Ready
+
+    ${response}                PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth5
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=40000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+                                  Sleep    10s
+
+    ${response}                PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+
+    ${status}                PCC.Wait Until Interface Ready
+                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                             ...  interface_name=xeth5
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${status}                PCC.Interface Verify PCC
+                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                             ...  interface_name=xeth5
+                             ...  assign_ip=[]
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${response}                PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth1-1
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+                                  Sleep    10s
+
+    ${response}                PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+    ${status_code}              Get Response Status Code        ${response}
+                                Should Be Equal As Strings      ${status_code}  200
+
+    ${status}                PCC.Wait Until Interface Ready
+                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                             ...  interface_name=xeth1-1
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${status}                PCC.Interface Verify PCC
+                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                             ...  interface_name=xeth1-1
+                             ...  assign_ip=[]
+                             ...  cleanUp=yes
+                             Should Be Equal As Strings      ${status}    OK
+
+    ${response}                PCC.Interface Set 1D Link
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+                               ...  interface_name=xeth1-2
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+                                  Sleep    10s
+
+    ${response}                PCC.Interface Apply
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
+
+    ${status_code}                Get Response Status Code        ${response}
+                                  Should Be Equal As Strings      ${status_code}  200
+
+    ${status}                PCC.Wait Until Interface Ready
+                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                             ...  interface_name=xeth1-2
+                             Should Be Equal As Strings      ${status}    OK
+    ${status}                PCC.Interface Verify PCC
+                             ...  node_name=${CLUSTERHEAD_2_NAME}
+                             ...  interface_name=xeth1-2
+                             ...  assign_ip=[]
+                             ...  cleanUp=yes
+                             Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Set Interfaces For ${SERVER_1_NAME}
+###################################################################################################################################
+    [Documentation]                 *Set Interfaces For ${SERVER_1_NAME}*
+                               ...  keywords:
+                               ...  PCC.Interface Set 1D Link
+                               ...  PCC.Interface Apply
+                               ...  PCC.Interface Verify PCC
+                               ...  PCC.Wait Until Interface Ready
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_1_NAME}
+                               ...  interface_name=enp129s0
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_1_NAME}
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_1_NAME}
+                               ...  interface_name=enp129s0
+                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_1_NAME}
+                               ...  interface_name=enp129s0
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_1_NAME}
+                               ...  interface_name=enp129s0d1
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_1_NAME}
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_1_NAME}
+                               ...  interface_name=enp129s0d1
+                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_1_NAME}
+                               ...  interface_name=enp129s0d1
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Set Interfaces For ${SERVER_2_NAME}
+###################################################################################################################################
+    [Documentation]                 *Set Interfaces For ${SERVER_2_NAME} (sv125)*
+                               ...  keywords:
+                               ...  PCC.Interface Set 1D Link
+                               ...  PCC.Interface Apply
+                               ...  PCC.Interface Verify PCC
+                               ...  PCC.Wait Until Interface Ready
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_2_NAME}
+                               ...  interface_name=enp129s0
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_2_NAME}
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_2_NAME}
+                               ...  interface_name=enp129s0
+                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_2_NAME}
+                               ...  interface_name=enp129s0
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_2_NAME}
+                               ...  interface_name=enp129s0d1
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=10000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_2_NAME}
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_2_NAME}
+                               ...  interface_name=enp129s0d1
+                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_2_NAME}
+                               ...  interface_name=enp129s0d1
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Set Interfaces For ${SERVER_3_NAME}
+###################################################################################################################################
+    [Documentation]                 *Set Interfaces For ${SERVER_3_NAME} (sv110)*
+                               ...  keywords:
+                               ...  PCC.Interface Set 1D Link
+                               ...  PCC.Interface Apply
+                               ...  PCC.Interface Verify PCC
+                               ...  PCC.Wait Until Interface Ready
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=40000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_3_NAME}
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_3_NAME}
+                               ...  interface_name=enp3s0
+                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Interface Set 1D Link
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0d1
+                               ...  assign_ip=[]
+                               ...  managedbypcc=True
+                               ...  autoneg=off
+                               ...  speed=40000
+                               ...  adminstatus=UP
+                               ...  cleanUp=yes
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+        ${response}                 PCC.Interface Apply
+                               ...  node_name=${SERVER_3_NAME}
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${status}                   PCC.Wait Until Interface Ready
+                               ...  node_name${SERVER_3_NAME}
+                               ...  interface_name=enp3s0d1
+                                    Should Be Equal As Strings      ${status}    OK
+        ${status}                   PCC.Interface Verify PCC
+                               ...  node_name=${SERVER_3_NAME}
+                               ...  interface_name=enp3s0d1
+                               ...  assign_ip=[]
+                               ...  cleanUp=yes
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+######## commenting cleanup script for 212 nodes ###########
+
+####################################################################################################################################
+#Set Interfaces For ${CLUSTERHEAD_1_NAME}
+####################################################################################################################################
+#    [Documentation]                 *Set Interfaces For ${CLUSTERHEAD_1_NAME}(i43)*
+#                               ...  keywords:
+#                               ...  PCC.Interface Set 1D Link
+#                               ...  PCC.Interface Apply
+#                               ...  PCC.Interface Verify PCC
+#                               ...  PCC.Wait Until Interface Ready
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth6-2
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth6-2
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth6-2
+#                               ...  assign_ip=[]
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth32-1
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth32-1
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth32-1
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth32-2
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth32-2
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                               ...  interface_name=xeth32-2
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Set Interfaces For ${CLUSTERHEAD_2_NAME}
+####################################################################################################################################
+#    [Documentation]                 *Set Interfaces For ${CLUSTERHEAD_2_NAME} (i42)*
+#                               ...  keywords:
+#                               ...  PCC.Interface Set 1D Link
+#                               ...  PCC.Interface Apply
+#                               ...  PCC.Interface Verify PCC
+#                               ...  PCC.Wait Until Interface Ready
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth6-2
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth6-2
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth6-2
+#                               ...  assign_ip=[]
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth32-1
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth32-1
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth32-1
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth32-2
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth32-2
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${CLUSTERHEAD_2_NAME}
+#                               ...  interface_name=xeth32-2
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Set Interfaces For ${SERVER_1_NAME}
+####################################################################################################################################
+#    [Documentation]                 *Set Interfaces For ${SERVER_1_NAME}*
+#                               ...  keywords:
+#                               ...  PCC.Interface Set 1D Link
+#                               ...  PCC.Interface Apply
+#                               ...  PCC.Interface Verify PCC
+#                               ...  PCC.Wait Until Interface Ready
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${SERVER_1_NAME}
+#                               ...  interface_name=enp130s0
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${SERVER_1_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name${SERVER_1_NAME}
+#                               ...  interface_name=enp130s0
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${SERVER_1_NAME}
+#                               ...  interface_name=enp130s0
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${SERVER_1_NAME}
+#                               ...  interface_name=enp130s0d1
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${SERVER_1_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name${SERVER_1_NAME}
+#                               ...  interface_name=enp130s0d1
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${SERVER_1_NAME}
+#                               ...  interface_name=enp130s0d1
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Set Interfaces For ${SERVER_2_NAME}
+####################################################################################################################################
+#    [Documentation]                 *Set Interfaces For ${SERVER_2_NAME} (sv125)*
+#                               ...  keywords:
+#                               ...  PCC.Interface Set 1D Link
+#                               ...  PCC.Interface Apply
+#                               ...  PCC.Interface Verify PCC
+#                               ...  PCC.Wait Until Interface Ready
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${SERVER_2_NAME}
+#                               ...  interface_name=enp130s0
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${SERVER_2_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name${SERVER_2_NAME}
+#                               ...  interface_name=enp130s0
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${SERVER_2_NAME}
+#                               ...  interface_name=enp130s0
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${SERVER_2_NAME}
+#                               ...  interface_name=enp130s0d1
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${SERVER_2_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name${SERVER_2_NAME}
+#                               ...  interface_name=enp130s0d1
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${SERVER_2_NAME}
+#                               ...  interface_name=enp130s0d1
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+####################################################################################################################################
+#Set Interfaces For ${SERVER_3_NAME}
+####################################################################################################################################
+#    [Documentation]                 *Set Interfaces For ${SERVER_3_NAME} (sv110)*
+#                               ...  keywords:
+#                               ...  PCC.Interface Set 1D Link
+#                               ...  PCC.Interface Apply
+#                               ...  PCC.Interface Verify PCC
+#                               ...  PCC.Wait Until Interface Ready
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${SERVER_3_NAME}
+#                               ...  interface_name=ens2
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${SERVER_3_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name${SERVER_3_NAME}
+#                               ...  interface_name=ens2
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${SERVER_3_NAME}
+#                               ...  interface_name=ens2
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Interface Set 1D Link
+#                               ...  node_name=${SERVER_3_NAME}
+#                               ...  interface_name=ens2d1
+#                               ...  assign_ip=[]
+#                               ...  managedbypcc=True
+#                               ...  autoneg=off
+#                               ...  speed=10000
+#                               ...  adminstatus=UP
+#                               ...  cleanUp=yes
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#                                    Sleep    10s
+#        ${response}                 PCC.Interface Apply
+#                               ...  node_name=${SERVER_3_NAME}
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#        ${status}                   PCC.Wait Until Interface Ready
+#                               ...  node_name${SERVER_3_NAME}
+#                               ...  interface_name=ens2d1
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Interface Verify PCC
+#                               ...  node_name=${SERVER_3_NAME}
+#                               ...  interface_name=ens2d1
+#                               ...  assign_ip=[]
+#                               ...  cleanUp=yes
+#                                    Should Be Equal As Strings      ${status}    OK
+
 
 
 #################################################################################################################################################################
-Verify Default node role is installed and all the apps persist from backend
+Verify Default node role is installed
 #################################################################################################################################################################
 
         [Documentation]    *Verify Default node role is installed* test
-
+        [Tags]        assign
         #### Checking if PCC assign the Default node role to the node when a node is added to PCC #####
         ${status}    PCC.Verify Node Role On Nodes
                      ...    Name=Default
@@ -291,6 +1113,10 @@ Verify Default node role is installed and all the apps persist from backend
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
 
+
+##################################################################################################################
+Verify Default node role packages are installed on nodes from backend
+##################################################################################################################
 
         ${status}                   PCC.Verify LLDP Neighbors
                              ...    servers_hostip=['${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}']
@@ -389,7 +1215,7 @@ Verify Default node role is installed and all the apps persist from backend
                                     Log To Console    ${status}
                                     Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
 
-		${status}                   CLI.Automatic Upgrades Validation
+                ${status}                   CLI.Automatic Upgrades Validation
                              ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
                              ...    linux_user=pcc
                              ...    linux_password=cals0ft
@@ -417,7 +1243,7 @@ Get Node Ids
 ###################################################################################################################################
 
 
-	    ${server1_id}                           PCC.Get Node Id    Name=${SERVER_1_NAME}
+            ${server1_id}                           PCC.Get Node Id    Name=${SERVER_1_NAME}
                                                 Log To Console    ${server1_id}
                                                 Set Global Variable    ${server1_id}
 
@@ -438,27 +1264,27 @@ Get Node Ids
                                                 Set Global Variable    ${invader2_id}
 
 ###################################################################################################################################
-Adding Maas To Invaders
+Adding Maas To Invaders : TCP-1140
 ###################################################################################################################################
     [Documentation]                 *Adding Maas To Invaders*
                                ...  Keywords:
                                ...  PCC.Add and Verify Roles On Nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
         ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${CLUSTERHEAD_2_NAME}"]
                                ...  roles=["Baremetal Management Node", "Default"]
                                     Should Be Equal As Strings      ${response}  OK
         ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_1_NAME}
+                               ...  node_name=${CLUSTERHEAD_2_NAME}
                                     Should Be Equal As Strings      ${status_code}  OK
         ${response}                 PCC.Maas Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                     Should Be Equal As Strings      ${response}  OK
 
 ###################################################################################################################################
-PCC-Tenant-Creation For Upgrade and restore
+PCC-Tenant-Creation For Upgrade and restore :TCP-477
 ###################################################################################################################################
 
         [Documentation]    *Create Tenant* test
@@ -485,9 +1311,25 @@ PCC-Tenant-Creation For Upgrade and restore
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
 
+        ${response}    PCC.Add Tenant
+                       ...    Name=${TENANT5}
+                       ...    Description=CR_TENANT_DESC
+                       ...    Parent_id=${parent_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}    PCC.Validate Tenant
+                     ...    Name=${TENANT5}
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+
 
 ###################################################################################################################################
-PCC Read Only Role Creation
+PCC Read Only Role Creation :TCP-499
 ###################################################################################################################################
 
         [Documentation]    *Create Read Only Role* test
@@ -515,7 +1357,7 @@ PCC Read Only Role Creation
                        Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-PCC-Read Only User Creation
+PCC-Read Only User Creation : TCP-1763
 ###################################################################################################################################
 
         [Documentation]    *Create Read Only User* test
@@ -546,14 +1388,7 @@ PCC-Read Only User Creation
                         Sleep  10s
 
 
-###################################################################################################################################
-PCC-Get Link From Gmail Read Only User
-###################################################################################################################################
-
-        [Documentation]    *Get Link From Gmail* test
-                           ...  keywords:
-                           ...  PCC.Add Read Only User
-
+        #PCC-Get Link From Gmail Read Only User
         ${password_token}     PCC.Get Link From Gmail
                               ...   Email=${READONLY_USER_PCC_USERNAME}
 
@@ -561,14 +1396,8 @@ PCC-Get Link From Gmail Read Only User
                               Set Suite Variable    ${password_token}
 
 
-###################################################################################################################################
-PCC-Create Read Only Password
-###################################################################################################################################
 
-        [Documentation]    *Create Password* test
-                           ...  keywords:
-                           ...  PCC.Create User Password
-
+        #PCC-Create Read Only Password
         ${response}     PCC.Create User Password
                         ...     Password=${READONLY_USER_PCC_PWD}
 
@@ -578,15 +1407,15 @@ PCC-Create Read Only Password
                         Should Be Equal As Strings    ${status}    200
 
         ${status}        Login To User
-						 ...  ${pcc_setup}
-						 ...  ${READONLY_USER_PCC_USERNAME}
-						 ...  ${READONLY_USER_PCC_PWD}
+                                                 ...  ${pcc_setup}
+                                                 ...  ${READONLY_USER_PCC_USERNAME}
+                                                 ...  ${READONLY_USER_PCC_PWD}
 
         ${status}        Login To PCC    ${pcc_setup}
 
 
 ###################################################################################################################################
-PCC-Admin User Creation
+PCC-Tenant User (Admin) Creation : TCP-313
 ###################################################################################################################################
 
         [Documentation]    *Create Read Only User* test
@@ -618,28 +1447,15 @@ PCC-Admin User Creation
 
 
 
-###################################################################################################################################
-PCC-Get Link From Gmail Admin User
-###################################################################################################################################
 
-        [Documentation]    *Get Link From Gmail* test
-                           ...  keywords:
-                           ...  PCC.Add Read Only User
-
+        #PCC-Get Link From Gmail Tenant User (Admin)
         ${password_token}     PCC.Get Link From Gmail
                               ...   Email=${TENANT_USER_PCC_USERNAME}
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}
 
-###################################################################################################################################
-PCC-Create Admin User Password
-###################################################################################################################################
-
-        [Documentation]    *Create Password* test
-                           ...  keywords:
-                           ...  PCC.Create User Password
-
+        #PCC-Create Tenant User (Admin) Password
         ${response}     PCC.Create User Password
                         ...     Password=${TENANT_USER_PCC_PWD}
 
@@ -649,14 +1465,14 @@ PCC-Create Admin User Password
                         Should Be Equal As Strings    ${status}    200
 
         ${status}        Login To User
-						 ...  ${pcc_setup}
-						 ...  ${TENANT_USER_PCC_USERNAME}
-						 ...  ${TENANT_USER_PCC_PWD}
+                                                 ...  ${pcc_setup}
+                                                 ...  ${TENANT_USER_PCC_USERNAME}
+                                                 ...  ${TENANT_USER_PCC_PWD}
 
-		${status}        Login To PCC    ${pcc_setup}
+                ${status}        Login To PCC    ${pcc_setup}
 
 ###################################################################################################################################
-Pcc Tenant Assignment
+Pcc Tenant Assignment : TCP-242
 ###################################################################################################################################
 
         [Documentation]    *Pcc-Tenant-Assignment* test
@@ -666,7 +1482,7 @@ Pcc Tenant Assignment
                            ...  PCC.Validate Tenant Assigned to Node
 
         ${tenant_id}    PCC.Get Tenant Id
-                        ...    Name=${TENANT5}
+                        ...    Name=${CR_TENANT_USER}
 
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant_id=${tenant_id}
@@ -679,14 +1495,14 @@ Pcc Tenant Assignment
 
         ${status}    PCC.Validate Tenant Assigned to Node
                      ...    Name=${SERVER_2_NAME}
-                     ...    Tenant_Name=${TENANT5}
+                     ...    Tenant_Name=${CR_TENANT_USER}
 
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
 
 
 ###################################################################################################################################
-PCC Node Group Creation and Verification For Upgrade and restore
+PCC Node Group Creation and Verification For Upgrade and restore : TCP-357
 ###################################################################################################################################
 
         [Documentation]                       *PCC Node Group - Verify if user can access node group* test
@@ -719,11 +1535,11 @@ PCC Node Group Creation and Verification For Upgrade and restore
 
 
 ###################################################################################################################################
-Alert Create Raw Rule
+Alert Create Raw Rule :TCP-1082
 ###################################################################################################################################
     [Documentation]                 *Alert Create Raw Rule*
                                ...  Keywords:
-                               ...  PCC.Alert Create Rule Raw
+                               ...  PCC.Alert Create Rule Raw   
 
         ${status}                   PCC.Alert Create Rule Raw
                                ...  auth_data=${PCC_CONN}
@@ -731,7 +1547,7 @@ Alert Create Raw Rule
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  filename=freeswap.yml
-
+                             
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -763,7 +1579,7 @@ Check App catalog for all the existing apps
                                Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Create DNS client node role
+Create DNS client node role :TCP-1428
 ###################################################################################################################################
 
         [Documentation]    *Create node role with DNS client application* test
@@ -799,7 +1615,7 @@ Create DNS client node role
 
 
 ###################################################################################################################################
-Create NTP client node role
+Create NTP client node role :TCP-1429
 ###################################################################################################################################
 
         [Documentation]    *Create node role with NTP client application* test
@@ -834,7 +1650,7 @@ Create NTP client node role
                      Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
 
 ###################################################################################################################################
-Create SNMP agent node role
+Create SNMP agent node role :TCP-1430
 ###################################################################################################################################
 
         [Documentation]    *Create node role with SNMPv2 client application* test
@@ -872,7 +1688,7 @@ Create SNMP agent node role
 
 
 ###################################################################################################################################
-Create RSYSLOG client node role
+Create RSYSLOG client node role :TCP-1616
 ###################################################################################################################################
 
         [Documentation]    *Create RSYSLOG client node role* test
@@ -968,7 +1784,7 @@ Install DNS, NTP, SNMPv2, Rsyslog client node role on node and verify
                                Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Create a policy using DNS client app, assigning it to the Location
+Create a policy using DNS client app, assigning it to the Location :TCP-1409
 ###################################################################################################################################
 
         [Documentation]    *Create a policy* test
@@ -1010,13 +1826,13 @@ Create a policy using DNS client app, assigning it to the Location
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-		${status}     PCC.Wait Until All Nodes Are Ready
+                ${status}     PCC.Wait Until All Nodes Are Ready
 
                       Log To Console    ${status}
                       Should Be Equal As Strings    ${status}    OK
 
         #verifying DNS policy in PCC UI
-		${response}    PCC.Get Policy Details
+                ${response}    PCC.Get Policy Details
                        ...  Name=dns
                        ...  description=dns-policy-description
 
@@ -1031,7 +1847,7 @@ Create a policy using DNS client app, assigning it to the Location
 Verifying DNS client Policy assignment from backend
 ###################################################################################################################################
 
-		##### Validate RSOP on Node ##########
+                ##### Validate RSOP on Node ##########
 
         ${dns_rack_policy_id}                PCC.Get Policy Id
                                              ...  Name=dns
@@ -1039,31 +1855,30 @@ Verifying DNS client Policy assignment from backend
                                              Log To Console    ${dns_rack_policy_id}
                                              Set Global Variable    ${dns_rack_policy_id}
 
-		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${dns_rack_policy_id}]
 
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
 
-		##### Validate DNS from backend #########
+                ##### Validate DNS from backend #########
 
         ${node_wait_status}                  PCC.Wait Until Node Ready
-                                             ...  Name=${SERVER_2_NAME}
+                                             ...  Name=${CLUSTERHEAD_1_NAME}
 
                                              Log To Console    ${node_wait_status}
                                              Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}                            PCC.Validate DNS From Backend
-                                             ...  host_ip=${SERVER_2_HOST_IP}
+                                             ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
                                              ...  search_list=['8.8.8.8']
 
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
 
-
 ###################################################################################################################################
-Create a policy using NTP client app, assigning it to the Location
+Create a policy using NTP client app, assigning it to the Location :TCP-1410
 ###################################################################################################################################
 
         [Documentation]    *Create a policy* test
@@ -1104,13 +1919,13 @@ Create a policy using NTP client app, assigning it to the Location
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-		${status}     PCC.Wait Until All Nodes Are Ready
+                ${status}     PCC.Wait Until All Nodes Are Ready
 
                       Log To Console    ${status}
                       Should Be Equal As Strings    ${status}    OK
 
-		#verifying NTP policy in PCC UI
-		${response}    PCC.Get Policy Details
+                #verifying NTP policy in PCC UI
+                ${response}    PCC.Get Policy Details
                        ...  Name=ntp
                        ...  description=ntp-policy-description
 
@@ -1126,7 +1941,7 @@ Create a policy using NTP client app, assigning it to the Location
 Verifying NTP client Policy assignment from backend
 ###################################################################################################################################
 
-		##### Validate RSOP on Node ##########
+                ##### Validate RSOP on Node ##########
 
         ${ntp_rack_policy_id}                PCC.Get Policy Id
                                              ...  Name=ntp
@@ -1134,8 +1949,8 @@ Verifying NTP client Policy assignment from backend
                                              Log To Console    ${ntp_rack_policy_id}
                                              Set Global Variable    ${ntp_rack_policy_id}
 
-		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${ntp_rack_policy_id}]
 
                                              Log To Console    ${status}
@@ -1143,36 +1958,36 @@ Verifying NTP client Policy assignment from backend
 
 
 
-		##### Check NTP services from backend #####
+                ##### Check NTP services from backend #####
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
-        ${status}     PCC.Check NTP services from backend
-                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+        ${status}                PCC.Check NTP services from backend
+                                 ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}']
 
-                      Log To Console    ${status}
-                      Should Be Equal As Strings      ${status}  OK
+                                 Log To Console    ${status}
+                                 Should Be Equal As Strings      ${status}  OK
 
-		##### Validate NTP from backend #########
+                ##### Validate NTP from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}     PCC.Validate NTP From Backend
-                      ...  host_ip=${SERVER_2_HOST_IP}
+                      ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
                       ...  time_zone=America/Chicago
 
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Create a policy using SNMP client app, assigning it to the Location
+Create a policy using SNMP client app, assigning it to the Location :TCP-1464
 ###################################################################################################################################
 
         [Documentation]    *Create a policy* test
@@ -1201,9 +2016,14 @@ Create a policy using SNMP client app, assigning it to the Location
                         ...  scope_name=rack-1
                         ...  parentID=${parent3_Id}
 
+
+
+        #### Creating SNMP_V2 policies ####
+
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
-                       ...  description=snmp-policy-description
+                       ...  description=SNMP_v2
+                       ...  inputs=[{"name":"community_string","value":"snmpv2_community_string"}]
                        ...  scopeIds=[${scope_id}]
 
                        Log To Console    ${response}
@@ -1213,77 +2033,47 @@ Create a policy using SNMP client app, assigning it to the Location
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-		${status}     PCC.Wait Until All Nodes Are Ready
-
-                      Log To Console    ${status}
-                      Should Be Equal As Strings    ${status}    OK
-
-		#verifying SNMP policy in PCC UI
-		${response}    PCC.Get Policy Details
-                       ...  Name=snmp
-                       ...  description=snmp-policy-description
-
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
 Verifying SNMP client Policy assignment from backend
 ###################################################################################################################################
 
-		##### Validate RSOP on Node ##########
+                ##### Validate RSOP on Node ##########
 
         ${snmp_rack_policy_id}                PCC.Get Policy Id
                                              ...  Name=snmp
-                                             ...  description=snmp-policy-description
+                                             ...  description=SNMP_v2
                                              Log To Console    ${snmp_rack_policy_id}
                                              Set Global Variable    ${snmp_rack_policy_id}
 
-		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${snmp_rack_policy_id}]
 
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
 
 
-
-		##### Check SNMP services from backend #####
-
-        ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
-
-                               Log To Console    ${node_wait_status}
-                               Should Be Equal As Strings    ${node_wait_status}    OK
-
-        ${status}     PCC.Check SNMP services from backend
-                      ...  targetNodeIp=['${SERVER_2_HOST_IP}']
-
-                      Log To Console    ${status}
-                      Should Be Equal As Strings      ${status}  OK
-
-		##### Validate SNMPv2 from backend #########
+                ##### Validate SNMPv2 from backend #########
 
         ${node_wait_status}    PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_2_NAME}
+                               ...  Name=${CLUSTERHEAD_1_NAME}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}     PCC.Validate SNMP from backend
                       ...  snmp_version=snmpv2
-                      ...  community_string=community_string
-                      ...  host_ip=${SERVER_2_HOST_IP}
-                      ...  node_name=${SERVER_2_NAME}
+                      ...  community_string=snmpv2_community_string
+                      ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
+                      ...  node_name=${CLUSTERHEAD_1_NAME}
 
                       Log To Console    ${status}
                       Should Be Equal As Strings      ${status}  OK
 
+
 ###################################################################################################################################
-Create a policy using RSYSLOG client app(without TLS), assigning it to the Location
+Create a policy using RSYSLOG client app(without TLS), assigning it to the Location:TCP-1618
 ###################################################################################################################################
 
         [Documentation]                      *Create a policy* test
@@ -1292,7 +2082,7 @@ Create a policy using RSYSLOG client app(without TLS), assigning it to the Locat
 
         ###  Creating Rsyslog Policy  ####
 
-		${app_id}                   PCC.Get App Id from Policies
+                ${app_id}                   PCC.Get App Id from Policies
                                     ...  Name=rsyslogd
                                     Log To Console    ${app_id}
 
@@ -1325,13 +2115,13 @@ Create a policy using RSYSLOG client app(without TLS), assigning it to the Locat
                                     Log to Console    ${message}
                                     Should Be Equal As Strings    ${status}    200
 
-		${status}     PCC.Wait Until All Nodes Are Ready
+                ${status}     PCC.Wait Until All Nodes Are Ready
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 
-		#verifying RSYSLOG policy in PCC UI
-		${response}    PCC.Get Policy Details
+                #verifying RSYSLOG policy in PCC UI
+                ${response}    PCC.Get Policy Details
                        ...  Name=rsyslogd
                        ...  description=rsyslog-policy
 
@@ -1342,33 +2132,36 @@ Create a policy using RSYSLOG client app(without TLS), assigning it to the Locat
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
+
 ###################################################################################################################################
 Verifying Rsyslog Policy assignment from backend
 ###################################################################################################################################
-	[Documentation]                      *Verifying Policy assignment from backend* test
+        [Documentation]                      *Verifying Policy assignment from backend* test
                                           ...  keywords:
                                           ...  PCC.Create Policy
 
-		##### Validate RSOP on Node ##########
+
+
+                ##### Validate RSOP on Node ##########
 
         ${rsyslog_policy_id}                PCC.Get Policy Id
-                                            ...  Name=rsyslogd
-                                            ...  description=rsyslog-policy
-                                            Log To Console    ${rsyslog_policy_id}
-                                            Set Global Variable    ${rsyslog_policy_id}
+                                             ...  Name=rsyslogd
+                                             ...  description=rsyslog-policy
+                                             Log To Console    ${rsyslog_policy_id}
+                                             Set Global Variable    ${rsyslog_policy_id}
 
-		${status}                            PCC.Validate RSOP of a node
-                                             ...  node_name=${SERVER_2_NAME}
+                ${status}                            PCC.Validate RSOP of a node
+                                             ...  node_name=${CLUSTERHEAD_1_NAME}
                                              ...  policyIDs=[${rsyslog_policy_id}]
 
                                              Log To Console    ${status}
                                              Should Be Equal As Strings      ${status}  OK
 
-		##### Validate Rsyslog from backend #########
+                ##### Validate Rsyslog from backend #########
 
         ${status}                           CLI.Check package installed
                                             ...    package_name=rsyslog
-                                            ...    host_ip=${SERVER_2_HOST_IP}
+                                            ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                             ...    linux_user=${PCC_LINUX_USER}
                                             ...    linux_password=${PCC_LINUX_PASSWORD}
 
@@ -1376,7 +2169,7 @@ Verifying Rsyslog Policy assignment from backend
                                             Should Be Equal As Strings    ${status}    rsyslog Package installed
 
 ###################################################################################################################################
-Create a policy using Automatic Upgrades client app, assigning it to the Location
+Create a policy using Automatic Upgrades client app, assigning it to the Location : TCP-1445
 ###################################################################################################################################
 
 
@@ -1390,9 +2183,9 @@ Create a policy using Automatic Upgrades client app, assigning it to the Locatio
                              Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
 
 
-	   ### create automatic upgrade policy with false value
+           ### create automatic upgrade policy with false value
 
-	   ${app_id}                   PCC.Get App Id from Policies
+           ${app_id}                   PCC.Get App Id from Policies
                                    ...  Name=automatic-upgrades
                                    Log To Console    ${app_id}
 
@@ -1413,10 +2206,10 @@ Create a policy using Automatic Upgrades client app, assigning it to the Locatio
                         ...  scope_name=rack-1
                         ...  parentID=${parent3_Id}
 
-		${response}           PCC.Create Policy
+                ${response}           PCC.Create Policy
                               ...  appId=${app_id}
                               ...  description=Automatic-upgrade-policy
-                              ...  scopeIds=[${default_rack_Id}]
+                              ...  scopeIds=[${scope_id}]
                               ...  inputs=[{"name": "enabled","value": "false"}]
 
                               Log To Console    ${response}
@@ -1431,10 +2224,10 @@ Create a policy using Automatic Upgrades client app, assigning it to the Locatio
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 
-	   ### Validation after setting automatic-upgrades to No ####
+           ### Validation after setting automatic-upgrades to No ####
 
        ${status}            CLI.Automatic Upgrades Validation
-                            ...    host_ip=${SERVER_2_HOST_IP}
+                            ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                             ...    linux_user=pcc
                             ...    linux_password=cals0ft
 
@@ -1442,7 +2235,7 @@ Create a policy using Automatic Upgrades client app, assigning it to the Locatio
 
 
 ###################################################################################################################################
-Create IPAM Subnets
+Create IPAM Subnets :TCP-1773,TCP-1774
 ###################################################################################################################################
     [Documentation]                 *Create IPAM Subnet*
                                ...  keywords:
@@ -1463,7 +2256,7 @@ Create IPAM Subnets
 
                                     Should Be Equal As Strings      ${status}    OK
 
-		###  Data CIDR  #####
+                ###  Data CIDR  #####
         ${response}                 PCC.Ipam Subnet Create
                                ...  name=${IPAM_DATA_SUBNET_NAME}
                                ...  subnet=${IPAM_DATA_SUBNET_IP}
@@ -1487,7 +2280,7 @@ Check internet reachability from nodes
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Network Manager Creation
+Network Manager Creation :TCP-1349
 ###################################################################################################################################
     [Documentation]                 *Network Manager Creation*
                                ...  keywords:
@@ -1503,26 +2296,24 @@ Network Manager Creation
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
-		####  Wait Until Network Manager Ready ####
-		${status}                   PCC.Wait Until Network Manager Ready
+                ####  Wait Until Network Manager Ready ####
+                ${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-		####  Verify Network Manager from Backend ####
-		${status}              PCC.Network Manager Verify BE
+                ####  Verify Network Manager from Backend ####
+                ${status}              PCC.Network Manager Verify BE
                                ...  nodes_ip=${NETWORK_MANAGER_NODES_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
-
-
                                     Should Be Equal As Strings      ${status}  OK
 
-		${status}              PCC.Health Check Network Manager
+                ${status}              PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Create Certificate Authority Public Certificate
+Create Certificate Authority Public Certificate : TCP-1231
 ###################################################################################################################################
 
         [Documentation]    *Add Certificate* test
@@ -1543,7 +2334,7 @@ Create Certificate Authority Public Certificate
                        Should Be Equal As Strings    ${response}    OK
 
 ###################################################################################################################################
-Create Private/Public Cert keypair for RGW
+Create Private/Public Cert keypair for RGW : TCP-1231
 ###################################################################################################################################
 
         [Documentation]    *Add Certificate* test
@@ -1570,7 +2361,7 @@ Create Private/Public Cert keypair for RGW
 
 
 ###################################################################################################################################
-Create OpenSSH Public Key
+Create OpenSSH Public Key :TCP-258
 ###################################################################################################################################
 
         [Documentation]    *Add Public Key* test
@@ -1621,14 +2412,14 @@ Create Application credential profile without application
                       Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Ceph Cluster Create
+Ceph Cluster Create : TCP-564
 ###################################################################################################################################
     [Documentation]                 *Creating Ceph Cluster*
                                ...  keywords:
                                ...  PCC.Ceph Create Cluster
                                ...  PCC.Ceph Wait Until Cluster Ready
 
-	    ${id}                       PCC.Ceph Get Cluster Id
+            ${id}                       PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Pass Execution If    ${id} is not ${None}    Cluster is already there
 
@@ -1638,8 +2429,8 @@ Ceph Cluster Create
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  tags=${CEPH_CLUSTER_TAGS}
+                               ...  nodes=["${SERVER_1_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_2_NAME}"]
+                               ...  tags=["All"]
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
         ${status_code}              Get Response Status Code        ${response}
@@ -1652,7 +2443,7 @@ Ceph Cluster Create
         ${status}                   PCC.Ceph Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -1664,15 +2455,15 @@ Ceph Crush Map Validation
 
 
         ${status}                   CLI.Validate CEPH Crush Map From Backend
-                               ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${CLUSTERHEAD_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                               ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"]}
                                ...  hostip=${SERVER_3_HOST_IP}
 
                                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 
 
-	    ${status}                   CLI.Validate CEPH Crush Map From Backend
-                               ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${CLUSTERHEAD_2_NAME}":["default-region","default-zone","default-site","default-rack"]}
-		                       ...  hostip=${CLUSTERHEAD_2_NAME}
+            ${status}                   CLI.Validate CEPH Crush Map From Backend
+                               ...  node_location={"${SERVER_3_NAME}":["default-region","default-zone","default-site","default-rack"],"${SERVER_1_NAME}":["default-region","default-zone","default-site","default-rack"]}
+                                       ...  hostip=${SERVER_1_HOST_IP}
 
                                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 #to do...
@@ -1684,14 +2475,14 @@ Ceph Storage Type Validation
                                ...  CLI.Validate CEPH Storage Type
 
         ${status}    CLI.Validate CEPH Storage Type
-                     ...  storage_types=['filestore']
+                     ...  storage_types=['bluestore']
                      ...  hostip=${SERVER_3_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
-	    ${status}    CLI.Validate CEPH Storage Type
-                     ...  storage_types=['filestore']
-                     ...  hostip=${SERVER_2_HOST_IP}
+            ${status}    CLI.Validate CEPH Storage Type
+                     ...  storage_types=['bluestore']
+                     ...  hostip=${SERVER_1_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
@@ -1706,12 +2497,12 @@ Ceph Architecture- Nodes and OSDs
 
         ${status}    PCC.Ceph Nodes OSDs Architecture Validation
                      ...  name=${CEPH_CLUSTER_NAME}
-                     ...  hostip=${SERVER_2_HOST_IP}
+                     ...  hostip=${SERVER_1_HOST_IP}
 
                      Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Pools For Upgrade
+Ceph Pools For Upgrade : TCP-566, TCP-567
 ###################################################################################################################################
 
     [Documentation]                             *Ceph Pool Creation for Fs*
@@ -1746,7 +2537,7 @@ Ceph Pools For Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=rbd
-                                           ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -1770,7 +2561,7 @@ Ceph Pools For Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=rgw
-                                           ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -1793,7 +2584,7 @@ Ceph Pools For Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=fs1
-                                           ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -1817,7 +2608,7 @@ Ceph Pools For Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=fs2
-                                           ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -1840,7 +2631,7 @@ Ceph Pools For Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=fs3
-                                           ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -1864,7 +2655,7 @@ Ceph Pools For Upgrade
 
         ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=k8s-pool
-                                           ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
@@ -1888,15 +2679,38 @@ Ceph Pools For Upgrade
 
         ${status}              PCC.Ceph Pool Verify BE
                                ...  name=rgw-erasure-pool
-                               ...  nodes_ip=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_NAME}"]
+                               ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                log to console                  ${status}
                                Should Be Equal As Strings      ${status}    OK
 
 
+        ${response}                             PCC.Ceph Create Pool
+                                           ...  name=${CEPH_RGW_POOLNAME}
+                                           ...  ceph_cluster_id=${cluster_id}
+                                           ...  size=${CEPH_POOL_SIZE}
+                                           ...  tags=${CEPH_POOL_TAGS}
+                                           ...  pool_type=${CEPH_POOL_TYPE}
+                                           ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                           ...  quota=1
+                                           ...  quota_unit=TiB
+
+        ${status_code}                          Get Response Status Code        ${response}
+                                                Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                               PCC.Ceph Wait Until Pool Ready
+                                           ...  name=${CEPH_RGW_POOLNAME}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=${CEPH_RGW_POOLNAME}
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
-Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade
+Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade :TCP-1273
 #####################################################################################################################################
-	[Documentation]                             *Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade*
+        [Documentation]                             *Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade*
 
 
         ${status}                               PCC.Ceph Get Pcc Status
@@ -1906,7 +2720,7 @@ Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade
         ${response}                             PCC.Ceph Create Rgw
                                            ...  name=ceph-rgw
                                            ...  poolName=rgw-erasure-pool
-                                           ...  targetNodes=${SERVER_3_NAME}
+                                           ...  targetNodes=["${SERVER_3_NAME}"]
                                            ...  port=${CEPH_RGW_PORT}
                                            ...  certificateName=${CEPH_RGW_CERT_NAME}
 
@@ -1915,6 +2729,7 @@ Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade
 
         ${status}                               PCC.Ceph Wait Until Rgw Ready
                                            ...  name=ceph-rgw
+                                           ...  ceph_cluster_name=ceph-pvt
                                                 Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}                       PCC.Ceph Rgw Verify BE Creation
@@ -1924,7 +2739,7 @@ Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade
 
 #15. RGW usecase (S3 bucket creation and upload data)
 ###################################################################################################################################
-Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
+Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts : TCP-1272
 #####################################################################################################################################
 
      [Documentation]                *Ceph Rados Gateway Creation*
@@ -1948,11 +2763,11 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			                   ...  ceph_cluster_name=ceph-pvt
+                               ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                               ...  targetNodeIp=['${CEPH_RGW_NODES}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
@@ -1967,11 +2782,11 @@ Create Rgw Configuration File (ServiceIp As Default)
                                            Sleep    3 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
-				                      ...  ceph_cluster_name=ceph-pvt
+                                                      ...  ceph_cluster_name=ceph-pvt
 
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
-				                      ...  ceph_cluster_name=ceph-pvt
+                                                      ...  ceph_cluster_name=ceph-pvt
 
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
@@ -2078,7 +2893,7 @@ Verify File Is Upload on Pool (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Get A File From Rgw Bucket (ServiceIp As Default)
+Get A File From Rgw Bucket (ServiceIp As Default): TCP-1573
 ###################################################################################################################################
     [Documentation]                        *Get a file from Rgw Bucket*
 
@@ -2096,7 +2911,7 @@ Get A File From Rgw Bucket (ServiceIp As Default)
 # TO DO.....
 #16. Ceph Rbd Creation For Upgrade with replicated pool RBD mount
 ###################################################################################################################################
-Ceph Create RBD
+Ceph Create RBD : TCP-569
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd where size unit is in MiB*
                                ...  keywords:
@@ -2116,7 +2931,7 @@ Ceph Create RBD
                                ...  name=rbd
 
         ${response}                 PCC.Ceph Create Rbd
-				               ...  pool_type=replicated
+                                               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -2136,7 +2951,7 @@ Ceph Create RBD
 
 
 ###################################################################################################################################
-Ceph Rbd Mount Test
+Ceph Rbd Mount Test : TCP-1272
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Mount Test*
                                ...  keywords:
@@ -2179,17 +2994,17 @@ Ceph Rbd Mount Test
                      Should be equal as strings    ${status}    OK
 
         ${status}    PCC.Map RBD
-		     ...    name=${CEPH_RBD_NAME}
-		     ...    pool_name=rbd
-		     ...    inet_ip=${inet_ip}
-		     ...    hostip=${SERVER_3_HOST_IP}
+                     ...    name=${CEPH_RBD_NAME}
+                     ...    pool_name=rbd
+                     ...    inet_ip=${inet_ip}
+                     ...    hostip=${SERVER_3_HOST_IP}
                      ...    username=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
-		     Log To Console    ${status}
+                     Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 
 
-		${status}      PCC.Mount RBD to Mount Point
+                ${status}      PCC.Mount RBD to Mount Point
                        ...    mount_folder_name=test_rbd_mnt
                        ...    hostip=${SERVER_3_HOST_IP}
                        ...    username=${PCC_LINUX_USER}
@@ -2227,7 +3042,7 @@ Ceph Rbd Mount Test
 #17. Ceph Fs Creation For Upgrade with 2 replicated and 1 EC pool Ceph Fs mount
 
 ###################################################################################################################################
-Ceph Fs Creation
+Ceph Fs Creation : TCP-788
 ###################################################################################################################################
     [Documentation]                 *Creating Cepf FS*
                                ...  keywords:
@@ -2270,12 +3085,12 @@ Ceph Fs Creation
                                 ...  name=${CEPH_FS_NAME}
                                 ...  user=${PCC_LINUX_USER}
                                 ...  password=${PCC_LINUX_PASSWORD}
-                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}"]
 
                                      Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Mount FS test case
+Mount FS test case : TCP-1183
 ###################################################################################################################################
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
@@ -2326,27 +3141,77 @@ Mount FS test case
                                                 Should Be True    ${size_replicated_pool_after_mount} > ${size_replicated_pool_before_mount}
 
 
-#18. Create Kubernetes cluster with pool and validate Deploy Wordpress app
 
 ###################################################################################################################################
-Create Kubernetes cluster
+Create Kubernetes cluster : TCP-179,TCP-140
 ###################################################################################################################################
         [Documentation]             *Create Kubernetes cluster*
                                ...  Keywords:
                                ...  PCC.K8s Create Cluster
+
         ${cluster_id}               PCC.K8s Get Cluster Id
                                ...  name=${K8s_NAME}
                                     Pass Execution If    ${cluster_id} is not ${None}    Cluster is already there
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.K8s Create Cluster
                                ...  id=${K8S_ID}
                                ...  k8sVersion=${K8S_VERSION}
                                ...  name=${K8S_NAME}
                                ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+                               ...  nodes=${K8S_NODES}
                                ...  pools=${K8S_POOL}
                                ...  networkClusterName=${NETWORK_MANAGER_NAME}
+
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.K8s Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+        ${status}                   PCC.Verify Node Role On Nodes
+                             ...    Name=Kubernetes Resource
+                             ...    nodes=["${CLUSTERHEAD_2_NAME}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${CLUSTERHEAD_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${SERVER_1_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+        ${status}                   CLI.Validate Kubernetes Resource
+                               ...  host_ip=${SERVER_2_HOST_IP}
+                               ...  linux_user=pcc
+                               ...  linux_password=cals0ft
+
+                                    Should Be Equal As Strings    ${status}    OK
+
+
+
+
 ###################################################################################################################################
 Kubernetes Cluster Verification PCC
 ###################################################################################################################################
@@ -2358,7 +3223,7 @@ Kubernetes Cluster Verification PCC
                                ...  name=${K8S_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
-K8s Cluster Verification Back End
+Kubernetes Cluster Verification Back End
 ###################################################################################################################################
     [Documentation]                 *Verifying K8s cluster BE*
                                ...  keywords:
@@ -2366,11 +3231,11 @@ K8s Cluster Verification Back End
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Add Wordpress App To K8 Cluster
+Kubernetes - Add Wordpress App : TCP-141
 ###################################################################################################################################
         [Documentation]             *Add App Kubernetes cluster*
                                ...  Keywords:
@@ -2459,19 +3324,19 @@ Get Auth Profile Id
                               Set Global Variable    ${Auth_Profile_Id}
 
 ####################################################################################################################################
-Create CR using Auth Profile, wait for CR creation
+Create CR using Auth Profile,wait for CR creation :TCP-578
 ####################################################################################################################################
 
         [Documentation]    *Create CR using Auth Profile, wait for CR creation* test
                            ...  keywords:
                            ...  PCC.Create Container Registry
 
-        ${server1_id}    PCC.Get Node Id    Name=${SERVER_1_NAME}
-                         Log To Console    ${server1_id}
-                         Set Global Variable    ${server1_id}
+        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
+                         Log To Console    ${server2_id}
+                         Set Global Variable    ${server2_id}
 
         ${response}    PCC.Create Container Registry
-                       ...    nodeID=${server1_id}
+                       ...    nodeID=${server2_id}
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}
@@ -2565,4 +3430,5 @@ Verify CR creation successful from frontend and backend
 
                                               Log to Console    ${Port_used_result}
                                               Should Be Equal As Strings    ${Port_used_result}    OK
+
 

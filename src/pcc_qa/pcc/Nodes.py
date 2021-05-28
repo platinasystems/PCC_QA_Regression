@@ -182,6 +182,20 @@ class Nodes(PccBase):
             (dict) Response: Get Node response after Tenant is assigned (includes any errors)
         """
         self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        node_list = pcc.get_nodes(conn)['Result']['Data']
+        if node_list is None:
+            print("No Nodes are present")
+            return {"StatusCode":200}
+
+        for node in node_list:
+            print("Node in check node exists: {}".format(node))
+            if (str(node['Id']) == str(self.ids)) :                
+                break
+        else:
+            print("Node is not present")
+            return {"StatusCode":200}
+        
         trace("Kwargs are :{}".format(kwargs))
         banner("PCC.Assign Tenant to Node")
         node_payload = {"tenant" : self.tenant_id,
@@ -674,8 +688,9 @@ class Nodes(PccBase):
             node_names = []
             wait_until_node_ready_resp = []
             
-            if get_response_data(response) == []:
-                return "No nodes present on PCC"
+            if get_response_data(response) is None:
+                print("No nodes present on PCC")
+                return "OK"
             else:
                 counter=1
                 for node in get_response_data(response):
@@ -786,6 +801,8 @@ class Nodes(PccBase):
         
         all_node_list = pcc.get_nodes(conn)['Result']['Data']
         node_ready_status = []
+        if all_node_list is None:
+            return "OK"
         try:
             for node_name in all_node_list:
                 ready = False

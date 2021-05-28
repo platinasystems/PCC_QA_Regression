@@ -332,7 +332,7 @@ class CephPool(PccBase):
         banner("PCC.Ceph Pool Verify BE")
         self._load_kwargs(kwargs)
 
-        for ip in self.nodes_ip:
+        for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,ceph_be_cmd)
             if re.search(self.name,str(output)):
                 continue

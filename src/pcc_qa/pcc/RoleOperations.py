@@ -10,7 +10,7 @@ from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
-from pcc_qa.pcc.Nodes import Nodes
+from pcc_qa.pcc.Nodes import Nodes as nd
 
 PCC_TIMEOUT = 60*15  # 15 min
 
@@ -228,8 +228,7 @@ class RoleOperations(PccBase):
         if result:
             return "OK"
         else:
-            return "Error in removing node roles: {}".format(response_code_list)
-        
+            return "Error in removing node roles: {}".format(response_code_list)                
     ###########################################################################
     @keyword(name="PCC.Maas Verify BE")
     ###########################################################################
