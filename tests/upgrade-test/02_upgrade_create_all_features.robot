@@ -2767,7 +2767,7 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts : TCP-1272
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${CEPH_RGW_NODES}']
+                               ...  targetNodeIp=${CEPH_RGW_NODES}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
