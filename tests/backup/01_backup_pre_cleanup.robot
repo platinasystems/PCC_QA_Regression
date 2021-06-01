@@ -60,7 +60,7 @@ Login
                           Set Global Variable    ${invader2_id}
 
 ###################################################################################################################################
-Ceph K8s Multiple
+Ceph K8s Multiple:TCP-139
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
@@ -96,7 +96,7 @@ Cleanup Auth Profiles after login as Admin user
                      Should Be Equal As Strings    ${status}    OK
 
 ####################################################################################################################################
-Cleanup Container Registry after login as Admin user
+Cleanup Container Registry after login as Admin user:TCP-839
 ####################################################################################################################################
 
         [Documentation]    *Cleanup all CR* test
@@ -139,7 +139,7 @@ Re-assigning ROOT to Node
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Deleting Maas From Nodes
+Deleting Maas From Nodes:TCP-1142
 ###################################################################################################################################
     [Documentation]                 *Deleting Maas+LLDP From Nodes*
                                ...  Keywords:
@@ -161,7 +161,7 @@ Deleting Maas From Nodes
                                     Should Not Be Equal As Strings      ${response}  OK
 
 ###################################################################################################################################
-Ceph Rgw Delete Multiple
+Ceph Rgw Delete Multiple:TCP-1342
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
@@ -171,7 +171,7 @@ Ceph Rgw Delete Multiple
 
 
 ###################################################################################################################################
-Ceph Fs Delete
+Ceph Fs Delete:TCP-808
 ###################################################################################################################################
     [Documentation]                 *Delete Fs if it exist*
                                ...  keywords:
@@ -180,7 +180,7 @@ Ceph Fs Delete
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Ceph Rbd Delete Multiple
+Ceph Rbd Delete Multiple:TCP-571,TCP-958,TCP-959,TCP-960,TCP-961,TCP-962,TCP-963
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
@@ -191,7 +191,7 @@ Ceph Rbd Delete Multiple
 
 
 ###################################################################################################################################
-Ceph Pool Multiple Delete
+Ceph Pool Multiple Delete:TCP-572,TCP-573
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
@@ -200,7 +200,7 @@ Ceph Pool Multiple Delete
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Ceph Cluster Delete
+Ceph Cluster Delete:TCP-574
 ###################################################################################################################################
     [Documentation]                 *Delete cluster if it exist*
                                ...  keywords:
@@ -209,7 +209,7 @@ Ceph Cluster Delete
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-BE Ceph Cleanup
+BE Ceph Cleanup:TCP-574
 ###################################################################################################################################
 
         ${status}                   PCC.Ceph Cleanup BE
@@ -220,7 +220,7 @@ BE Ceph Cleanup
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Network Manager Delete
+Network Manager Delete:TCP-1768
 ###################################################################################################################################
     [Documentation]                 *Delete Network Manager if it exist*
                                ...  keywords:
@@ -238,7 +238,7 @@ Delete Multiple Subnet
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Cleanup features associated to Node
+Cleanup features associated to Node:TCP-1399,TCP-1431
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
                                ...  keywords:
@@ -283,7 +283,7 @@ Wait Until All Nodes Are Ready
 
 
 ###################################################################################################################################
-Delete All Node Roles
+Delete All Node Roles:TCP-1756
 ###################################################################################################################################
 
         [Documentation]    *Delete All Node Roles* test
@@ -296,7 +296,7 @@ Delete All Node Roles
                      Should Be Equal As Strings    ${status}    OK    Node roles still exists
 
 ####################################################################################################################################
-Cleanup all certificates from PCC
+Cleanup all certificates from PCC:TCP-1233
 ####################################################################################################################################
     [Documentation]                 *Cleanup all certificates*
                                ...  keywords:
@@ -307,7 +307,7 @@ Cleanup all certificates from PCC
                                                                         Should be equal as strings    ${status}    OK
 
 ####################################################################################################################################
-Cleanup all keys from PCC
+Cleanup all keys from PCC:TCP-276
 ####################################################################################################################################
     [Documentation]                 *Cleanup all keys*
                                ...  keywords:
@@ -318,7 +318,7 @@ Cleanup all keys from PCC
                                                                         Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
-Delete All Node Groups
+Delete All Node Groups:TCP-361
 ###################################################################################################################################
 
         [Documentation]    *Delete All Node Groups* test
@@ -333,7 +333,7 @@ Delete All Node Groups
                      Should Be Equal As Strings    ${status}    OK    Node group still exists
 
 ###################################################################################################################################
-Delete All Profiles
+Delete All Profiles:TCP-1316,TCP-1315
 ###################################################################################################################################
 
         [Documentation]    *PCC.Delete All Profiles* test
@@ -346,7 +346,7 @@ Delete All Profiles
                        Log To Console    ${response}
 
 ###################################################################################################################################
-PCC All Tenant deletion
+PCC All Tenant deletion:TCP-478
 ###################################################################################################################################
 
         [Documentation]    *PCC All Tenant deletion* test
@@ -359,7 +359,7 @@ PCC All Tenant deletion
                      Should Be Equal As Strings    ${status}    OK    Not Deleted
 
 ###################################################################################################################################
-Policy driven management cleanup
+Policy driven management cleanup:TCP-1442,TCP-1392,TCP-1393,TCP-1394,TCP-1395
 ###################################################################################################################################
 
                 [Documentation]    *Policy driven management cleanup* test

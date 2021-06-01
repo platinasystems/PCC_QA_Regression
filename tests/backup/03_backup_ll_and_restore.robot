@@ -41,7 +41,7 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-Backup PCC Instance Locally 
+Backup PCC Instance Locally:TCP-296,TCP-439 
 ####################################################################################################################################
 
         [Documentation]            *Backup PCC instance* test
@@ -62,7 +62,7 @@ Backup PCC Instance Locally
                                     Sleep    1 minutes
 
 ###################################################################################################################################
-Backend Verification Before Restore
+Backend Verification Before Restore:TCP-1667,TCP-1668,TCP-1669,TCP-1670,TCP-302,TCP-304,TCP-300
 ###################################################################################################################################
         ${response}                 CLI.Backend Verification Before Restore
                                ...  backup_hostip=${PCC_HOST_IP}
@@ -72,7 +72,7 @@ Backend Verification Before Restore
                                     Should Be Equal As Strings      ${response}  OK
 
 ##################################################################################################################################
-Prune Volumes And Perform Fresh Install
+Prune Volumes And Perform Fresh Install:TCP-425,TCP-429,TCP-433
 ###################################################################################################################################
 
         [Documentation]    *Prune Volumes And Perform Fresh Install* test
@@ -108,7 +108,7 @@ Prune Volumes And Perform Fresh Install
 
 
 ###################################################################################################################################
-Restore PCC Instance Locally 
+Restore PCC Instance Locally:TCP-1679,TCP-296
 ###################################################################################################################################
 
         [Documentation]            *Restore PCC instance* test
@@ -130,7 +130,7 @@ Restore PCC Instance Locally
                                     Sleep    1 minutes
 
 ###################################################################################################################################
-Backend Verification After Restore
+Backend Verification After Restore:TCP-1667,TCP-1668,TCP-1669,TCP-1670,TCP-302,TCP-304,TCP-300
 ###################################################################################################################################
         ${response}                 CLI.Backend Verification After Restore
                                ...  backup_hostip=${PCC_HOST_IP}

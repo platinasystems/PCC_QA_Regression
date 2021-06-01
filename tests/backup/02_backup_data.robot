@@ -477,7 +477,7 @@ Create Subnets For Network Manager :TCP-1773,TCP-1774
 
 
 ###################################################################################################################################
-Network Manager Creation
+Network Manager Creation:TCP-1752,TCP-1590
 ###################################################################################################################################
     [Documentation]                 *Network Manager Creation with ControlCIDR and DataCIDR*
                                ...  keywords:
@@ -558,7 +558,7 @@ Network Manager Creation
 
 
 ###################################################################################################################################
-Ceph Cluster Create : TCP-564
+Ceph Cluster Create : TCP-564,TCP-1588
 ###################################################################################################################################
     [Documentation]                 *Creating Ceph Cluster*
                                ...  keywords:
@@ -641,7 +641,7 @@ Ceph Cluster Create : TCP-564
 
 
 ###################################################################################################################################
-Ceph Crush Map Validation
+Ceph Crush Map Validation:TCP-1743
 ###################################################################################################################################
     [Documentation]                 *Ceph Crush Map Validation*
                                ...  keywords:
@@ -662,7 +662,7 @@ Ceph Crush Map Validation
                                     Should Be Equal As Strings      ${status}    OK    Validation unsuccessful
 
 ###################################################################################################################################
-Ceph Storage Type Validation
+Ceph Storage Type Validation:TCP-1737,TCP-1740
 ###################################################################################################################################
     [Documentation]                 *Ceph Storage Type Validation*
                                ...  keywords:
@@ -952,7 +952,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Backup 
                                                 Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
-Create Rgw Configuration File (ServiceIp As Default)
+Create Rgw Configuration File (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
 
@@ -979,7 +979,7 @@ Create Rgw Configuration File (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Create Rgw Bucket (ServiceIp As Default)
+Create Rgw Bucket (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Bucket*
 
@@ -995,7 +995,7 @@ Create Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-List Rgw Bucket (ServiceIp As Default)
+List Rgw Bucket (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *List Rgw Bucket*
 
@@ -1009,7 +1009,7 @@ List Rgw Bucket (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Update Rgw Configuration File With Control IP And Try To ADD File (ServiceIp As Default)
+Update Rgw Configuration File With Control IP And Try To ADD File (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
 
@@ -1026,7 +1026,7 @@ Update Rgw Configuration File With Control IP And Try To ADD File (ServiceIp As 
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Verify File Is Upload on Pool (ServiceIp As Default)
+Verify File Is Upload on Pool (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Verify File Is Uploaded on Pool*
 
@@ -1041,7 +1041,7 @@ Verify File Is Upload on Pool (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Update Rgw Configuration File With Data IP And Try To ADD File (ServiceIp As Default)
+Update Rgw Configuration File With Data IP And Try To ADD File (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
 
@@ -1059,7 +1059,7 @@ Update Rgw Configuration File With Data IP And Try To ADD File (ServiceIp As Def
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Verify File Is Upload on Pool (ServiceIp As Default)
+Verify File Is Upload on Pool (ServiceIp As Default):TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Verify File Is Uploaded on Pool*
 
@@ -1074,7 +1074,7 @@ Verify File Is Upload on Pool (ServiceIp As Default)
                                            Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Get A File From Rgw Bucket (ServiceIp As Default) : TCP-1573
+Get A File From Rgw Bucket (ServiceIp As Default) : TCP-1573,TCP-1294
 ###################################################################################################################################
     [Documentation]                        *Get a file from Rgw Bucket*
 
@@ -1384,7 +1384,7 @@ Create Kubernetes cluster : TCP-179,TCP-140
 
 
 ##################################################################################################################################
-Kubernetes Cluster Verification PCC
+Kubernetes Cluster Verification PCC:TCP-179,TCP-140
 ###################################################################################################################################
         [Documentation]             *Kubernetes Cluster Verification PCC*
                                ...  Keywords:
@@ -1394,7 +1394,7 @@ Kubernetes Cluster Verification PCC
                                ...  name=${K8S_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
-Kubernetes Cluster Verification Back End
+Kubernetes Cluster Verification Back End:TCP-179,TCP-140
 ###################################################################################################################################
     [Documentation]                 *Verifying K8s cluster BE*
                                ...  keywords:
@@ -1450,7 +1450,7 @@ Kubernetes - Add Wordpress App : TCP-141
 
 
 ###################################################################################################################################
-Create a Container Registry(using Auto mode) for Backup and Restore :TCP-578
+Create a Container Registry(using Auto mode) for Backup and Restore :TCP-578,TCP-836
 ###################################################################################################################################
         [Documentation]                        *Create CR* test
                                                ...  keywords:
@@ -1489,7 +1489,7 @@ Create a Container Registry(using Auto mode) for Backup and Restore :TCP-578
                                                Set Global Variable    ${host_ip}
                        
 ###################################################################################################################################
-Verify CR creation successful from frontend and backend
+Verify CR creation successful from frontend and backend:TCP-578,TCP-836
 ###################################################################################################################################
 
         [Documentation]                       *Verify CR creation successful from frontend and backend* test
@@ -1636,7 +1636,7 @@ Alert Create Raw Rule :TCP-1082
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Alert Verify Raw Rule
+Alert Verify Raw Rule:TCP-1082
 ###################################################################################################################################
     [Documentation]                 *Alert Verify Raw Rule*
                                ...  Keywords:
@@ -1652,7 +1652,7 @@ Alert Verify Raw Rule
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Check App catalog for all the existing apps
+Check App catalog for all the existing apps:TCP-1407
 ###################################################################################################################################
 
 
@@ -1735,7 +1735,7 @@ Create OpenSSH Public Key :TCP-258
 
 
 ###################################################################################################################################
-Create scoping object - Region:TCP-1362, TCP-1363, TCP-1364, TCP-1365
+Create scoping object - Region:TCP-1362
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Region* test
@@ -1764,7 +1764,7 @@ Create scoping object - Region:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 
 
 ###################################################################################################################################
-Create scoping object - Zone:TCP-1362, TCP-1363, TCP-1364, TCP-1365
+Create scoping object - Zone:TCP-1363
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Zone* test
@@ -1799,7 +1799,7 @@ Create scoping object - Zone:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 
 
 ###################################################################################################################################
-Create scoping object - Site:TCP-1362, TCP-1363, TCP-1364, TCP-1365
+Create scoping object - Site:TCP-1364
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Site* test
@@ -1838,7 +1838,7 @@ Create scoping object - Site:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 
 
 ###################################################################################################################################
-Create scoping object - Rack:TCP-1362, TCP-1363, TCP-1364, TCP-1365
+Create scoping object - Rack: TCP-1365
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Rack* test
@@ -1882,7 +1882,7 @@ Create scoping object - Rack:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 
 
 ###################################################################################################################################
-Assign the node (CLUSTERHEAD_2_NAME) to a rack :TCP-241,TCP-1469
+Assign the node (CLUSTERHEAD_2_NAME) to a rack :TCP-1469,TCP-1403
 #####################################################################################################################################
         [Tags]        assign
 
@@ -2074,7 +2074,7 @@ Create RSYSLOG client node role :TCP-1616
 
 
 ###################################################################################################################################
-Install DNS, NTP, SNMPv2, Rsyslog client node role on node and verify
+Install DNS, NTP, SNMPv2, Rsyslog client node role on node and verify:TCP-1428,TCP-1429,TCP-1430,TCP-1616
 ###################################################################################################################################
     [Documentation]                 *Associate DNS, NTP, SNMPv2 client node role with a node*
                                ...  Keywords:
@@ -2186,7 +2186,7 @@ Create a policy using DNS client app, assigning it to the Location :TCP-1409
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Verifying DNS client Policy assignment from backend
+Verifying DNS client Policy assignment from backend:TCP-1445
 ###################################################################################################################################
 
                 ##### Validate RSOP on Node ##########
@@ -2280,7 +2280,7 @@ Create a policy using NTP client app, assigning it to the Location :TCP-1410
 
 
 ###################################################################################################################################
-Verifying NTP client Policy assignment from backend
+Verifying NTP client Policy assignment from backend:TCP-1445
 ###################################################################################################################################
 
                 ##### Validate RSOP on Node ##########
@@ -2377,7 +2377,7 @@ Create a policy using SNMP client app, assigning it to the Location :TCP-1464
 
 
 ###################################################################################################################################
-Verifying SNMP client Policy assignment from backend
+Verifying SNMP client Policy assignment from backend:TCP-1445
 ###################################################################################################################################
 
                 ##### Validate RSOP on Node ##########
@@ -2476,7 +2476,7 @@ Create a policy using RSYSLOG client app(without TLS), assigning it to the Locat
 
 
 ###################################################################################################################################
-Verifying Rsyslog Policy assignment from backend
+Verifying Rsyslog Policy assignment from backend:TCP-1617
 ###################################################################################################################################
         [Documentation]                      *Verifying Policy assignment from backend* test
                                           ...  keywords:
