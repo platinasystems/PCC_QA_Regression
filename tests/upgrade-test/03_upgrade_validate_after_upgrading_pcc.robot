@@ -229,7 +229,7 @@ Verify Default node role is installed and all the apps persist from backend
                              ...    linux_password=cals0ft
 
                              Log To Console    ${status}
-                             Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+                             Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
 
     ${status}                CLI.Automatic Upgrades Validation
                              ...    host_ip=${CLUSTERHEAD_2_HOST_IP}
@@ -237,7 +237,7 @@ Verify Default node role is installed and all the apps persist from backend
                              ...    linux_password=cals0ft
 
                              Log To Console    ${status}
-                             Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+                             Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
 
     ${status}                PCC.Check NTP services from backend
                              ...   targetNodeIp=['${SERVER_2_HOST_IP}','${SERVER_1_HOST_IP}','${SERVER_3_HOST_IP}','${CLUSTERHEAD_1_HOST_IP}','${CLUSTERHEAD_2_HOST_IP}']

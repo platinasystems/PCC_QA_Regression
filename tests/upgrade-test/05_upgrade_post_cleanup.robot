@@ -143,95 +143,18 @@ Cleanup Container Registry after login as Admin user: TCP-839
                      Should Be Equal As Strings    ${result}    OK
 
 
-####################################################################################################################################
-Re-assigning ROOT to Node
-####################################################################################################################################
-
-        [Documentation]    *Re-assigning ROOT user to Node* test
-                           ...  keywords:
-                           ...  PCC.Get Tenant Id
-                           ...  PCC.Assign Tenant to Node
-        ########  Getting ROOT ID   #######################################################################################
-
-        ${tenant_id}    PCC.Get Tenant Id
-                        ...    Name=ROOT
-                        Set Global Variable    ${tenant_id}
-
-        ########  Assigning Tenant to Node   ################################################################################
-
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${server1_id}
-
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${server2_id}
-
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${server3_id}
-
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${invader1_id}
-
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${invader2_id}
-
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${status}        PCC.Wait Until All Nodes Are Ready
-                         Log To Console    ${status}
-                         Should Be Equal As Strings      ${status}  OK
-
-
-####################################################################################################################################
+###################################################################################################################################
 Ceph Rgw Delete Multiple
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Delete Multiple*
                                ...  keywords:
                                ...  PCC.Ceph Delete All Rgw
+        [Tags]    Run_this
 
-	${status}                   PCC.Wait Until All Nodes Are Ready
-
-                                    Log To Console    ${status}
-                                    Should Be Equal As Strings      ${status}  OK
-
-	${status}                   PCC.Ceph Wait Until Rgw Ready
-                               ...  name=${CEPH_RGW_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_3_HOST_IP}']
-                                    Should Be Equal As Strings      ${backend_status}    OK
-				    Sleep    120s
-
-	    ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
-                                    Should Be Equal As Strings      ${backend_status}    OK
-				    Sleep    120s
-
-	${status}                   PCC.Ceph Delete All Rgw
+        ${status}                   PCC.Ceph Delete All Rgw
+                                ...  ceph_cluster_name=ceph-pvt
                                     Should be equal as strings    ${status}    OK
+
 ##################################################################################################################
 Cepf FS unmount
 ##################################################################################################################
@@ -317,6 +240,33 @@ Ceph Cluster Delete : TCP-574
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
+Ceph Cluster Force Delete (if cluster not deleted)
+###################################################################################################################################
+    [Documentation]                 *Delete cluster if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Force Delete All Cluster
+        [Tags]    Force_delete
+	${ceph_cluster_id}    PCC.Ceph Get Cluster Id
+			      ...    name=ceph-pvt
+			      Log To Console    ${ceph_cluster_id}
+			      Pass Execution If    ${ceph_cluster_id} is ${None}    ${ceph_cluster_id} ceph cluster already present
+
+	${response}    PCC.Ceph Delete Cluster
+		       ...    forceRemove=True
+		       ...    id=${ceph_cluster_id}
+		       Log To Console    ${response}
+		       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+	${cluster_deletion_wait_status}    PCC.Ceph Wait Until Cluster Deleted
+					   ...    id=${ceph_cluster_id}
+					   Log To Console    ${cluster_deletion_wait_status}
+					   Should be equal as strings    ${cluster_deletion_wait_status}    OK
+
+###################################################################################################################################
 BE Ceph Cleanup
 ###################################################################################################################################
 
@@ -344,6 +294,68 @@ Delete Multiple Subnet
                                ...  PCC.Ipam Subnet Delete All
         ${status}                   PCC.Ipam Subnet Delete All
                                     Should Be Equal As Strings      ${status}    OK
+
+####################################################################################################################################
+Re-assigning ROOT to Node
+####################################################################################################################################
+
+        [Documentation]    *Re-assigning ROOT user to Node* test
+                           ...  keywords:
+                           ...  PCC.Get Tenant Id
+                           ...  PCC.Assign Tenant to Node
+        ########  Getting ROOT ID   #######################################################################################
+
+        ${tenant_id}    PCC.Get Tenant Id
+                        ...    Name=ROOT
+                        Set Global Variable    ${tenant_id}
+
+        ########  Assigning Tenant to Node   ################################################################################
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server1_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${server3_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader1_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Assign Tenant to Node
+                       ...    tenant=${tenant_id}
+                       ...    ids=${invader2_id}
+
+                       Log To Console    ${response}
+                       ${status}    Get From Dictionary    ${response}    StatusCode
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}        PCC.Wait Until All Nodes Are Ready
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
+
+
 
 ###################################################################################################################################
 Cleanup features associated to Node
@@ -558,6 +570,17 @@ Policy driven management cleanup :TCP-1442
                                 ####  Delete All Locations  ####
                 ${response}    PCC.Delete Scope
                                ...  scope_name=region-1
+                               ...  parentID=
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}   Get From Dictionary    ${result}    message
+                               Log To Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
+                ${response}    PCC.Delete Scope
+                               ...  scope_name=region-2
                                ...  parentID=
 
                                Log To Console    ${response}
