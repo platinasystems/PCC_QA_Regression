@@ -945,10 +945,13 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Backup 
                
         ${status}                               PCC.Ceph Wait Until Rgw Ready
                                            ...  name=${CEPH_RGW_NAME}
+                                           ...  ceph_cluster_name=ceph-pvt
+
                                                 Should Be Equal As Strings      ${status}    OK
                
         ${backend_status}                       PCC.Ceph Rgw Verify BE Creation
-                                           ...  targetNodeIp=['${CEPH_RGW_NODES}']
+                                           ...  targetNodeIp=${CEPH_RGW_NODES}
+
                                                 Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
@@ -963,11 +966,11 @@ Create Rgw Configuration File (ServiceIp As Default)
                                            Sleep    3 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
-				                      ...  ceph_cluster_name=ceph-pvt
+				      ...  ceph_cluster_name=ceph-pvt
 
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
-				                      ...  ceph_cluster_name=ceph-pvt
+				      ...  ceph_cluster_name=ceph-pvt
 
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}

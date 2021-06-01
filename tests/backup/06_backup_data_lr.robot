@@ -487,32 +487,6 @@ PCC Node Role Creation After Backup Restore and restore
                                               Log To Console    ${status}
                                               Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
 					 
-###################################################################################################################################
-PCC-Tenant-Creation After Backup Restore and restore
-###################################################################################################################################
-
-        [Documentation]                       *Create Tenant* test
-                                              ...  keywords:
-                                              ...  PCC.Add Tenant
-                   
-        ${parent_id}                          PCC.Get Tenant Id
-                                              ...    Name=${ROOT_TENANT}
-                           
-        ${response}                            PCC.Add Tenant
-                                              ...    Name=${TENANT1}
-                                              ...    Description=${TENANT1_DESC}
-                                              ...    Parent_id=${parent_id}
-                                              
-                                              Log To Console    ${response}
-                                              ${result}    Get Result    ${response}
-                                              ${status}    Get From Dictionary    ${response}    StatusCode
-                                              Should Be Equal As Strings    ${status}    200
-                           
-        ${status}                              PCC.Validate Tenant
-                                              ...    Name=${TENANT1}
-                                              
-                                              Log To Console    ${status}
-                                              Should Be Equal As Strings    ${status}    OK
 					 
 ###################################################################################################################################
 PCC Node Group Creation and Verification After Backup Restore and restore
