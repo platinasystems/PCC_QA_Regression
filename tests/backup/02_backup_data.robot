@@ -231,10 +231,10 @@ PCC-Read Only User Creation : TCP-1763
                         Should Be Equal As Strings    ${status}    200
 
         ${status}        Login To User
-						 ...  ${pcc_setup}
-						 ...  ${READONLY_USER_PCC_USERNAME}
-						 ...  ${READONLY_USER_PCC_PWD}
-						 Should be equal as strings    ${status}    OK
+                          ...  ${pcc_setup}
+                          ...  ${READONLY_USER_PCC_USERNAME}
+                          ...  ${READONLY_USER_PCC_PWD}
+                          Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Login
@@ -294,10 +294,10 @@ PCC-Tenant User (Admin) Creation : TCP-313
                         Should Be Equal As Strings    ${status}    200
 
         ${status}        Login To User
-						 ...  ${pcc_setup}
-						 ...  ${TENANT_USER_PCC_USERNAME}
-						 ...  ${TENANT_USER_PCC_PWD}
-						 Should be equal as strings    ${status}    OK
+                          ...  ${pcc_setup}
+                          ...  ${TENANT_USER_PCC_USERNAME}
+                          ...  ${TENANT_USER_PCC_PWD}
+                          Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Login

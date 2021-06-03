@@ -825,14 +825,17 @@ PCC-Validate Read Only User login
 
 
     ${status}                Login To User
-						     ...  ${pcc_setup}
-						     ...  ${READONLY_USER_PCC_USERNAME}
-						     ...  ${READONLY_USER_PCC_PWD}
-
-						     Should Be Equal As Strings      ${status}    OK
-
-    ${status}                Login To PCC    ${pcc_setup}
+                             ...  ${pcc_setup}
+                             ...  ${READONLY_USER_PCC_USERNAME}
+                             ...  ${READONLY_USER_PCC_PWD}
                              Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 PCC-Validate Tenant User (Admin) login
@@ -843,15 +846,20 @@ PCC-Validate Tenant User (Admin) login
                                    ...  Login To User
                                    ...  Login To PCC
 
-    ${status}                Login To User
-						     ...  ${pcc_setup}
-						     ...  ${TENANT_USER_PCC_USERNAME}
-						     ...  ${TENANT_USER_PCC_PWD}
+    ${status}                    Login To User
+                              ...  ${pcc_setup}
+                              ...  ${TENANT_USER_PCC_USERNAME}
+                              ...  ${TENANT_USER_PCC_PWD}
 
-						     Should Be Equal As Strings      ${status}    OK
+                              Should Be Equal As Strings      ${status}    OK
 
-    ${status}                Login To PCC    ${pcc_setup}
-                             Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
+
 
 
 
