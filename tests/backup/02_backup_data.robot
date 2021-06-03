@@ -236,8 +236,12 @@ PCC-Read Only User Creation : TCP-1763
 						 ...  ${READONLY_USER_PCC_PWD}
 						 Should be equal as strings    ${status}    OK
 
-        ${status}        Login To PCC    ${pcc_setup}
-                         Should Be Equal As Strings    ${status}    OK
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
 
 
 ###################################################################################################################################
@@ -295,8 +299,12 @@ PCC-Tenant User (Admin) Creation : TCP-313
 						 ...  ${TENANT_USER_PCC_PWD}
 						 Should be equal as strings    ${status}    OK
 
-		${status}        Login To PCC    ${pcc_setup}
-		                 Should be equal as strings    ${status}    OK
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Pcc Tenant Assignment : TCP-242

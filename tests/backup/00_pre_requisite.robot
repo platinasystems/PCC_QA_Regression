@@ -17,6 +17,13 @@ Login
                                     Load Server 1 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
                                     Load Server 3 Test Data        ${pcc_setup}
+                                    Load Ipam Data    ${pcc_setup}
+                                    Load Ceph Rbd Data    ${pcc_setup}
+                                    Load Ceph Pool Data    ${pcc_setup}
+                                    Load Ceph Fs Data    ${pcc_setup}
+                                    Load Ceph Rgw Data    ${pcc_setup}
+                                    Load Ceph Cluster Data    ${pcc_setup}
+                                    Load Network Manager Data    ${pcc_setup}
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
