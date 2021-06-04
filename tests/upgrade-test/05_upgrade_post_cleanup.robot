@@ -142,18 +142,74 @@ Cleanup Container Registry after login as Admin user: TCP-839
                      Log to Console    ${result}
                      Should Be Equal As Strings    ${result}    OK
 
+####################################################################################################################################
+Ceph Rados Gateway Delete 
+####################################################################################################################################
+
+    [Documentation]                 *Ceph Rados Gateway Delete*
+  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
+        ${response}                 PCC.Ceph Delete Rgw
+                               ...  name=ceph-rgw
+			       ...  ceph_cluster_name=ceph-pvt
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+                               ...  name=ceph-rgw
+			       ...  ceph_cluster_name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
+                               ...  targetNodeIp=['${SERVER_3_HOST_IP}']
+                                    Should Be Equal As Strings      ${backend_status}    OK
+	                            Sleep    5 minutes
+
+####################################################################################################################################
+Ceph Rados Gateway Delete 
+####################################################################################################################################
+
+    [Documentation]                 *Ceph Rados Gateway Delete*
+  
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+  
+        ${response}                 PCC.Ceph Delete Rgw
+                               ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+                               ...  name=${CEPH_RGW_NAME}
+			       ...  ceph_cluster_name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                                    Should Be Equal As Strings      ${backend_status}    OK
+	                            Sleep    5 minutes
+
 
 ###################################################################################################################################
-Ceph Rgw Delete Multiple
+#Ceph Rgw Delete Multiple
 ###################################################################################################################################
-    [Documentation]                 *Ceph Rbd Delete Multiple*
-                               ...  keywords:
-                               ...  PCC.Ceph Delete All Rgw
-        [Tags]    Run_this
-
-        ${status}                   PCC.Ceph Delete All Rgw
-                                ...  ceph_cluster_name=ceph-pvt
-                                    Should be equal as strings    ${status}    OK
+#    [Documentation]                 *Ceph Rbd Delete Multiple*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Delete All Rgw
+#        [Tags]    Run_this
+#
+#        ${status}                   PCC.Ceph Delete All Rgw
+#                                ...  ceph_cluster_name=ceph-pvt
+#                                    Should be equal as strings    ${status}    OK
 
 ##################################################################################################################
 Cepf FS unmount

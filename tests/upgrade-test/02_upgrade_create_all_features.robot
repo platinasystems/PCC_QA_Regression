@@ -1099,21 +1099,21 @@ Set Interfaces For ${SERVER_3_NAME}
 
 
 
-#################################################################################################################################################################
-Verify Default node role is installed
-#################################################################################################################################################################
-
-        [Documentation]    *Verify Default node role is installed* test
-        [Tags]        assign
-        #### Checking if PCC assign the Default node role to the node when a node is added to PCC #####
-        ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Default
-                     ...    nodes=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK
-
-
+###########################################################################################################################################
+#Verify Default node role is installed
+###########################################################################################################################################
+#
+#        [Documentation]    *Verify Default node role is installed* test
+#        [Tags]        assign
+#        #### Checking if PCC assign the Default node role to the node when a node is added to PCC #####
+#        ${status}    PCC.Verify Node Role On Nodes
+#                     ...    Name=Default
+#                     ...    nodes=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+#
+#                     Log To Console    ${status}
+#                     Should Be Equal As Strings    ${status}    OK
+#
+#
 ##################################################################################################################
 Verify Default node role packages are installed on nodes from backend
 ##################################################################################################################
@@ -1410,8 +1410,14 @@ PCC-Read Only User Creation : TCP-1763
                                                  ...  ${pcc_setup}
                                                  ...  ${READONLY_USER_PCC_USERNAME}
                                                  ...  ${READONLY_USER_PCC_PWD}
+                                                 Should be equal as strings    ${status}    OK
 
-        ${status}        Login To PCC    ${pcc_setup}
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
 
 
 ###################################################################################################################################
@@ -1469,7 +1475,15 @@ PCC-Tenant User (Admin) Creation : TCP-313
                                                  ...  ${TENANT_USER_PCC_USERNAME}
                                                  ...  ${TENANT_USER_PCC_PWD}
 
-                ${status}        Login To PCC    ${pcc_setup}
+                                                 Should be equal as strings    ${status}    OK
+
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
+
 
 ###################################################################################################################################
 Pcc Tenant Assignment : TCP-242
@@ -2767,7 +2781,7 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts : TCP-1272
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=${CEPH_RGW_NODES}
+                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
@@ -2782,11 +2796,11 @@ Create Rgw Configuration File (ServiceIp As Default)
                                            Sleep    3 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
-                                                      ...  ceph_cluster_name=ceph-pvt
+                                      ...  ceph_cluster_name=ceph-pvt
 
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
-                                                      ...  ceph_cluster_name=ceph-pvt
+                                      ...  ceph_cluster_name=ceph-pvt
 
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}

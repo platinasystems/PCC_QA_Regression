@@ -58,7 +58,7 @@ Upgrade PCC
 					         ...  host_ip=${PCC_HOST_IP}
 					         ...  linux_user=${PCC_LINUX_USER}
 					         ...  linux_password=${PCC_LINUX_PASSWORD}
-					         ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli upgrade -p ${PCC_SETUP_PWD} --release v1.7.1-rc1
+					         ...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli upgrade -p ${PCC_SETUP_PWD} --release v1.7.1-rc2
 
                              #...  pcc_version_cmd=sudo /home/pcc/platina-cli-ws/platina-cli run -u ${PCC_SETUP_USERNAME} -p ${PCC_SETUP_PWD} --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru ${PCC_SETUP_USERNAME} --rp ${PCC_SETUP_PWD} --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master
 
@@ -125,14 +125,14 @@ Verify Default node role is installed and all the apps persist from backend
 
     [Documentation]                *Verify Default node role is installed* test
 
-        #### Checking if PCC assign the Default node role to the node when a node is added to PCC #####
-    ${status}                PCC.Verify Node Role On Nodes
-                             ...    Name=Default
-                             ...    nodes=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-
-                             Log To Console    ${status}
-                             Should Be Equal As Strings    ${status}    OK
-
+#        #### Checking if PCC assign the Default node role to the node when a node is added to PCC #####
+#    ${status}                PCC.Verify Node Role On Nodes
+#                             ...    Name=Default
+#                             ...    nodes=["${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+#
+#                             Log To Console    ${status}
+#                             Should Be Equal As Strings    ${status}    OK
+#
 
     ${status}                PCC.Verify LLDP Neighbors
                              ...    servers_hostip=['${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}']
@@ -312,8 +312,12 @@ PCC-Validate Read Only User login
 
 						     Should Be Equal As Strings      ${status}    OK
 
-    ${status}                Login To PCC    ${pcc_setup}
-                             Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 PCC-Validate Tenant User (Admin) login
@@ -331,8 +335,12 @@ PCC-Validate Tenant User (Admin) login
 
 						     Should Be Equal As Strings      ${status}    OK
 
-    ${status}                Login To PCC    ${pcc_setup}
-                             Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+Login
+###################################################################################################################################
+
+        ${status}                               Login To PCC        testdata_key=${pcc_setup}
+                                                Should be equal as strings    ${status}    OK
 
 
 ###################################################################################################################################

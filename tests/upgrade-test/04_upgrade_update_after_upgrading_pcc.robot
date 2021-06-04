@@ -371,7 +371,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=ceph-rgw
-			                   ...  ceph_cluster_name=ceph-pvt
+			       ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -379,13 +379,9 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=ceph-rgw
-			                   ...  ceph_cluster_name=ceph-pvt
+			       ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
-        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
-                               ...  targetNodeIp=['${SERVER_3_HOST_IP}']
-                                    Should Be Equal As Strings      ${backend_status}    OK
-				    Sleep    5 minutes
 
 ###################################################################################################################################
 Deleting Maas From Invader
