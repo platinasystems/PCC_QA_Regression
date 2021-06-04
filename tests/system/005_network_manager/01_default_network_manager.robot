@@ -138,10 +138,6 @@ Network Manager Delete and Verify PCC (Network Manager with same ControlCIDR and
                                     Should Not Be Equal As Strings      ${status}  OK
 
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
 
 ###################################################################################################################################
 Set Interfaces For Server Falling in DataCIDR
