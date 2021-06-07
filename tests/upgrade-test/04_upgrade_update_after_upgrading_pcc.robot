@@ -547,7 +547,7 @@ Ceph Create RBD : TCP-569
 
         ${response}                 PCC.Ceph Create Rbd
                                ...  pool_type=replicated
-                               ...  name=rbd_after_upgrade
+                               ...  name=rbd2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
                                ...  size=${CEPH_RBD_SIZE}
@@ -560,7 +560,7 @@ Ceph Create RBD : TCP-569
 
 
         ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd_after_upgrade
+                               ...  name=rbd2
 
                                     Should Be Equal As Strings      ${status}    OK
 

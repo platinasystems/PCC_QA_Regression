@@ -565,7 +565,7 @@ Delete All Profiles
         ${response}    PCC.Delete All Profiles
 
                        Log To Console    ${response}
-                       Should Be Equal As Strings    ${status}    OK
+                       Should Be Equal As Strings    ${response}    OK
 
 ###################################################################################################################################
 PCC-Users Deletion : TCP-332

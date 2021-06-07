@@ -337,7 +337,8 @@ class CephPool(PccBase):
             if re.search(self.name,str(output)):
                 continue
             else:
-                return None
+                print("Output:{}".format(output))
+                return "None"
         return "OK"
 
     ###########################################################################

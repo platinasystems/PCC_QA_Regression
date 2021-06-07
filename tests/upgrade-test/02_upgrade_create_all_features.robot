@@ -2373,6 +2373,159 @@ Create a policy using Automatic Upgrades client app, assigning it to the Locatio
 
                             Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
 
+###################################################################################################################################
+Create an Auth Profile
+###################################################################################################################################
+
+        [Documentation]    *Create Auth Profile* test
+                           ...  keywords:
+                           ...  PCC.Create Auth Profile
+
+
+        ${response}    PCC.Create Auth Profile
+                       ...    Name=${AUTH_PROFILE_NAME}
+                       ...    type_auth=${AUTH_PROFILE_TYPE}
+                       ...    domain=${AUTH_PROFILE_DOMAIN}
+                       ...    port=${AUTH_PROFILE_PORT}
+                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
+                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
+                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
+                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
+                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
+                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
+                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
+
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+####################################################################################################################################
+Get Auth Profile Id
+####################################################################################################################################
+
+        [Documentation]    *Get Auth Profile Id* test
+                           ...  keywords:
+                           ...  PCC.Get Auth Profile Id
+
+
+        ${Auth_Profile_Id}    PCC.Get Auth Profile Id
+                              ...    Name=${AUTH_PROFILE_NAME}
+
+                              Log To Console    ${Auth_Profile_Id}
+                              Set Global Variable    ${Auth_Profile_Id}
+
+####################################################################################################################################
+Create CR using Auth Profile,wait for CR creation :TCP-578
+####################################################################################################################################
+
+        [Documentation]    *Create CR using Auth Profile, wait for CR creation* test
+                           ...  keywords:
+                           ...  PCC.Create Container Registry
+
+        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
+                         Log To Console    ${server2_id}
+                         Set Global Variable    ${server2_id}
+
+        ${response}    PCC.Create Container Registry
+                       ...    nodeID=${server2_id}
+                       ...    Name=${CR_NAME}
+                       ...    fullyQualifiedDomainName=${CR_FQDN}
+                       ...    password=${CR_PASSWORD}
+                       ...    secretKeyBase=${CR_SECRETKEYBASE}
+                       ...    authenticationProfileId=${Auth_Profile_Id}
+                       ...    databaseName=${CR_DATABASENAME}
+                       ...    databasePassword=${CR_DB_PWD}
+                       ...    port=${CR_PORT}
+                       ...    registryPort=${CR_REGISTRYPORT}
+                       ...    adminState=${CR_ADMIN_STATE}
+
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+
+                       PCC.CR Wait For Creation
+                       ...    Name=${CR_NAME}
+
+###################################################################################################################################
+Verify CR creation successful from frontend and backend
+###################################################################################################################################
+
+        [Documentation]                       *Verify CR creation successful from frontend and backend* test
+                                              ...  keywords:
+                                              ...  PCC.CR Verify Creation from PCC
+                                              ...  Is Docker Container Up
+                                              ...  motorframework.common.LinuxUtils.Is FQDN reachable
+                                              ...  Is Port Used
+
+        ${result}                             PCC.CR Verify Creation from PCC
+                                              ...    Name=${CR_NAME}
+                                              Log to console    "${result}"
+                                              Should Be Equal As Strings    ${result}    OK
+
+        ${host_ip}    PCC.Get Host IP
+                      ...  Name=${CR_NAME}
+                      Log To Console    ${host_ip}
+                      Set Global Variable    ${host_ip}
+
+
+        ${container_up_result1}               Is Docker Container Up
+                                              ...    container_name=portus_nginx_1
+                                              ...    hostip=${host_ip}
+
+        ${container_up_result2}               Is Docker Container Up
+                                              ...    container_name=portus_background_1
+                                              ...    hostip=${host_ip}
+
+        ${container_up_result3}               Is Docker Container Up
+                                              ...    container_name=portus_registry_1
+                                              ...    hostip=${host_ip}
+
+        ${container_up_result4}               Is Docker Container Up
+                                              ...    container_name=portus_portus_1
+                                              ...    hostip=${host_ip}
+
+        ${container_up_result5}               Is Docker Container Up
+                                              ...    container_name=portus_db_1
+                                              ...    hostip=${host_ip}
+
+                                              Log to Console    ${container_up_result1}
+                                              Should Be Equal As Strings    ${container_up_result1}    OK
+
+                                              Log to Console    ${container_up_result2}
+                                              Should Be Equal As Strings    ${container_up_result2}    OK
+
+                                              Log to Console    ${container_up_result3}
+                                              Should Be Equal As Strings    ${container_up_result3}    OK
+
+                                              Log to Console    ${container_up_result4}
+                                              Should Be Equal As Strings    ${container_up_result4}    OK
+
+                                              Log to Console    ${container_up_result5}
+                                              Should Be Equal As Strings    ${container_up_result5}    OK
+
+        ${FQDN_reachability_result}           pcc_qa.common.LinuxUtils.Is FQDN reachable
+                                              ...    FQDN_name=${CR_FQDN}
+                                              ...    hostip=${host_ip}
+
+                                              Log to Console    ${FQDN_reachability_result}
+                                              Should Be Equal As Strings    ${FQDN_reachability_result}    OK
+
+        ${Port_used_result}                   Is Port Used
+                                              ...    port_number=${CR_REGISTRYPORT}
+                                              ...    hostip=${host_ip}
+
+                                              Log to Console    ${Port_used_result}
+                                              Should Be Equal As Strings    ${Port_used_result}    OK
+
+
 
 ###################################################################################################################################
 Create IPAM Subnets :TCP-1773,TCP-1774
@@ -2626,7 +2779,7 @@ Ceph Storage Type Validation
 
                      Should Be Equal As Strings      ${status}    OK
 
-#to do...
+
 ###################################################################################################################################
 Ceph Architecture- Nodes and OSDs
 ###################################################################################################################################
@@ -2675,13 +2828,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
                                            ...  name=rbd
                                                 Should Be Equal As Strings      ${status}    OK
 
-        ${status}                               PCC.Ceph Pool Verify BE
-                                           ...  name=rbd
-                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                                log to console                  ${status}
-                                                Should Be Equal As Strings      ${status}    OK
-
-
         ${response}                             PCC.Ceph Create Pool
                                            ...  name=rgw
                                            ...  ceph_cluster_id=${cluster_id}
@@ -2699,12 +2845,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
                                            ...  name=rgw
                                                 Should Be Equal As Strings      ${status}    OK
 
-        ${status}                               PCC.Ceph Pool Verify BE
-                                           ...  name=rgw
-                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                                log to console                  ${status}
-                                                Should Be Equal As Strings      ${status}    OK
-
         ${response}                             PCC.Ceph Create Pool
                                            ...  name=fs1
                                            ...  ceph_cluster_id=${cluster_id}
@@ -2720,12 +2860,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
 
         ${status}                               PCC.Ceph Wait Until Pool Ready
                                            ...  name=fs1
-                                                Should Be Equal As Strings      ${status}    OK
-
-        ${status}                               PCC.Ceph Pool Verify BE
-                                           ...  name=fs1
-                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                                log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
 
@@ -2746,11 +2880,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
                                            ...  name=fs2
                                                 Should Be Equal As Strings      ${status}    OK
 
-        ${status}                               PCC.Ceph Pool Verify BE
-                                           ...  name=fs2
-                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                                log to console                  ${status}
-                                                Should Be Equal As Strings      ${status}    OK
 
         ${response}                             PCC.Ceph Create Pool
                                            ...  name=fs3
@@ -2769,12 +2898,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
                                            ...  name=fs3
                                                 Should Be Equal As Strings      ${status}    OK
 
-        ${status}                               PCC.Ceph Pool Verify BE
-                                           ...  name=fs3
-                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                                log to console                  ${status}
-                                                Should Be Equal As Strings      ${status}    OK
-
 
         ${response}                             PCC.Ceph Create Pool
                                            ...  name=k8s-pool
@@ -2791,12 +2914,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
 
         ${status}                               PCC.Ceph Wait Until Pool Ready
                                            ...  name=k8s-pool
-                                                Should Be Equal As Strings      ${status}    OK
-
-        ${status}                               PCC.Ceph Pool Verify BE
-                                           ...  name=k8s-pool
-                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                                log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
 
         ${response}            PCC.Ceph Create Erasure Pool
@@ -2817,12 +2934,6 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
                                ...  name=rgw-erasure-pool
                                Should Be Equal As Strings      ${status}    OK
 
-        ${status}              PCC.Ceph Pool Verify BE
-                               ...  name=rgw-erasure-pool
-                               ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                               log to console                  ${status}
-                               Should Be Equal As Strings      ${status}    OK
-
 
         ${response}                             PCC.Ceph Create Pool
                                            ...  name=${CEPH_RGW_POOLNAME}
@@ -2842,10 +2953,53 @@ Ceph Pools For Upgrade : TCP-566, TCP-567
                                                 Should Be Equal As Strings      ${status}    OK
 
         ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=rbd
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=rgw
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=fs1
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=fs2
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=fs3
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=k8s-pool
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+
+        ${status}                               PCC.Ceph Pool Verify BE
+                                           ...  name=rgw-erasure-pool
+                                           ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                                log to console                  ${status}
+                                                Should Be Equal As Strings      ${status}    OK
+                                                                                                
+        ${status}                               PCC.Ceph Pool Verify BE
                                            ...  name=${CEPH_RGW_POOLNAME}
                                            ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                                 log to console                  ${status}
                                                 Should Be Equal As Strings      ${status}    OK
+
 
 ###################################################################################################################################
 Ceph Rados Gateway Creation With EC Pool Without S3 Accounts For Upgrade :TCP-1273
@@ -3418,157 +3572,5 @@ Kubernetes - Add Wordpress App : TCP-141
                                Should Be Equal As Strings      ${status}    OK
 
 
-
-###################################################################################################################################
-Create an Auth Profile
-###################################################################################################################################
-
-        [Documentation]    *Create Auth Profile* test
-                           ...  keywords:
-                           ...  PCC.Create Auth Profile
-
-
-        ${response}    PCC.Create Auth Profile
-                       ...    Name=${AUTH_PROFILE_NAME}
-                       ...    type_auth=${AUTH_PROFILE_TYPE}
-                       ...    domain=${AUTH_PROFILE_DOMAIN}
-                       ...    port=${AUTH_PROFILE_PORT}
-                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-
-
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
-####################################################################################################################################
-Get Auth Profile Id
-####################################################################################################################################
-
-        [Documentation]    *Get Auth Profile Id* test
-                           ...  keywords:
-                           ...  PCC.Get Auth Profile Id
-
-
-        ${Auth_Profile_Id}    PCC.Get Auth Profile Id
-                              ...    Name=${AUTH_PROFILE_NAME}
-
-                              Log To Console    ${Auth_Profile_Id}
-                              Set Global Variable    ${Auth_Profile_Id}
-
-####################################################################################################################################
-Create CR using Auth Profile,wait for CR creation :TCP-578
-####################################################################################################################################
-
-        [Documentation]    *Create CR using Auth Profile, wait for CR creation* test
-                           ...  keywords:
-                           ...  PCC.Create Container Registry
-
-        ${server2_id}    PCC.Get Node Id    Name=${SERVER_2_NAME}
-                         Log To Console    ${server2_id}
-                         Set Global Variable    ${server2_id}
-
-        ${response}    PCC.Create Container Registry
-                       ...    nodeID=${server2_id}
-                       ...    Name=${CR_NAME}
-                       ...    fullyQualifiedDomainName=${CR_FQDN}
-                       ...    password=${CR_PASSWORD}
-                       ...    secretKeyBase=${CR_SECRETKEYBASE}
-                       ...    authenticationProfileId=${Auth_Profile_Id}
-                       ...    databaseName=${CR_DATABASENAME}
-                       ...    databasePassword=${CR_DB_PWD}
-                       ...    port=${CR_PORT}
-                       ...    registryPort=${CR_REGISTRYPORT}
-                       ...    adminState=${CR_ADMIN_STATE}
-
-
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
-
-
-                       PCC.CR Wait For Creation
-                       ...    Name=${CR_NAME}
-
-###################################################################################################################################
-Verify CR creation successful from frontend and backend
-###################################################################################################################################
-
-        [Documentation]                       *Verify CR creation successful from frontend and backend* test
-                                              ...  keywords:
-                                              ...  PCC.CR Verify Creation from PCC
-                                              ...  Is Docker Container Up
-                                              ...  motorframework.common.LinuxUtils.Is FQDN reachable
-                                              ...  Is Port Used
-
-        ${result}                             PCC.CR Verify Creation from PCC
-                                              ...    Name=${CR_NAME}
-                                              Log to console    "${result}"
-                                              Should Be Equal As Strings    ${result}    OK
-
-        ${host_ip}    PCC.Get Host IP
-                      ...  Name=${CR_NAME}
-                      Log To Console    ${host_ip}
-                      Set Global Variable    ${host_ip}
-
-
-        ${container_up_result1}               Is Docker Container Up
-                                              ...    container_name=portus_nginx_1
-                                              ...    hostip=${host_ip}
-
-        ${container_up_result2}               Is Docker Container Up
-                                              ...    container_name=portus_background_1
-                                              ...    hostip=${host_ip}
-
-        ${container_up_result3}               Is Docker Container Up
-                                              ...    container_name=portus_registry_1
-                                              ...    hostip=${host_ip}
-
-        ${container_up_result4}               Is Docker Container Up
-                                              ...    container_name=portus_portus_1
-                                              ...    hostip=${host_ip}
-
-        ${container_up_result5}               Is Docker Container Up
-                                              ...    container_name=portus_db_1
-                                              ...    hostip=${host_ip}
-
-                                              Log to Console    ${container_up_result1}
-                                              Should Be Equal As Strings    ${container_up_result1}    OK
-
-                                              Log to Console    ${container_up_result2}
-                                              Should Be Equal As Strings    ${container_up_result2}    OK
-
-                                              Log to Console    ${container_up_result3}
-                                              Should Be Equal As Strings    ${container_up_result3}    OK
-
-                                              Log to Console    ${container_up_result4}
-                                              Should Be Equal As Strings    ${container_up_result4}    OK
-
-                                              Log to Console    ${container_up_result5}
-                                              Should Be Equal As Strings    ${container_up_result5}    OK
-
-        ${FQDN_reachability_result}           pcc_qa.common.LinuxUtils.Is FQDN reachable
-                                              ...    FQDN_name=${CR_FQDN}
-                                              ...    hostip=${host_ip}
-
-                                              Log to Console    ${FQDN_reachability_result}
-                                              Should Be Equal As Strings    ${FQDN_reachability_result}    OK
-
-        ${Port_used_result}                   Is Port Used
-                                              ...    port_number=${CR_REGISTRYPORT}
-                                              ...    hostip=${host_ip}
-
-                                              Log to Console    ${Port_used_result}
-                                              Should Be Equal As Strings    ${Port_used_result}    OK
 
 
