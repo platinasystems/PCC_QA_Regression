@@ -20,6 +20,7 @@ Login to PCC
                          Load Clusterhead 2 Test Data    ${pcc_setup}
                          Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
+                         Load Server 3 Test Data    ${pcc_setup}
 
                          Load Node Groups Data    ${pcc_setup}
 

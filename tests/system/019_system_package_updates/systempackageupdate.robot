@@ -577,35 +577,35 @@ Backend Validations after node roles deletion
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                                         Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate CEPH Resource
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                                         Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Network Resource
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                                         Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Platina Systems Package repository
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                                         Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.OS Package repository
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                                         Should Be Equal As Strings    ${status}    OK
 
 ###############################################################################################################################################
 System Package Updates cleanup

@@ -574,7 +574,8 @@ Check if parentID is never null for a zone (Negative):TCP-1381
         
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
-        
+                        ...  parentID=None
+
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=zone-1
                         ...  parentID=${parent1_Id}
@@ -600,7 +601,8 @@ Check if parentID is never null for a zone (Negative):TCP-1381
         
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
-        
+                        ...  parentID=None
+
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=zone-1
                         ...  parentID=${parent1_Id}
