@@ -516,4 +516,22 @@ Downgrade PCC
 
                     Should Be Equal As Strings    ${status}    OK
 
+###################################################################################################################################
+Update OS Images
+###################################################################################################################################
+
+        [Documentation]    *Update OS Images* test
+                           ...  keywords:
+                           ...  PCC.Update OS Images
+
+        ${result}      PCC.Update OS Images
+                       ...    setup_password=${PCC_SETUP_PWD}
+                       ...    pcc_username=${PCC_USERNAME}
+                       ...    pcc_password=${PCC_PASSWORD}
+                       ...    host_ip=${PCC_HOST_IP}
+                       ...    username=${PCC_LINUX_USER}
+                       ...    password=${PCC_LINUX_PASSWORD}
+
+                       Log To Console    ${result}
+                       Should Be Equal As Strings      ${result}  OK
 
