@@ -20,7 +20,7 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
-PCC Dashboard - Verify object graph
+PCC Dashboard - Verify object graph:TCP-1776
 ###################################################################################################################################
 
         [Documentation]    *PCC Dashboard - Verify object graph * test
@@ -34,7 +34,7 @@ PCC Dashboard - Verify object graph
                        Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC Dashboard - Verify object count
+PCC Dashboard - Verify object count:TCP-1777
 ###################################################################################################################################
 
         [Documentation]    *PCC Dashboard - Verify object count* test
@@ -47,7 +47,7 @@ PCC Dashboard - Verify object count
                        Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC Dashboard - Verify object health count
+PCC Dashboard - Verify object health count:TCP-1778
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Verify object health count* test
                                    ...  keywords:
@@ -60,7 +60,7 @@ PCC Dashboard - Verify object health count
 
 
 ###################################################################################################################################
-PCC Dashboard - Verify object metrics
+PCC Dashboard - Verify object metrics:TCP-1653,TCP-1652,TCP-1649
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Verify object metrics* test
                                    ...  keywords:
@@ -72,7 +72,7 @@ PCC Dashboard - Verify object metrics
                        Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC Dashboard - Verify object location
+PCC Dashboard - Verify object location:TCP-1649
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Verify object location* test
                                    ...  keywords:
@@ -87,7 +87,7 @@ PCC Dashboard - Verify object location
 
 
 ###################################################################################################################################
-PCC Dashboard - Verify Object Health/Kernel/OS Information
+PCC Dashboard - Verify Object Health/Kernel/OS Information:TCP-1653,TCP-1652,TCP-1650
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Verify Object Health/Kernel/OS Information* test
                                    ...  keywords:
@@ -109,7 +109,7 @@ PCC Dashboard - Verify Object Health/Kernel/OS Information
                        Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC Dashboard - Storage Page Validation
+PCC Dashboard - Storage Page Validation:TCP-1506
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Storage Page Validation* test
                                    ...  keywords:
@@ -126,7 +126,7 @@ PCC Dashboard - Storage Page Validation
 
 
 ###################################################################################################################################
-PCC Dashboard - Filesystem page validation
+PCC Dashboard - Filesystem page validation:TCP-1507
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Filesystem page validation* test
                                    ...  keywords:
@@ -138,7 +138,7 @@ PCC Dashboard - Filesystem page validation
 
                        Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
-PCC Dashboard - Monitor Page Storage Controller Validation
+PCC Dashboard - Monitor Page Storage Controller Validation:TCP-1780
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Monitor Page Storage Controller Validation* test
                                    ...  keywords:
@@ -150,7 +150,7 @@ PCC Dashboard - Monitor Page Storage Controller Validation
                        Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC Dashboard - Monitor Page Partition Validation
+PCC Dashboard - Monitor Page Partition Validation:TCP-1779
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Monitor Page Partition Validation* test
                                    ...  keywords:
@@ -162,7 +162,7 @@ PCC Dashboard - Monitor Page Partition Validation
                        Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-PCC Dashboard - Monitor Page Filesystem Validation
+PCC Dashboard - Monitor Page Filesystem Validation:TCP-1781
 ###################################################################################################################################
         [Documentation]    *PCC Dashboard - Monitor Page Filesystem Validation* test
                                    ...  keywords:

@@ -241,7 +241,7 @@ Check if user is able to define one or more Remote Syslog Client policies and as
 	    #### Validate RSYSlog from backend ####
 		
 		${status}     CLI.Validate Rsyslog from backend
-                              ...  node_names=['${SERVER_1_NAME}']
+                              ...  node_names=['${SERVER_2_NAME}']
 			      ...  host_ip=${SERVER_2_HOST_IP}	
 
                               Log To Console    ${status}

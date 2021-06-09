@@ -22,7 +22,7 @@ Login to PCC
                          Load Server 2 Test Data    ${pcc_setup}                         
 
 ###################################################################################################################################
-GET scoping object types
+GET scoping object types: TCP-1361
 ###################################################################################################################################
 
         [Documentation]    *GET scoping object types* test
@@ -40,7 +40,7 @@ GET scoping object types
                        Should Be Equal As Strings    ${status}    200 
                         
 ###################################################################################################################################
-Create scoping object - Region
+Create scoping object - Region:TCP-1362
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Region* test
@@ -68,7 +68,7 @@ Create scoping object - Region
                        Should Be Equal As Strings    ${status}    OK 
                        
 ###################################################################################################################################
-Create scoping object - Zone
+Create scoping object - Zone:TCP-1363
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Region* test
@@ -100,7 +100,7 @@ Create scoping object - Zone
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Create scoping object - Site
+Create scoping object - Site:TCP-1364
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Site* test
@@ -137,7 +137,7 @@ Create scoping object - Site
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Create scoping object - Rack
+Create scoping object - Rack:TCP-1365
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Rack* test
@@ -177,7 +177,7 @@ Create scoping object - Rack
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Create scoping object (Zone) under Default region
+Create scoping object (Zone) under Default region:TCP-1366
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Region* test
@@ -209,7 +209,7 @@ Create scoping object (Zone) under Default region
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Create scoping object (Site) under Default zone
+Create scoping object (Site) under Default zone:TCP-1367
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Site* test
@@ -247,7 +247,7 @@ Create scoping object (Site) under Default zone
                        Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
-Create scoping object (Rack) under Default Site
+Create scoping object (Rack) under Default Site:TCP-1368
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object - Rack* test
@@ -287,7 +287,7 @@ Create scoping object (Rack) under Default Site
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Get Scoping Object by ID
+Get Scoping Object by ID:TCP-1369
 ###################################################################################################################################
 
         [Documentation]    *Get Scoping Object by ID* test
@@ -320,7 +320,7 @@ Get Scoping Object by ID
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Get all Scoping Object
+Get all Scoping Object:TCP-1370
 ###################################################################################################################################
 
         [Documentation]    *Get all Scoping Object* test
@@ -338,7 +338,7 @@ Get all Scoping Object
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Create scoping object without mandatory parameters (type, name) (Negative)
+Create scoping object without mandatory parameters (type, name) (Negative):TCP-1372
 ###################################################################################################################################
 
         [Documentation]    *Create scoping object without mandatory parameters (type, name)* test
@@ -392,7 +392,7 @@ Create scoping object without mandatory parameters (type, name) (Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Check if a duplicate named scoping object can created for same parent(Negative)
+Check if a duplicate named scoping object can created for same parent(Negative): TCP-1374
 ###################################################################################################################################
 
         [Documentation]    *Check if a duplicate named scoping object can created for same parent* test
@@ -426,7 +426,7 @@ Check if a duplicate named scoping object can created for same parent(Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Create scope with invalid type should throw proper error [supported: Region,Zone,Site,Rack] (Negative)
+Create scope with invalid type should throw proper error [supported- Region,Zone,Site,Rack] (Negative):TCP-1375
 ###################################################################################################################################
 
         [Documentation]    *Create scope with invalid type should throw proper error* test
@@ -467,7 +467,7 @@ Create scope with invalid type should throw proper error [supported: Region,Zone
                        Should Not Be Equal As Strings    ${status}    OK 
                        
 ###################################################################################################################################
-Create scope with invalid/non existing parentID (Negative)
+Create scope with invalid/non existing parentID (Negative):TCP-1376
 ###################################################################################################################################
 
         [Documentation]    *Create scope with invalid/non existing parentID* test
@@ -496,7 +496,7 @@ Create scope with invalid/non existing parentID (Negative)
                        
                        
 ###################################################################################################################################
-Check parentID must be integer (Negative)
+Check parentID must be integer (Negative):TCP-1377
 ###################################################################################################################################
 
         [Documentation]    *Check parentID must be integer (Negative)* test
@@ -523,7 +523,7 @@ Check parentID must be integer (Negative)
                        Should Not Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Check if parentID is null for a region
+Check if parentID is null for a region:TCP-1380
 ###################################################################################################################################
 
         [Documentation]    *Check if parentID is null for a region* test
@@ -545,7 +545,7 @@ Check if parentID is null for a region
                        Should Be Equal As Strings    ${parentID}    None
                        
 ###################################################################################################################################
-Check if parentID is never null for a zone (Negative)
+Check if parentID is never null for a zone (Negative):TCP-1381
 ###################################################################################################################################
 
         [Documentation]    *Check if parentID is never null for a zone* test
@@ -571,16 +571,11 @@ Check if parentID is never null for a zone (Negative)
                        Should Not Be Equal As Strings    ${parentID}    None 
                       
 ###################################################################################################################################
-Check if parentID is never null for a site (Negative)
-###################################################################################################################################
-
-        [Documentation]    *Check if parentID is never null for a site* test
-                           ...  keywords:
-                           ...  PCC.Get Scope Details
         
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
-        
+                        ...  parentID=None
+
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=zone-1
                         ...  parentID=${parent1_Id}
@@ -603,17 +598,11 @@ Check if parentID is never null for a site (Negative)
                        Should Not Be Equal As Strings    ${parentID}    None
                        
 ###################################################################################################################################
-Check if parentID is never null for a rack (Negative)
-###################################################################################################################################
-
-        [Documentation]    *Check if parentID is never null for a rack* test
-                           ...  keywords:
-                           ...  PCC.Get Scope Details
-        
         
         ${parent1_Id}    PCC.Get Scope Id
                         ...  scope_name=region-1
-        
+                        ...  parentID=None
+
         ${parent2_Id}    PCC.Get Scope Id
                         ...  scope_name=zone-1
                         ...  parentID=${parent1_Id}
@@ -640,7 +629,7 @@ Check if parentID is never null for a rack (Negative)
                        Should Not Be Equal As Strings    ${parentID}    None
 
 ###################################################################################################################################
-A policyID must be integer (Negative)
+A policyID must be integer (Negative):TCP-1383
 ###################################################################################################################################
 
         [Documentation]    *Check if parentID is never null for a rack* test
@@ -672,7 +661,7 @@ A policyID must be integer (Negative)
                        
                        
 ###################################################################################################################################
-Associate policies with scope
+Associate policies with scope:TCP-1382
 ###################################################################################################################################
 
         [Documentation]    *Check if parentID is never null for a rack* test
@@ -733,7 +722,7 @@ Associate policies with scope
                        
                    
 ###################################################################################################################################
-Update Name of a scoping object (considered Zone)
+Update Name of a scoping object (considered Zone):TCP-1384
 ###################################################################################################################################
 
         [Documentation]    *Update Name of a scoping object (considered Zone)* test
@@ -769,7 +758,7 @@ Update Name of a scoping object (considered Zone)
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Update Description of a scoping object (considered Zone)
+Update Description of a scoping object (considered Zone):TCP-1385
 ###################################################################################################################################
 
         [Documentation]    *Update Description of a scoping object (considered Zone)* test
@@ -804,7 +793,7 @@ Update Description of a scoping object (considered Zone)
                        Should Be Equal As Strings    ${status}    OK
                        
 ###################################################################################################################################
-Update parentID of a scoping object (considered Site)
+Update parentID of a scoping object (considered Site):TCP-1451
 ###################################################################################################################################
 
         [Documentation]    *Update Description of a scoping object (considered Zone)* test
@@ -874,7 +863,7 @@ Update parentID of a scoping object (considered Site)
                        Should Be Equal As Strings    ${status}    OK
                        
 ####################################################################################################################################
-#Update parentID of a default scoping object must not be supported (considered Default Site) - Bug ID -2730
+#Update parentID of a default scoping object must not be supported (considered Default Site) :TCP-1387
 ####################################################################################################################################
 #
 #        [Documentation]    *Update parentID of a default scoping object must not be supported (considered Default Site)* test
@@ -913,7 +902,7 @@ Update parentID of a scoping object (considered Site)
 #                       Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Check if a default region can be deleted
+Check if a default region can be deleted:TCP-1388
 ###################################################################################################################################
 
         [Documentation]    *Check if a default zone can be deleted* test
@@ -932,7 +921,7 @@ Check if a default region can be deleted
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Check if a default zone can be deleted
+Check if a default zone can be deleted:TCP-1389
 ###################################################################################################################################
 
         [Documentation]    *Check if a default zone can be deleted* test
@@ -956,7 +945,7 @@ Check if a default zone can be deleted
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Check if a default site can be deleted
+Check if a default site can be deleted:TCP-1390
 ###################################################################################################################################
 
         [Documentation]    *Check if a default site can be deleted* test
@@ -984,7 +973,7 @@ Check if a default site can be deleted
 
                        
 ###################################################################################################################################
-Check if a default rack can be deleted
+Check if a default rack can be deleted:TCP-1391
 ###################################################################################################################################
 
         [Documentation]    *Check if a default rack can be deleted* test

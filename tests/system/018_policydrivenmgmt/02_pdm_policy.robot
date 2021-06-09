@@ -23,7 +23,7 @@ Login to PCC
                          Load Server 2 Test Data    ${pcc_setup}
                          
 ###################################################################################################################################
-Check if user can view the applications
+Check if user can view the applications:TCP-1407
 ###################################################################################################################################
 
         [Documentation]    *Check if user can view the applications* test
@@ -41,7 +41,7 @@ Check if user can view the applications
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Create a policy with default inputs (using DNS app)
+Create a policy with default inputs (using DNS app):TCP-1760
 ###################################################################################################################################
 
         [Documentation]    *Create a policy* test
@@ -81,44 +81,9 @@ Create a policy with default inputs (using DNS app)
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
                        
-###################################################################################################################################
-Create a policy with user-defined inputs
-###################################################################################################################################
-
-        [Documentation]    *Create a policy* test
-                           ...  keywords:
-                           ...  PCC.Create Policy
-        
-        [Tags]    Only
-        ${app_id}    PCC.Get App Id from Policies
-                     ...  Name=snmp
-                     Log To Console    ${app_id}
-        
-        ${parent1_id}    PCC.Get Scope Id
-                         ...  scope_name=region-1             
-        
-        ${scope1_id}     PCC.Get Scope Id
-                         ...  scope_name=zone-updated
-                         ...  parentID=${parent1_id}
-                             
-                      
-        ${response}    PCC.Create Policy
-                       ...  appId=${app_id}
-                       ...  description=user-defined-policy-description
-                       ...  scopeIds=[${scope1_id}]
-                       ...  inputs=[{"name": "parameter1","value": "value1"},{"name": "parameter2","value": "value2"}]
-                       
-                       
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
-                       
                        
 ###################################################################################################################################
-Create policy without mandatory parameters - Application
+Create policy without mandatory parameters - Application:TCP-1415
 ###################################################################################################################################
 
         [Documentation]    *Create policy without mandatory parameters - Application* test
@@ -145,7 +110,7 @@ Create policy without mandatory parameters - Application
                        
 
 ###################################################################################################################################
-Create policy without name of Description
+Create policy without name of Description:TCP-1416
 ###################################################################################################################################
 
         [Documentation]    *Create policy without name of Description* test
@@ -179,7 +144,7 @@ Create policy without name of Description
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Create a policy with default inputs (using NTP app)
+Create a policy with default inputs (using NTP app):TCP-1761
 ###################################################################################################################################
 
         [Documentation]    *Create a policy* test
@@ -219,7 +184,7 @@ Create a policy with default inputs (using NTP app)
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Get Policy
+Get Policy:TCP-1412
 ###################################################################################################################################
 
         [Documentation]    *Get Policy* test
@@ -238,7 +203,7 @@ Get Policy
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Get All Policies
+Get All Policies:TCP-1413
 ###################################################################################################################################
 
         [Documentation]    *Get All Policies* test
@@ -256,7 +221,7 @@ Get All Policies
                        Should Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Get current policy deploy status by scopes
+Get current policy deploy status by scopes:TCP-1436
 ###################################################################################################################################
 
         [Documentation]    *Get current policy deploy status by scopes* test
@@ -291,7 +256,7 @@ Get current policy deploy status by scopes
                        Should Be Equal As Strings    ${status}    200  
 
 ###################################################################################################################################
-Get current policy deploy status by policies
+Get current policy deploy status by policies:TCP-1437
 ###################################################################################################################################
 
         [Documentation]    *Get current policy deploy status by policies* test
@@ -312,7 +277,7 @@ Get current policy deploy status by policies
 
 
 ####################################################################################################################################
-#Create policy with invalid/non existing appID (Negative)
+#Create policy with invalid/non existing appID (Negative):TCP-1417
 ####################################################################################################################################
 #
 #        [Documentation]    *Create policy with invalid/non existing appID* test
@@ -345,7 +310,7 @@ Get current policy deploy status by policies
                        
                        
 ###################################################################################################################################
-Create policy with invalid/non existing scopeIDs (Negative)
+Create policy with invalid/non existing scopeIDs (Negative):TCP-1418
 ###################################################################################################################################
 
         [Documentation]    *Create policy with invalid/non existing scopeIDs* test
@@ -371,7 +336,7 @@ Create policy with invalid/non existing scopeIDs (Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
 ####################################################################################################################################
-#Check if appID of a policy must be integer (Negative)
+#Check if appID of a policy must be integer (Negative):TCP-1419
 ####################################################################################################################################
 #
 #        [Documentation]    *Check if appID of a policy must be integer* test
@@ -417,7 +382,7 @@ Create policy with invalid/non existing scopeIDs (Negative)
                        
                        
 ###################################################################################################################################
-Check if scopeID must be integer (Negative)
+Check if scopeID must be integer (Negative):TCP-1420
 ###################################################################################################################################
 
         [Documentation]    *Check if scopeID must be integer* test
@@ -458,7 +423,7 @@ Check if scopeID must be integer (Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Update appID of policy must not be allowed (Negative)
+Update appID of policy must not be allowed (Negative):TCP-1424
 ###################################################################################################################################
 
         [Documentation]    *Update appID of policy must not be allowed* test
@@ -498,7 +463,7 @@ Update appID of policy must not be allowed (Negative)
                        Should Not Be Equal As Strings    ${status}    200
                        
 ###################################################################################################################################
-Update description of an existing policy
+Update description of an existing policy:TCP-1425
 ###################################################################################################################################
 
         [Documentation]    *Update description of an existing policy* test
@@ -550,7 +515,7 @@ Update description of an existing policy
 
 
 ###################################################################################################################################
-Update scopeIDs of an existing policy
+Update scopeIDs of an existing policy:TCP-1426
 ###################################################################################################################################
 
         [Documentation]    *Update scopeIDs of an existing policy* test
@@ -587,7 +552,7 @@ Update scopeIDs of an existing policy
                        Should Be Equal As Strings    ${status}    200
 
 ##################################################################################################################################
-Update inputs name and value of policy must not be allowed (Negative)
+Update inputs name and value of policy must not be allowed (Negative):TCP-1427
 ###################################################################################################################################
 
         [Documentation]    *Update inputs name and value of policy must not be allowed* test

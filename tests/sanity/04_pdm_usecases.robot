@@ -37,7 +37,7 @@ Install net-tools on nodes
                  Should be equal as strings    ${status}    OK
 				 
 ###################################################################################################################################
-Create scoping objects
+Create scoping objects:TCP-1362, TCP-1363, TCP-1364, TCP-1365
 ###################################################################################################################################
 
         [Documentation]    *Create scoping objects* test
@@ -249,7 +249,7 @@ Create scoping objects
 
 
 ###################################################################################################################################
-Getting Ids of Default locations and user-created locations
+Getting Ids of Default locations and user-created locations:TCP-1753
 ###################################################################################################################################
 
         [Documentation]    *Get Scope Ids* test
@@ -337,7 +337,7 @@ Getting Ids of Default locations and user-created locations
                         Set Global Variable    ${rack-2_Id}
 
 ###################################################################################################################################
-Create Node roles
+Create Node roles:TCP-1428, TCP-1429, TCP-1430
 ###################################################################################################################################
 
         [Documentation]    *Create Node Roles* test
@@ -459,7 +459,7 @@ Create Node roles
                      Should Be Equal As Strings    ${status}    OK    Node role doesnot exists
 
 ###################################################################################################################################
-Create Policies
+Create Policies:TCP-1409, TCP-1410, TCP-1411
 ###################################################################################################################################
 
         [Documentation]    *Create Policies* test
@@ -607,7 +607,7 @@ Create Policies
                        Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
-Getting Ids of All Node Roles
+Getting Ids of All Node Roles:TCP-1754
 ###################################################################################################################################
 
       [Documentation]    *Getting Ids of All Node Roles* test
@@ -641,7 +641,7 @@ Getting Ids of All Node Roles
 
 
 ###################################################################################################################################
-Getting Ids of All Policies
+Getting Ids of All Policies:TCP-1755
 ###################################################################################################################################
 
       [Documentation]    *Getting Ids of All Policies* test
@@ -728,9 +728,9 @@ Delete Node
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
 
-###################################################################################################################################
-Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) and policies, node roles are applied on the node
-###################################################################################################################################
+########################################################################################################################################
+Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) and policies, node roles are applied on the node:TCP-1445
+########################################################################################################################################
 ## Checked ###
 
 		
@@ -1046,7 +1046,7 @@ Add nodes to PCC and check if node is assigned to a scoping object (Rack/Site) a
 
 
 ###################################################################################################################################
-Check if the node inherit its relationship with the parents object and policies to maintain backward compatibility when a node is associated with a rack
+Check if the node inherit its relationship with the parents object and policies to maintain backward compatibility when a node is associated with a rack:TCP-1447
 ###################################################################################################################################
 
 #### Checked #######
@@ -1301,7 +1301,7 @@ Check if the node inherit its relationship with the parents object and policies 
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Check if the node inherit its relationship with the parents object and policies to maintain backward compatibility when a node is associated with a site
+Check if the node inherit its relationship with the parents object and policies to maintain backward compatibility when a node is associated with a site:TCP-1448
 ###################################################################################################################################
 
 ##### Checked ####
@@ -1480,7 +1480,7 @@ Check if the node inherit its relationship with the parents object and policies 
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Update parent of a zone
+Update parent of a zone:TCP-1449
 ###################################################################################################################################
 
 
@@ -1675,7 +1675,7 @@ Update parent of a zone
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Update parent of a site
+Update parent of a site:TCP-1450
 ###################################################################################################################################
 
 
@@ -1877,7 +1877,7 @@ Update parent of a site
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Update parent of a rack
+Update parent of a rack:TCP-1451
 ###################################################################################################################################
 
 
@@ -2086,7 +2086,7 @@ Update parent of a rack
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Update rack of a node
+Update rack of a node:TCP-1469
 ###################################################################################################################################
 
 
@@ -2264,7 +2264,7 @@ Update rack of a node
                       Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Update site of a node
+Update site of a node:TCP-1469
 ###################################################################################################################################
 
 
@@ -2433,7 +2433,7 @@ Update site of a node
                       Should Be Equal As Strings      ${status}  OK
 
 #####################################################################################################################################
-Delete an existing node from the PCC and add it back
+Delete an existing node from the PCC and add it back:TCP-1456
 #####################################################################################################################################
 
         [Documentation]    *Delete Nodes* test
@@ -2614,7 +2614,7 @@ Delete an existing node from the PCC and add it back
                       Should Be Equal As Strings      ${status}  OK
 
 #####################################################################################################################################
-Check if policies can be applied by policy update
+Check if policies can be applied by policy update:TCP-1458
 #####################################################################################################################################
 
 
@@ -2740,7 +2740,7 @@ Check if policies can be applied by policy update
 
 
 ###################################################################################################################################
-Check if policies can be applied by node Role delete
+Check if policies can be applied by node Role delete:TCP-1463
 ###################################################################################################################################
 
 
@@ -2855,7 +2855,7 @@ Check if policies can be applied by node Role delete
                       Should Not Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Policy driven management cleanup
+Policy driven management cleanup:TCP-1442
 ###################################################################################################################################
 
         [Documentation]    *Delete All Things related to Policy driven management feature* test
