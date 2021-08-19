@@ -94,23 +94,6 @@
 
     "server-3":
         {
-          "server_name":"consul-03.example.com",
-          "pcc_url": "https://172.2.203.101:9999",
-          "pcc_host_ip": "172.17.2.203",
-          "pcc_linux_password": "cals0ft",
-          "pcc_username": "pcc",
-          "pcc_password": "cals0ft",
-          "bmc": "172.17.3.203",
-          "mgmt_ip": "172.17.2.203/23",
-          "bmc_user": "ADMIN",
-          "bmc_pwd": "ADMIN",
-          "console": "ttyS1",
-          "managed_by_pcc": "true",
-          "ssh_keys": "pcc"
-        },
-
-    "server-4":
-        {
           "server_name":"servernode-130",
           "pcc_url": "https://172.17.2.130:9999",
           "pcc_host_ip": "172.17.2.130",
@@ -214,7 +197,7 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["cluster-head-68","cluster-head-69","consul-01.example.com","consul-02.example.com","consul-03.example.com"],
+            "nodes":["cluster-head-68","cluster-head-69","consul-01.example.com","consul-02.example.com","servernode-130"],
             "nodes_ip":["172.17.2.68","172.17.2.69","172.17.2.106","172.17.2.107","172.17.2.130"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
@@ -225,7 +208,7 @@
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["cluster-head-68","consul-01.example.com","consul-02.example.com","consul-02.example.com"],
+            "nodes":["cluster-head-68","consul-01.example.com","consul-02.example.com","servernode-130"],
             "nodes_ip":["172.17.2.68","172.17.2.106","172.17.2.107","172.17.2.130"],
             "tags":["iSCSI"],
             "networkClusterName":"network-pvt"
