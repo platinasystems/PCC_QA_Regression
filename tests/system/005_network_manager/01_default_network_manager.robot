@@ -150,7 +150,7 @@ Set Interfaces For Server Falling in DataCIDR
                                ...  PCC.Interface Verify PCC
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.150.11/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
@@ -170,18 +170,18 @@ Set Interfaces For Server Falling in DataCIDR
 
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_2_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.150.9/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
@@ -201,12 +201,12 @@ Set Interfaces For Server Falling in DataCIDR
 
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${SERVER_2_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f0
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_2_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.150.9/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -334,13 +334,13 @@ Interface Verification For Server Falling In DataCIDR
                                ...  PCC.Interface Verify PCC
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_2_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.9/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -481,13 +481,13 @@ Interface Verification For Server Not Falling In DataCIDR
                                ...  PCC.Interface Verify PCC
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.72.10/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.72.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -590,7 +590,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
                                ...  PCC.Interface Verify PCC
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.72.10/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
@@ -610,18 +610,18 @@ Set Interfaces For Server Partially Falling In DataCIDR
 
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.72.10/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.12/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
@@ -641,12 +641,12 @@ Set Interfaces For Server Partially Falling In DataCIDR
 
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f1
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -760,13 +760,13 @@ Interface Verification For Server Partially Falling in DataCIDR
                                ...  PCC.Interface Verify PCC
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0
+                               ...  interface_name=enp1s0f0
                                ...  assign_ip=["192.168.72.10/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp129s0d1
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.12/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -961,29 +961,29 @@ Fetching Network Manager ID before backup
 ##                                    Should Not Be Equal As Strings      ${status_code}  200
 ##
 ###################################################################################################################################
-Ceph Cluster Creation without Network Manager (Negative) : TCP-1772
+#Ceph Cluster Creation without Network Manager (Negative) : TCP-1772
 ###################################################################################################################################
-    [Documentation]                 *Creating Ceph Cluster*
-                               ...  keywords:
-                               ...  PCC.Ceph Create Cluster
-
-        ${network_id}               PCC.Get Network Manager Id
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Pass Execution If    ${network_id} is not ${None}    Network is already there
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Pass Execution If    ${id} is not ${None}    Ceph Cluster is already there
-
-        ${response}                 PCC.Ceph Create Cluster
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  nodes=${CEPH_CLUSTER_NODES}
-                               ...  tags=${CEPH_CLUSTER_TAGS}
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
-
+#    [Documentation]                 *Creating Ceph Cluster*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Create Cluster
+#
+#        ${network_id}               PCC.Get Network Manager Id
+#                               ...  name=${NETWORK_MANAGER_NAME}
+#                                    Pass Execution If    ${network_id} is not ${None}    Network is already there
+#
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                                    Pass Execution If    ${id} is not ${None}    Ceph Cluster is already there
+#
+#       ${response}                 PCC.Ceph Create Cluster
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                               ...  nodes=${CEPH_CLUSTER_NODES}
+#                               ...  tags=${CEPH_CLUSTER_TAGS}
+#                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
 ####################################################################################################################################
 #Network Manager Creation with same ControlCIDR and DataCIDR
 ####################################################################################################################################
