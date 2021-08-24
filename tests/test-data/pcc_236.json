@@ -210,7 +210,7 @@
             "name":"ceph-pvt",
             "nodes":["cluster-head-68","consul-01.example.com","consul-02.example.com","servernode-130"],
             "nodes_ip":["172.17.2.68","172.17.2.106","172.17.2.107","172.17.2.130"],
-            "tags":["iSCSI"],
+            "tags":["All"],
             "networkClusterName":"network-pvt"
         },
 
