@@ -601,7 +601,7 @@ class Nodes(PccBase):
                 model_number=self._serialize_response(time.time(),cli_run(node_details['Host'], self.user, self.password, model_cmd))['Result']['stdout']
                 print("Backend Serial Data:"+str(serial_number))
                 print("Backend Model Data:"+str(model_number))
-                if node_details['Model']==str(model_number.strip()) and node_details['SN']==str(serial_number.strip()):
+                if node_details['Model'].strip()==str(model_number.strip()) and node_details['SN'].strip()==str(serial_number.strip()):
                     continue
                 else:                 
                     failed_host.append(name)
