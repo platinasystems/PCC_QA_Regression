@@ -59,7 +59,7 @@
 
     "server-1":
         {
-            "server_name":"consul-01.example.com",
+            "server_name":"consul-01",
             "pcc_url": "https://172.17.2.106:9999",
             "pcc_host_ip": "172.17.2.106",
             "pcc_linux_password": "cals0ft",
@@ -77,7 +77,7 @@
 
     "server-2":
         {
-          "server_name":"consul-02.example.com",
+          "server_name":"consul-02",
           "pcc_url": "https://172.17.2.107:9999",
           "pcc_host_ip": "172.17.2.107",
           "pcc_linux_password": "cals0ft",
@@ -197,7 +197,7 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["cluster-head-68","cluster-head-69","consul-01.example.com","consul-02.example.com","servernode-130"],
+            "nodes":["cluster-head-68","cluster-head-69","consul-01","consul-02","servernode-130"],
             "nodes_ip":["172.17.2.68","172.17.2.69","172.17.2.106","172.17.2.107","172.17.2.130"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
@@ -208,7 +208,7 @@
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["cluster-head-68","consul-01.example.com","consul-02.example.com","servernode-130"],
+            "nodes":["cluster-head-68","consul-01","consul-02","servernode-130"],
             "nodes_ip":["172.17.2.68","172.17.2.106","172.17.2.107","172.17.2.130"],
             "tags":["All"],
             "networkClusterName":"network-pvt"
@@ -246,7 +246,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "targetNodes":["consul-01.example.com"],
+            "targetNodes":["consul-01"],
             "port":443,
             "certificateName":"rgw-crt",
             "S3Accounts":"rgw-app"
@@ -258,7 +258,7 @@
             "k8sVersion":"v1.14.3",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["cluster-head-69","consul-01.example.com","consul-02.example.com"],
+            "nodes":["cluster-head-69","consul-01","consul-02"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
