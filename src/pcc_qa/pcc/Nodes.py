@@ -603,8 +603,7 @@ class Nodes(PccBase):
                 print("Backend Model Data:"+str(model_number))
                 if node_details['Model']==str(model_number.strip()) and node_details['SN']==str(serial_number.strip()):
                     continue
-                else:
-                    
+                else:                 
                     failed_host.append(name)
                     continue                
         else:
