@@ -327,7 +327,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 #####################################################################################################################################
@@ -418,7 +418,7 @@ Ceph Rados Update Port
                                     Should Be Equal As Strings      ${status}    OK   
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
 				    
 				    Sleep    3 minutes
@@ -532,7 +532,7 @@ Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
-                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 	                            Sleep    5 minutes
 				                                    
