@@ -582,8 +582,8 @@ class Nodes(PccBase):
         self._load_kwargs(kwargs)
         print("Kwargs:{}".format(kwargs))      
         conn = BuiltIn().get_variable_value("${PCC_CONN}")    
-        serial_cmd="sudo dmidecode -s baseboard-serial-number"
-        model_cmd="sudo dmidecode -s baseboard-product-name"       
+        serial_cmd="sudo dmidecode -s system-serial-number"
+        model_cmd="sudo dmidecode -s system-product-name"       
         failed_host=[]
         if self.Names:
             for name in ast.literal_eval(self.Names):
