@@ -75,43 +75,43 @@ Ceph Cluster Creation without Network Manager (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Network Manager Creation with same ControlCIDR and DataCIDR : TCP-1750
+#Network Manager Creation with same ControlCIDR and DataCIDR : TCP-1750
 ###################################################################################################################################
-    [Documentation]                 *Network Manager Creation with same ControlCIDR and DataCIDR*
-                               ...  keywords:
-                               ...  PCC.Network Manager Create
-                               ...  PCC.Wait Until Network Manager Ready
-                               ...  PCC.Network Manager Verify BE
-        ${response}                 PCC.Network Manager Create
-                               ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                               ...  controlCIDR=${NETWORK_MANAGER_DATACIDR}
-                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
-                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+#     [Documentation]                 *Network Manager Creation with same ControlCIDR and DataCIDR*
+#                                ...  keywords:
+#                                ...  PCC.Network Manager Create
+#                                ...  PCC.Wait Until Network Manager Ready
+#                                ...  PCC.Network Manager Verify BE
+#         ${response}                 PCC.Network Manager Create
+#                                ...  name=${NETWORK_MANAGER_NAME}
+#                                ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
+#                                ...  controlCIDR=${NETWORK_MANAGER_DATACIDR}
+#                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
+#                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
 
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
+#         ${status_code}              Get Response Status Code        ${response}
+#                                     Should Be Equal As Strings      ${status_code}  200
 
-        ${status}                   PCC.Wait Until Network Manager Ready
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
+#         ${status}                   PCC.Wait Until Network Manager Ready
+#                                ...  name=${NETWORK_MANAGER_NAME}
+#                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                               ...  controlCIDR=${IPAM_DATA_SUBNET_IP}
-                               ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
-                                    Should Be Equal As Strings      ${status}  OK
+#         ${status}                   PCC.Network Manager Verify BE
+#                                ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+#                                ...  controlCIDR=${IPAM_DATA_SUBNET_IP}
+#                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
+#                                     Should Be Equal As Strings      ${status}  OK
 
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
+#         ${status}                   PCC.Health Check Network Manager
+#                                ...  name=${NETWORK_MANAGER_NAME}
+#                                     Should Be Equal As Strings      ${status}    OK
 
-        ${status}                   PCC.Network Manager verify From Event log
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
+#         ${status}                   PCC.Network Manager verify From Event log
+#                                ...  name=${NETWORK_MANAGER_NAME}
+#                                     Should Be Equal As Strings      ${status}    OK
 
-                                    PCC.FRR status on nodes
-                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+#                                     PCC.FRR status on nodes
+#                                ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
 
 
 ###################################################################################################################################
@@ -151,7 +151,7 @@ Set Interfaces For Server Falling in DataCIDR
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp1s0f1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  assign_ip=["192.168.150.9/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -176,13 +176,13 @@ Set Interfaces For Server Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp1s0f1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  assign_ip=["192.168.150.9/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp1s0f1
-                               ...  assign_ip=["192.168.150.9/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -207,7 +207,7 @@ Set Interfaces For Server Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp1s0f1
-                               ...  assign_ip=["192.168.150.9/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 #################################################################################################################################
@@ -335,13 +335,13 @@ Interface Verification For Server Falling In DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp1s0f1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  assign_ip=["192.168.150.9/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_2_NAME}
                                ...  interface_name=enp1s0f1
-                               ...  assign_ip=["192.168.150.9/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
