@@ -150,7 +150,7 @@ Set Interfaces For Server Falling in DataCIDR
                                ...  PCC.Interface Verify PCC
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp1s0f0
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.11/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
@@ -170,12 +170,12 @@ Set Interfaces For Server Falling in DataCIDR
 
         ${status}                   PCC.Wait Until Interface Ready
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp1s0f0
+                               ...  interface_name=enp1s0f1
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp1s0f0
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -334,7 +334,7 @@ Interface Verification For Server Falling In DataCIDR
                                ...  PCC.Interface Verify PCC
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
-                               ...  interface_name=enp1s0f0
+                               ...  interface_name=enp1s0f1
                                ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
