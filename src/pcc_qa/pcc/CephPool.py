@@ -365,7 +365,8 @@ class CephPool(PccBase):
             "type":self.pool_type,
             "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
-            "quota_unit":self.quota_unit
+            "quota_unit":self.quota_unit,
+            "managed":True
              }
 
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
