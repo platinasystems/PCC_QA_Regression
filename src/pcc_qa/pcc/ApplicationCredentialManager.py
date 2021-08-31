@@ -50,6 +50,9 @@ class ApplicationCredentialManager(PccBase):
         self.maxObjectSize = None
         self.maxUserSize = None
         self.maxUserObjects = None
+        self.readPermission = True
+        self.writePermission = True
+        self.deletePermission = True
         
         
         
@@ -155,6 +158,9 @@ class ApplicationCredentialManager(PccBase):
                     "active":bool(self.Active),
                     "files":self.Files,
                     "profile":{
+                               "readPermission":self.readPermission,
+                               "deletePermission":self.deletePermission,
+                               "writePermission":self.writePermission 
                                "active":self.ProfileActive,
                                "maxBuckets":self.MaxBuckets,
                                "maxBucketObjects":self.maxBucketObjects,
@@ -219,6 +225,9 @@ class ApplicationCredentialManager(PccBase):
                     "active":bool(self.Active),
                     "files":self.Files,
                     "profile":{"username":self.Name,
+                               "readPermission":self.readPermission,
+                               "deletePermission":self.deletePermission,
+                               "writePermission":self.writePermission 
                                "active":self.ProfileActive,
                                "maxBuckets":self.MaxBuckets,
                                "maxBucketObjects":self.maxBucketObjects,

@@ -383,7 +383,7 @@ Ceph Rados Add S3Account
                                     Should Be Equal As Strings      ${status}    OK  
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK 
                                     
 #####################################################################################################################################
@@ -802,7 +802,7 @@ Ceph Rados Remove S3Account (ServiceIp As Default)
                                      Should Be Equal As Strings      ${status}    OK  
 
          ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                                ...  targetNodeIp=['${SERVER_2_HOST_IP}']
+                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                      Should Be Equal As Strings      ${backend_status}    OK         
                                     
 ####################################################################################################################################
