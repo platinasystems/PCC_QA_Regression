@@ -347,43 +347,43 @@ Ceph Rbd without pool(Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Create RBD and when it is in deploying state then try to delete it (Negative)
-###################################################################################################################################
-     [Documentation]                *Create RBD and when it is in deploying state then try to delete it*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Create Rbd
+# Create RBD and when it is in deploying state then try to delete it (Negative)
+# ###################################################################################################################################
+#      [Documentation]                *Create RBD and when it is in deploying state then try to delete it*
+#                                ...  keywords:
+#                                ...  PCC.Ceph Get Pool Id
+#                                ...  PCC.Ceph Get Cluster Id
+#                                ...  PCC.Ceph Create Rbd
 
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
+#         ${status}                   PCC.Ceph Get Pcc Status
+#                                ...  name=ceph-pvt
+#                                     Should Be Equal As Strings      ${status}    OK
 
-        ${cluster_id}               PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_Cluster_NAME}
+#         ${cluster_id}               PCC.Ceph Get Cluster Id
+#                                ...  name=${CEPH_Cluster_NAME}
 
-        ${pool_id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_POOL_NAME}
+#         ${pool_id}                  PCC.Ceph Get Pool Id
+#                                ...  name=${CEPH_POOL_NAME}
 
-        ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
-                               ...  name=abc1
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  ceph_pool_id=${pool_id}
-                               ...  size=${CEPH_RBD_SIZE}
-                               ...  tags=${CEPH_RBD_TAGS}
-                               ...  image_feature=${CEPH_RBD_IMG}
-                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
+#         ${response}                 PCC.Ceph Create Rbd
+# 				 ...  pool_type=replicated
+#                                ...  name=abc1
+#                                ...  ceph_cluster_id=${cluster_id}
+#                                ...  ceph_pool_id=${pool_id}
+#                                ...  size=${CEPH_RBD_SIZE}
+#                                ...  tags=${CEPH_RBD_TAGS}
+#                                ...  image_feature=${CEPH_RBD_IMG}
+#                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
-        ${id}                       PCC.Ceph Get Rbd Id
-                               ...  name=abc1
-                                    Pass Execution If    ${id} is ${None}    Rbd is alredy Deleted
+#         ${id}                       PCC.Ceph Get Rbd Id
+#                                ...  name=abc1
+#                                     Pass Execution If    ${id} is ${None}    Rbd is alredy Deleted
 
-        ${response}                 PCC.Ceph Delete Rbd
-                               ...  id=${id}
+#         ${response}                 PCC.Ceph Delete Rbd
+#                                ...  id=${id}
 
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
+#         ${status_code}              Get Response Status Code        ${response}
+#                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Ceph Rbd where size unit is in MiB
