@@ -160,7 +160,7 @@ class ApplicationCredentialManager(PccBase):
                     "profile":{
                                "readPermission":self.readPermission,
                                "deletePermission":self.deletePermission,
-                               "writePermission":self.writePermission 
+                               "writePermission":self.writePermission, 
                                "active":self.ProfileActive,
                                "maxBuckets":self.MaxBuckets,
                                "maxBucketObjects":self.maxBucketObjects,
