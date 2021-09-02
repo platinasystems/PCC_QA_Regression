@@ -199,7 +199,7 @@ Ceph Rados Add S3Account
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=["${SERVER_2_HOST_IP}"]
+                               ...  targetNodeIp=["${SERVER_1_HOST_IP}"]
                                     Should Be Equal As Strings      ${backend_status}    OK
                                     Sleep    3 minutes
 
@@ -510,7 +510,7 @@ Create multiple Application credential profile with same application
                        Pass Execution if    ${application_id} == ${rgw_id}   Application Id matches
                        
 ###################################################################################################################################
-Create Application credential profile with same application using duplicate username (Negative)
+Create Application credential profile with same application using duplicate name (Negative)
 ###################################################################################################################################
 
         [Documentation]    *Create Metadata Profile* test
@@ -527,7 +527,7 @@ Create Application credential profile with same application using duplicate user
 			...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Add Metadata Profile
-                       ...    Name=profile_with_app_duplicate_uname
+                       ...    Name=profile_with_app_multiple
                        ...    Type=ceph
                        ...    Username=profile_with_app_multiple
                        ...    Email=profile_with_app_multiple@gmail.com
