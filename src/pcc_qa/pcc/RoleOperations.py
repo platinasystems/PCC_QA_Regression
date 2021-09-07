@@ -211,7 +211,8 @@ class RoleOperations(PccBase):
                         payload={
                                  "Id":self.Id,
                                  "roles":role_ids,
-                                 "scopeId":self.scopeId
+                                 "scopeId":self.scopeId,
+                                 "Host":self.Host
                                  }
                         print("Payload:-"+str(payload))
                         api_response=pcc.modify_node(conn, payload)
