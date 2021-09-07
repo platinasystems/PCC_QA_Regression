@@ -685,7 +685,8 @@ class Nodes(PccBase):
                     payload = { "Id":node['Id'],
                                 "ClusterId":0,
                                 "roles":[1],
-                                "scopeId":int(self.scopeId)}
+                                "scopeId":int(self.scopeId),
+                                "Host":node['Host']}
                     
                     update_resp = pcc.modify_node(conn, payload)
                     update_response_status.append(update_resp['StatusCode'])

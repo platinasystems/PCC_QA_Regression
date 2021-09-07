@@ -149,7 +149,7 @@ Deleting Maas From Nodes
 
 	${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  Host=${CLUSTERHEAD_1_HOST_IP}
+                               ...  Host=${CLUSTERHEAD_1_HOST_IP}"      
                                ...  roles=["Baremetal Management Node"]
                                     Should Be Equal As Strings      ${response}  OK
 
