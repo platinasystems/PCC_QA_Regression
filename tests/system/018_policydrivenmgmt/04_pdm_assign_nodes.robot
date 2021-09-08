@@ -60,6 +60,7 @@ Apply location -rack on single node by using edit button: TCP-1403
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
                        ...  Name=${SERVER_2_NAME}
+                       ...  Host=${SERVER_2_HOST_IP}
                        ...  scopeId=${scope_id}
 
                        Log To Console    ${response}
@@ -144,6 +145,7 @@ Apply location -site on single node by using edit button:TCP-1404
         ${response}    PCC.Update Node
                        ...  Id=${node_id}
                        ...  Name=${SERVER_2_NAME}
+                       ...  Host=${SERVER_2_HOST_IP}
                        ...  scopeId=${scope_id}
 
                        Log To Console    ${response}

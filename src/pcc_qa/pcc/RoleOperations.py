@@ -52,11 +52,11 @@ class RoleOperations(PccBase):
         tmp_id = None
         
         for node in eval(str(self.nodes)):
-            role_ids=[]
             response = pcc.get_nodes(conn)
             for data in get_response_data(response):
                 self.Id=data['Id']
                 self.Host=data['Host']
+                role_ids = data['roles']
                 if str(data['Name']).lower() == str(node).lower():
                     for role in eval(str(self.roles)):
                         tmp_id=easy.get_node_role_id_by_name(conn,str(role))
@@ -192,6 +192,7 @@ class RoleOperations(PccBase):
             response = pcc.get_nodes(conn)
             for data in get_response_data(response):
                 self.Id=data['Id']
+                self.Host=data['Host']
                 role_ids=data['roles']          
                 print("***************** node from pcc: {} ********************".format(data['Name'].lower()))
                 if str(data['Name']).lower() == str(node).lower():
