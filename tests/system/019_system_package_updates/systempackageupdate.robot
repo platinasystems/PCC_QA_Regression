@@ -37,12 +37,12 @@ Check if PCC have a new entry under the applications list to represent the packa
 Check if PCC define default node role for the following to include Platina Systems Package Repository:TCP-1582,TCP-1583,TCP-1584,TCP-1585
 ###################################################################################################################################
 
-        ## Check for Cluster Head node role
-        ${status}          PCC.Validate Node Role
-                           ...    Name=Cluster Head
+#        ## Check for Cluster Head node role
+#        ${status}          PCC.Validate Node Role
+#                           ...    Name=Cluster Head
 
-                           Log To Console   ${status}
-                           Should Be Equal As Strings    ${status}    OK
+#                           Log To Console   ${status}
+#                           Should Be Equal As Strings    ${status}    OK
 
         ## Check for Ceph Resource node role
         ${status}          PCC.Validate Node Role
@@ -114,7 +114,7 @@ Check if PCC assign the Default node role to the node when a node is added to PC
                      Should be equal as strings    ${status}    OK
 
 ################################################################################################################################################################
-Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the cluster head:TCP-1587,TCP-1660,TCP-1661,TCP-1662
+Check if user is able to assign the  CEPH resource, Kubernetes resource, Network resource node role to the cluster head:TCP-1587,TCP-1660,TCP-1661,TCP-1662
 ################################################################################################################################################################
     [Documentation]                 *Check if user is able to assign the Cluster Head node role to the cluster head*
                                ...  Keywords:
@@ -124,7 +124,7 @@ Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes reso
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Default","Cluster Head", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
+                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -146,13 +146,6 @@ Check if user is able to assign the Cluster Head, CEPH resource, Kubernetes reso
 
         ${status}    PCC.Verify Node Role On Nodes
                      ...    Name=Default
-                     ...    nodes=["${CLUSTERHEAD_1_NAME}"]
-
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK
-
-                ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Cluster Head
                      ...    nodes=["${CLUSTERHEAD_1_NAME}"]
 
                      Log To Console    ${status}
@@ -201,13 +194,6 @@ Backend Validations after node roles addition :TCP-1610
                                          Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Platina Systems Package repository
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft
@@ -452,13 +438,6 @@ Remove a node from PCC on which node roles are installed and check backend repo 
 
                                          Should Not Be Equal As Strings    ${status}    OK
 
-                ${status}    CLI.Validate Platina Systems Package repository
-                                         ...    host_ip=${SERVER_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Not Be Equal As Strings    ${status}    OK
-
                 ${status}    CLI.OS Package repository
                                          ...    host_ip=${SERVER_1_HOST_IP}
                                          ...    linux_user=pcc
@@ -518,7 +497,7 @@ Check Automatic Upgrades policy accept invalid value for Enable/disable automati
                                           Should Not Be Equal As Strings    ${status}    200
 
 ###############################################################################################################################################
-Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes resource, Network resource node role to the clusterhead:TCP-1598,TCP-1599,TCP-1600,TCP-1601
+Check if user is able to remove CEPH resource, Kubernetes resource, Network resource node role to the clusterhead:TCP-1598,TCP-1599,TCP-1600,TCP-1601
 ###############################################################################################################################################
     [Documentation]                 *Check if user is able to remove the Cluster Head node role to the cluster head*
                                ...  Keywords:
@@ -528,7 +507,7 @@ Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes reso
 
                 ${response}                 PCC.Delete and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Cluster Head", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
+                               ...  roles=["Ceph Resource", "Kubernetes Resource", "Network Resource"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -536,13 +515,6 @@ Check if user is able to remove the Cluster Head, CEPH resource, Kubernetes reso
                                ...  node_name=${CLUSTERHEAD_1_NAME}
 
                                     Should Be Equal As Strings      ${status_code}  OK
-
-        ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Cluster Head
-                     ...    nodes=["${CLUSTERHEAD_1_NAME}"]
-
-                     Log To Console    ${status}
-                     Should Not Be Equal As Strings    ${status}    OK
 
         ${status}    PCC.Verify Node Role On Nodes
                      ...    Name=Ceph Resource
@@ -587,13 +559,6 @@ Backend Validations after node roles deletion
                                          Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Platina Systems Package repository
                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
                                          ...    linux_user=pcc
                      ...    linux_password=cals0ft

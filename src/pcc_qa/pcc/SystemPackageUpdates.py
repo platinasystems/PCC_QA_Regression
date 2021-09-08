@@ -321,7 +321,7 @@ class SystemPackageUpdates(PccBase):
                 print(" ===============  Searching in repo list:deb http://deb.debian.org/debian stretch main =========== ")
                 if re.search(r"deb http://deb.debian.org/debian stretch main", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb-src http://deb.debian.org/debian-security/ stretch/updates", str(check_repo_list_output)):
+                if re.search(r"deb-src http://deb.debian.org/debian-security stretch/updates", str(check_repo_list_output)):
                     validation_checks.append("OK")
                 if re.search(r"deb http://deb.debian.org/debian stretch-updates main", str(check_repo_list_output)):
                     validation_checks.append("OK")
