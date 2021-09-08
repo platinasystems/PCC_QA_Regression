@@ -174,7 +174,8 @@ Create a policy with default inputs (using NTP app):TCP-1761
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=ntp-policy-description
-                       ...  scopeIds=[${scope1_id},${scope2_id}]                       
+                       ...  scopeIds=[${scope1_id},${scope2_id}]   
+                       ...  inputs=[{"name": "community_string","value": "thecommunitystring"},{"name": "snmp_user","value": "platina"},{"name": "snmp_password","value": "snmpplatina"},{"name": "snmp_encryption","value": "snmpencr"}]                    
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
