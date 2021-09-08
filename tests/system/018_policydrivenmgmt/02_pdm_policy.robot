@@ -142,7 +142,7 @@ Create policy without name of Description:TCP-1416
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
                        Should Not Be Equal As Strings    ${status}    200
-                       
+
 ###################################################################################################################################
 Create a policy with default inputs (using NTP app):TCP-1761
 ###################################################################################################################################
@@ -174,8 +174,48 @@ Create a policy with default inputs (using NTP app):TCP-1761
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=ntp-policy-description
-                       ...  scopeIds=[${scope1_id},${scope2_id}]   
-                       ...  inputs=[{"name": "community_string","value": "thecommunitystring"},{"name": "snmp_user","value": "platina"},{"name": "snmp_password","value": "snmpplatina"},{"name": "snmp_encryption","value": "snmpencr"}]                    
+                       ...  scopeIds=[${scope1_id},${scope2_id}]                    
+                       
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Create a policy with default inputs (using SNMP app)
+###################################################################################################################################
+
+        [Documentation]    *Create a policy* test
+                           ...  keywords:
+                           ...  PCC.Create Policy
+        
+        [Tags]    Only
+        ${app_id}    PCC.Get App Id from Policies
+                     ...  Name=snmp
+                     Log To Console    ${app_id}
+        
+        ${scope1_id}    PCC.Get Scope Id
+                         ...  scope_name=Default region           
+        
+        # ${scope1_id}     PCC.Get Scope Id
+        #                  ...  scope_name=zone-updated
+        #                  ...  parentID=${parent1_id}
+                         
+        # ${parent2_id}    PCC.Get Scope Id
+        #                  ...  scope_name=zone-2
+        #                  ...  parentID=${parent1_id}
+                         
+        # ${scope2_id}     PCC.Get Scope Id
+        #                  ...  scope_name=site-1  
+        #                  ...  parentID=${parent2_id}          
+                      
+        ${response}    PCC.Create Policy
+                       ...  appId=${app_id}
+                       ...  description=snmp-policy-description
+                       ...  scopeIds=[${scope1_id}]   
+                       ...  inputs=[{"name": "community_string","value": "thecommunitystring"},{"name": "snmp_user","value": "platina"},{"name": "snmp_password","value": "snmpplatina"},{"name": "snmp_encryption","value": "snmpencr"}]                                     
                        
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
