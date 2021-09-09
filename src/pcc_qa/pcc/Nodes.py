@@ -333,6 +333,8 @@ class Nodes(PccBase):
             self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
         if "roles" in kwargs:
             self.roles = ast.literal_eval(self.roles)
+        else:
+            self.roles = get_node_response['Result']['Data']['roles']
         payload = {
             "Id": self.Id,
             "Name": self.Name,
