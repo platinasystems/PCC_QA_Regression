@@ -552,7 +552,7 @@ class PolicyDrivenMgmt(PccBase):
             for name in ast.literal_eval(self.node_names):
                 print("Name in for loop: {}".format(name))
                 node_id = Nodes().get_node_id(conn, Name=name)
-                response = pcc.get_node_by_id(conn, node_id)
+                response = pcc.get_node_by_id(conn, str(node_id))
                 node = get_response_data(response)
                 print("Node id is : {}".format(node_id))
                 response = Nodes().update_node(conn, Id=node_id, Name=name, scopeId=self.scopeId, Host=node['Host'])
