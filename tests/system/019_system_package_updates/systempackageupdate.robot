@@ -114,7 +114,7 @@ Check if PCC assign the Default node role to the node when a node is added to PC
                      Should be equal as strings    ${status}    OK
 
 ################################################################################################################################################################
-Check if user is able to assign the  CEPH resource, Kubernetes resource, Network resource node role to the cluster head:TCP-1587,TCP-1660,TCP-1661,TCP-1662
+Check if user is able to assign the CEPH resource, Kubernetes resource, Network resource node role to the cluster head:TCP-1587,TCP-1660,TCP-1661,TCP-1662
 ################################################################################################################################################################
     [Documentation]                 *Check if user is able to assign the Cluster Head node role to the cluster head*
                                ...  Keywords:
@@ -496,81 +496,81 @@ Check Automatic Upgrades policy accept invalid value for Enable/disable automati
                                           Log to Console    ${message}
                                           Should Not Be Equal As Strings    ${status}    200
 
-###############################################################################################################################################
-Check if user is able to remove CEPH resource, Kubernetes resource, Network resource node role to the clusterhead:TCP-1598,TCP-1599,TCP-1600,TCP-1601
-###############################################################################################################################################
-    [Documentation]                 *Check if user is able to remove the Cluster Head node role to the cluster head*
-                               ...  Keywords:
-                               ...  PCC.Add and Verify Roles On Nodes
-                               ...  PCC.Wait Until Roles Ready On Nodes
+# ###############################################################################################################################################
+# Check if user is able to remove CEPH resource, Kubernetes resource, Network resource node role to the clusterhead:TCP-1598,TCP-1599,TCP-1600,TCP-1601
+# ###############################################################################################################################################
+#     [Documentation]                 *Check if user is able to remove the Cluster Head node role to the cluster head*
+#                                ...  Keywords:
+#                                ...  PCC.Add and Verify Roles On Nodes
+#                                ...  PCC.Wait Until Roles Ready On Nodes
 
 
-                ${response}                 PCC.Delete and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Ceph Resource", "Kubernetes Resource", "Network Resource"]
+#                 ${response}                 PCC.Delete and Verify Roles On Nodes
+#                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
+#                                ...  roles=["Ceph Resource", "Kubernetes Resource", "Network Resource"]
 
-                                    Should Be Equal As Strings      ${response}  OK
+#                                     Should Be Equal As Strings      ${response}  OK
 
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#         ${status_code}              PCC.Wait Until Roles Ready On Nodes
+#                                ...  node_name=${CLUSTERHEAD_1_NAME}
 
-                                    Should Be Equal As Strings      ${status_code}  OK
+#                                     Should Be Equal As Strings      ${status_code}  OK
 
-        ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Ceph Resource
-                     ...    nodes=["${CLUSTERHEAD_1_NAME}"]
+#         ${status}    PCC.Verify Node Role On Nodes
+#                      ...    Name=Ceph Resource
+#                      ...    nodes=["${CLUSTERHEAD_1_NAME}"]
 
-                     Log To Console    ${status}
-                     Should Not Be Equal As Strings    ${status}    OK
+#                      Log To Console    ${status}
+#                      Should Not Be Equal As Strings    ${status}    OK
 
-        ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Kubernetes Resource
-                     ...    nodes=["${CLUSTERHEAD_1_NAME}"]
+#         ${status}    PCC.Verify Node Role On Nodes
+#                      ...    Name=Kubernetes Resource
+#                      ...    nodes=["${CLUSTERHEAD_1_NAME}"]
 
-                     Log To Console    ${status}
-                     Should Not Be Equal As Strings    ${status}    OK
+#                      Log To Console    ${status}
+#                      Should Not Be Equal As Strings    ${status}    OK
 
-        ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Network Resource
-                     ...    nodes=["${CLUSTERHEAD_1_NAME}"]
+#         ${status}    PCC.Verify Node Role On Nodes
+#                      ...    Name=Network Resource
+#                      ...    nodes=["${CLUSTERHEAD_1_NAME}"]
 
-                     Log To Console    ${status}
-                     Should Not Be Equal As Strings    ${status}    OK
+#                      Log To Console    ${status}
+#                      Should Not Be Equal As Strings    ${status}    OK
 
-###############################################################################################################################################
-Backend Validations after node roles deletion
-###############################################################################################################################################
-        [Documentation]                 *Backend validations*
-                               ...  Keywords:
+# ###############################################################################################################################################
+# Backend Validations after node roles deletion
+# ###############################################################################################################################################
+#         [Documentation]                 *Backend validations*
+#                                ...  Keywords:
 
 
-                ${status}    CLI.Validate Kubernetes Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+#                 ${status}    CLI.Validate Kubernetes Resource
+#                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                          ...    linux_user=pcc
+#                      ...    linux_password=cals0ft
 
-                                         Should Be Equal As Strings    ${status}    OK
+#                                          Should Be Equal As Strings    ${status}    OK
 
-                ${status}    CLI.Validate CEPH Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+#                 ${status}    CLI.Validate CEPH Resource
+#                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                          ...    linux_user=pcc
+#                      ...    linux_password=cals0ft
 
-                                         Should Be Equal As Strings    ${status}    OK
+#                                          Should Be Equal As Strings    ${status}    OK
 
-                ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+#                 ${status}    CLI.Validate Network Resource
+#                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                          ...    linux_user=pcc
+#                      ...    linux_password=cals0ft
 
-                                         Should Be Equal As Strings    ${status}    OK
+#                                          Should Be Equal As Strings    ${status}    OK
 
-                ${status}    CLI.OS Package repository
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+#                 ${status}    CLI.OS Package repository
+#                                          ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+#                                          ...    linux_user=pcc
+#                      ...    linux_password=cals0ft
 
-                                         Should Be Equal As Strings    ${status}    OK
+#                                          Should Be Equal As Strings    ${status}    OK
 
 ###############################################################################################################################################
 System Package Updates cleanup
