@@ -334,7 +334,7 @@ class Nodes(PccBase):
         if "roles" in kwargs:
             self.roles = ast.literal_eval(self.roles)
         else:
-            get_node_response = self.get_node(conn,self.Id)
+            get_node_response = self.get_node(conn,str(self.Id))
             self.roles = get_node_response['Result']['Data']['roles']
         payload = {
             "Id": self.Id,
