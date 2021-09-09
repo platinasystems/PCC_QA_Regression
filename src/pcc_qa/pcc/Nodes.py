@@ -152,7 +152,7 @@ class Nodes(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Get Node")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_node_by_id(conn, self.Id)
+        return pcc.get_node_by_id(conn, str(self.Id))
 
     ###########################################################################
     @keyword(name="PCC.Get Node Id")
@@ -329,12 +329,12 @@ class Nodes(PccBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("Kwargs are: {}".format(kwargs))
         if "scopeId" not in kwargs:
-            get_node_response = self.get_node(conn,self.Id)
+            get_node_response = self.get_node(conn)
             self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
         if "roles" in kwargs:
             self.roles = ast.literal_eval(self.roles)
         else:
-            get_node_response = self.get_node(conn,str(self.Id))
+            get_node_response = self.get_node(conn)
             self.roles = get_node_response['Result']['Data']['roles']
         payload = {
             "Id": self.Id,
