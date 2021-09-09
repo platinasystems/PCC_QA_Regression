@@ -552,6 +552,20 @@ Delete All Node Roles:TCP-1756
                      Should Be Equal As Strings    ${status}    OK    Node role still exists
 
 ###################################################################################################################################
+Unassign Locations Assigned from All Policies:TCP-1443
+###################################################################################################################################
+
+        [Documentation]    *Unassign Locations Assigned from All Policies* test
+                           ...  keywords:
+                           ...  PCC.Unassign Locations Assigned from All Policies
+
+
+        ${status}    PCC.Unassign Locations Assigned from All Policies
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
 Delete All Policies:TCP-1443
 ###################################################################################################################################
 
@@ -564,3 +578,5 @@ Delete All Policies:TCP-1443
 
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
+
+
