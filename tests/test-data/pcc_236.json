@@ -209,7 +209,7 @@
         {
             "name":"ceph-pvt",
             "nodes":["cluster-head-68","consul-01","consul-02"],
-            "nodes_ip":["172.17.2.68","172.17.2.106","172.17.2.107","172.17.2.130"],
+            "nodes_ip":["172.17.2.68","172.17.2.106","172.17.2.107"],
             "tags":["All"],
             "networkClusterName":"network-pvt"
         },
