@@ -87,7 +87,7 @@ Check if Remote Syslog Package already exists, if exists delete the package
                                         ...    linux_user=${PCC_LINUX_USER}
                                         ...    linux_password=${PCC_LINUX_PASSWORD}
 
-                                        Pass Execution If       '${status}' == 'rsyslog Package is not installed'   'ryslog Package already installed'
+                                        Pass Execution If       ${status} == rsyslog Package not installed
 
                 ${status}               CLI.Remove a package from machine
                                                 ...    package_name=rsyslog
@@ -166,8 +166,8 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                 ${response}    PCC.Add Certificate
                        ...  Alias=Cert_for_rsyslog
                        ...  Description=Cert_for_rsyslog
-                       ...  Certificate_upload=Rsyslog_cert.pem
-		       ...  Private_key=Rsyslog_pvt_key.pem	
+                       ...  Certificate_upload=domain.crt
+		               ...  Private_key=domain.key
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -241,8 +241,8 @@ Check if user is able to define one or more Remote Syslog Client policies and as
 	    #### Validate RSYSlog from backend ####
 		
 		${status}     CLI.Validate Rsyslog from backend
-                              ...  node_names=['${SERVER_2_NAME}']
-			      ...  host_ip=${SERVER_2_HOST_IP}	
+                        ...  node_names=['${SERVER_2_NAME}']
+			            ...  host_ip=${SERVER_2_HOST_IP}	
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
@@ -347,7 +347,7 @@ Check if user is able to define one or more Remote Syslog Client policies(withou
             #### Validate RSYSlog from backend ####
 
                 ${status}     CLI.Validate Rsyslog from backend
-                              ...  node_names=['${SERVER_1_NAME}']
+                              ...  node_names=['${CLUSTERHEAD_1_NAME}']
                               ...  host_ip=${CLUSTERHEAD_1_HOST_IP}
 
                               Log To Console    ${status}

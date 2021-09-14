@@ -70,8 +70,8 @@ class PhoneHome(PccBase):
             print("docker_cmd_run:{}".format(docker_cmd_run))
             print("application_cmd_output:{}".format(application_cmd_output))
             validation_status = []
-            validation_list = ['collectionenabled: true', 'submitenabled: true', 'dailysubmission: true',
-                               'platinadestination: false', 'https: false','jobcleanupage: 0',
+            validation_list = ['collectionEnabled: true', 'submitEnabled: true', 'dailySubmission: true',
+                               'platinaDestination: false', 'https: false','jobCleanupAge: 0',
                                'httpsSkipVerify: true', 'destinationHost: {}'.format(self.host_ip), 'destinationPort: 9001',
                                'destinationBucket: phone-home']
             for i in validation_list:
