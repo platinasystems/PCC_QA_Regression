@@ -87,7 +87,7 @@ Check if Remote Syslog Package already exists, if exists delete the package
                                         ...    linux_user=${PCC_LINUX_USER}
                                         ...    linux_password=${PCC_LINUX_PASSWORD}
 
-                                        Pass Execution If       ${status} == rsyslog Package not installed
+                                        Pass Execution If       ${status} == "rsyslog Package not installed" rsyslog Package not installed
 
                 ${status}               CLI.Remove a package from machine
                                                 ...    package_name=rsyslog
@@ -150,14 +150,14 @@ Check if user is able to define one or more Remote Syslog Client policies and as
 		####  Create Rsyslog configuration ####
 
 		${status}    CLI.Rsyslog Server Configuration
-                	     ...  rsys_server=${SERVER_2_NAME}
+                	     ...  rsys_server=${SERVER_1_NAME}
                  	     ...  rsys_tls=yes
                 	     Should be equal as strings    ${status}    OK
 		
 		#### Restart RSYSLog client service ####
 
                 ${status}     CLI.Restart Rsyslog service
-                              ...  host_ips=['${SERVER_2_HOST_IP}']
+                              ...  host_ips=['${SERVER_1_HOST_IP}']
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
@@ -214,7 +214,7 @@ Check if user is able to define one or more Remote Syslog Client policies and as
                                ...  appId=${app_id}
                                ...  description=rsyslog-policy
                                ...  scopeIds=[${default_rack_Id}]
-                               ...  inputs=[{"name": "rsyslog_remote_address","value":"${SERVER_2_HOST_IP}"},{"name":"rsyslog_enable_tls","value":"true"},{"name":"rsyslog_tcp_port","value":"6514"},{"name":"rsyslog_ca_certificate","value":"${certificate_id}"}]
+                               ...  inputs=[{"name": "rsyslog_remote_address","value":"${SERVER_1_HOST_IP}"},{"name":"rsyslog_enable_tls","value":"true"},{"name":"rsyslog_tcp_port","value":"6514"},{"name":"rsyslog_ca_certificate","value":"${certificate_id}"}]
 
                                Log To Console    ${response}
                                ${result}    Get Result    ${response}
@@ -233,7 +233,7 @@ Check if user is able to define one or more Remote Syslog Client policies and as
 	    #### Restart RSYSLog client ####
 		
 		${status}     CLI.Restart Rsyslog service
-			      ...  host_ips=['${SERVER_2_HOST_IP}','${SERVER_1_HOST_IP}']
+			      ...  host_ips=['${SERVER_1_HOST_IP}']
 			      			
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
@@ -241,8 +241,8 @@ Check if user is able to define one or more Remote Syslog Client policies and as
 	    #### Validate RSYSlog from backend ####
 		
 		${status}     CLI.Validate Rsyslog from backend
-                        ...  node_names=['${SERVER_2_NAME}']
-			            ...  host_ip=${SERVER_2_HOST_IP}	
+                        ...  node_names=['${SERVER_1_NAME}']
+			            ...  host_ip=${SERVER_1_HOST_IP}	
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
@@ -264,7 +264,7 @@ Check if user is able to define one or more Remote Syslog Client policies and as
 	    #### Cleanup logs created by Rsyslog ####
 	
 		${status}     CLI.Cleanup logs created by Rsyslog
-                              ...  host_ips=['${SERVER_2_HOST_IP}']
+                              ...  host_ips=['${SERVER_1_HOST_IP}']
 
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
