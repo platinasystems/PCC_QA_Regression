@@ -25,6 +25,7 @@ class NodeGroups(PccBase):
         self.number_of_node_groups = None
         self.sample_name = None
         self.node_id = None
+        self.Host = None
         super().__init__()
 
     ###########################################################################
@@ -339,11 +340,14 @@ class NodeGroups(PccBase):
         """
         self._load_kwargs(kwargs)
         banner("PCC.Assign Node Group to Node")
-        node_payload = {"ClusterId" : int(self.Id),
-                   "Id" : int(self.node_id)
-                  }
-        
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        node_response = pcc.get_node_by_id(conn, str(self.node_id))
+        roles = node_response['Result']['Data']['roles']
+        node_payload = {"ClusterId" : int(self.Id),
+                        "Id" : int(self.node_id),
+                        "Host" : self.Host,
+                        "roles":roles
+                       }
         response = pcc.modify_node(conn, data=node_payload)
         return pcc.get_nodes(conn)
         

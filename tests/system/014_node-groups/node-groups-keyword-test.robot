@@ -553,6 +553,7 @@ Pcc Node Group Assignment
         ${response}    PCC.Assign Node Group to Node                                  
                        ...    Id=${nodegroup_id}
                        ...    node_id=${invader1_id}
+                       ...    Host=${CLUSTERHEAD_1_HOST_IP}
                      
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
