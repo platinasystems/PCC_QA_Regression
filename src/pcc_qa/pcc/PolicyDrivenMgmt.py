@@ -116,14 +116,14 @@ class PolicyDrivenMgmt(PccBase):
                 "name": self.scope_name,
                 "description": self.description,
                 "parentID":self.parentID,
-                "policyIDs":self.policyIDs
+                "policies":self.policyIDs
                 }
         else:
             payload = {
                 "type": self.type,
                 "name": self.scope_name,
                 "description": self.description,
-                "policyIDs":self.policyIDs
+                "policies":self.policyIDs
                 }
        
         print("payload:-"+str(payload)) 
