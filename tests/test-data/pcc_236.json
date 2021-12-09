@@ -208,8 +208,8 @@
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["cluster-head-68","consul-01","consul-02"],
-            "nodes_ip":["172.17.2.68","172.17.2.106","172.17.2.107"],
+            "nodes":["servernode-130","consul-01","consul-02"],
+            "nodes_ip":["172.17.2.130","172.17.2.106","172.17.2.107"],
             "tags":["All"],
             "networkClusterName":"network-pvt"
         },
