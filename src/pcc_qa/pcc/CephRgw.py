@@ -452,7 +452,7 @@ class CephRgw(PccBase):
         banner("PCC.Ceph Rgw Make Bucket")
         self._load_kwargs(kwargs)
         
-        cmd='sudo s3cmd mb s3://BUCKET -c /home/pcc/.s3cfg'
+        cmd='sudo s3cmd mb s3://testbucket -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("created",str(data)):
@@ -471,7 +471,7 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)       
         cmd='sudo dd if=/dev/zero of={} bs=10MiB count=1'.format(self.fileName)
         file_create=cli_run(self.pcc,self.user,self.password,cmd)
-        cmd='sudo s3cmd put {} s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.fileName)
+        cmd='sudo s3cmd put {} s3://testbucket/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.fileName)
         print("Command:"+str(cmd))
         trace("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
@@ -491,7 +491,7 @@ class CephRgw(PccBase):
     def ceph_rgw_get_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Get File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd get s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName)
+        cmd='sudo s3cmd get s3://testbucket/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("download",str(data)):
@@ -513,7 +513,7 @@ class CephRgw(PccBase):
         cmd='sudo s3cmd ls -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
-        if re.search("BUCKET",str(data)):
+        if re.search("testbucket",str(data)):
             return "OK"
         else:
             print("Buckets are not listed or Buckets are not created yet")
@@ -543,7 +543,7 @@ class CephRgw(PccBase):
     def ceph_rgw_delete_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete File To Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd del s3://BUCKET/{} -c /home/pcc/.s3cfg'.format(self.fileName)
+        cmd='sudo s3cmd del s3://testbucket/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("delete",str(data)):
@@ -560,7 +560,7 @@ class CephRgw(PccBase):
     def ceph_delete_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Delete Bucket")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd rb s3://BUCKET -c /home/pcc/.s3cfg'
+        cmd='sudo s3cmd rb s3://testbucket -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("removed",str(data)):
