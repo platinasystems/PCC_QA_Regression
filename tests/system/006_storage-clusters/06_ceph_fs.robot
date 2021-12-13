@@ -1045,7 +1045,7 @@ Mount FS test case
 
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
-                       ...    hostip=${CLUSTERHEAD_1_HOST_IP}
+                       ...    hostip=${SERVER_1_HOST_IP}
 
                        Log To Console    ${inet_ip}
                        Set Global Variable    ${inet_ip}
