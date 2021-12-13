@@ -1307,7 +1307,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=rgw-non-ceph
-                               ...  targetNodes=["${SERVER_3_NAME}"]
+                               ...  targetNodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
                            
@@ -1321,7 +1321,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
                                     Should Be Equal As Strings      ${status}    OK      
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_3_HOST_IP}']
+                               ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK  
 
 #####################################################################################################################################
@@ -1348,7 +1348,7 @@ Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
-                               ...  targetNodeIp=['${SERVER_3_HOST_IP}']
+                               ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 				    Sleep    5 minutes
                                     
