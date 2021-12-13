@@ -671,7 +671,7 @@ Get CEPH Inet IP
         [Tags]    RBD
 
         ${inet_ip}     PCC.Get CEPH Inet IP
-                       ...    hostip=${CLUSTERHEAD_1_HOST_IP}
+                       ...    hostip=${SERVER_1_HOST_IP}
 
 
                        Log To Console    ${inet_ip}
@@ -685,7 +685,7 @@ RBD Mount use case (2-1 erasure coded pool)
 	[Tags]    Mount_test
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
-                       ...    hostip=${CLUSTERHEAD_1_HOST_IP}
+                       ...    hostip=${SERVER_1_HOST_IP}
 
                        Log To Console    ${inet_ip}
                        Set Global Variable    ${inet_ip}
