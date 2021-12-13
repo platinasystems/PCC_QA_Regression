@@ -292,7 +292,8 @@ class CephRbd(PccBase):
                     "size":self.size,
                     "size_units": self.size_units,
                     "tags":self.tags,
-                    "image_feature":self.image_feature
+                    "image_feature":self.image_feature,
+                    "managed":True
 
                 }
 
