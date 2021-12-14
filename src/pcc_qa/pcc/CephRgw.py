@@ -384,7 +384,7 @@ class CephRgw(PccBase):
         
         if re.search("Configuration saved",str(data)):
             print("File is created Successfully, Changing check_ssl_certificate and check_ssl_hostname to False")
-            cmd='sudo sed -i "s/check_ssl_certificate = True/check_ssl_certificate = False/g" /home/pcc/.s3cfg; sudo sed -i "s/check_ssl_hostname = True/check_ssl_hostname = False/g" /home/pcc/.s3cfg'
+            cmd='sudo sed -i "s/check_ssl_certificate = True/check_ssl_certificate = False/g" /home/pcc/.s3cfg; sudo sed -i "s/check_ssl_hostname = True/check_ssl_hostname = False/g" /home/pcc/.s3cfg sudo sed -i "s/signature_v2 = False/signature_v2 = True/g" /home/pcc/.s3cfg'
             output=cli_run(self.pcc,self.user,self.password,cmd)
             return "OK"
         else:
