@@ -472,7 +472,7 @@ class OS_Deployment(PccBase):
                 else:
                     return "Error"
             else:
-                prinr("Name and Version OS is Empty, Please Provide ...")
+                print("Name and Version OS is Empty, Please Provide ...")
                 return "Error"
         except Exception as e:
             logger.console("Error in set password on server: " + str(e))
