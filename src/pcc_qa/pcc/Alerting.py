@@ -109,7 +109,7 @@ class Alerting(PccBase):
         serialise_output=PccBase()._serialize_response(time.time(),output)['Result']['stdout']
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
-        if re.search("statuscode: 0",serialise_output) and re.search("messagetype: OK",serialise_output):
+        if re.search("statuscode: 200",serialise_output) and re.search("messagetype: OK",serialise_output):
             return "OK"
         return "Error"
 
@@ -200,7 +200,7 @@ class Alerting(PccBase):
         except Exception as e:
             raise e           
             
-        default_alerts=["memory high usage","cpu high temp"]
+        default_alerts=["memory high usage","cpu high temp","drive decreased","osds down/out","ceph pool usage 80%","ceph pool usage 90%"]
         response = pcc.get_alert_rules(conn)
         for data in get_response_data(response):
             self.id=data["id"]
