@@ -56,6 +56,7 @@ class RoleOperations(PccBase):
             for data in get_response_data(response):
                 self.Id=data['Id']
                 self.Host=data['Host']
+                self.node_name=data['Name']
                 role_ids = data['roles']
                 if str(data['Name']).lower() == str(node).lower():
                     for role in eval(str(self.roles)):
@@ -70,6 +71,7 @@ class RoleOperations(PccBase):
                         self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
                     payload={
                              "Id":self.Id,
+                             "Name":self.node_name,
                              "Host":self.Host,
                              "roles":role_ids,
                              "scopeId":self.scopeId
