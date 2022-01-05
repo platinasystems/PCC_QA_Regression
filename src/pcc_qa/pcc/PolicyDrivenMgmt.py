@@ -39,7 +39,7 @@ class PolicyDrivenMgmt(PccBase):
         self.scopeIds = []
         self.scopeId= None
         self.inputs = []
-        self.owner = 0
+        self.owner = 1
         self.policyID = None
         self.policyIDs = []
         self.node_names = []
