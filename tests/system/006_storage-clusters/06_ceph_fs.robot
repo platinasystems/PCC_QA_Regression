@@ -1084,7 +1084,7 @@ Mount FS test case
 
         ${status}      Create dummy file and copy to mount path
                        ...    dummy_file_name=test_fs_mnt_1mb.bin
-                       ...    dummy_file_size=1MiB
+                       ...    dummy_file_size=1KiB
                        ...    mount_folder_name=test_fs_mnt
                        ...    hostip=${SERVER_2_HOST_IP}
                        ...    user=${PCC_LINUX_USER}
