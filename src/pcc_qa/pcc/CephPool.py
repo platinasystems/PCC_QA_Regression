@@ -91,7 +91,7 @@ class CephPool(PccBase):
 
         response = pcc.get_ceph_pools(conn)
         for data in get_response_data(response):
-            if str(data['managed']) == 'true':
+            if data['managed'] == True:
                 response=pcc.delete_ceph_pool_by_id(conn,str(data['id']))
                 status=self.wait_until_pool_deleted(id=data['id'])
                 if status!="OK":
