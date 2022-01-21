@@ -91,11 +91,12 @@ class CephPool(PccBase):
 
         response = pcc.get_ceph_pools(conn)
         for data in get_response_data(response):
-            response=pcc.delete_ceph_pool_by_id(conn,str(data['id']))
-            status=self.wait_until_pool_deleted(id=data['id'])
-            if status!="OK":
-                print("{} deletion failed".format(data['name']))
-                return "Error"
+            if str(data['managed']) == 'true':
+                response=pcc.delete_ceph_pool_by_id(conn,str(data['id']))
+                status=self.wait_until_pool_deleted(id=data['id'])
+                if status!="OK":
+                    print("{} deletion failed".format(data['name']))
+                    return "Error"
         return "OK"
 
     ###########################################################################
