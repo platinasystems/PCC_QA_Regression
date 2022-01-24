@@ -755,7 +755,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp1s0f0
-                               ...  assign_ip=["192.168.150.12/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -780,7 +780,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp1s0f0
-                               ...  assign_ip=["192.168.150.12/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -818,7 +818,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
         ${response}                 PCC.Interface Set 1D Link
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  assign_ip=["192.168.150.10/31"]
                                ...  managedbypcc=True
                                ...  autoneg=off
                                ...  speed=10000
@@ -843,7 +843,7 @@ Set Interfaces For Server Partially Falling In DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${CLUSTERHEAD_2_NAME}
                                ...  interface_name=xeth1-1
-                               ...  assign_ip=["192.168.150.11/31"]
+                               ...  assign_ip=["192.168.150.10/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -856,7 +856,7 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR) :
                                ...  PCC.Network Manager Verify BE
         ${response}                 PCC.Network Manager Create
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
@@ -869,7 +869,7 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR) :
                                     Should Be Equal As Strings      ${status}    OK
 
         ${status}                   PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
@@ -883,7 +883,7 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR) :
                                     Should Be Equal As Strings      ${status}    OK
 
                                     PCC.FRR status on nodes
-                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_HOST_IP}"]
 
 ###################################################################################################################################
 Interface Verification For Server Partially Falling in DataCIDR
@@ -900,7 +900,7 @@ Interface Verification For Server Partially Falling in DataCIDR
         ${status}                   PCC.Interface Verify PCC
                                ...  node_name=${SERVER_1_NAME}
                                ...  interface_name=enp1s0f0
-                               ...  assign_ip=["192.168.150.12/31"]
+                               ...  assign_ip=["192.168.150.11/31"]
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -922,7 +922,7 @@ Network Manager Refresh (Interfaces For Server Partially Falling In DataCIDR) : 
                                     Should Be Equal As Strings      ${status}    OK
 
          ${status}                  PCC.Network Manager Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
@@ -986,7 +986,7 @@ Network Manager Update (Interfaces For Server Partially Falling In DataCIDR) : T
         ${response}                 PCC.Network Manager Update
                                ...  id=${network_id}
                                ...  name=${NETWORK_MANAGER_NAME}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}","${SERVER_3_NAME}"]
+                               ...  nodes=["${SERVER_3_NAME}","${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
