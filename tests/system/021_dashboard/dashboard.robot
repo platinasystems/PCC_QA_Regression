@@ -97,7 +97,7 @@ PCC Dashboard - Verify Object Health/Kernel/OS Information:TCP-1653,TCP-1652,TCP
         [Tags]             kc
 
         ${node_ip}     PCC.Ceph Active Manager And Verify
-                       ...  hostip=${CLUSTERHEAD_1_HOST_IP}
+                       ...  hostip=${SERVER_1_HOST_IP}
                        Log To Console    ${node_ip}
                        Set Global Variable    ${node_ip}
 
