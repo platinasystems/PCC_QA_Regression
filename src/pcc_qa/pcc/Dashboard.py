@@ -436,7 +436,7 @@ class Dashboard(PccBase):
                                 ceph_cluster_description = ceph_health_response["summary"]
                                 trace("Ceph health description:{}".format(ceph_cluster_description))
                                 if ceph_cluster_description == "":
-                                    ceph_cluster_dict["Health"]="EverythingisOK"
+                                    ceph_cluster_dict["Health"]="Everythingisgood"
                                 else:
                                     ceph_cluster_dict["Health"] = ''.join(e for e in ceph_cluster_description if e.isalnum())
                                 cmd1 = 'sudo ceph --version'
