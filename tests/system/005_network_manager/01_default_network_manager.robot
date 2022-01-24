@@ -883,7 +883,7 @@ Network Manager Creation (Interfaces For Server Partially Falling In DataCIDR) :
                                     Should Be Equal As Strings      ${status}    OK
 
                                     PCC.FRR status on nodes
-                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_HOST_IP}"]
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
 
 ###################################################################################################################################
 Interface Verification For Server Partially Falling in DataCIDR
