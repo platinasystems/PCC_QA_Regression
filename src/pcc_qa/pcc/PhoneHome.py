@@ -11,7 +11,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
-from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json, midtext
+from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json, midtext, convertFromTo
 from pcc_qa.common.Result import get_response_data
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
@@ -277,7 +277,7 @@ class PhoneHome(PccBase):
         print("split_manual_tar_file:{}".format(split_manual_tar_file))
         manual_tar['name'] = split_manual_tar_file[0].replace('".', '')
         manual_tar['tar_file_without_user'] = split_manual_tar_file[0].replace('".', '').replace(self.setup_username,"")
-        manual_tar['size'] = float(split_manual_tar_file[2])
+        manual_tar['size'] = convertFromTo(float(split_manual_tar_file[2]), split_manual_tar_file[3], 'MB')
 
         #daily_tar_file_command = 'sudo cat /home/pcc/default.log |grep "Successfully uploaded"|grep "daily"|grep "{}"'.format(date_cmd_op)
         #daily_tar_file_command_output = cli_run(self.host_ip, self.user, self.password, daily_tar_file_command)

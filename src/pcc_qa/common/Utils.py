@@ -96,3 +96,24 @@ def convert(value, size):
         return converter[size]
     else:
         return "Size not found in the list"
+
+def convertFromTo(value, startUnit, endUnit = 'B'):
+    converter = {'B': 1,
+                 'KiB': 2**10,
+                 'MiB': 2**20,
+                 'GiB': 2**30,
+                 'TiB': 2**40,
+                 'PiB': 2**50,
+                 'EiB': 2**60,
+                 'KB': 1e3,
+                 'MB': 1e6,
+                 'GB': 1e9,
+                 'TB': 1e12,
+                 'PB': 1e15,
+                 'EB': 1e18
+                 }
+    if startUnit not in converter.keys() or endUnit not in converter.keys():
+        return "Size not found in the list"
+
+    unit = converter[startUnit] / converter[endUnit]
+    return value * unit
