@@ -348,6 +348,7 @@ class NodeGroups(PccBase):
                         "Host" : self.Host,
                         "roles":roles
                        }
+        print("payload : {}".format(node_payload))     
         response = pcc.modify_node(conn, data=node_payload)
         return pcc.get_nodes(conn)
         

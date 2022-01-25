@@ -616,6 +616,8 @@ Pcc Node Group Un-Assignment
         ${response}    PCC.Assign Node Group to Node
                        ...    Id=0
                        ...    node_id=${invader1_id}
+                       ...    Host=${CLUSTERHEAD_1_HOST_IP}
+
 
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
