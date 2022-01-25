@@ -391,8 +391,8 @@ class Dashboard(PccBase):
                 if object == "K8sCluster":
                     if data["pccObjectType"] == object:
                         k8s_dashboard["Name"] = data["pccObjectName"]
-                        k8s_dashboard["Health"] = data["health"]["description"].lower()
-
+                        if data["health"]["description"].lower() == "everything is ok":
+                            k8s_dashboard["Health"] = "good"
                         trace("K8s Dashboard:{}".format(k8s_dashboard))
                         for data1 in get_response_data(k8s_response):
                             if data1["name"] == k8s_dashboard["Name"]:
@@ -417,7 +417,7 @@ class Dashboard(PccBase):
                             elif item["topic"] == "Capacity Usage":
                                 for data in item["message"]:
                 
-                                    capacity_value = str(math.floor(eval(data["message"].split(" ")[3]))) + " " +data["message"].split(" ")[4]
+                                    capacity_value = str(round(eval(data["message"].split(" ")[3]))) + " " +data["message"].split(" ")[4]
                                     ceph_cluster_dashboard_dict["Total Capacity"] = capacity_value
                             elif item["topic"] == "Version":
                                 for data in item["message"]:
