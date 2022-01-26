@@ -55,16 +55,13 @@ class Rsyslog(PccBase):
             validation_status = []
             for node_name in ast.literal_eval(self.node_names):
                 print("Node name: {}".format(node_name))
-                date_cmd_op = self._serialize_response(time.time(), cli_run(self.host_ip,self.linux_user,self.linux_password,cmd="date"))
+                date_cmd_op = self._serialize_response(time.time(), cli_run(self.host_ip,self.linux_user,self.linux_password,cmd="date +'%b %d'"))
                 output = str(date_cmd_op['Result']['stdout']).replace('\n', '').strip()
-                current_date_day = output[4:5]
-                current_date_month = output[7:9]
-                current_date = current_date_month + " " + current_date_day
                 #current_time = output[11:16]
-                print("Current_date: {}".format(current_date))
+                print("Current_date: {}".format(output))
                 #print("Current_time: {}".format(current_time))
 
-                cmd = '''sudo cat /var/log/messages|grep "{}"|grep "{}"|grep "{}"|wc -l'''.format(current_date,node_name)  
+                cmd = '''sudo cat /var/log/messages|grep "{}"|grep "{}"|grep "{}"|wc -l'''.format(output,node_name)  
                 print("============== cmd is : {} ==========".format(cmd))
                 cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
                 serialised_output = self._serialize_response(time.time(), cmd_op)
