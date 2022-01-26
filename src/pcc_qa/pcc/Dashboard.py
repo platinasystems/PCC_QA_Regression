@@ -412,7 +412,7 @@ class Dashboard(PccBase):
                         for item in data["pccObjectDetails"]:
                             if item["topic"] == "Health":
                                 for data in item["message"]:
-                                    ceph_cluster_dashboard_dict["Health"] = ''.join(e for e in data["message"] if e.isalnum())
+                                    ceph_cluster_dashboard_dict["Health"] += ''.join(e for e in data["message"] if e.isalnum())
 
                             elif item["topic"] == "Capacity Usage":
                                 for data in item["message"]:
