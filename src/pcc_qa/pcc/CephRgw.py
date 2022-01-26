@@ -229,9 +229,9 @@ class CephRgw(PccBase):
                 if str(data['name']).lower() == str(self.name).lower():
                     print("Response To Look :-"+str(data))
                     trace("  Waiting until %s is Ready, current status: %s" % (str(data['name']),str(data['deploy_status'])))
-                    if data['deploy_status'] == "completed":
+                    if data.get('deploy_status') == "completed":
                         return "OK"
-                    elif re.search("failed", str(data['deploy_status'])):
+                    elif re.search("failed", str(data.get('deploy_status'))):
                         return "Error"
                     else:
                         break
