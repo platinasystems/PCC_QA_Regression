@@ -87,7 +87,7 @@ Check if Remote Syslog Package already exists, if exists delete the package
                                         ...    linux_user=${PCC_LINUX_USER}
                                         ...    linux_password=${PCC_LINUX_PASSWORD}
 
-                                        Pass Execution If    "${status}" == "rsyslog Package is not installed"    rsyslog Package is not installed
+                                        Pass Execution If    "${status}" == "rsyslog Package not installed"    rsyslog Package not installed
 
                 ${status}               CLI.Remove a package from machine
                                                 ...    package_name=rsyslog
