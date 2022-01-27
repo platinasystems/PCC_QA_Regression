@@ -408,7 +408,7 @@ class Dashboard(PccBase):
                 if object == "CephCluster":
                     if data["pccObjectType"] == object:
                         ceph_cluster_dashboard_dict["Name"] = data["pccObjectName"]
-
+                        ceph_cluster_dashboard_dict["Health"] = ""
                         for item in data["pccObjectDetails"]:
                             if item["topic"] == "Health":
                                 for data in item["message"]:

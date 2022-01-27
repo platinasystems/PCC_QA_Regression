@@ -620,6 +620,7 @@ Pcc Node Group Un-Assignment
                        ...    Id=0
                        ...    node_id=${invader1_id}
                        ...    Host=${CLUSTERHEAD_1_HOST_IP}
+                       ...    Hostname=${CLUSTERHEAD_1_NAME}
 
 
                        Log To Console    ${response}
