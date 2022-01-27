@@ -61,7 +61,7 @@ class Rsyslog(PccBase):
                 print("Current_date: {}".format(output))
                 #print("Current_time: {}".format(current_time))
 
-                cmd = '''sudo cat /var/log/messages|grep "{}"|grep "{}"|grep "{}"|wc -l'''.format(output,node_name)  
+                cmd = '''sudo cat /var/log/messages|grep "{}"|grep "{}"|wc -l'''.format(output,node_name)  
                 print("============== cmd is : {} ==========".format(cmd))
                 cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
                 serialised_output = self._serialize_response(time.time(), cmd_op)
