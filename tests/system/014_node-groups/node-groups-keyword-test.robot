@@ -562,7 +562,7 @@ Pcc Node Group Assignment
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
                      
-                     Sleep    5s
+                     Sleep    1m
 
         ${status}    PCC.Validate Node Group Assigned to Node
                      ...    Name=${CLUSTERHEAD_1_NAME}
