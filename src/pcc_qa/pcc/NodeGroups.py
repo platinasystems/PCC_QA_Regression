@@ -26,6 +26,7 @@ class NodeGroups(PccBase):
         self.sample_name = None
         self.node_id = None
         self.Host = None
+        self.Hostname = None
         super().__init__()
 
     ###########################################################################
@@ -346,6 +347,7 @@ class NodeGroups(PccBase):
         node_payload = {"ClusterId" : int(self.Id),
                         "Id" : int(self.node_id),
                         "Host" : self.Host,
+                        "Name" : self.Hostname,
                         "roles":roles
                        }
         print("payload : {}".format(node_payload))     

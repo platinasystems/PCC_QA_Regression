@@ -554,6 +554,7 @@ Pcc Node Group Assignment
                        ...    Id=${nodegroup_id}
                        ...    node_id=${invader1_id}
                        ...    Host=${CLUSTERHEAD_1_HOST_IP}
+                       ...    Hostname=${CLUSTERHEAD_1_NAME}
                      
                        Log To Console    ${response}
                        ${result}    Get Result    ${response}
@@ -567,6 +568,7 @@ Pcc Node Group Assignment
         ${status}    PCC.Validate Node Group Assigned to Node
                      ...    Name=${CLUSTERHEAD_1_NAME}
                      ...    Id=${nodegroup_id}
+
                      
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK
