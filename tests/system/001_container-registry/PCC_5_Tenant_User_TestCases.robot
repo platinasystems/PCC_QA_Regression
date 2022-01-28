@@ -611,7 +611,7 @@ Cleanup Auth Profiles after login as Tenant user
                      Log to Console    ${result}
                      Should Be Equal As Strings    ${result}    OK
                      
-                     Sleep    2 minutes
+                     Sleep    5 minutes
                      
         ${status}    PCC.CR Wait For CR updation
                      ...    Name=${CR_NAME}
