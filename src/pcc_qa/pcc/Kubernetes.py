@@ -189,6 +189,9 @@ class Kubernetes(PccBase):
                         if int(data['latestAnsibleJob']['progressPercentage'])==100 and (str(data['deployStatus']).lower() == 'installed' or str(data['deployStatus']).lower() == 'update completed'):
                             print("Response:-"+str(data))
                             cluster_ready = True
+                        elif re.search("failed",data['latestAnsibleJob']['status']):
+                            print("Response:-"+str(data))
+                            return "Error"
                     elif str(data['deployStatus']).lower() == 'installed' or str(data['deployStatus']).lower() == 'update completed':
                         print("Response:-"+str(data))
                         cluster_ready = True
