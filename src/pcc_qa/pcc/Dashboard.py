@@ -408,21 +408,20 @@ class Dashboard(PccBase):
                 if object == "CephCluster":
                     if data["pccObjectType"] == object:
                         ceph_cluster_dashboard_dict["Name"] = data["pccObjectName"]
-                        ceph_cluster_dashboard_dict["Health"] = ""
+                        ceph_cluster_dashboard_dict["Health"] = set()
                         for item in data["pccObjectDetails"]:
                             if item["topic"] == "Health":
                                 for data in item["message"]:
-                                    ceph_cluster_dashboard_dict["Health"] += ''.join(e for e in data["message"] if e.isalnum())
-
+                                    ceph_cluster_dashboard_dict["Health"].add(''.join(e for e in data["message"] if e.isalnum()))
                             elif item["topic"] == "Capacity Usage":
                                 for data in item["message"]:
-                
                                     capacity_value = str(round(eval(data["message"].split(" ")[3]))) + " " +data["message"].split(" ")[4]
                                     ceph_cluster_dashboard_dict["Total Capacity"] = capacity_value
                             elif item["topic"] == "Version":
                                 for data in item["message"]:
                                     message = data["message"].split(" ")
                                     ceph_cluster_dashboard_dict["Version"] = message[0]+" " +message[1]
+
                         trace("Ceph Cluster dashboard:{}".format(ceph_cluster_dashboard_dict))
 
                         for ceph in get_response_data(ceph_clusters_response):
@@ -433,12 +432,12 @@ class Dashboard(PccBase):
     
                                 ceph_health_response = get_response_data(ceph_response)
                                 
-                                ceph_cluster_description = ceph_health_response["summary"]
+                                ceph_cluster_description = ceph_health_response["summary"].split(";")
                                 trace("Ceph health description:{}".format(ceph_cluster_description))
-                                if ceph_cluster_description == "":
+                                if ceph_cluster_description == []:
                                     ceph_cluster_dict["Health"]="Everythingisgood"
                                 else:
-                                    ceph_cluster_dict["Health"] = ''.join(e for e in ceph_cluster_description if e.isalnum())
+                                    ceph_cluster_dict["Health"] = set(["".join(e for e in c if e.isalnum()) for c in ceph_cluster_description]) 
                                 cmd1 = 'sudo ceph --version'
                                 cmd2 = 'sudo ceph -s | grep usage | cut -d "/" -f2 | cut -d "a" -f1'
                                 cmd_execution1 = cli_run(self.nodeip, self.user, self.password, cmd1)
