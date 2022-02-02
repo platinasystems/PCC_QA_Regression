@@ -55,7 +55,7 @@ class Rsyslog(PccBase):
             validation_status = []
             for node_name in ast.literal_eval(self.node_names):
                 print("Node name: {}".format(node_name))
-                date_cmd_op = self._serialize_response(time.time(), cli_run(self.host_ip,self.linux_user,self.linux_password,cmd="date +'%b %d'"))
+                date_cmd_op = self._serialize_response(time.time(), cli_run(self.host_ip,self.linux_user,self.linux_password,cmd="date +'%b %e'"))
                 output = str(date_cmd_op['Result']['stdout']).replace('\n', '').strip()
                 #current_time = output[11:16]
                 print("Current_date: {}".format(output))
