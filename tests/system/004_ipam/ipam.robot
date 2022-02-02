@@ -228,4 +228,59 @@ Fetching IPAM subnet ID before backup
                                            ...  name=${IPAM_DATA_SUBNET_NAME}
                                            Log To Console    ${ipam_subnet_id_before_backup}
                                            Set Global Variable    ${ipam_subnet_id_before_backup}
+
+
+###################################################################################################################################
+Login To PCC Secondary
+###################################################################################################################################
+
+                                    Load Ipam Data Secondary   ${pcc_setup}
+
+        ${status}                   Login To PCC Secondary        testdata_key=${pcc_setup}
+                                    Should Be Equal     ${status}  OK
+
+###################################################################################################################################
+Create IPAM ControlCIDR Subnet Secondary
+###################################################################################################################################
+    [Documentation]                 *Create IPAM Subnet Secondary*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Create
+                               ...  PCC.Wait Until Ipam Subnet Ready
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=${IPAM_CONTROL_SUBNET_NAME_SECONDARY}
+                               ...  subnet=${IPAM_CONTROL_SUBNET_IP_SECONDARY}
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=${IPAM_CONTROL_SUBNET_NAME_SECONDARY}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Create IPAM DataCIDR Subnet Secondary
+###################################################################################################################################
+    [Documentation]                 *Create IPAM Subnet Secondary*
+                               ...  keywords:
+                               ...  PCC.Ipam Subnet Create
+                               ...  PCC.Wait Until Ipam Subnet Ready
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=${IPAM_DATA_SUBNET_NAME_SECONDARY}
+                               ...  subnet=${IPAM_DATA_SUBNET_IP_SECONDARY}
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=${IPAM_DATA_SUBNET_NAME_SECONDARY}
+
+                                    Should Be Equal As Strings      ${status}    OK
+
                                            

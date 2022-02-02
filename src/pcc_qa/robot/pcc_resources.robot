@@ -71,6 +71,30 @@ Login To PCC
         ${login_success}        Set Variable If  "${PCC_CONN}" == "None"  ERROR  OK
     [Return]                    ${login_success}
 
+###################################################################################################################################
+Login To PCC Secondary
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}=None
+
+        [Documentation]         *Login to PCC* - obtain token
+                                Log To Console          **** Login To PCC ****
+
+                                # Load Test Data sets Suite Variables used by all tests
+
+                                Load PCC Secondary Test Data      ${testdata_key}
+
+                                #Load Clusterhead 1 Test Data    ${pcc_server_key}.json
+                                # PCC.Login is defined in Login.py   it takes PCC_URL from defined Robot variable
+
+        ${PCC_CONN}             PCC.Login               url=${PCC_URL_SECONDARY}   username=${PCC_USERNAME_SECONDARY}    password=${PCC_PASSWORD_SECONDARY}
+
+                                # Log To Console          CH-NAME=${CLUSTERHEAD_1_NAME}
+                                # Using SESSION and TOKEN for all subsequent REST API calls
+
+                                Set Suite Variable      ${PCC_CONN}
+        ${login_success}        Set Variable If  "${PCC_CONN}" == "None"  ERROR  OK
+    [Return]                    ${login_success}
+
 
 ###################################################################################################################################
 Load PCC Test Data
@@ -1187,3 +1211,214 @@ Load Ipam Data
 
         ${IPAM_DATA_SUBNET_IP}         Evaluate    $pcc_server_dict.get("dataSubnet", None)
                                        Set Suite Variable    ${IPAM_DATA_SUBNET_IP}
+
+###################################################################################################################################
+Load PCC Secondary Test Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_key}
+
+        [Documentation]             *Load PCC Test Data*
+                                         Log To Console          **** Load PCC Test Data ****
+
+        ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+        ${PCC_SERVER_SECONDARY}          Evaluate                $pcc_multisite_dict.get("pcc_server", None)
+                                         Set Suite Variable      ${PCC_SERVER_SECONDARY}
+
+        ${PCC_URL_SECONDARY}             Evaluate                $PCC_SERVER_SECONDARY.get("pcc_url", None)
+                                         Set Suite Variable      ${PCC_URL_SECONDARY}
+
+        ${PCC_HOST_IP_SECONDARY}         Evaluate                $PCC_SERVER_SECONDARY.get("pcc_host_ip", None)
+                                         Set Suite Variable      ${PCC_HOST_IP_SECONDARY}
+
+        ${PCC_USERNAME_SECONDARY}         Evaluate                $PCC_SERVER_SECONDARY.get("pcc_username", None)
+                                          Set Suite Variable      ${PCC_USERNAME_SECONDARY}
+
+        ${PCC_PASSWORD_SECONDARY}         Evaluate                $PCC_SERVER_SECONDARY.get("pcc_password", None)
+                                          Set Suite Variable      ${PCC_PASSWORD_SECONDARY}
+
+        ${PCC_LINUX_USER_SECONDARY}       Evaluate                $PCC_SERVER_SECONDARY.get("pcc_linux_user", None)
+                                          Set Suite Variable      ${PCC_LINUX_USER_SECONDARY}
+
+        ${PCC_LINUX_PASSWORD_SECONDARY}   Evaluate                $PCC_SERVER_SECONDARY.get("pcc_linux_password", None)
+                                          Set Suite Variable      ${PCC_LINUX_PASSWORD_SECONDARY}
+
+###################################################################################################################################
+Load Clusterhead 1 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Clusterhead 1 Secondary Test Data*
+                                Log To Console          **** Load Clusterhead 1 Secondary Test Data ****
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${CLUSTERHEAD_1_SECONDARY}          Evaluate                $pcc_multisite_dict.get("clusterhead-1", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_1_SECONDARY}
+
+            ${CLUSTERHEAD_1_NAME_SECONDARY}     Evaluate                $CLUSTERHEAD_1_SECONDARY.get("invader_name", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_1_NAME_SECONDARY}
+
+            ${CLUSTERHEAD_1_HOST_IP_SECONDARY}  Evaluate                $CLUSTERHEAD_1_SECONDARY.get("pcc_host_ip", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_1_HOST_IP_SECONDARY}
+
+            ${CLUSTERHEAD_1_UNAME_SECONDARY}    Evaluate                $CLUSTERHEAD_1_SECONDARY.get("pcc_username", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_1_UNAME_SECONDARY}
+
+            ${CLUSTERHEAD_1_PWD_SECONDARY}      Evaluate                $CLUSTERHEAD_1_SECONDARY.get("pcc_password", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_1_PWD_SECONDARY}
+
+###################################################################################################################################
+Load Clusterhead 2 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Clusterhead 2 Secondary Test Data*
+                                Log To Console          **** Load Clusterhead 2 Secondary Test Data ****
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${CLUSTERHEAD_2_SECONDARY}          Evaluate                $pcc_multisite_dict.get("clusterhead-2", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_2_SECONDARY}
+
+            ${CLUSTERHEAD_2_NAME_SECONDARY}     Evaluate                $CLUSTERHEAD_2_SECONDARY.get("invader_name", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_2_NAME_SECONDARY}
+
+            ${CLUSTERHEAD_2_HOST_IP_SECONDARY}  Evaluate                $CLUSTERHEAD_2_SECONDARY.get("pcc_host_ip", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_2_HOST_IP_SECONDARY}
+
+            ${CLUSTERHEAD_2_UNAME_SECONDARY}    Evaluate                $CLUSTERHEAD_2_SECONDARY.get("pcc_username", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_2_UNAME_SECONDARY}
+
+            ${CLUSTERHEAD_2_PWD_SECONDARY}      Evaluate                $CLUSTERHEAD_2_SECONDARY.get("pcc_password", None)
+                                                Set Suite Variable      ${CLUSTERHEAD_2_PWD_SECONDARY}
+
+###################################################################################################################################
+Load Server 1 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Server 1 Secondary Test Data*
+                                Log To Console          **** Load Server 1 Secondary Test Data ****
+
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${SERVER_1_SECONDARY}          Evaluate                $pcc_multisite_dict.get("server-1", None)
+                                           Set Suite Variable      ${SERVER_1_SECONDARY}
+
+
+            ${SERVER_1_NAME_SECONDARY}      Evaluate    $SERVER_1_SECONDARY.get("server_name", None)
+                                            Set Suite Variable    ${SERVER_1_NAME_SECONDARY}
+
+            ${SERVER_1_HOST_IP_SECONDARY}   Evaluate    $SERVER_1_SECONDARY.get("pcc_host_ip", None)
+                                            Set Suite Variable    ${SERVER_1_HOST_IP_SECONDARY}
+
+            ${SERVER_1_UNAME_SECONDARY}     Evaluate    $SERVER_1_SECONDARY.get("pcc_username", None)
+                                            Set Suite Variable    ${SERVER_1_UNAME_SECONDARY}
+
+            ${SERVER_1_PWD_SECONDARY}       Evaluate    $SERVER_1_SECONDARY.get("pcc_password", None)
+                                            Set Suite Variable    ${SERVER_1_PWD_SECONDARY}
+
+###################################################################################################################################
+Load Server 2 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Server 2 Secondary Test Data*
+                                Log To Console          **** Load Server 2 Secondary Test Data ****
+
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${SERVER_2_SECONDARY}          Evaluate                $pcc_multisite_dict.get("server-2", None)
+                                           Set Suite Variable      ${SERVER_1_SECONDARY}
+
+
+            ${SERVER_2_NAME_SECONDARY}      Evaluate    $SERVER_2_SECONDARY.get("server_name", None)
+                                            Set Suite Variable    ${SERVER_2_NAME_SECONDARY}
+
+            ${SERVER_2_HOST_IP_SECONDARY}   Evaluate    $SERVER_2_SECONDARY.get("pcc_host_ip", None)
+                                            Set Suite Variable    ${SERVER_2_HOST_IP_SECONDARY}
+
+            ${SERVER_2_UNAME_SECONDARY}     Evaluate    $SERVER_2_SECONDARY.get("pcc_username", None)
+                                            Set Suite Variable    ${SERVER_2_UNAME_SECONDARY}
+
+            ${SERVER_2_PWD_SECONDARY}       Evaluate    $SERVER_2_SECONDARY.get("pcc_password", None)
+                                            Set Suite Variable    ${SERVER_2_PWD_SECONDARY}
+
+###################################################################################################################################
+Load Server 3 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Server 3 Secondary Test Data*
+                                Log To Console          **** Load Server 3 Secondary Test Data ****
+
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${SERVER_3_SECONDARY}          Evaluate                $pcc_multisite_dict.get("server-3", None)
+                                           Set Suite Variable      ${SERVER_3_SECONDARY}
+
+
+            ${SERVER_3_NAME_SECONDARY}      Evaluate    $SERVER_3_SECONDARY.get("server_name", None)
+                                            Set Suite Variable    ${SERVER_3_NAME_SECONDARY}
+
+            ${SERVER_3_HOST_IP_SECONDARY}   Evaluate    $SERVER_3_SECONDARY.get("pcc_host_ip", None)
+                                            Set Suite Variable    ${SERVER_3_HOST_IP_SECONDARY}
+
+            ${SERVER_3_UNAME_SECONDARY}     Evaluate    $SERVER_3_SECONDARY.get("pcc_username", None)
+                                            Set Suite Variable    ${SERVER_3_UNAME_SECONDARY}
+
+            ${SERVER_3_PWD_SECONDARY}       Evaluate    $SERVER_3_SECONDARY.get("pcc_password", None)
+                                            Set Suite Variable    ${SERVER_3_PWD_SECONDARY}
+
+###################################################################################################################################
+Load Ipam Data Secondary
+###################################################################################################################################
+    [Arguments]                        ${testdata_filename}
+    [Documentation]                    *Load Ipam Data Secondary*
+                                       Log To Console      **** Load Ipam Data Secondary****
+
+         ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_filename}.json        ceph_multisite
+
+         ${IPAM_SECONDARY}                          Evaluate    $pcc_multisite_dict.get("ipam", None)
+                                                    Set Suite Variable    ${IPAM_SECONDARY}
+
+        ${IPAM_CONTROL_SUBNET_NAME_SECONDARY}       Evaluate    $IPAM_SECONDARY.get("controlName", None)
+                                                    Set Suite Variable    ${IPAM_CONTROL_SUBNET_NAME_SECONDARY}
+
+        ${IPAM_DATA_SUBNET_NAME_SECONDARY}          Evaluate    $IPAM_SECONDARY.get("dataName", None)
+                                                    Set Suite Variable    ${IPAM_DATA_SUBNET_NAME_SECONDARY}
+
+        ${IPAM_CONTROL_SUBNET_IP_SECONDARY}         Evaluate    $IPAM_SECONDARY.get("controlSubnet", None)
+                                                    Set Suite Variable    ${IPAM_CONTROL_SUBNET_IP_SECONDARY}
+
+        ${IPAM_DATA_SUBNET_IP_SECONDARY}            Evaluate    $IPAM_SECONDARY.get("dataSubnet", None)
+                                                    Set Suite Variable    ${IPAM_DATA_SUBNET_IP_SECONDARY}
+
+###################################################################################################################################
+Load Network Manager Data Secondary
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Network Manager Data Secondary*
+                                    Log To Console      **** Load Network Manager Data Secondary ****
+
+         ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_filename}.json        ceph_multisite
+
+         ${NETWORK_MANAGER_SECONDARY}           Evaluate    $pcc_multisite_dict.get("network_manager", None)
+                                                Set Suite Variable      ${NETWORK_MANAGER_SECONDARY}
+
+        ${NETWORK_MANAGER_NAME_SECONDARY}       Evaluate    $NETWORK_MANAGER_SECONDARY.get("name", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_NAME_SECONDARY}
+
+        ${NETWORK_MANAGER_NODES_SECONDARY}      Evaluate    $NETWORK_MANAGER_SECONDARY.get("nodes", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_NODES_SECONDARY}
+
+        ${NETWORK_MANAGER_NODES_IP_SECONDARY}   Evaluate    $NETWORK_MANAGER_SECONDARY.get("nodes_ip", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_NODES_IP_SECONDARY}
+
+        ${NETWORK_MANAGER_CNTLCIDR_SECONDARY}   Evaluate    $NETWORK_MANAGER_SECONDARY.get("controlCIDR", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_CNTLCIDR_SECONDARY}
+
+        ${NETWORK_MANAGER_DATACIDR_SECONDARY}   Evaluate    $NETWORK_MANAGER_SECONDARY.get("dataCIDR", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_DATACIDR_SECONDARY}
+
+        ${NETWORK_MANAGER_IGWPOLICY_SECONDARY}  Evaluate    $NETWORK_MANAGER_SECONDARY.get("igwPolicy", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY_SECONDARY}

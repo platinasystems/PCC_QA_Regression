@@ -10,7 +10,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-        
+
                                     Load Ipam Data    ${pcc_setup}
                                     Load K8s Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
@@ -142,7 +142,7 @@ Ceph Cluster Creation without Network Manager (Negative)
 ###################################################################################################################################
 Set Interfaces For Server Falling in DataCIDR
 ###################################################################################################################################
-        
+
     [Documentation]                 *Set Interfaces For Server Falling in DataCIDR*
                                ...  keywords:
                                ...  PCC.Interface Set 1D Link
@@ -1038,6 +1038,40 @@ Fetching Network Manager ID before backup
                                        Log To Console    ${network_id_before_backup}
                                        Set Global Variable    ${network_id_before_backup}
 
+
+###################################################################################################################################
+Login To PCC Secondary
+###################################################################################################################################
+
+                                    Load Network Manager Data Secondary   ${pcc_setup}
+
+
+        ${status}                   Login To PCC Secondary      testdata_key=${pcc_setup}
+                                    Should Be Equal     ${status}  OK
+
+
+###################################################################################################################################
+Network Manager Creation Secondary
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation Secondary*
+                               ...  keywords:
+                               ...  PCC.Network Manager Create
+                               ...  PCC.Wait Until Network Manager Ready
+                               ...  PCC.Network Manager Verify BE
+                                    Sleep    60s
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
+                               ...  nodes=${NETWORK_MANAGER_NODES_SECONDARY}
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR_SECONDARY}
+                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR_SECONDARY}
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ################## commenting 212 nodes for pcc30 ########
 #
