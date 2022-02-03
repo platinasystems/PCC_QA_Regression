@@ -1023,4 +1023,4 @@ Fetching Pool ID before backup
          ${pool_id_before_backup}    PCC.Ceph Get Pool Id
                                      ...  name=${CEPH_POOL_NAME}                            
                                      Log To Console    ${pool_id_before_backup}
-                                     Set Global Variable    ${pool_id_before_backup}  
+                                     Set Global Variable    ${pool_id_before_backup}

@@ -593,3 +593,44 @@ TCP-981 Update Cluster - Try to rename cluster Name (Negative)
 #                               ...  password=${PCC_LINUX_PASSWORD}
 #                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
 #                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Login To PCC Secondary
+###################################################################################################################################
+
+                                    Load Ceph Cluster Data Secondary   ${pcc_setup}
+                                    Load Network Manager Data Secondary   ${pcc_setup}
+
+        ${status}                   Login To PCC Secondary       testdata_key=${pcc_setup}
+                                    Should Be Equal     ${status}  OK
+
+###################################################################################################################################
+Ceph Secondary Cluster Create
+###################################################################################################################################
+    [Documentation]                 *Creating Ceph Secondary Cluster*
+                               ...  keywords:
+                               ...  PCC.Ceph Create Cluster
+                               ...  PCC.Ceph Wait Until Cluster Ready
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Pass Execution If    ${id} is not ${None}    Cluster is alredy there
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Ceph Create Cluster
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                               ...  nodes=${CEPH_CLUSTER_NODES_SECONDARY}
+                               ...  tags=${CEPH_CLUSTER_TAGS_SECONDARY}
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+

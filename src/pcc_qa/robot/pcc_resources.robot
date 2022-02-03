@@ -1422,3 +1422,94 @@ Load Network Manager Data Secondary
 
         ${NETWORK_MANAGER_IGWPOLICY_SECONDARY}  Evaluate    $NETWORK_MANAGER_SECONDARY.get("igwPolicy", None)
                                                 Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY_SECONDARY}
+###################################################################################################################################
+Load Ceph Cluster Data Secondary
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 * Load Ceph Cluster Data Secondary  *
+                                    Log To Console      **** Load Ceph Cluster Data Secondary****
+        ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_filename}.json        ceph_multisite
+
+        ${CEPH_CLUSTER_SECONDARY}           Evaluate    $pcc_multisite_dict.get("ceph_cluster", None)
+                                            Set Suite Variable      ${CEPH_CLUSTER_SECONDARY}
+
+                                    # Ceph
+        ${CEPH_CLUSTER_NAME_SECONDARY}        Evaluate    $CEPH_CLUSTER_SECONDARY.get("name", None)
+                                    Set Suite Variable    ${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${CEPH_CLUSTER_NODES_SECONDARY}       Evaluate    $CEPH_CLUSTER_SECONDARY.get("nodes", None)
+                                    Set Suite Variable    ${CEPH_CLUSTER_NODES_SECONDARY}
+
+        ${CEPH_CLUSTER_NODES_IP_SECONDARY}    Evaluate    $CEPH_CLUSTER_SECONDARY.get("nodes_ip", None)
+                                    Set Suite Variable    ${CEPH_CLUSTER_NODES_IP_SECONDARY}
+
+        ${CEPH_CLUSTER_TAGS_SECONDARY}        Evaluate    $CEPH_CLUSTER_SECONDARY.get("tags", None)
+                                    Set Suite Variable    ${CEPH_CLUSTER_TAGS_SECONDARY}
+
+        ${CEPH_CLUSTER_NETWORK_SECONDARY}     Evaluate    $CEPH_CLUSTER_SECONDARY.get("networkClusterName", None)
+                                    Set Suite Variable    ${CEPH_CLUSTER_NETWORK_SECONDARY}
+
+###################################################################################################################################
+Load Ceph Pool Data Secondary
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Ceph Pool Data Secondary*
+                                    Log To Console      **** Load Ceph Pool Data Secondary ****
+
+        ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_filename}.json        ceph_multisite
+
+        ${CEPH_POOL_SECONDARY}           Evaluate    $pcc_multisite_dict.get("ceph_pool", None)
+                                         Set Suite Variable      ${CEPH_POOL_SECONDARY}
+
+                                    # Ceph
+        ${CEPH_POOL_NAME_SECONDARY}           Evaluate    $CEPH_POOL_SECONDARY.get("name", None)
+                                              Set Suite Variable    ${CEPH_POOL_NAME_SECONDARY}
+
+        ${CEPH_POOL_SIZE_SECONDARY}           Evaluate    $CEPH_POOL_SECONDARY.get("size", None)
+                                              Set Suite Variable    ${CEPH_POOL_SIZE_SECONDARY}
+
+        ${CEPH_POOL_TYPE_SECONDARY}           Evaluate    $CEPH_POOL_SECONDARY.get("pool_type", None)
+                                              Set Suite Variable    ${CEPH_POOL_TYPE_SECONDARY}
+
+	    ${POOL_RESILIENCE_SCHEME_SECONDARY}   Evaluate    $CEPH_POOL_SECONDARY.get("resilienceScheme", None)
+                                              Set Suite Variable    ${POOL_RESILIENCE_SCHEME_SECONDARY}
+
+        ${CEPH_POOL_TAGS_SECONDARY}           Evaluate    $CEPH_POOL_SECONDARY.get("tags", None)
+                                              Set Suite Variable    ${CEPH_POOL_TAGS_SECONDARY}
+
+        ${CEPH_POOL_QUOTA_SECONDARY}          Evaluate    $CEPH_POOL_SECONDARY.get("quota", None)
+                                              Set Suite Variable    ${CEPH_POOL_QUOTA_SECONDARY}
+
+        ${CEPH_POOL_QUOTA_UNIT_SECONDARY}     Evaluate    $CEPH_POOL_SECONDARY.get("quota_unit", None)
+                                              Set Suite Variable    ${CEPH_POOL_QUOTA_UNIT_SECONDARY}
+
+
+###################################################################################################################################
+Load Ceph Rgw Data Secondary
+###################################################################################################################################
+    [Arguments]                     ${testdata_filename}
+    [Documentation]                 *Load Ceph Rgw Data*
+                                    Log To Console      **** Load Ceph Secondary Rgw Data ****
+
+        ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_filename}.json        ceph_multisite
+
+        ${CEPH_RGW_SECONDARY}           Evaluate    $pcc_multisite_dict.get("ceph_rgw", None)
+                                         Set Suite Variable      ${CEPH_RGW_SECONDARY}
+
+        ${CEPH_RGW_NAME_SECONDARY}             Evaluate    $CEPH_RGW_SECONDARY.get("name", None)
+                                     Set Suite Variable    ${CEPH_RGW_NAME_SECONDARY}
+
+        ${CEPH_RGW_POOLNAME_SECONDARY}         Evaluate    $CEPH_RGW_SECONDARY.get("poolName", None)
+                                     Set Suite Variable    ${CEPH_RGW_POOLNAME_SECONDARY}
+
+        ${CEPH_RGW_NODES_SECONDARY}            Evaluate    $CEPH_RGW_SECONDARY.get("targetNodes", None)
+                                     Set Suite Variable    ${CEPH_RGW_NODES_SECONDARY}
+
+        ${CEPH_RGW_PORT_SECONDARY}             Evaluate    $CEPH_RGW_SECONDARY.get("port", None)
+                                     Set Suite Variable    ${CEPH_RGW_PORT_SECONDARY}
+
+        ${CEPH_RGW_CERT_NAME_SECONDARY}        Evaluate    $CEPH_RGW_SECONDARY.get("certificateName", None)
+                                     Set Suite Variable    ${CEPH_RGW_CERT_NAME_SECONDARY}
+
+        ${CEPH_RGW_S3ACCOUNTS_SECONDARY}       Evaluate    $CEPH_RGW_SECONDARY.get("S3Accounts", None)
+                                     Set Suite Variable    ${CEPH_RGW_S3ACCOUNTS_SECONDARY}
