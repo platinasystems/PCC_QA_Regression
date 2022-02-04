@@ -1,10 +1,16 @@
+import json
+import time
+import re
+
 from pcc_qa.common.PccBase import PccBase
 from robot.api.deco import keyword
-from pcc_qa.common.Utils import banner
+from pcc_qa.common.Utils import banner, trace
 from robot.libraries.BuiltIn import BuiltIn
 from platina_sdk import pcc_api as pcc
 
-class CephTrust(PccBase):
+PCCSERVER_TIMEOUT = 60*8
+
+class CephMultisite(PccBase):
 
     """
     Ceph Trust
@@ -23,6 +29,9 @@ class CephTrust(PccBase):
         self.masterAppID = None
         self.masterAppID = ""
         self.side = ""
+        self.slaveAppID = None
+        self.slaveParams = None
+        self.clusterID = None
         super().__init__()
 
     ###########################################################################
@@ -38,12 +47,83 @@ class CephTrust(PccBase):
             "appType": self.appType
         }
 
-        print(payload)
+        trace(payload)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         return pcc.start_trust_creation(conn, payload)
 
+    ###########################################################################
+    @keyword(name="PCC.Ceph Download Trust File")
+    ###########################################################################
+    def download_trust_file(self, *args, **kwargs):
+        banner("PCC.Ceph Download Trust File")
+        self._load_kwargs(kwargs)
 
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        response = pcc.get_trust_file(conn, str(self.id))
+        file_name = "trust-{}.json".format(self.id)
+        with open(file_name, "w") as trust_file:
+            json.dump(response["Result"], trust_file)
+        return response["StatusCode"]
 
+    ###########################################################################
+    @keyword(name="PCC.Ceph Secondary End Trust")
+    ###########################################################################
+    def secondary_end_trust(self, *args, **kwargs):
+        banner("PCC.Ceph Secondary End Trust")
+        self._load_kwargs(kwargs)
+
+        file_name = "trust-{}.json".format(self.id)
+        slave_params = {"clusterID" : self.clusterID, "targetNodes":[]}
+        multipart_data = {"trustFile": open(file_name, 'rb'),
+                          "side": (None, "slave"),
+                          "appType": (None, self.appType),
+                          "slaveParams": (None, json.dumps(slave_params))
+                          }
+
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.end_trust_creation(conn, multipart_data)
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Edit Trust")
+    ###########################################################################
+    def edit_trust(self, *args, **kwargs):
+        banner("PCC.Ceph Edit Trust")
+        self._load_kwargs(kwargs)
+
+        payload = {
+            "id": self.id,
+            "slaveAppID": self.slaveAppID,
+            "slaveParams": {"targetNodes":[]}
+        }
+
+        trace(payload)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.select_trust_target(conn, str(self.id), payload)
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Wait Until Trust Established")
+    ###########################################################################
+    def wait_until_trust_established(self, *args, **kwargs):
+        banner("PCC.Ceph Wait Until Trust Established")
+        self._load_kwargs(kwargs)
+        print("Kwargs"+str(kwargs))
+
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        timeout = time.time() + PCCSERVER_TIMEOUT
+        while True:
+            response = pcc.get_trust_by_id(conn, str(self.id))
+            data = response["Result"]["Data"]
+            trace("Response To Look :-"+str(response))
+            trace("Progress: {}%, current deploy status: {}".format(data["progressPercentage"],data["deploy_status"]))
+            if data.get('deploy_status') == "completed":
+                return "OK"
+            elif re.search("failed", str(data.get('deploy_status'))):
+                return "Error"
+            else:
+                if time.time() > timeout:
+                    return "Timeout Error"
+            time.sleep(10)
 
 
 
