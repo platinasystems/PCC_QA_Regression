@@ -362,7 +362,7 @@ Ceph Rados Add S3Account
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}

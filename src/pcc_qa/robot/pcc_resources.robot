@@ -20,6 +20,7 @@ Library                         pcc_qa.pcc.CephPool
 Library                         pcc_qa.pcc.CephRbd
 Library                         pcc_qa.pcc.CephFs
 Library                         pcc_qa.pcc.CephRgw
+Library                         pcc_qa.pcc.CephMultisite
 Library                         pcc_qa.pcc.Cli
 Library                         pcc_qa.pcc.Kubernetes
 Library                         pcc_qa.pcc.OpenSSHKeys
