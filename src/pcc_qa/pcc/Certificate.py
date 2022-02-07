@@ -48,7 +48,7 @@ class Certificate(PccBase):
             certificate_path = os.path.join("tests/test-data", self.Certificate_upload)
             multipart_data = {'file': open(certificate_path, 'rb'), 'description':(None, self.Description)}
             print("multipart data: {}".format(multipart_data))
-        return pcc.add_certificate(conn, self.Alias, self.Description, multipart_data=multipart_data)
+        return pcc.add_certificate(conn, self.Alias, multipart_data=multipart_data)
 
     ###########################################################################
     @keyword(name="PCC.Delete Certificate")

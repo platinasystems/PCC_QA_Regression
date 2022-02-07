@@ -10,6 +10,7 @@ from platina_sdk import pcc_api as pcc
 
 PCCSERVER_TIMEOUT = 60*8
 
+
 class CephMultisite(PccBase):
 
     """
@@ -21,7 +22,7 @@ class CephMultisite(PccBase):
         # Robot arguments definitions
         self.id = None
         self.status = ""
-        self.deployStatus= ""
+        self.deployStatus = ""
         self.progressPercentage = None
         self.remoteID = None
         self.trustFileLink = ""
@@ -93,7 +94,7 @@ class CephMultisite(PccBase):
         payload = {
             "id": self.id,
             "slaveAppID": self.slaveAppID,
-            "slaveParams": {"targetNodes":[]}
+            "slaveParams": {"targetNodes": []}
         }
 
         trace(payload)
@@ -115,7 +116,7 @@ class CephMultisite(PccBase):
             response = pcc.get_trust_by_id(conn, str(self.id))
             data = response["Result"]["Data"]
             trace("Response To Look :-"+str(response))
-            trace("Progress: {}%, current deploy status: {}".format(data["progressPercentage"],data["deploy_status"]))
+            trace("Progress: {}%, current deploy status: {}".format(data["progressPercentage"], data["deploy_status"]))
             if data.get('deploy_status') == "completed":
                 return "OK"
             elif re.search("failed", str(data.get('deploy_status'))):
@@ -125,5 +126,39 @@ class CephMultisite(PccBase):
                     return "Timeout Error"
             time.sleep(10)
 
+    ###########################################################################
+    @keyword(name="PCC.Ceph Trust Delete")
+    ###########################################################################
+    def delete_trust_by_id(self, *args, **kwargs):
+        banner("PCC.Ceph Trust Delete")
+        self._load_kwargs(kwargs)
 
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.delete_trust_by_id(conn, str(self.id))
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Wait Until Trust Deleted")
+    ###########################################################################
+    def wait_until_trust_delete(self, *args, **kwargs):
+        banner("PCC.Ceph Wait Until Trust Deleted")
+        self._load_kwargs(kwargs)
+        print("Kwargs"+str(kwargs))
+
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        timeout = time.time() + PCCSERVER_TIMEOUT
+        found = True
+        while found:
+            response = pcc.get_trusts(conn)
+            data = response["Result"]["Data"]
+            trace("Response To Look :-"+str(data))
+            found = False
+            for trust in data:
+                if trust["id"] == self.id:
+                    found = True
+                else:
+                    if time.time() > timeout:
+                        return "Timeout Error"
+            time.sleep(10)
+        return "OK"
 

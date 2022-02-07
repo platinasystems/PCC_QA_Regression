@@ -336,7 +336,7 @@
         },
         "ceph_rgw":
         {
-            "name":"rados-pvt",
+            "name":"rados-pvt-secondary",
             "poolName":"rgw-pool",
             "targetNodes":["sv46"],
             "port":443,
