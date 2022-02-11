@@ -1046,7 +1046,7 @@ Login To PCC Secondary
                                     Load Network Manager Data Secondary   ${pcc_setup}
 
 
-        ${status}                   Login To PCC Secondary      testdata_key=${pcc_setup}
+        ${status}                   Login To PCC Secondary  testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
 
 

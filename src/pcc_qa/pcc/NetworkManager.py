@@ -417,11 +417,15 @@ class NetworkManager(PccBase):
         except Exception as e:
             raise e
 
-        self.id=easy.get_network_clusters_id_by_name(conn,self.name)  
-        time.sleep(30)
-        print("Network Manager ID: "+str(self.id)) 
-        response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
-        print("Response:"+str(response))
+        while True:
+            self.id=easy.get_network_clusters_id_by_name(conn,self.name)
+            time.sleep(30)
+            print("Network Manager ID: "+str(self.id))
+            response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
+            print("Response:"+str(response))
+            if response.get("deploy_status"):
+                break
+
         if response["deploy_status"].lower()=="completed" and (response['health']=="OK" or response['health']=="Warning"):
             return "OK"
         else:
@@ -431,8 +435,6 @@ class NetworkManager(PccBase):
             print("Health Info:"+str(response['info']))
             print("--------------")
             return "Error"
-        print("Could not verify the health of network cluter "+str(self.name))
-        return "Error"
 
     ###########################################################################
     @keyword(name="PCC.Network Manager Verify Upstream BE")

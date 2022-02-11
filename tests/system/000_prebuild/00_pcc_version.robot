@@ -51,6 +51,6 @@ PCC Version Secondary
 	${pcc_ver}                  PCC.Get PCC Version
                                 ...  user=${PCC_LINUX_USER_SECONDARY}
                                 ...  password=${PCC_LINUX_PASSWORD_SECONDARY}
-                                ...  hostip=${PCC_HOST_IP}
+                                ...  hostip=${PCC_HOST_IP_SECONDARY}
 
                                 Log To Console    ${pcc_ver}

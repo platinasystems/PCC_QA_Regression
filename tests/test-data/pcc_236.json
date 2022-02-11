@@ -314,6 +314,7 @@
             "nodes":["invader71","invader72","sv46","sv50","sv51"],
             "nodes_ip":["172.17.2.71","172.17.2.72","172.17.2.246","172.17.2.138","172.17.2.139"],
             "dataCIDR":"data-pvt",
+            "controlCIDR":"control-pvt",
             "igwPolicy":"default"
         },
         "ceph_cluster":
