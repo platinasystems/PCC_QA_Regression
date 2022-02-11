@@ -368,19 +368,6 @@ Delete All Node Roles
                      Should Be Equal As Strings    ${status}    OK    Node roles still exists
 
 ####################################################################################################################################
-Cleanup all certificates from PCC
-####################################################################################################################################
-    [Documentation]                 *Cleanup all certificates*
-                               ...  keywords:
-                               ...  PCC.Delete All Certificates
-        [Tags]    Run_this
-
-        ${status}                   PCC.Delete All Certificates
-
-                                    Log To Console    ${status}
-                                    Should be equal as strings    ${status}    OK
-
-####################################################################################################################################
 Cleanup all keys from PCC
 ####################################################################################################################################
     [Documentation]                 *Cleanup all keys*
@@ -478,6 +465,18 @@ Policy driven management cleanup
                              Log To Console    ${status}
                              Should Be Equal As Strings    ${status}    OK
 
+####################################################################################################################################
+Cleanup all certificates from PCC
+####################################################################################################################################
+    [Documentation]                 *Cleanup all certificates*
+                               ...  keywords:
+                               ...  PCC.Delete All Certificates
+        [Tags]    Run_this
+
+        ${status}                   PCC.Delete All Certificates
+
+                                    Log To Console    ${status}
+                                    Should be equal as strings    ${status}    OK
 
 #####################################################################################################################################
 Delete Nodes
