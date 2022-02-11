@@ -9,6 +9,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from platina_sdk import pcc_api as pcc
 
 PCCSERVER_TIMEOUT = 60*8
+TRUST_CAUGHT_UP_MSG = "syncing (caught up)"
 
 
 class CephMultisite(PccBase):
@@ -116,7 +117,7 @@ class CephMultisite(PccBase):
             response = pcc.get_trust_by_id(conn, str(self.id))
             data = response["Result"]["Data"]
             trace("Response To Look :-"+str(response))
-            trace("Progress: {}%, current deploy status: {}".format(data["progressPercentage"], data["deploy_status"]))
+            trace("Progress: {}%, current deploy status: {}".format(data.get("progressPercentage"), data.get("deploy_status")))
             if data.get('deploy_status') == "completed":
                 return "OK"
             elif re.search("failed", str(data.get('deploy_status'))):
@@ -125,6 +126,30 @@ class CephMultisite(PccBase):
                 if time.time() > timeout:
                     return "Timeout Error"
             time.sleep(10)
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Wait Until Replica Status Caught Up")
+    ###########################################################################
+    def wait_until_trust_caught_up(self, *args, **kwargs):
+        banner("PCC.Ceph Wait Until Replica Status Caught Up")
+        self._load_kwargs(kwargs)
+        print("Kwargs"+str(kwargs))
+
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        timeout = time.time() + PCCSERVER_TIMEOUT
+        while True:
+            response = pcc.get_trust_by_id(conn, str(self.id))
+            data = response["Result"]["Data"]
+            app_status = data["appStatus"]
+            trace("AppStatus: {}".format(app_status))
+            if app_status["data"] == TRUST_CAUGHT_UP_MSG and app_status["meta"] == TRUST_CAUGHT_UP_MSG:
+                return "OK"
+            else:
+                if time.time() > timeout:
+                    return "Timeout Error"
+            time.sleep(10)
+
 
     ###########################################################################
     @keyword(name="PCC.Ceph Trust Delete")
@@ -152,6 +177,8 @@ class CephMultisite(PccBase):
             response = pcc.get_trusts(conn)
             data = response["Result"]["Data"]
             trace("Response To Look :-"+str(data))
+            if not data:
+                return "OK"
             found = False
             for trust in data:
                 if trust["id"] == self.id:

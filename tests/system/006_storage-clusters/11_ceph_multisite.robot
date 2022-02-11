@@ -14,6 +14,8 @@ Load Test Variable
                         Load Ceph Cluster Data  ${pcc_setup}
                         Load Ceph Rgw Data Secondary   ${pcc_setup}
                         Load Ceph Cluster Data Secondary  ${pcc_setup}
+                        Load Server 1 Test Data    ${pcc_setup}
+                        Load Server 1 Secondary Test Data    ${pcc_setup}
 
 ###################################################################################################################################
 Login to PCC Primary
@@ -130,6 +132,208 @@ Wait Until Trust Established - Primary
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${primary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Create Primary Rgw Configuration File
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=0.0.0.0
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Create Rgw Bucket - Primary
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw Make Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+List Rgw Bucket - Primary
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw List Buckets
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+ADD File - Primary
+###################################################################################################################################
+    [Documentation]                        *ADD File - Primary*
+
+        ${status}                          PCC.Ceph Rgw Upload File To Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                           Should Be Equal As Strings      ${status}    OK
+
+                                           Sleep  1m
+
+###################################################################################################################################
+Login to PCC Secondary
+###################################################################################################################################
+
+        ${status}        Login To PCC Secondary    ${pcc_setup}
+
+###################################################################################################################################
+Wait Until Secondary Replica Status: Caught up
+###################################################################################################################################
+
+        ${result}                   PCC.Ceph Wait Until Replica Status Caught Up
+                               ...  id=${secondary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Login to PCC Primary
+###################################################################################################################################
+
+        ${status}        Login To PCC    ${pcc_setup}
+
+
+###################################################################################################################################
+Create Secondary Rgw Configuration File
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP_SECONDARY}
+                                      ...  port=${CEPH_RGW_PORT_SECONDARY}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+List Rgw Bucket - Secondary
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw List Buckets
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+List Rgw Objects inside Bucket - Secondary
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw List Objects inside Buckets
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Create Primary Rgw Configuration File
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+				                           Set Suite Variable   ${accessKey}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+				                           Set Suite Variable   ${secretKey}
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=0.0.0.0
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Delete A File From Rgw Bucket - Primary
+####################################################################################################################################
+    [Documentation]                        *Delete a file from Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw Delete File From Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Delete Rgw Bucket - Primary
+###################################################################################################################################
+      [Documentation]                      *Delete Rgw Bucket*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=ceph-pvt
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw Delete Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Primary tear-down

@@ -508,7 +508,7 @@ class CephRgw(PccBase):
     @keyword(name="PCC.Ceph Rgw List Buckets")
     ###########################################################################
     def ceph_rgw_list_buckets(self,**kwargs):
-        banner("PCC.Ceph Rgw Delete Bucket")
+        banner("PCC.Ceph Rgw List Buckets")
         self._load_kwargs(kwargs)       
         cmd='sudo s3cmd ls -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
@@ -517,6 +517,22 @@ class CephRgw(PccBase):
             return "OK"
         else:
             print("Buckets are not listed or Buckets are not created yet")
+            return "Error"
+        return
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Rgw List Objects inside Buckets")
+    ###########################################################################
+    def ceph_rgw_list_objects(self,**kwargs):
+        banner("PCC.Ceph Rgw List Objects inside Buckets")
+        self._load_kwargs(kwargs)
+        cmd='sudo s3cmd ls s3://testbucket  -c /home/pcc/.s3cfg'
+        print("Command:"+str(cmd))
+        data=cli_run(self.pcc,self.user,self.password,cmd)
+        if re.search(self.fileName,str(data)):
+            return "OK"
+        else:
+            print("File is not listed")
             return "Error"
         return
 

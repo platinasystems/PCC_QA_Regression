@@ -47,7 +47,7 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                      ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                       ...  quota=1
                                       ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                       
@@ -102,7 +102,7 @@ Create Metadata Application credential profile without application For Rados
         ${response}                   PCC.Add Metadata Profile
                                       ...    Name=test_app_credential
                                       ...    Type=ceph
-                                      ...    Username=profile_without_app
+                                      ...    Username=test_app_credential
                                       ...    Email=profile_without_app@gmail.com
                                       ...    Active=True
                                       
@@ -175,7 +175,7 @@ Ceph Rados Add S3Account
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
      
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -195,7 +195,7 @@ Ceph Rados Add S3Account
 	
 	${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -219,7 +219,7 @@ Create Application credential profile with application
 
         ${rgw_id}      PCC.Ceph Get Rgw Id
                        ...    name=${CEPH_RGW_NAME}
-		       ...  ceph_cluster_name=ceph-pvt
+		               ...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Add Metadata Profile
                        ...    Name=profile_with_app

@@ -580,11 +580,11 @@ Create Rgw Configuration File (ServiceIp As Default)
                                            Sleep    3 minutes
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME}
-				      ...  ceph_cluster_name=ceph-pvt
+				                      ...  ceph_cluster_name=ceph-pvt
 
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
-				      ...  ceph_cluster_name=ceph-pvt
+				                      ...  ceph_cluster_name=ceph-pvt
 
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}

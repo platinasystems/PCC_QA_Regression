@@ -351,7 +351,7 @@ Wait Until All Nodes Are Ready
         ${status}                   PCC.Wait Until All Nodes Are Ready
 
                                     Log To Console    ${status}
-                                                                        Should Be Equal As Strings      ${status}  OK
+                                    Should Be Equal As Strings      ${status}  OK
 
 
 ###################################################################################################################################
@@ -378,7 +378,7 @@ Cleanup all certificates from PCC
         ${status}                   PCC.Delete All Certificates
 
                                     Log To Console    ${status}
-                                                                        Should be equal as strings    ${status}    OK
+                                    Should be equal as strings    ${status}    OK
 
 ####################################################################################################################################
 Cleanup all keys from PCC
