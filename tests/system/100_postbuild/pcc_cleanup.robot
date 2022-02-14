@@ -367,18 +367,6 @@ Delete All Node Roles
                      Log To Console    ${status}
                      Should Be Equal As Strings    ${status}    OK    Node roles still exists
 
-####################################################################################################################################
-Cleanup all keys from PCC
-####################################################################################################################################
-    [Documentation]                 *Cleanup all keys*
-                               ...  keywords:
-                               ...  PCC.Delete All Keys
-        [Tags]    Run_this
-        ${status}                   PCC.Delete All Keys
-
-                                    Log To Console    ${status}
-                                                                        Should be equal as strings    ${status}    OK
-
 ###################################################################################################################################
 Delete All Node Groups
 ###################################################################################################################################
@@ -464,6 +452,18 @@ Policy driven management cleanup
 
                              Log To Console    ${status}
                              Should Be Equal As Strings    ${status}    OK
+
+####################################################################################################################################
+Cleanup all keys from PCC
+####################################################################################################################################
+    [Documentation]                 *Cleanup all keys*
+                               ...  keywords:
+                               ...  PCC.Delete All Keys
+        [Tags]    Run_this
+        ${status}                   PCC.Delete All Keys
+
+                                    Log To Console    ${status}
+                                    Should be equal as strings    ${status}    OK
 
 ####################################################################################################################################
 Cleanup all certificates from PCC

@@ -47,7 +47,7 @@ class OpenSSHKeys(PccBase):
         multipart_data = {'file': open(filename_path, 'rb'), 'description':(None, self.Description)}
         
         print("Filename_path is {}".format(filename_path))
-        return pcc.add_keys(conn, alias = self.Alias, description=self.Description,multipart_data=multipart_data )
+        return pcc.add_keys(conn, alias = self.Alias, multipart_data=multipart_data)
         
     ###########################################################################
     @keyword(name="PCC.Get OpenSSH Key Id")
