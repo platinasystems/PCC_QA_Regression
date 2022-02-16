@@ -454,18 +454,6 @@ Policy driven management cleanup
                              Should Be Equal As Strings    ${status}    OK
 
 ####################################################################################################################################
-Cleanup all keys from PCC
-####################################################################################################################################
-    [Documentation]                 *Cleanup all keys*
-                               ...  keywords:
-                               ...  PCC.Delete All Keys
-        [Tags]    Run_this
-        ${status}                   PCC.Delete All Keys
-
-                                    Log To Console    ${status}
-                                    Should be equal as strings    ${status}    OK
-
-####################################################################################################################################
 Cleanup all certificates from PCC
 ####################################################################################################################################
     [Documentation]                 *Cleanup all certificates*
@@ -474,6 +462,18 @@ Cleanup all certificates from PCC
         [Tags]    Run_this
 
         ${status}                   PCC.Delete All Certificates
+
+                                    Log To Console    ${status}
+                                    Should be equal as strings    ${status}    OK
+
+####################################################################################################################################
+Cleanup all keys from PCC
+####################################################################################################################################
+    [Documentation]                 *Cleanup all keys*
+                               ...  keywords:
+                               ...  PCC.Delete All Keys
+        [Tags]    Run_this
+        ${status}                   PCC.Delete All Keys
 
                                     Log To Console    ${status}
                                     Should be equal as strings    ${status}    OK
