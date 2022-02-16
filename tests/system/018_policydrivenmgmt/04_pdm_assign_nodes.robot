@@ -537,46 +537,46 @@ Check if a region can be deleted if its child rack does not have nodes assigned:
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 
-###################################################################################################################################
-Delete All Node Roles:TCP-1756
-###################################################################################################################################
-
-        [Documentation]    *Delete All Node Roles* test
-                           ...  keywords:
-                           ...  PCC.Delete all Node roles
-        [Tags]    onlydelete
-
-        ${status}    PCC.Delete all Node roles
-
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node role still exists
-
-###################################################################################################################################
-Unassign Locations Assigned from All Policies:TCP-1443
-###################################################################################################################################
-
-        [Documentation]    *Unassign Locations Assigned from All Policies* test
-                           ...  keywords:
-                           ...  PCC.Unassign Locations Assigned from All Policies
-
-
-        ${status}    PCC.Unassign Locations Assigned from All Policies
-
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK
-
-###################################################################################################################################
-Delete All Policies:TCP-1443
-###################################################################################################################################
-
-        [Documentation]    *Delete All Policies* test
-                           ...  keywords:
-                           ...  PCC.Delete All Policies
-
-
-        ${status}    PCC.Delete All Policies
-
-                     Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK
+####################################################################################################################################
+#Delete All Node Roles:TCP-1756
+####################################################################################################################################
+#
+#        [Documentation]    *Delete All Node Roles* test
+#                           ...  keywords:
+#                           ...  PCC.Delete all Node roles
+#        [Tags]    onlydelete
+#
+#        ${status}    PCC.Delete all Node roles
+#
+#                     Log To Console    ${status}
+#                     Should Be Equal As Strings    ${status}    OK    Node role still exists
+#
+####################################################################################################################################
+#Unassign Locations Assigned from All Policies:TCP-1443
+####################################################################################################################################
+#
+#        [Documentation]    *Unassign Locations Assigned from All Policies* test
+#                           ...  keywords:
+#                           ...  PCC.Unassign Locations Assigned from All Policies
+#
+#
+#        ${status}    PCC.Unassign Locations Assigned from All Policies
+#
+#                     Log To Console    ${status}
+#                     Should Be Equal As Strings    ${status}    OK
+#
+####################################################################################################################################
+#Delete All Policies:TCP-1443
+####################################################################################################################################
+#
+#        [Documentation]    *Delete All Policies* test
+#                           ...  keywords:
+#                           ...  PCC.Delete All Policies
+#
+#
+#        ${status}    PCC.Delete All Policies
+#
+#                     Log To Console    ${status}
+#                     Should Be Equal As Strings    ${status}    OK
 
 
