@@ -36,6 +36,7 @@ class CephRgw(PccBase):
         self.pcc=None
         self.port=None
         self.certificateName=None
+        self.certificateUrl=""
         self.certificateID=None
         self.S3Accounts=[]
         self.secretKey=None
@@ -111,6 +112,7 @@ class CephRgw(PccBase):
                     "targetNodes":self.targetNodes,
                     "port":self.port,
                     "certificateID": self.certificateID,
+                    "address":self.certificateUrl,
                     "S3Accounts":self.S3Accounts,
                     "serviceIpType":serviceIpType
                   }
@@ -179,6 +181,7 @@ class CephRgw(PccBase):
                     "targetNodes":self.targetNodes,
                     "port":self.port,
                     "certificateID": self.certificateID,
+                    "address": self.certificateUrl,
                     "S3Accounts":self.S3Accounts,
                     "serviceIpType":serviceIpType
                 }

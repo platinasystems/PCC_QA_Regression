@@ -155,6 +155,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                            
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
@@ -184,6 +185,7 @@ Ceph Rados Add S3Account
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["test_app_credential"]
                                
         ${status_code}              Get Response Status Code        ${response}     

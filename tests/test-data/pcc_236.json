@@ -249,6 +249,7 @@
             "targetNodes":["consul-01"],
             "port":443,
             "certificateName":"rgw-crt",
+            "certificateUrl": "rgw.platinasystems.com",
             "S3Accounts":"rgw-app"
         },
     "ceph_multisite": {
@@ -342,6 +343,7 @@
             "targetNodes":["sv46"],
             "port":443,
             "certificateName":"rgw-crt",
+            "certificateUrl": "rgw.platinasystems.com",
             "S3Accounts":"rgw-app"
         }
     },

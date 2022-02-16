@@ -633,6 +633,9 @@ Load Ceph Rgw Data
                                    
         ${CEPH_RGW_CERT_NAME}        Evaluate    $pcc_server_dict.get("certificateName", None)
                                      Set Suite Variable    ${CEPH_RGW_CERT_NAME}
+
+        ${CEPH_RGW_CERT_URL}        Evaluate    $pcc_server_dict.get("certificateUrl", None)
+                                     Set Suite Variable    ${CEPH_RGW_CERT_URL}
                                     
         ${CEPH_RGW_S3ACCOUNTS}       Evaluate    $pcc_server_dict.get("S3Accounts", None)
                                      Set Suite Variable    ${CEPH_RGW_S3ACCOUNTS}
@@ -1511,6 +1514,9 @@ Load Ceph Rgw Data Secondary
 
         ${CEPH_RGW_CERT_NAME_SECONDARY}        Evaluate    $CEPH_RGW_SECONDARY.get("certificateName", None)
                                      Set Suite Variable    ${CEPH_RGW_CERT_NAME_SECONDARY}
+
+        ${CEPH_RGW_CERT_URL_SECONDARY}        Evaluate    $CEPH_RGW_SECONDARY.get("certificateUrl", None)
+                                     Set Suite Variable    ${CEPH_RGW_CERT_URL_SECONDARY}
 
         ${CEPH_RGW_S3ACCOUNTS_SECONDARY}       Evaluate    $CEPH_RGW_SECONDARY.get("S3Accounts", None)
                                      Set Suite Variable    ${CEPH_RGW_S3ACCOUNTS_SECONDARY}

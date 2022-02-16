@@ -47,7 +47,7 @@ Ceph Pool For Rgws
                                       ...  size=${CEPH_POOL_SIZE}
                                       ...  tags=${CEPH_POOL_TAGS}
                                       ...  pool_type=${CEPH_POOL_TYPE}
-                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                                      ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                       ...  quota=1
                                       ...  quota_unit=GiB
 
@@ -187,6 +187,7 @@ Creating RGW using a pool that is used by other Ceph front-ends (Negative)
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -225,6 +226,7 @@ Creating RGW without pool name (Negative)
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -316,6 +318,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -371,6 +374,7 @@ Ceph Rados Add S3Account
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
 
         ${status_code}              Get Response Status Code        ${response}
@@ -379,7 +383,7 @@ Ceph Rados Add S3Account
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -397,7 +401,7 @@ Ceph Rados Update Port
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -406,6 +410,7 @@ Ceph Rados Update Port
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=446
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
 
         ${status_code}              Get Response Status Code        ${response}
@@ -414,7 +419,7 @@ Ceph Rados Update Port
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -434,7 +439,7 @@ Ceph Rados Update Nodes (Add Node)
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -443,6 +448,7 @@ Ceph Rados Update Nodes (Add Node)
                                ...  targetNodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
 
         ${status_code}              Get Response Status Code        ${response}
@@ -451,7 +457,7 @@ Ceph Rados Update Nodes (Add Node)
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -520,7 +526,7 @@ Ceph Rados Gateway Delete
 
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -528,7 +534,7 @@ Ceph Rados Gateway Delete
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
@@ -552,7 +558,9 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -561,7 +569,7 @@ Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -791,6 +799,7 @@ Ceph Rados Remove S3Account (ServiceIp As Default)
                                 ...  targetNodes=${CEPH_RGW_NODES}
                                 ...  port=${CEPH_RGW_PORT}
                                 ...  certificateName=${CEPH_RGW_CERT_NAME}
+                                ...  certificateUrl=${CEPH_RGW_CERT_URL}
 
          ${status_code}              Get Response Status Code        ${response}
          ${message}                  Get Response Message        ${response}
@@ -798,7 +807,7 @@ Ceph Rados Remove S3Account (ServiceIp As Default)
 
          ${status}                   PCC.Ceph Wait Until Rgw Ready
                                 ...  name=${CEPH_RGW_NAME}
-  			       ...  ceph_cluster_name=ceph-pvt
+  			                    ...  ceph_cluster_name=ceph-pvt
                                      Should Be Equal As Strings      ${status}    OK
 
          ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -817,7 +826,7 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -825,13 +834,13 @@ Ceph Rados Gateway Delete (ServiceIp As Default)
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-				    Sleep    5 minutes
+				                    Sleep    5 minutes
 
 ###################################################################################################################################
 #Ceph Rados Gateway Creation With Replicated Pool With S3 Accounts (ServiceIp As NodeIp)
@@ -1216,6 +1225,7 @@ Ceph Rados Create with Multiple Nodes
                                ...  targetNodes=["${SERVER_2_NAME}","${SERVER_1_NAME}"]
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
 
         ${status_code}              Get Response Status Code        ${response}
@@ -1224,7 +1234,7 @@ Ceph Rados Create with Multiple Nodes
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1242,7 +1252,7 @@ Ceph Rados Remove One Node
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${response}                 PCC.Ceph Update Rgw
                                ...  ID=${rgw_id}
@@ -1251,6 +1261,7 @@ Ceph Rados Remove One Node
                                ...  targetNodes=["${SERVER_2_NAME}"]
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
                                ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
 
         ${status_code}              Get Response Status Code        ${response}
@@ -1259,7 +1270,7 @@ Ceph Rados Remove One Node
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1278,7 +1289,7 @@ Ceph Rados Gateway Delete
 
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -1286,13 +1297,13 @@ Ceph Rados Gateway Delete
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_2_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
- 				    Sleep    5 minutes
+ 				                    Sleep    5 minutes
 
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Ceph Node
@@ -1310,6 +1321,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
                                ...  targetNodes=["${CLUSTERHEAD_1_NAME}"]
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -1317,7 +1329,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
 
         ${status}                   PCC.Ceph Wait Until Rgw Ready
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -1336,7 +1348,7 @@ Ceph Rados Gateway Delete
 
         ${response}                 PCC.Ceph Delete Rgw
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -1344,13 +1356,13 @@ Ceph Rados Gateway Delete
 
         ${status}                   PCC.Ceph Wait Until Rgw Deleted
                                ...  name=${CEPH_RGW_NAME}
-			       ...  ceph_cluster_name=ceph-pvt
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${CLUSTERHEAD_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-				    Sleep    5 minutes
+				                    Sleep    5 minutes
 
 #####################################################################################################################################
 #App credentials associated with RGW instance would work with each node running RGW service
@@ -1606,6 +1618,7 @@ Ceph Rados Gateway Secondary Creation
                                ...  targetNodes=${CEPH_RGW_NODES_SECONDARY}
                                ...  port=${CEPH_RGW_PORT_SECONDARY}
                                ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
