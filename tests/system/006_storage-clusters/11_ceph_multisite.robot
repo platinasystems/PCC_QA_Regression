@@ -368,4 +368,141 @@ Secondary Delete Trust
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
+###################################################################################################################################
+Secondary Started Trust Creation
+###################################################################################################################################
+        [Documentation]                *Secondary Started Trust Creation*
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${secondary_cluster_id}     PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${rgw_id_secondary}         PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+			                        Set Suite Variable   ${rgw_id_secondary}
+
+		${response}	                PCC.Ceph Secondary Start Trust
+			                   ...  clusterID=${secondary_cluster_id}
+
+        ${result}                   Get Result    ${response}
+        ${data}                     Get From Dictionary     ${result}   Data
+        ${secondary_trust_id}       Get From Dictionary     ${data}     id
+                                    Set Suite Variable   ${secondary_trust_id}
+                                    Log To Console      ${secondary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Secondary Download Trust File
+###################################################################################################################################
+        [Documentation]                *Secondary Download Trust File*
+
+        ${status_code}              PCC.Ceph Download Trust File
+                               ...  id=${secondary_trust_id}
+
+                                    Should Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Login To PCC Primary
+###################################################################################################################################
+
+        ${status}        Login To PCC    ${pcc_setup}
+
+###################################################################################################################################
+Primary End Trust Creation
+###################################################################################################################################
+        [Documentation]                *Primary End Trust Creation*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+		${response}	                PCC.Ceph Primary End Trust
+			                   ...  masterAppID=${rgw_id}
+			                   ...  id=${secondary_trust_id}
+
+        ${result}                   Get Result    ${response}
+        ${data}                     Get From Dictionary     ${result}   Data
+        ${primary_trust_id}         Get From Dictionary     ${data}     id
+                                    Set Suite Variable   ${primary_trust_id}
+                                    Log To Console      ${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Primary Edit Trust
+###################################################################################################################################
+        [Documentation]                *Primary Edit Trust*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+		${response}	                PCC.Ceph Edit Trust
+			                   ...  id=${primary_trust_id}
+			                   ...  slaveAppID=${rgw_id_secondary}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${result}                   PCC.Ceph Wait Until Trust Established
+                               ...  id=${primary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Login To PCC Secondary
+###################################################################################################################################
+
+        ${status}        Login To PCC Secondary  ${pcc_setup}
+
+###################################################################################################################################
+Wait Until Trust Established - Secondary
+###################################################################################################################################
+
+        ${result}                   PCC.Ceph Wait Until Trust Established
+                               ...  id=${secondary_trust_id}
+
+###################################################################################################################################
+Secondary tear-down
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Trust Delete
+                               ...  id=${secondary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${result}                   PCC.Ceph Wait Until Trust Deleted
+                               ...  id=${secondary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Login To PCC Primary
+###################################################################################################################################
+
+        ${status}        Login To PCC   ${pcc_setup}
+
+###################################################################################################################################
+Primary Delete Trust
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Trust Delete
+                               ...  id=${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200

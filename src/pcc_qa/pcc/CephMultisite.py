@@ -54,6 +54,23 @@ class CephMultisite(PccBase):
         return pcc.start_trust_creation(conn, payload)
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Secondary Start Trust")
+    ###########################################################################
+    def secondary_start_trust(self, *args, **kwargs):
+        banner("PCC.Ceph Secondary Start Trust")
+        self._load_kwargs(kwargs)
+
+        payload = {
+            "side": "slave",
+            "appType": self.appType,
+            "slaveParams": {"clusterID": self.clusterID, "targetNodes": []}
+        }
+
+        trace(payload)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.start_trust_creation(conn, payload)
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Download Trust File")
     ###########################################################################
     def download_trust_file(self, *args, **kwargs):
@@ -80,6 +97,23 @@ class CephMultisite(PccBase):
                           "side": (None, "slave"),
                           "appType": (None, self.appType),
                           "slaveParams": (None, json.dumps(slave_params))
+                          }
+
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.end_trust_creation(conn, multipart_data)
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Primary End Trust")
+    ###########################################################################
+    def primary_end_trust(self, *args, **kwargs):
+        banner("PCC.Ceph Primary End Trust")
+        self._load_kwargs(kwargs)
+
+        file_name = "trust-{}.json".format(self.id)
+        multipart_data = {"trustFile": open(file_name, 'rb'),
+                          "side": (None, "master"),
+                          "appType": (None, self.appType),
+                          "masterAppID": (None, self.masterAppID)
                           }
 
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
