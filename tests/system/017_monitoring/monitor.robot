@@ -173,7 +173,7 @@ Monitor Verify OS And Its Version Backend
         ${status}                   PCC.Verify OS And Its Version Back End
                                ...  Name=Ubuntu
                                ...  host_ip=${SERVER_1_HOST_IP}
-                               ...  version=20.04.3
+                               ...  version=20.04.4
                                ...  username=pcc
                                ...  password=cals0ft
                                     Should Be Equal As Strings      ${status}    OK
