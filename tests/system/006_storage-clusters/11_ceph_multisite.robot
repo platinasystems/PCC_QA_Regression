@@ -50,6 +50,27 @@ Primary Started Trust Creation
                                     Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
+Create Trust With Rgw Already Used As Primary (Negative)
+###################################################################################################################################
+        [Documentation]                *Create Trust With Rgw Already Used As Primary (Negative)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+		${response}	                PCC.Ceph Primary Start Trust
+			                   ...  masterAppID=${rgw_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
 Primary Download Trust File
 ###################################################################################################################################
         [Documentation]                *Primary Download Trust File*
@@ -59,6 +80,26 @@ Primary Download Trust File
 
                                     Should Be Equal As Strings      ${status_code}  200
 
+###################################################################################################################################
+Create Remote Replica Using The Same PCC (Negative)
+###################################################################################################################################
+        [Documentation]                *Create Remote Replica Using The Same PCC (Negative)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+		${response}	                PCC.Ceph Secondary End Trust
+			                   ...  clusterID=${cluster_id}
+			                   ...  id=${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
 
 ###################################################################################################################################
 Login To PCC Secondary
@@ -66,6 +107,27 @@ Login To PCC Secondary
 
         ${status}        Login To PCC Secondary  ${pcc_setup}
 
+
+###################################################################################################################################
+Create Trust Using Bad App Side Trust File (Negative)
+###################################################################################################################################
+        [Documentation]                *Create Trust Using Bad App Side Trust File (Negative)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+		${response}	                PCC.Ceph Primary End Trust
+			                   ...  masterAppID=${rgw_id}
+			                   ...  id=${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Secondary End Trust Creation
