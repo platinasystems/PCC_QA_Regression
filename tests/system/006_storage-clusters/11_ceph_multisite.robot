@@ -17,16 +17,13 @@ Load Test Variable
                         Load Server 1 Test Data    ${pcc_setup}
                         Load Server 1 Secondary Test Data    ${pcc_setup}
 
-###################################################################################################################################
-Login to PCC Primary
-###################################################################################################################################
-
-        ${status}        Login To PCC    ${pcc_setup}
 
 ###################################################################################################################################
 Primary Started Trust Creation
 ###################################################################################################################################
         [Documentation]                *Primary Started Trust Creation*
+
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -50,6 +47,27 @@ Primary Started Trust Creation
                                     Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
+Create Trust With Rgw Already Used As Primary (Negative)
+###################################################################################################################################
+        [Documentation]                *Create Trust With Rgw Already Used As Primary (Negative)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+		${response}	                PCC.Ceph Primary Start Trust
+			                   ...  masterAppID=${rgw_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
 Primary Download Trust File
 ###################################################################################################################################
         [Documentation]                *Primary Download Trust File*
@@ -59,13 +77,48 @@ Primary Download Trust File
 
                                     Should Be Equal As Strings      ${status_code}  200
 
+###################################################################################################################################
+Create Remote Replica Using The Same PCC (Negative)
+###################################################################################################################################
+        [Documentation]                *Create Remote Replica Using The Same PCC (Negative)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+		${response}	                PCC.Ceph Secondary End Trust
+			                   ...  clusterID=${cluster_id}
+			                   ...  id=${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Login To PCC Secondary
+Create Trust Using Bad App Side Trust File (Negative)
 ###################################################################################################################################
+        [Documentation]                *Create Trust Using Bad App Side Trust File (Negative)*
 
-        ${status}        Login To PCC Secondary  ${pcc_setup}
+        ${status}                   Login To PCC Secondary  ${pcc_setup}
 
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+		${response}	                PCC.Ceph Primary End Trust
+			                   ...  masterAppID=${rgw_id}
+			                   ...  id=${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Secondary End Trust Creation
@@ -120,14 +173,10 @@ Secondary Edit Trust
                                     Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
-Login to PCC Primary
-###################################################################################################################################
-
-        ${status}        Login To PCC    ${pcc_setup}
-
-###################################################################################################################################
 Wait Until Trust Established - Primary
 ###################################################################################################################################
+
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${primary_trust_id}
@@ -201,30 +250,22 @@ ADD File - Primary
                                            Sleep  1m
 
 ###################################################################################################################################
-Login to PCC Secondary
-###################################################################################################################################
-
-        ${status}        Login To PCC Secondary    ${pcc_setup}
-
-###################################################################################################################################
 Wait Until Secondary Replica Status: Caught up
 ###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary    ${pcc_setup}
+
 
         ${result}                   PCC.Ceph Wait Until Replica Status Caught Up
                                ...  id=${secondary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
-Login to PCC Primary
-###################################################################################################################################
-
-        ${status}        Login To PCC    ${pcc_setup}
-
-
-###################################################################################################################################
 Create Secondary Rgw Configuration File
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
+
+        ${status}                          Login To PCC    ${pcc_setup}
 
         ${status}                          PCC.Ceph Get Pcc Status
                                       ...  name=${CEPH_CLUSTER_NAME}
@@ -309,7 +350,7 @@ Delete A File From Rgw Bucket - Primary
     [Documentation]                        *Delete a file from Rgw Bucket*
 
         ${status}                          PCC.Ceph Get Pcc Status
-                                      ...  name=ceph-pvt
+                                      ...  name=${CEPH_CLUSTER_NAME}
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete File From Bucket
@@ -325,7 +366,7 @@ Delete Rgw Bucket - Primary
       [Documentation]                      *Delete Rgw Bucket*
 
         ${status}                          PCC.Ceph Get Pcc Status
-                                      ...  name=ceph-pvt
+                                      ...  name=${CEPH_CLUSTER_NAME}
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete Bucket
@@ -334,10 +375,50 @@ Delete Rgw Bucket - Primary
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
+#####################################################################################################################################
+Ceph Primary Rados Gateway Delete While Using it As Replica (Negative)
+#####################################################################################################################################
+
+    [Documentation]                 *Ceph Primary Rados Gateway Delete While Using it As Replica (Negative)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Ceph Delete Rgw
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+#####################################################################################################################################
+Ceph Secondary Rados Gateway Delete While Using it As Replica (Negative)
+#####################################################################################################################################
+
+    [Documentation]                 *Ceph Secondary Rados Gateway Delete While Using it As Replica (Negative)*
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${response}                 PCC.Ceph Delete Rgw
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
 
 ###################################################################################################################################
 Primary tear-down
 ###################################################################################################################################
+
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${primary_trust_id}
@@ -350,16 +431,11 @@ Primary tear-down
                                ...  id=${primary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
 
-
-###################################################################################################################################
-Login To PCC Secondary
-###################################################################################################################################
-
-        ${status}        Login To PCC Secondary   ${pcc_setup}
-
 ###################################################################################################################################
 Secondary Delete Trust
 ###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
 
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${secondary_trust_id}
@@ -409,15 +485,11 @@ Secondary Download Trust File
                                     Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Login To PCC Primary
-###################################################################################################################################
-
-        ${status}        Login To PCC    ${pcc_setup}
-
-###################################################################################################################################
 Primary End Trust Creation
 ###################################################################################################################################
         [Documentation]                *Primary End Trust Creation*
+
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -463,14 +535,10 @@ Primary Edit Trust
                                     Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
-Login To PCC Secondary
-###################################################################################################################################
-
-        ${status}        Login To PCC Secondary  ${pcc_setup}
-
-###################################################################################################################################
 Wait Until Trust Established - Secondary
 ###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary  ${pcc_setup}
 
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${secondary_trust_id}
@@ -491,14 +559,10 @@ Secondary tear-down
                                     Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
-Login To PCC Primary
-###################################################################################################################################
-
-        ${status}        Login To PCC   ${pcc_setup}
-
-###################################################################################################################################
 Primary Delete Trust
 ###################################################################################################################################
+
+        ${status}                   Login To PCC   ${pcc_setup}
 
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${primary_trust_id}
