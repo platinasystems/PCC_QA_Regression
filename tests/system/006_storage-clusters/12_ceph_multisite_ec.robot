@@ -11,7 +11,7 @@ ${pcc_setup}    pcc_212
 ###################################################################################################################################
 Load Test Variable
 ###############################################################################################################
-         [Tags]  EC3
+         [Tags]  p1
                         Load Ceph Rgw Data    ${pcc_setup}
                         Load Ceph Cluster Data  ${pcc_setup}
                         Load Ceph Rgw Data Secondary   ${pcc_setup}
@@ -93,25 +93,24 @@ Login To PCC Secondary -Delete Seondary Ceph Rados Gateway
 				                    Sleep    1 minutes
 ###################################################################################################################################
 Login to PCC Primary and Create Erasure coded pool
-################################################Login to PCC Primary-1###################################################################################
-
+################################################Login to PCC Primar###################################################################################
+        [Tags]  p1
         [Documentation]    *Get Erasure Code Profile Id* test
                            ...  keywords:
                            ...  PCC.Get Erasure Code Profile Id
                            ...  PCC.Ceph Get Cluster Id
                            ...  PCC.Ceph Create Erasure Pool
 
-        [Tags]    Today
-
-        ${status}        Login To PCC    ${pcc_setup}
+        ${status}              Login To PCC    ${pcc_setup}
 
         ${cluster_id}          PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_CLUSTER_NAME}
 
         ######### Quota Size in MiB (2:1 ratio) #########
+                               Log To Console  pool name is ${CEPH_RGW_POOLNAME_EC}
+
 
         ${response}            PCC.Ceph Create Erasure Pool
-
                                ...  name=${CEPH_RGW_POOLNAME_EC}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
@@ -143,37 +142,6 @@ Login to PCC Primary and Create Erasure coded pool
                                Should Be Equal As Strings      ${status}    OK
                                Sleep    5s
 
-
-###################################################################################################################################
-EC-Create Metadata Application credential profile without application For Rados
-###################################################################################################################################
-        [Tags]    Today
-        [Documentation]               *Create Metadata Profile* test
-                                      ...  keywords:
-                                     ...  PCC.Add Metadata Profile
-
-        ${status}                     PCC.Ceph Get Pcc Status
-                                      ...  name=ceph-pvt
-                                       Should Be Equal As Strings      ${status}    OK
-
-         ${response}                   PCC.Add Metadata Profile
-                                       ...    Name=appcred_ec
-                                       ...    Type=ceph
-                                       ...    Username=appcred_ec
-                                       ...    Email=appcred_ec@gmail.com
-                                       ...    Active=True
-
-                                       Log To Console    ${response}
-                                       ${result}    Get Result    ${response}
-                                       ${status}    Get From Dictionary    ${result}    status
-                                       ${message}    Get From Dictionary    ${result}    message
-                                       Log to Console    ${message}
-                                       Should Be Equal As Strings    ${status}    200
-
-         ${profile_id}                 PCC.Get Profile by Id
-                                       ...    Name=appcred_ec
-
-                                         Log to Console    ${profile_id}
 
 
 ###################################################################################################################################
@@ -207,7 +175,7 @@ EC-Ceph Rados Gateway Creation With Erasure Coded Pool Without S3 Accounts
 ##################################################################################################################################
 EC-Create Application credential profile with application
 ###################################################################################################################################
-    [Tags]    Today
+
         [Documentation]    *Create Metadata Profile* test
                            ...  keywords:
                            ...  PCC.Add Metadata Profile
