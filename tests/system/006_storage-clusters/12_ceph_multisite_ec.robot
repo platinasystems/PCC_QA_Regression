@@ -26,16 +26,11 @@ Load Test Variable
                         Load Ceph Cluster Data Secondary   ${pcc_setup}
 
 ###################################################################################################################################
-Login to PCC Primary
+Login to PCC Primary -Ceph Rados Gateway Delete Primary
 ###################################################################################################################################
 
-        ${status}        Login To PCC    ${pcc_setup}
-
-#####################################################################################################################################
-Ceph Rados Gateway Delete Primary
-#####################################################################################################################################
-
     [Documentation]                 *Ceph Rados Gateway Delete*
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
@@ -64,16 +59,11 @@ Ceph Rados Gateway Delete Primary
                                     Should Be Equal As Strings      ${backend_status}    OK
 				                    Sleep    1 minutes
 ####################################################################################################################################
-Login To PCC Secondary
+Login To PCC Secondary -Delete Seondary Ceph Rados Gateway
 ###################################################################################################################################
 
-        ${status}        Login To PCC Secondary   ${pcc_setup}
-
-#####################################################################################################################################
-Delete Seondary Ceph Rados Gateway
-#####################################################################################################################################
-
     [Documentation]                 *Ceph Rados Gateway Delete*
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
@@ -122,7 +112,7 @@ Login to PCC Primary and Create Erasure coded pool
 
         ${response}            PCC.Ceph Create Erasure Pool
 
-                               ...  name=ceph-erasure-pool2-mib-2-1
+                               ...  name=${CEPH_RGW_POOLNAME_EC}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  pool_type=data
@@ -139,13 +129,13 @@ Login to PCC Primary and Create Erasure coded pool
 
 
         ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool2-mib-2-1
+                               ...  name=${CEPH_RGW_POOLNAME_EC}
 
                                Should Be Equal As Strings      ${status}    OK
 
 
        ${status}               PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool2-mib-2-1
+                               ...  name=${CEPH_RGW_POOLNAME_EC}
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
@@ -167,10 +157,10 @@ EC-Create Metadata Application credential profile without application For Rados
                                        Should Be Equal As Strings      ${status}    OK
 
          ${response}                   PCC.Add Metadata Profile
-                                       ...    Name=test_app_credential1
+                                       ...    Name=appcred_ec
                                        ...    Type=ceph
-                                       ...    Username=test_app_credential1
-                                       ...    Email=profile_without_app@gmail.com
+                                       ...    Username=appcred_ec
+                                       ...    Email=appcred_ec@gmail.com
                                        ...    Active=True
 
                                        Log To Console    ${response}
@@ -181,7 +171,7 @@ EC-Create Metadata Application credential profile without application For Rados
                                        Should Be Equal As Strings    ${status}    200
 
          ${profile_id}                 PCC.Get Profile by Id
-                                       ...    Name=test_app_credential1
+                                       ...    Name=appcred_ec
 
                                          Log to Console    ${profile_id}
 
@@ -199,7 +189,7 @@ EC-Ceph Rados Gateway Creation With Erasure Coded Pool Without S3 Accounts
 
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME_EC}
-                               ...  poolName=ceph-erasure-pool2-mib-2-1
+                               ...  poolName=${CEPH_RGW_POOLNAME_EC}
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
@@ -232,10 +222,10 @@ EC-Create Application credential profile with application
 		               ...  ceph_cluster_name=ceph-pvt
 
         ${response}    PCC.Add Metadata Profile
-                       ...    Name=test_app_credential1
+                       ...    Name=appcred_ec
                        ...    Type=ceph
-                       ...    Username=test_app_credential1
-                       ...    Email=test_app_credential1@gmail.com
+                       ...    Username=appcred_ec
+                       ...    Email=appcred_ec@gmail.com
                        ...    Active=True
                        ...    ApplicationId=${rgw_id}
 
@@ -322,7 +312,6 @@ Ceph Rados Gateway Secondary Creation
                                ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
                                ...  poolName=${CEPH_RGW_POOLNAME_EC_SECONDARY}
                                ...  targetNodes=${CEPH_RGW_NODES_SECONDARY}
-                             #  ...  targetNodes=${CEPH_RGW_NODES_EC_SECONDARY}
                                ...  port=${CEPH_RGW_PORT_SECONDARY}
                                ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
                                ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
@@ -515,16 +504,11 @@ EC-ADD File - Primary
                                            Sleep  1m
 
 ###################################################################################################################################
-EC-Login to PCC Secondary
+EC-Login to PCC Secondary -Wait Until Secondary Replica Status: Caught up
 ###################################################################################################################################
-    [Tags]  EC1
-        ${status}        Login To PCC Secondary    ${pcc_setup}
+             ${status}              Login To PCC Secondary    ${pcc_setup}
 
-###################################################################################################################################
-EC-Wait Until Secondary Replica Status: Caught up
-###################################################################################################################################
-    [Tags]  EC
-        ${result}                   PCC.Ceph Wait Until Replica Status Caught Up
+             ${result}              PCC.Ceph Wait Until Replica Status Caught Up
                                ...  id=${secondary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
 
@@ -557,10 +541,8 @@ EC-Create Secondary Rgw Configuration File
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
-                                     # ...  pcc=${SERVER_2_HOST_IP}
-                                     ...  pcc=${SERVER_1_HOST_IP}
-                                     # ...  targetNodeIp=${SERVER_2_HOST_IP_SECONDARY}
-                                     ...  targetNodeIp=${SERVER_1_HOST_IP_SECONDARY}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP_SECONDARY}
                                       ...  port=${CEPH_RGW_PORT_SECONDARY}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -576,7 +558,6 @@ EC-List Rgw Bucket - Secondary
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw List Buckets
-                                     # ...  pcc=${SERVER_2_HOST_IP}
                                       ...  pcc=${SERVER_1_HOST_IP}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -592,7 +573,6 @@ EC-List Rgw Objects inside Bucket - Secondary
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw List Objects inside Buckets
-                                      #...  pcc=${SERVER_2_HOST_IP}
                                       ...  pcc=${SERVER_1_HOST_IP}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -638,8 +618,8 @@ EC-Delete A File From Rgw Bucket - Primary
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete File From Bucket
-                                      ...  pcc=${SERVER_2_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -655,8 +635,8 @@ EC-Delete Rgw Bucket - Primary
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete Bucket
-                                      ...  pcc=${SERVER_2_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_2_HOST_IP}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -678,15 +658,9 @@ EC-Primary tear-down
 
 
 ###################################################################################################################################
-EC-Login To PCC Secondary
+EC-Login To PCC Secondary -Delete Trust
 ###################################################################################################################################
-        [Tags]  EC1
-        ${status}        Login To PCC Secondary   ${pcc_setup}
-
-###################################################################################################################################
-EC-Secondary Delete Trust
-###################################################################################################################################
-        [Tags]  EC1
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${secondary_trust_id}
 
@@ -721,11 +695,8 @@ EC-Login to PCC Primary-Create Trust and DownLoad Trust file
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
-####################################################################################################################################
-#EC-Primary Download Trust File
-####################################################################################################################################
-#        [Tags]  EC3
-        [Documentation]                *Primary Download Trust File*
+
+##################################Primary Download Trust File#######################################################################
 
         ${status_code}              PCC.Ceph Download Trust File
                                ...  id=${primary_trust_id}
@@ -785,7 +756,7 @@ EC-Secondary End Trust Creation -
 EC-Login to PCC Primary -toEditTrustFromPrimary
 ####################################################################################################################################
     [Tags]  EC3
-        ${status}        Login To PCC    ${pcc_setup}
+        ${status}                   Login To PCC    ${pcc_setup}
 
 ###################################################################################################################################
 EC-Primary Edit Trust - toEditTrustFromPrimary
@@ -808,7 +779,7 @@ EC-Primary Edit Trust - toEditTrustFromPrimary
                                     Log To Console      ${status_code}
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                   Log To Console      ${message}
+                                    Log To Console      ${message}
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${primary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
@@ -828,7 +799,8 @@ EC-Login to PCC Secondary4 - Wait Until Secondary Replica Status: Caught up
 EC-Login to PCC Primary- Teardown
 ####################################################################################################################################
         [Tags]  EC3
-         ${status}        Login To PCC    ${pcc_setup}
+        ${status}                  Login To PCC    ${pcc_setup}
+
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${primary_trust_id}
 
@@ -845,7 +817,7 @@ EC-Login to PCC Primary- Teardown
 EC-Login To PCC Secondary -Teardown
 ###################################################################################################################################
         [Tags]  EC3
-        ${status}        Login To PCC Secondary   ${pcc_setup}
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
 
 ###################################################################################################################################
 EC-Secondary Delete Trust -Teardown
@@ -888,8 +860,8 @@ EC-Ceph Rados Gateway Delete Secondary -Teardown
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-	                            Sleep    1 minutes
-                                  Should Be Equal As Strings      ${status_code}  200
+	                                Sleep    1 minutes
+                                    Should Be Equal As Strings      ${status_code}  200
 ###################################################################################################################################
 EC-Login to PCC Primary -Delete RGW
 ###################################################################################################################################
