@@ -200,7 +200,7 @@ class Alerting(PccBase):
         except Exception as e:
             raise e           
             
-        default_alerts=["memory high usage","cpu high temp","drive decreased","osds down/out","ceph pools high usage","ceph pools very high usage"]
+        default_alerts=["memory high usage","memory very high usage","cpu high temp","drive decreased","osds down/out","ceph pools high usage","ceph pools very high usage"]
         response = pcc.get_alert_rules(conn)
         for data in get_response_data(response):
             self.id=data["id"]
