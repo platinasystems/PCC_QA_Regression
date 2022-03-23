@@ -570,6 +570,7 @@ Primary Delete Trust
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
+						Sleep   1m
 #####################################################################################################################################
 Delete Primary Ceph Rados Gateway Delete
 #####################################################################################################################################
