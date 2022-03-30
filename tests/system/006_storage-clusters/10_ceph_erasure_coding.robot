@@ -4,6 +4,7 @@ Resource    pcc_resources.robot
 
 *** Variables ***
 ${pcc_setup}    pcc_226
+@{poolsToDelete}    ceph-erasure-pool-mib-4-2   ceph-erasure-pool-pib-4-2   ceph-erasure-pool-eib-4-2   pool123456  pool11  pool13  pool4   pool5   pool6   pool7
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -13,7 +14,7 @@ Login to PCC
 
         [Documentation]    *Login to PCC* test
 
-        [Tags]    Mount_test
+        [Tags]    Runonly
         ${status}        Login To PCC    ${pcc_setup}
 
                          Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -772,6 +773,38 @@ RBD Mount use case (2-1 erasure coded pool)
 					 Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 
+###################################################################################################################################
+Ceph Delete Unused Pools
+###################################################################################################################################
+
+    [Documentation]            *Delete Unused Pools*
+                               ...  keywords:
+                               ...  PCC.Ceph Get Pool Id
+                               ...  PCC.Ceph Delete Pool
+                               ...  PCC.Ceph Wait Until Pool Deleted
+
+        [Tags]    Runonly
+
+        ############  Deleting ceph-erasure-pool-mib-4-2  ################
+
+    FOR     ${pool_name}    IN  @{poolsToDelete}
+
+                               Log To Console   ${pool_name}
+
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=${pool_name}
+                               Continue For Loop If    ${id} is ${None}
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+    END
 
 ####################################################################################################################################
 #Ceph Fs Creation with Erasure Coded Pool - Replicated Pool in metadata
