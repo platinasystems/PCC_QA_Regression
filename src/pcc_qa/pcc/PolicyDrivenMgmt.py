@@ -181,6 +181,16 @@ class PolicyDrivenMgmt(PccBase):
        
         print("payload:-"+str(payload)) 
         return pcc.modify_scope_by_id(conn, id=str(self.Id), data=payload)
+
+    ###########################################################################
+    @keyword(name="PCC.Delete Scope By id")
+    ###########################################################################
+
+    def delete_scope_by_id(self, *args, **kwargs):
+        banner("PCC.Delete Scope By id")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        return pcc.delete_scope_by_id(conn, str(self.scopeId))
         
     
     ###########################################################################
