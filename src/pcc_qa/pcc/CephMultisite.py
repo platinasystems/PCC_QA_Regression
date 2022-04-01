@@ -177,7 +177,7 @@ class CephMultisite(PccBase):
             data = response["Result"]["Data"]
             app_status = data["appStatus"]
             trace("AppStatus: {}".format(app_status))
-            if app_status["data"] == TRUST_CAUGHT_UP_MSG and app_status["meta"] == TRUST_CAUGHT_UP_MSG:
+            if app_status.get("data") == TRUST_CAUGHT_UP_MSG and app_status.get("meta") == TRUST_CAUGHT_UP_MSG:
                 return "OK"
             else:
                 if time.time() > timeout:
