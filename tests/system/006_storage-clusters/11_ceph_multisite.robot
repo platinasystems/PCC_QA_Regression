@@ -182,10 +182,155 @@ Wait Until Trust Established - Primary
                                ...  id=${primary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
 
+
+###################################################################################################################################
+Change location on primary side with replica established (Negative)
+###################################################################################################################################
+
+        [Documentation]    *Change location on primary side with replica established (Negative)*
+
+        ${response}    PCC.Create Scope
+                       ...  type=region
+                       ...  scope_name=region-1
+                       ...  description=region-description
+
+        ${node_id}    PCC.Get Node Id
+                      ...  Name=${SERVER_1_NAME}
+                      Log To Console    ${node_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}      PCC.Check Scope Creation From PCC
+                       ...  scope_name=region-1
+
+                       Log To Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK
+
+        ${region_id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+                        Log To Console    ${region_id}
+
+        ${zone_id}    PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${region_id}
+                        Log To Console    ${zone_id}
+
+        ${site_id}    PCC.Get Scope Id
+                        ...  scope_name=Default site
+                        ...  parentID=${zone_id}
+                        Log To Console    ${site_id}
+
+        ${rack_id}    PCC.Get Scope Id
+                        ...  scope_name=Default rack
+                        ...  parentID=${site_id}
+                        Log To Console    ${rack_id}
+
+        ${response}    PCC.Update Node
+                       ...  Id=${node_id}
+                       ...  Name=${SERVER_1_NAME}
+                       ...  Host=${SERVER_1_HOST_IP}
+                       ...  scopeId=${rack_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Delete Scope By id
+                       ...  scopeId=${region_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Change location on secondary side with replica established (Negative)
+###################################################################################################################################
+
+        [Documentation]    *Change location on secondary side with replica established (Negative)*
+
+        ${status}      Login To PCC Secondary   ${pcc_setup}
+
+        ${response}    PCC.Create Scope
+                       ...  type=region
+                       ...  scope_name=region-1
+                       ...  description=region-description
+
+        ${node_id}    PCC.Get Node Id
+                      ...  Name=${SERVER_1_NAME_SECONDARY}
+                      Log To Console    ${node_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+        ${status}      PCC.Check Scope Creation From PCC
+                       ...  scope_name=region-1
+
+                       Log To Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK
+
+        ${region_id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+                        Log To Console    ${region_id}
+
+        ${zone_id}    PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${region_id}
+                        Log To Console    ${zone_id}
+
+        ${site_id}    PCC.Get Scope Id
+                        ...  scope_name=Default site
+                        ...  parentID=${zone_id}
+                        Log To Console    ${site_id}
+
+        ${rack_id}    PCC.Get Scope Id
+                        ...  scope_name=Default rack
+                        ...  parentID=${site_id}
+                        Log To Console    ${rack_id}
+
+        ${response}    PCC.Update Node
+                       ...  Id=${node_id}
+                       ...  Name=${SERVER_1_NAME_SECONDARY}
+                       ...  Host=${SERVER_1_HOST_IP_SECONDARY}
+                       ...  scopeId=${rack_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Not Be Equal As Strings    ${status}    200
+
+        ${response}    PCC.Delete Scope By id
+                       ...  scopeId=${region_id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
 ###################################################################################################################################
 Create Primary Rgw Configuration File
 ###################################################################################################################################
     [Documentation]                        *Create Rgw Configuration File*
+
+        ${status}                          Login To PCC    ${pcc_setup}
 
         ${status}                          PCC.Ceph Get Pcc Status
                                       ...  name=${CEPH_CLUSTER_NAME}
