@@ -250,7 +250,10 @@
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl": "rgw.platinasystems.com",
-            "S3Accounts":"rgw-app"
+            "S3Accounts":"rgw-app",
+            "name-ec":"rados-pvt-ec",
+            "poolName-ec":"rgw-pool-ec",
+            "targetNodes-ec":["consul-02"]
         },
     "ceph_multisite": {
         "pcc_server":
@@ -344,7 +347,10 @@
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl": "rgw.platinasystems.com",
-            "S3Accounts":"rgw-app"
+            "S3Accounts":"rgw-app",
+            "name-ec":"rados-pvt-secondary-ec",
+            "poolName-ec":"rgw-pool-ec",
+            "targetNodes-ec":["sv50"]
         }
     },
 
