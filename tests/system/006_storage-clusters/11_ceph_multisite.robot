@@ -500,8 +500,6 @@ Delete A File From Rgw Bucket - Primary
 
         ${status}                          PCC.Ceph Rgw Delete File From Bucket
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
-                                      ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -516,8 +514,6 @@ Delete Rgw Bucket - Primary
 
         ${status}                          PCC.Ceph Rgw Delete Bucket
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
-                                      ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
 #####################################################################################################################################
