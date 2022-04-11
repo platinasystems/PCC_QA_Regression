@@ -58,3 +58,32 @@ class Gmail(PccBase):
                 token = line.split('token=')[-1]
                 print(token)
                 return token
+
+    ###########################################################################
+    @keyword(name="PCC.Get Body From Last Mail")
+    ###########################################################################
+    def get_body_from_last_mail(self, *args, **kwargs):
+
+        self._load_kwargs(kwargs)
+        print("Kwargs are:{}".format(kwargs))
+        banner("PCC.Get Body From Last Mail")
+
+        mail = imaplib.IMAP4_SSL('imap.gmail.com')
+        # mail.login('calsoftplatina@gmail.com', 'plat1n@!')
+        mail.login(self.Email, 'plat1n@!')
+        mail.list()
+        # Out: list of "folders" aka labels in gmail.
+        mail.select("inbox")  # connect to inbox.
+
+        result, data = mail.search(None, '(from "pcc_notifications@platinasystems.com")')
+        ids = data[0]  # data is a list.
+        id_list = ids.split()  # ids is a space separated string
+        latest_email_id = id_list[-1]  # get the latest
+
+        result, data = mail.fetch(latest_email_id, "(RFC822)")  # fetch the email body (RFC822) for the given ID
+
+        raw_email = data[0][1]  # here's the body, which is raw text of the whole email
+        # including headers and alternate payloads
+        raw_email = str(raw_email)
+        return raw_email
+
