@@ -491,7 +491,7 @@ class CephCluster(PccBase):
             print("Osd Id:"+str(data['osd']))
             host_ip=easy.get_hostip_by_name(conn,data['server'])
             print("Host Ip:"+str(host_ip))
-            cmd="sudo systemctl -f restart ceph-osd@{}".format(data['osd'])
+            cmd="sudo systemctl -f start ceph-osd@{}".format(data['osd'])
             cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
             print("cmd:"+str(cmd))
             print("cmd output:"+str(cmd_exec))    

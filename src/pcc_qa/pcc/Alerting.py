@@ -14,6 +14,7 @@ from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json
 from pcc_qa.common.Result import get_response_data
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
+from pcc_qa.pcc import Gmail
 
 PCCSERVER_TIMEOUT = 60*1
 
@@ -39,7 +40,11 @@ class Alerting(PccBase):
         self.setup_ip=None
         self.user="pcc"
         self.password="Cals0ft"
-        self.filename=None        
+        self.filename=None
+        self.mail=""
+        self.cc=""
+        self.info=[]
+
         super().__init__()
 
     ###########################################################################
@@ -291,3 +296,55 @@ class Alerting(PccBase):
                          return "Error"
                  return "OK"                
         return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Alert Edit Rule Notifications")
+    ###########################################################################
+    def alert_edit_rule_notifications(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Alert Edit Rule Notifications")
+
+        print("kwargs:-" + str(kwargs))
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        payload = {
+                   "notifications": [
+                      {
+                         "service": "email",
+                         "inputs": [
+                            {
+                               "name": "to",
+                               "value": self.mail
+                            },
+                            {
+                               "name": "cc",
+                               "value": self.cc
+                            }
+                         ]
+                      }
+                   ]
+                }
+        print("Payload:-" + str(payload))
+        return pcc.modify_alert_rule(conn, payload, self.id)
+
+
+    ###########################################################################
+    @keyword(name="PCC.Find Alert Mail")
+    ###########################################################################
+    def find_alert_mail(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.PCC.Find Alert Mail")
+
+        print("kwargs:-" + str(kwargs))
+        if self.mail:
+            for v in self.info:
+                if v not in self.mail:
+                    return "NOT FOUND"
+            return "OK"
+        return "NOT FOUND"
+
+
