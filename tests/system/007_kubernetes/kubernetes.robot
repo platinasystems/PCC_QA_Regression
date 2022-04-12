@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-
+          [Tags]  add
                                     Load K8s Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -23,6 +23,7 @@ Login
 ###################################################################################################################################
 Create Kubernetes cluster:TCP-179,TCP-140
 ###################################################################################################################################
+
         [Documentation]             *Create Kubernetes cluster*
                                ...  Keywords:
                                ...  PCC.K8s Create Cluster
@@ -62,6 +63,7 @@ Create Kubernetes cluster:TCP-179,TCP-140
 ###################################################################################################################################
 Add App To K8 Cluster:TCP-141
 ###################################################################################################################################
+      #  [Tags]  add
         [Documentation]             *Add App Kubernetes cluster*
                                ...  Keywords:
                                ...  PCC.K8s Get Cluster Id
@@ -82,7 +84,7 @@ Add App To K8 Cluster:TCP-141
                                
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Be Equal As Strings      ${status_code}  200
-                                
+
         ${status}                   PCC.K8s Wait Until Cluster is Ready
                                ...  name=${K8S_NAME}
                                     Should Be Equal As Strings      ${status}    OK
@@ -116,6 +118,7 @@ Delete App To K8 Cluster:TCP-158
 ###################################################################################################################################
 Add Node to Kubernetes cluster:TCP-142
 ###################################################################################################################################
+       #[Tags]  add
        [Documentation]             *Add Node to Kubernetes cluster*
                                ...  Keywords:
                               ...  PCC.K8s Update Cluster Nodes
@@ -211,31 +214,7 @@ Down And Up The Interface And Check For K8s:TCP-183
 #                               ...  name=${K8S_NAME}
 #                                    Should Be Equal As Strings      ${status}    OK
 #
-##################################################################################################################################
-#Upgrade K8 Cluster Version:TCP-159
-####################################################################################################################################     
-#        [Documentation]             *Upgrade K8 Cluster Version* 
-#                               ...  Keywords:
-#                               ...  PCC.K8s Upgrade Cluster
-#                               ...  PCC.K8s Get Cluster Id
-#                               ...  PCC.K8s Wait Until Cluster is Ready
-#        
-#        ${cluster_id}               PCC.K8s Get Cluster Id
-#                               ...  name=${K8S_NAME}
-#
-#        ${response}                 PCC.K8s Upgrade Cluster
-#                               ...  cluster_id=${cluster_id}
-#                               ...  k8sVersion=v1.13.5
-#                               ...  pools=${K8S_POOL}
-#
-#        ${status_code}              Get Response Status Code        ${response}     
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.K8s Wait Until Cluster is Ready
-#                               ...  name=${K8S_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
- 
+
    
 ###################################################################################################################################
 Fetching K8s ID before backup
@@ -244,4 +223,86 @@ Fetching K8s ID before backup
          ${K8s_cluster_id_before_backup}        PCC.K8s Get Cluster Id
                                                 ...  name=${K8S_NAME}                            
                                                 Log To Console    ${K8s_cluster_id_before_backup}
-                                                Set Global Variable    ${K8s_cluster_id_before_backup}      
+                                                Set Global Variable    ${K8s_cluster_id_before_backup}
+
+#################################################################################################################################
+Update K8 cluster with pools
+###################################################################################################################################
+
+        [Documentation]             *Upgrade K8 Cluster with pools*
+                               ...  Keywords:
+                               ...  PCC.K8s Upgrade Cluster
+                               ...  PCC.K8s Get Cluster Id
+                               ...  PCC.K8s Wait Until Cluster is Ready
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8S_NAME}
+
+        ${response}                 PCC.K8s Upgrade Cluster
+                               ...  cluster_id=${cluster_id}
+                               ...  k8sVersion=${K8S_VERSION}
+                               ...  pools=['fs-2','pool-pvt','pool2', 'pool3']
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Log To Console      ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Get Storage Classes
+###################################################################################################################################
+
+        [Documentation]             *Get Storage Classes*
+                               ...  Keywords:
+                               ...  PCC.K8s Get Cluster Id
+                               ...  PCC.K8s Get Storage Class Ids
+
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8S_NAME}
+
+        @{strgclass_id}             PCC.K8s Get Storage Class Ids
+                               ...  cluster_id=${cluster_id}
+                               ...  pools=['fs-2','pool-pvt1','pool2', 'pool3']
+
+                                    Log To Console      ${strgclass_id}
+        ${length}                   Get Length     ${strgclass_id}
+                                    Should Be Equal       ${length}        4
+
+
+###################################################################################################################################
+Delete Storage Classes
+###################################################################################################################################
+        [Tags]  add
+        [Documentation]             *Delete Storage Classes*
+                               ...  Keywords:
+                               ...  PCC.K8s Get Cluster Id
+                               ...  PCC.K8s Get Storage Class Ids
+                               ...  PCC.K8s delete Storage Classes
+                               ...  PCC.K8s Wait Until Cluster is Ready
+
+        ${cluster_id}               PCC.K8s Get Cluster Id
+                               ...  name=${K8S_NAME}
+
+        @{strgclass_id}             PCC.K8s Get Storage Class Ids
+                               ...  cluster_id=${cluster_id}
+                               ...  pools=['pool3', 'pool-pvt','fs-2']
+
+                                    #Should Not Be Empty     ${strgclass_id}  msg=No Storage Class to delete
+
+        ${response}                 PCC.K8s delete Storage Classes
+                               ...  cluster_id=${cluster_id}
+                               ...  storageClassIds=@{strgclass_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}       200
+
+        ${status}                   PCC.K8s Wait Until Cluster is Ready
+                               ...  name=${K8S_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
