@@ -11,6 +11,8 @@ Login
 
                                     Load Clusterhead 1 Test Data        testdata_key=${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
+                                    Load Ceph Pool Data   ${pcc_setup}
+                                    Load Server 1 Test Data   ${pcc_setup}
 
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
@@ -206,3 +208,87 @@ Alert osd down/out
                                ...   info=["osds down/out", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK
 
+
+###################################################################################################################################
+Alert High Pool Usage
+###################################################################################################################################
+    [Documentation]                 *Alert High Pool Usage*
+
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=high-usage-pool
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                               ...  quota=100
+                               ...  quota_unit=MiB
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=high-usage-pool
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+       ${alert_id}                 PCC.Alert Get Rule Id
+                               ...  name=ceph pools high usage
+
+       ${response}                 PCC.Alert Edit Rule Notifications
+                               ...  id=${alert_id}
+                               ...  mail=${TENANT_USER_PCC_USERNAME}
+
+       ${status_code}              Get Response Status Code        ${response}
+       ${message}                  Get Response Message        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
+
+       ${result}                    PCC.Ceph Pool Add File By Size
+                               ...  name=high-usage-pool
+                               ...  size=85MiB
+                               ...  hostip=${SERVER_1_HOST_IP}
+                                    Should Be Equal As Strings      ${result}  OK
+                                    sleep  3m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=pool usage 80%. Status:firing
+                                    Should Be Equal As Strings      ${response}  OK
+
+       ${mail}                       PCC.Get Body From Last Mail
+                               ...   Email=${TENANT_USER_PCC_USERNAME}
+
+       ${result}                     PCC.Find Alert Mail
+                               ...   mail=${mail}
+                               ...   info=["pool usage 80%", "firing", "The ceph pool high-usage-pool usage is greather than 80%"]
+                                     Should Be Equal As Strings      ${result}  OK
+
+       ${result}                     PCC.Ceph Pool Delete File By Name
+                               ...   name=high-usage-pool
+                               ...   filename=85MiB_file
+                               ...   hostip=${SERVER_1_HOST_IP}
+                                     Should Be Equal As Strings      ${result}  OK
+
+                                     sleep  3m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=pool usage 80%. Status:resolved
+                                    Should Be Equal As Strings      ${response}  OK
+
+       ${mail}                       PCC.Get Body From Last Mail
+                               ...   Email=${TENANT_USER_PCC_USERNAME}
+
+       ${result}                     PCC.Find Alert Mail
+                               ...   mail=${mail}
+                               ...   info=["pool usage 80%", "resolved"]
+                                     Should Be Equal As Strings      ${result}  OK
