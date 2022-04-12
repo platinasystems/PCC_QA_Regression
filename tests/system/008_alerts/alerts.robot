@@ -210,7 +210,7 @@ Alert osd down/out
 
 
 ###################################################################################################################################
-Alert High Pool Usage
+Alert High Pool Usage 80%
 ###################################################################################################################################
     [Documentation]                 *Alert High Pool Usage*
 
@@ -291,4 +291,61 @@ Alert High Pool Usage
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
                                ...   info=["pool usage 80%", "resolved"]
+                                     Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Alert High Pool Usage 90%
+###################################################################################################################################
+    [Documentation]                 *Alert High Pool Usage*
+
+       ${alert_id}                 PCC.Alert Get Rule Id
+                               ...  name=ceph pools very high usage
+
+       ${response}                 PCC.Alert Edit Rule Notifications
+                               ...  id=${alert_id}
+                               ...  mail=${TENANT_USER_PCC_USERNAME}
+
+       ${status_code}              Get Response Status Code        ${response}
+       ${message}                  Get Response Message        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
+
+       ${result}                    PCC.Ceph Pool Add File By Size
+                               ...  name=high-usage-pool
+                               ...  size=95MiB
+                               ...  hostip=${SERVER_1_HOST_IP}
+                                    Should Be Equal As Strings      ${result}  OK
+                                    sleep  3m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=pool usage 90%. Status:firing
+                                    Should Be Equal As Strings      ${response}  OK
+
+       ${mail}                       PCC.Get Body From Last Mail
+                               ...   Email=${TENANT_USER_PCC_USERNAME}
+
+       ${result}                     PCC.Find Alert Mail
+                               ...   mail=${mail}
+                               ...   info=["pool usage 90%", "firing", "The ceph pool high-usage-pool usage is greather than 90%"]
+                                     Should Be Equal As Strings      ${result}  OK
+
+       ${result}                     PCC.Ceph Pool Delete File By Name
+                               ...   name=high-usage-pool
+                               ...   filename=95MiB_file
+                               ...   hostip=${SERVER_1_HOST_IP}
+                                     Should Be Equal As Strings      ${result}  OK
+
+                                     sleep  3m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=pool usage 90%. Status:resolved
+                                    Should Be Equal As Strings      ${response}  OK
+
+       ${mail}                       PCC.Get Body From Last Mail
+                               ...   Email=${TENANT_USER_PCC_USERNAME}
+
+       ${result}                     PCC.Find Alert Mail
+                               ...   mail=${mail}
+                               ...   info=["pool usage 90%", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK
