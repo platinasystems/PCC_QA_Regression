@@ -271,8 +271,8 @@ Get Storage Classes
 
                                     Log To Console      ${strgclass_id}
         ${length}                   Get Length     ${strgclass_id}
-                                    Should Be Equal       ${length}        4
-
+                                    
+						Should Be Equal As Integers     ${length}        4
 
 ###################################################################################################################################
 Delete Storage Classes
