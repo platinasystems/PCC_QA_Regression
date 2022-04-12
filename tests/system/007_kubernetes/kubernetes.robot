@@ -267,7 +267,7 @@ Get Storage Classes
 
         @{strgclass_id}             PCC.K8s Get Storage Class Ids
                                ...  cluster_id=${cluster_id}
-                               ...  pools=['fs-2','pool-pvt1','pool2', 'pool3']
+                               ...  pools=['fs-2','pool-pvt','pool2', 'pool3']
 
                                     Log To Console      ${strgclass_id}
         ${length}                   Get Length     ${strgclass_id}
