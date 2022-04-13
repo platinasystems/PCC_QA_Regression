@@ -688,6 +688,8 @@ Secondary tear-down
                                ...  id=${secondary_trust_id}
                                     Should Be Equal As Strings      ${result}  OK
 
+                                    Sleep  1m
+
 ###################################################################################################################################
 Primary Delete Trust
 ###################################################################################################################################
@@ -700,7 +702,8 @@ Primary Delete Trust
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-						Sleep   1m
+
+						            Sleep   1m
 
 #####################################################################################################################################
 Ceph Rados Update Nodes And Certficate for LB
