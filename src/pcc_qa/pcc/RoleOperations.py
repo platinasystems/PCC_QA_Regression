@@ -67,7 +67,6 @@ class RoleOperations(PccBase):
                     if "scopeId" not in kwargs:
                         trace("Node id is :{}".format(str(data['Id'])))
                         get_node_response = pcc.get_node_by_id(conn,str(data['Id']))
-                        trace("get_node_response: {}".format(str(get_node_response)))
                         self.scopeId = int(get_node_response['Result']['Data']["scopeId"])
                     payload={
                              "Id":self.Id,
