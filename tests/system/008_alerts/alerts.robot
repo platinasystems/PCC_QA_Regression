@@ -174,7 +174,7 @@ Alert osd down/out
                                ...  limit=1
                                     Should Be Equal As Strings      ${response}  OK
 
-                                    sleep  7m
+                                    sleep  10m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -193,7 +193,7 @@ Alert osd down/out
                                ...   name=${CEPH_CLUSTER_NAME}
                                      Should Be Equal As Strings      ${response}  OK
 
-                                     sleep  3m
+                                     sleep  5m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -257,7 +257,7 @@ Alert High Pool Usage 80% Firing
                                ...  size=85MiB
                                ...  hostip=${SERVER_1_HOST_IP}
                                     Should Be Equal As Strings      ${result}  OK
-                                    sleep  3m
+                                    sleep  5m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -278,7 +278,7 @@ Alert High Pool Usage 80% Firing
                                ...   hostip=${SERVER_1_HOST_IP}
                                      Should Be Equal As Strings      ${result}  OK
 
-                                     sleep  3m
+                                     sleep  5m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -305,7 +305,7 @@ Alert High Pool Usage 80% Resolved
                                ...   hostip=${SERVER_1_HOST_IP}
                                      Should Be Equal As Strings      ${result}  OK
 
-                                     sleep  3m
+                                     sleep  5m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -341,7 +341,7 @@ Alert High Pool Usage 90% Firing
                                ...  size=95MiB
                                ...  hostip=${SERVER_1_HOST_IP}
                                     Should Be Equal As Strings      ${result}  OK
-                                    sleep  3m
+                                    sleep  5m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -368,7 +368,7 @@ Alert High Pool Usage 90% Resolved
                                ...   hostip=${SERVER_1_HOST_IP}
                                      Should Be Equal As Strings      ${result}  OK
 
-                                     sleep  3m
+                                     sleep  5m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
