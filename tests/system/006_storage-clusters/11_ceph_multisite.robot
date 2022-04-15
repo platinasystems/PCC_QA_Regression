@@ -1123,6 +1123,8 @@ Delete Primary Ceph Rados Gateway Delete
 
     [Documentation]                 *Ceph Rados Gateway Delete*
 
+        ${status}                   Login To PCC    ${pcc_setup}
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
