@@ -1128,7 +1128,7 @@ Delete Primary Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...    name=${CEPH_RGW_NAME}
+                               ...  name=${CEPH_RGW_NAME}
 		                       ...  ceph_cluster_name=ceph-pvt
 		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
 
@@ -1162,7 +1162,7 @@ Delete Seondary Ceph Rados Gateway
                                     Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...    name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
 		                       ...  ceph_cluster_name=ceph-pvt
 		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
 
