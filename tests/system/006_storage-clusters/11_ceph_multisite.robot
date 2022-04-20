@@ -673,28 +673,12 @@ Wait Until Trust Established - Secondary
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${secondary_trust_id}
 
-###################################################################################################################################
-Secondary tear-down
-###################################################################################################################################
-
-        ${response}                 PCC.Ceph Trust Delete
-                               ...  id=${secondary_trust_id}
-
-        ${status_code}              Get Response Status Code        ${response}
-        ${message}                  Get Response Message        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${result}                   PCC.Ceph Wait Until Trust Deleted
-                               ...  id=${secondary_trust_id}
-                                    Should Be Equal As Strings      ${result}  OK
-
-                                    Sleep  1m
 
 ###################################################################################################################################
-Primary Delete Trust
+Primary tear-down
 ###################################################################################################################################
 
-        ${status}                   Login To PCC   ${pcc_setup}
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${primary_trust_id}
@@ -703,7 +687,22 @@ Primary Delete Trust
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
-						            Sleep   1m
+        ${result}                   PCC.Ceph Wait Until Trust Deleted
+                               ...  id=${primary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Secondary Delete Trust
+###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${response}                 PCC.Ceph Trust Delete
+                               ...  id=${secondary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
 
 #####################################################################################################################################
 Ceph Rados Update Nodes And Certficate for LB
