@@ -290,7 +290,7 @@ Delete Storage Classes
 
         @{strgclass_id}             PCC.K8s Get Storage Class Ids
                                ...  cluster_id=${cluster_id}
-                               ...  pools=['pool3', 'pool-pvt','fs-2']
+                               ...  pools=['pool3', 'pool-pvt','fs-2', 'pool2']
 
                                     #Should Not Be Empty     ${strgclass_id}  msg=No Storage Class to delete
 
@@ -306,3 +306,12 @@ Delete Storage Classes
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
+Delete K8 Cluster
+###################################################################################################################################
+    [Tags]  delete
+    [Documentation]                 *Delete K8 Cluster*
+                               ...  keywords:
+                               ...  PCC.K8s Delete All Cluster
+        ${status}                   PCC.K8s Delete All Cluster
+                                    Should be equal as strings    ${status}    OK
+##################################################################################################################################

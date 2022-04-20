@@ -192,7 +192,6 @@ class Kubernetes(PccBase):
             raise e
 
         response = pcc.get_kubernetes(conn)
-        trace(" get_kubernetes response: " + response)
         for data in get_response_data(response):
             print("Response To Look :-" + str(data))
             print("K8s {} and id {} is deleting....".format(data['name'], data['ID']))
@@ -203,7 +202,7 @@ class Kubernetes(PccBase):
                 del_check = self.k8s_wait_until_cluster_deleted()
                 print("del_check:" + str(del_check))
                 if del_check == "OK":
-                    print("k8s {} is deleted sucessfully".format(data['name']))
+                    print("k8s {} is deleted successfully".format(data['name']))
                     return "OK"
                 else:
                     print("k8s {} unable to delete".format(data['name']))
@@ -460,18 +459,4 @@ class Kubernetes(PccBase):
         except Exception as e:
             trace("Error in getting k8s version: {}".format(e))
 
-        # ###########################################################################
-        # @keyword(name="PCC.K8s Get Storage Classes Id")
-        # ###########################################################################
-        # def get_k8s_StorageClass_by_id(self, *args, **kwargs):
-        #     banner("PCC.K8s Get Cluster Id")
-        #     self._load_kwargs(kwargs)
-        #
-        #     try:
-        #         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        #     except Exception as e:
-        #         raise e
-        #
-        #     cluster_id = easy.get_k8s_cluster_id_by_name(conn, self.name)
-        #     trace(cluster_id)
-        #     return cluster_id
+
