@@ -8,7 +8,7 @@ ${pcc_setup}                 pcc_212
 ###################################################################################################################################
 Login
 ###################################################################################################################################
-          [Tags]  add
+          [Tags]  sanity
                                     Load K8s Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
@@ -23,7 +23,7 @@ Login
 ###################################################################################################################################
 Create Kubernetes cluster:TCP-179,TCP-140
 ###################################################################################################################################
-
+	  [Tags]  sanity
         [Documentation]             *Create Kubernetes cluster*
                                ...  Keywords:
                                ...  PCC.K8s Create Cluster
@@ -306,12 +306,12 @@ Delete Storage Classes
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Delete K8 Cluster
+#Delete K8 Cluster
 ###################################################################################################################################
-    [Tags]  delete
-    [Documentation]                 *Delete K8 Cluster*
-                               ...  keywords:
-                               ...  PCC.K8s Delete All Cluster
-        ${status}                   PCC.K8s Delete All Cluster
-                                    Should be equal as strings    ${status}    OK
+#    [Tags]  delete
+#    [Documentation]                 *Delete K8 Cluster*
+#                              ...  keywords:
+#                               ...  PCC.K8s Delete All Cluster
+#        ${status}                   PCC.K8s Delete All Cluster
+#                                    Should be equal as strings    ${status}    OK
 ##################################################################################################################################
