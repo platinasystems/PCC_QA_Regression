@@ -18,6 +18,41 @@ Load Test Variable
                         Load Server 1 Secondary Test Data    ${pcc_setup}
                         Load Server 2 Secondary Test Data    ${pcc_setup}
 
+###################################################################################################################################
+Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
+#####################################################################################################################################
+
+     [Documentation]                 *Ceph Rados Gateway Creation*
+
+        ${status}                   Login To PCC    ${pcc_setup}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+		                       ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+		                            Pass Execution If    ${rgw_id} is not ${None}    There is already a radosgw
+
+        ${response}                 PCC.Ceph Create Rgw
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=${CEPH_RGW_POOLNAME}
+                               ...  targetNodes=${CEPH_RGW_NODES}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
+                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 
 ###################################################################################################################################
 Primary Started Trust Creation

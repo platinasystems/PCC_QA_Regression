@@ -36,26 +36,23 @@ class ApplicationCredentialManager(PccBase):
         self.Id = None  
         self.Type = None
         self.Name = None
-        self.Username = None
-        self.Email = None
         self.Type = None
         self.Filename = None
         self.ApplicationId = None
-        self.Active = None
+        self.Active = True
         self.Files = []
-        self.ProfileActive = None
-        self.MaxBuckets = None
+        self.maxBuckets = None
         self.maxBucketObjects = None
         self.maxBucketSize = None
         self.maxObjectSize = None
         self.maxUserSize = None
         self.maxUserObjects = None
+        self.maxBucketSizeUnit = "MiB"
+        self.maxUserSizeUnit = "MiB"
         self.readPermission = True
         self.writePermission = True
         self.deletePermission = True
-        
-        
-        
+
         super().__init__()
         
     ###########################################################################
@@ -120,11 +117,11 @@ class ApplicationCredentialManager(PccBase):
         banner("PCC.Add Metadata Profile")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("Kwargs are: {}".format(kwargs))        
-        if "MaxBuckets" in kwargs:
-            if kwargs['MaxBuckets'].isnumeric(): 
-                self.MaxBuckets= ast.literal_eval(self.MaxBuckets)
+        if "maxBuckets" in kwargs:
+            if kwargs['maxBuckets'].isnumeric(): 
+                self.maxBuckets= ast.literal_eval(self.maxBuckets)
             else:
-                self.MaxBuckets= kwargs['MaxBuckets']
+                self.maxBuckets= kwargs['maxBuckets']
         if "maxBucketObjects" in kwargs:
             if kwargs['maxBucketObjects'].isnumeric(): 
                 self.maxBucketObjects = ast.literal_eval(self.maxBucketObjects)
@@ -155,19 +152,20 @@ class ApplicationCredentialManager(PccBase):
         payload =  {"name":self.Name,
                     "type":self.Type,
                     "applicationId":self.ApplicationId,
-                    "active":bool(self.Active),
+                    "active":self.Active,
                     "files":self.Files,
                     "profile":{
                                "readPermission":self.readPermission,
                                "deletePermission":self.deletePermission,
                                "writePermission":self.writePermission,
-                               "active":self.ProfileActive,
-                               "maxBuckets":self.MaxBuckets,
+                               "maxBuckets":self.maxBuckets,
                                "maxBucketObjects":self.maxBucketObjects,
                                "maxBucketSize":self.maxBucketSize,
                                "maxObjectSize":self.maxObjectSize,
                                "maxUserSize":self.maxUserSize,
-                               "maxUserObjects":self.maxUserObjects
+                               "maxUserObjects":self.maxUserObjects,
+                               "maxBucketSizeUnit": self.maxBucketSizeUnit,
+                               "maxUserSizeUnit": self.maxUserSizeUnit
                               }
                     
                     } 
@@ -214,7 +212,7 @@ class ApplicationCredentialManager(PccBase):
                 
         """
         self._load_kwargs(kwargs)
-        banner("PCC.Add Metadata Profile")
+        banner("PCC.Update Metadata Profile")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         print("Kwargs are: {}".format(kwargs))
                 
@@ -222,16 +220,17 @@ class ApplicationCredentialManager(PccBase):
                     "name":self.Name,
                     "type":self.Type,
                     "applicationId":self.ApplicationId,
-                    "active":bool(self.Active),
+                    "active":self.Active,
                     "files":self.Files,
-                    "profile":{"username":self.Name,
+                    "profile":{
                                "readPermission":self.readPermission,
                                "deletePermission":self.deletePermission,
-                               "writePermission":self.writePermission, 
-                               "active":self.ProfileActive,
-                               "maxBuckets":self.MaxBuckets,
+                               "writePermission":self.writePermission,
+                               "maxBuckets":self.maxBuckets,
                                "maxBucketObjects":self.maxBucketObjects,
                                "maxBucketSize":self.maxBucketSize,
+                               "maxBucketSizeUnit":self.maxBucketSizeUnit,
+                               "maxUserSizeUnit":self.maxUserSizeUnit,
                                "maxObjectSize":self.maxObjectSize,
                                "maxUserSize":self.maxUserSize,
                                "maxUserObjects":self.maxUserObjects
@@ -242,9 +241,32 @@ class ApplicationCredentialManager(PccBase):
         multipart_data = {'data':(None,dump)}
     
         print("multipart_data: {}".format(multipart_data))
-        response = pcc.add_metadata_profile(conn, multipart_data)
+        response = pcc.update_metadata_profile(conn, str(self.Id), multipart_data)
         print("Response from keyword: {}".format(response))
         return response
+
+    ###########################################################################
+    @keyword(name="PCC.Wait Until AppCredential Ready")
+    ###########################################################################
+    def wait_until_appcredential_ready(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Wait Until AppCredential Ready")
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        print("Kwargs are: {}".format(kwargs))
+
+        timeout = time.time() + PCCSERVER_TIMEOUT
+
+        while True:
+            response = pcc.get_application_credential_profile_by_id(conn, str(self.Id))
+            trace(response)
+            data = response["Result"]["Data"]
+            if data.get('deployStatus') == "completed":
+                return "OK"
+            elif "failed" == data.get('deployStatus'):
+                return "Error"
+            if time.time() > timeout:
+                raise Exception("[PCC.Wait Until AppCredential Ready] Timeout")
+            time.sleep(5)
         
     ###########################################################################
     @keyword(name="PCC.Get Metadata Profiles")
@@ -506,7 +528,7 @@ class ApplicationCredentialManager(PccBase):
         banner("PCC.Get Profiles with additional data for specific application")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        return pcc.get_profiles_with_additional_data_for_specific_application(conn, type = str(self.Type), application_id = str(self.ApplicationId))
+        return get_response_data(pcc.get_profiles_with_additional_data_for_specific_application(conn, type = str(self.Type), application_id = str(self.ApplicationId)))
         
     #################################################################################
     @keyword(name="PCC.Describe Profiles per type and application")
