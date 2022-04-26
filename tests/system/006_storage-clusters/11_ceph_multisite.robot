@@ -18,11 +18,31 @@ Load Test Variable
                         Load Server 1 Secondary Test Data    ${pcc_setup}
                         Load Server 2 Secondary Test Data    ${pcc_setup}
 
+
 ###################################################################################################################################
-Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
+Create Application credential profile without application For Rados
+###################################################################################################################################
+
+        [Documentation]               *Create Metadata Profile* test
+                                      ...  keywords:
+                                      ...  PCC.Add Metadata Profile
+
+        ${response}                   PCC.Add Metadata Profile
+                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                                      ...    Type=ceph
+
+                                      Log To Console    ${response}
+                                      ${result}    Get Result    ${response}
+                                      ${status}    Get From Dictionary    ${result}    status
+                                      ${message}    Get From Dictionary    ${result}    message
+                                      Log to Console    ${message}
+                                      Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Primary - Ceph Rados Gateway Creation
 #####################################################################################################################################
 
-     [Documentation]                 *Ceph Rados Gateway Creation*
+     [Documentation]                 *Primary - Ceph Rados Gateway Creation*
 
         ${status}                   Login To PCC    ${pcc_setup}
 
