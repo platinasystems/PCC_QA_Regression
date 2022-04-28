@@ -1,4 +1,5 @@
 import time
+import re
 import os
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
@@ -8,6 +9,7 @@ from pcc_qa.common import PccUtility as easy
 from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.PccBase import PccBase
+from pcc_qa.common.Cli import cli_run
 
 class Certificate(PccBase):
     """ 
@@ -20,6 +22,9 @@ class Certificate(PccBase):
         self.Description = None
         self.Private_key = None
         self.Certificate_upload = None
+        self.user="pcc"
+        self.password="Cals0ft"
+        self.ip=""
         super().__init__()
 
     ###########################################################################
@@ -142,4 +147,21 @@ class Certificate(PccBase):
                     return "OK"
             return "Error : Certificate Not Found"
         except Exception as e:
-            return {"Error": str(e)}        
+            return {"Error": str(e)}
+
+    ###########################################################################################################
+    @keyword(name="PCC.Verify Certificate On Node")
+    ###########################################################################################################
+    def verify_certificate_on_node(self, *args, **kwargs):
+        banner("PCC.Verify Certificate On Node")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        cmd="ls /usr/local/share/ca-certificates/platina"
+        output = cli_run(cmd=cmd, host_ip=self.ip, linux_user=self.user, linux_password=self.password)
+        trace("Output:" + str(output))
+        if re.search(self.Alias, str(output)):
+            return "OK"
+        return "Not Found"
+
+
+
