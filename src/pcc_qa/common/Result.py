@@ -34,7 +34,7 @@ def get_result_field(response, field):
 ###########################################################################
 @keyword(name="Get Response Status Code")
 ###########################################################################
-def get_result_field(response):
+def get_status_code(response):
     try:
         return response["StatusCode"]
     except Exception as e:

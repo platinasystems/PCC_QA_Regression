@@ -45,6 +45,7 @@ Library				            pcc_qa.pcc.Gmail
 Library                         pcc_qa.pcc.Roles
 Library                         pcc_qa.pcc.Pcc
 Library                         pcc_qa.pcc.Notifications
+Library                         pcc_qa.pcc.Tags
 Library                         Collections
 
 

@@ -11,6 +11,7 @@ from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 from pcc_qa.pcc.Nodes import Nodes
+import ast
 
 PCC_TIMEOUT = 60*15  # 15 min
 
@@ -28,7 +29,7 @@ class RoleOperations(PccBase):
         self.user="pcc"
         self.password="cals0ft"
         self.nodes_ip=[]
-        self.tags=None
+        self.tags=[]
 
     ###########################################################################
     @keyword(name="PCC.Add and Verify Roles On Nodes")
@@ -107,12 +108,18 @@ class RoleOperations(PccBase):
             response = pcc.get_nodes(conn)
             for data in get_response_data(response):
                 self.Id=data['Id']
-                self.Host=data['Host']
+                self.node_name = data['Name']
+                self.Host = data['Host']
+                self.roles = data['roles']
+                self.scopeId = data['scopeId']
                 if str(data['Name']).lower() == str(node).lower():
                     payload={
                              "Id":self.Id,
+                             "Name": self.node_name,
                              "Host":self.Host,
-                             "tags":eval(str(self.tags))
+                             "tags": ast.literal_eval(str(self.tags)),
+                             "roles": self.roles,
+                             "scopeId": self.scopeId
                              }
                     print("Payload:-"+str(payload))
                     api_response=pcc.modify_node(conn, payload)
