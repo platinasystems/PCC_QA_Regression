@@ -27,6 +27,8 @@ Create Application credential profile without application For Rados
                                       ...  keywords:
                                       ...  PCC.Add Metadata Profile
 
+        ${status}                     Login To PCC    ${pcc_setup}
+
         ${response}                   PCC.Add Metadata Profile
                                       ...    Name=${CEPH_RGW_S3ACCOUNTS}
                                       ...    Type=ceph
