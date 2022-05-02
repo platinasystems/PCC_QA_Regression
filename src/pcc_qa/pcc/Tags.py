@@ -122,12 +122,14 @@ class Tags(PccBase):
     ###########################################################################
     @keyword(name="PCC.Delete All Tag")
     ###########################################################################
-    def delete_tag(self, *args, **kwargs):
-        banner("PCC.Delete Tag")
+    def delete_all_tag(self, *args, **kwargs):
+        banner("PCC.Delete All Tag")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
 
         tags = get_response_data(pcc.get_tags(conn))
+        if not tags:
+            return "OK"
         result = "OK"
         for tag in tags:
            resp = pcc.delete_tag(conn, str(tag["id"]))
