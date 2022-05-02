@@ -23,7 +23,7 @@ class Certificate(PccBase):
         self.Private_key = None
         self.Certificate_upload = None
         self.user="pcc"
-        self.password="Cals0ft"
+        self.password="cals0ft"
         self.ip=""
         super().__init__()
 
