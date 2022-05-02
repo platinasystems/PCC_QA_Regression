@@ -192,9 +192,6 @@ EC-Create Application credential profile with application
         ${response}    PCC.Add Metadata Profile
                        ...    Name=appcred_ec
                        ...    Type=ceph
-                       ...    Username=appcred_ec
-                       ...    Email=appcred_ec@gmail.com
-                       ...    Active=True
                        ...    ApplicationId=${rgw_id}
 
                        Log To Console    ${response}
