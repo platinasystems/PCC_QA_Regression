@@ -149,11 +149,7 @@ class Monitor(PccBase):
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
-            raise e                 
-        payload = {
-            "unit":"HOUR",
-            "value":1
-        }
+            raise e
         if not self.nodes:
             print("Node names can not be empty!!")
             return "Error"            
@@ -171,89 +167,96 @@ class Monitor(PccBase):
             for topic in eval(str(self.category)):
                 print("Topic:"+str(topic))
                 if topic.lower()=='cpu':
-                    data=pcc.add_monitor_cache(conn, "cpu", str(nodeId), payload) 
-                    us=data['Result']['metrics'][0]['us']
-                    print("##############--CPU--##################") 
-                    print("us:"+str(us))   
+                    payload = {
+                        "query": "{{job='cpu',nodeId='{}'}}".format(nodeId)
+                    }
+                    data=get_response_data(pcc.query_metric(conn, payload))
+                    print("##############--CPU--##################")
                     print("CPU Data:"+str(data))
-                    trace("CPU Data:"+str(data))
                     print("#####################################")
-                    if us:
+                    if data:
                         continue
                     else:
                         failed_chk.append(nodeId)
 
                 elif topic.lower()=='memory':
-                    data=pcc.add_monitor_cache(conn, "memory", str(nodeId), payload)  
-                    totalMem=data['Result']['metrics'][0]['totalMem']
+                    payload = {
+                        "query": "{{job='memory',nodeId='{}'}}".format(nodeId)
+                    }
+                    data = get_response_data(pcc.query_metric(conn, payload))
                     print("###################--MEMORY--#############")    
                     print("Memory Data:"+str(data))
-                    print("totalMem:"+str(totalMem))
-                    trace("Memory Data:"+str(data))
-                    print("#####################################")                    
-                    if totalMem:
+                    print("#####################################")
+                    if data:
                         continue
                     else:
                         failed_chk.append(nodeId) 
                                            
                 elif topic.lower()=='storage':
-                    data=pcc.add_monitor_cache(conn, "storage", str(nodeId), payload)  
-                    storageControllers=data['Result']['metrics'][0]['storageControllers']
+                    payload = {
+                        "query": "{{job='storage',nodeId='{}'}}".format(nodeId)
+                    }
+                    data = get_response_data(pcc.query_metric(conn, payload))
                     
                     print("################--STORAGE--##############")    
                     print("Storage Data:"+str(data))
-                    print("storageControllers:"+str(storageControllers))
-                    trace("Storage Data:"+str(data))
                     print("#####################################")
-                    if storageControllers:
+                    if data:
                         continue
                     else:
                         failed_chk.append(nodeId)                     
 
                 elif topic.lower()=='sensor':
-                    data=pcc.add_monitor_cache(conn, "sensor", str(nodeId), payload)  
-                    cpuMaxTemp=data['Result']['metrics'][0]['cpuMaxTemp']
+                    payload = {
+                        "query": "{{job='sensor',nodeId='{}'}}".format(nodeId)
+                    }
+                    data = get_response_data(pcc.query_metric(conn, payload))
                     print("################--SENSOR--#################")    
                     print("Sensor Data:"+str(data))
-                    trace("Sensor Data:"+str(data))
-                    print("cpuMaxTemp:"+str(cpuMaxTemp))
                     print("#####################################")                    
-                    if cpuMaxTemp:
+                    if data:
                         continue
                     else:
                         failed_chk.append(nodeId)                            
 
                 elif topic.lower()=='system':
-                    data=pcc.add_monitor_cache(conn, "system", str(nodeId), payload)  
-                    totProcesses=data['Result']['metrics'][0]['totProcesses']
+                    payload = {
+                        "query": "{{job='system',nodeId='{}'}}".format(nodeId)
+                    }
+                    data = get_response_data(pcc.query_metric(conn, payload))
                     print("##################--SYSTEM--#################")    
                     print("System Data:"+str(data))
-                    print("totProcesses:"+str(totProcesses))
-                    trace("System Data:"+str(data))
                     print("#####################################")                    
-                    if totProcesses:
+                    if data:
                         continue
                     else:
                         failed_chk.append(nodeId)                     
 
                 elif topic.lower()=='network':
-                    data=pcc.add_monitor_cache(conn, "network", str(nodeId), payload)  
-                    interfaces=data['Result']['metrics'][0]['interfaces']
+                    payload = {
+                        "query": "{{job='network',nodeId='{}'}}".format(nodeId)
+                    }
+                    data = get_response_data(pcc.query_metric(conn, payload))
                     print("################--NETWORK--##################")    
                     print("Network Data:"+str(data))
-                    trace("Network Data:"+str(data))
                     print("#####################################")                    
-                    if interfaces:
+                    if data:
                         continue
                     else:
                         failed_chk.append(nodeId) 
                         
                 elif topic.lower()=='file system':
-                    data=pcc.add_monitor_cache(conn, "partitions", str(nodeId), payload)  
+                    payload = {
+                        "query": "{{job='partitions',nodeId='{}'}}".format(nodeId)
+                    }
+                    data = get_response_data(pcc.query_metric(conn, payload))
                     print("################--FILE SYSTEM--##################")    
                     print("File System Data:"+str(data))
-                    trace("File System:"+str(data))
-                    print("#####################################")                    
+                    print("#####################################")
+                    if data:
+                        continue
+                    else:
+                        failed_chk.append(nodeId)
                 else:
                     print("Invalid Category:"+str(topic))   
                     return "Error"
@@ -303,15 +306,13 @@ class Monitor(PccBase):
                         print("Host:"+str(ip))
                         network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))['Result']['stdout']
                         payload = {
-                                    "unit":"HOUR",
-                                    "value":1
-                                  }                    
-                        data=pcc.add_monitor_cache(conn, "network", str(nodeId), payload)  
-                        interfaces=data['Result']['metrics'][0]['interfaces']     
-                        print("Network Interfacea PCC:"+str(interfaces))               
-                        print("Interface Count Backend:"+str(network_check))
-                        print("Interface Count API:"+str(len(interfaces)))
-                        if len(interfaces)==int(network_check):
+                            "query": "{{job='network',nodeId='{}',__name__=~'interfaces:.*:bytesSent'}}".format(nodeId)
+                        }
+                        data = get_response_data(pcc.query_metric(conn, payload))
+                        trace("Interface Count API:"+str(len(data)))
+                        trace("Interface Count BE:" + str(network_check))
+
+                        if len(data)==int(network_check):
                             continue
                         else:
                           failed_chk.append(nodeId) 
@@ -322,4 +323,4 @@ class Monitor(PccBase):
             print("Could not verify the topics for Node ids: "+str())
             return "Error"
         else:
-            return "OK"                     
+            return "OK"

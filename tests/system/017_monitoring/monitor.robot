@@ -44,17 +44,7 @@ Monitor Data Availability Verify BE For Memory
                                ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
                                ...  category=["memory"]
                                     Should Be Equal As Strings      ${status}    OK  
-                                    
-##################################################################################################################################
-Monitor Verify Nodes Health
-###################################################################################################################################   
-    [Documentation]                 *Monitor Verify Nodes Health*
-                               ...  keywords:
-                               ...  PCC.Monitor Verify Node Health
-                               
-        ${status}                   PCC.Monitor Verify Node Health
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}"]
-                                    Should Be Equal As Strings      ${status}    OK  
+
                                     
 ###################################################################################################################################
 Monitor Data Availability Verify PCC for CPU
@@ -141,7 +131,7 @@ Monitor Verify Services Back End (pccagent, systemCollector, frr)
 
 ###################################################################################################################################
 Monitor Verify Interface Counts
-###################################################################################################################################                                    
+###################################################################################################################################
     [Documentation]                 *Monitor Verify Interface Counts*
                                ...  keywords:
                                ...  PCC.Monitor Verify Interface Counts
@@ -150,7 +140,7 @@ Monitor Verify Interface Counts
                                ...  nodes_ip=["${SERVER_2_HOST_IP}"]
                                ...  category=["network"]
                                ...  nodes=["${SERVER_2_NAME}"]
-                                    Should Be Equal As Strings      ${status}    OK 
+                                    Should Be Equal As Strings      ${status}    OK
 
 ####################################################################################################################################
 Monitor Verify Model And Serial Number
