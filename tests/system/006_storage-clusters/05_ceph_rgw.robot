@@ -106,9 +106,6 @@ Create Application credential profile without application For Rados
         ${response}                   PCC.Add Metadata Profile
                                       ...    Name=${CEPH_RGW_S3ACCOUNTS}
                                       ...    Type=ceph
-                                      ...    Username=profile_without_app
-                                      ...    Email=profile_without_app@gmail.com
-                                      ...    Active=True
 
                                       Log To Console    ${response}
                                       ${result}    Get Result    ${response}

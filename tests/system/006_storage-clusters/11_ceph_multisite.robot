@@ -16,6 +16,64 @@ Load Test Variable
                         Load Ceph Cluster Data Secondary  ${pcc_setup}
                         Load Server 1 Test Data    ${pcc_setup}
                         Load Server 1 Secondary Test Data    ${pcc_setup}
+                        Load Server 2 Secondary Test Data    ${pcc_setup}
+
+
+###################################################################################################################################
+Create Application credential profile without application For Rados
+###################################################################################################################################
+
+        [Documentation]               *Create Metadata Profile* test
+                                      ...  keywords:
+                                      ...  PCC.Add Metadata Profile
+
+        ${status}                     Login To PCC    ${pcc_setup}
+
+        ${response}                   PCC.Add Metadata Profile
+                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                                      ...    Type=ceph
+
+                                      Log To Console    ${response}
+                                      ${result}    Get Result    ${response}
+                                      ${status}    Get From Dictionary    ${result}    status
+                                      ${message}    Get From Dictionary    ${result}    message
+                                      Log to Console    ${message}
+                                      Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Primary - Ceph Rados Gateway Creation
+#####################################################################################################################################
+
+     [Documentation]                 *Primary - Ceph Rados Gateway Creation*
+
+        ${status}                   Login To PCC    ${pcc_setup}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+		                       ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+		                            Pass Execution If    ${rgw_id} is not ${None}    There is already a radosgw
+
+        ${response}                 PCC.Ceph Create Rgw
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=${CEPH_RGW_POOLNAME}
+                               ...  targetNodes=${CEPH_RGW_NODES}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
+                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 
 ###################################################################################################################################
@@ -46,6 +104,10 @@ Primary Started Trust Creation
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
+        ${status_code}              PCC.Ceph Download Trust File
+                               ...  id=${primary_trust_id}
+                                    Should Be Equal As Strings      ${status_code}  200
+
 ###################################################################################################################################
 Create Trust With Rgw Already Used As Primary (Negative)
 ###################################################################################################################################
@@ -65,17 +127,6 @@ Create Trust With Rgw Already Used As Primary (Negative)
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-
-
-###################################################################################################################################
-Primary Download Trust File
-###################################################################################################################################
-        [Documentation]                *Primary Download Trust File*
-
-        ${status_code}              PCC.Ceph Download Trust File
-                               ...  id=${primary_trust_id}
-
-                                    Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Create Remote Replica Using The Same PCC (Negative)
@@ -615,11 +666,6 @@ Secondary Started Trust Creation
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
-###################################################################################################################################
-Secondary Download Trust File
-###################################################################################################################################
-        [Documentation]                *Secondary Download Trust File*
-
         ${status_code}              PCC.Ceph Download Trust File
                                ...  id=${secondary_trust_id}
 
@@ -684,26 +730,12 @@ Wait Until Trust Established - Secondary
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${secondary_trust_id}
 
-###################################################################################################################################
-Secondary tear-down
-###################################################################################################################################
-
-        ${response}                 PCC.Ceph Trust Delete
-                               ...  id=${secondary_trust_id}
-
-        ${status_code}              Get Response Status Code        ${response}
-        ${message}                  Get Response Message        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${result}                   PCC.Ceph Wait Until Trust Deleted
-                               ...  id=${secondary_trust_id}
-                                    Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
-Primary Delete Trust
+Primary tear-down
 ###################################################################################################################################
 
-        ${status}                   Login To PCC   ${pcc_setup}
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${response}                 PCC.Ceph Trust Delete
                                ...  id=${primary_trust_id}
@@ -711,19 +743,450 @@ Primary Delete Trust
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-						Sleep   1m
+
+        ${result}                   PCC.Ceph Wait Until Trust Deleted
+                               ...  id=${primary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Secondary Delete Trust
+###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${response}                 PCC.Ceph Trust Delete
+                               ...  id=${secondary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+#####################################################################################################################################
+Ceph Rados Update Nodes And Certficate for LB
+#####################################################################################################################################
+     [Documentation]                *Ceph Rados Update Nodes And Certficate for LB*
+
+	    ${status}                   Login To PCC Secondary  ${pcc_setup}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${response}                 PCC.Ceph Update Rgw
+                               ...  ID=${rgw_id}
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  poolName=${CEPH_RGW_POOLNAME_SECONDARY}
+                               ...  targetNodes=["sv46","sv51"]
+                               ...  port=${CEPH_RGW_PORT_SECONDARY}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL_LB_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+#####################################################################################################################################
+Ceph Load Balancer create on Rgw with 2 nodes
+#####################################################################################################################################
+     [Documentation]                *Ceph Load Balancer create on Rgw with 2 nodes*
+
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id_secondary}    PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                               Set Suite Variable   ${rgw_id_secondary}
+
+        ${scope1_id}           PCC.Get Scope Id
+                               ...  scope_name=Default region
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb
+                               ...  scopeIds=[${scope1_id}]
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id_secondary}"}]
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               Log to Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
+        ${response}            PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_2_NAME_SECONDARY}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                               Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+###################################################################################################################################
+Secondary Started Trust Creation (LB)
+###################################################################################################################################
+        [Documentation]                *Secondary Started Trust Creation with LB*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${secondary_cluster_id}     PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${rgw_id_secondary}         PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+			                        Set Suite Variable   ${rgw_id_secondary}
+
+		${response}	                PCC.Ceph Secondary Start Trust
+			                   ...  clusterID=${secondary_cluster_id}
+
+        ${result}                   Get Result    ${response}
+        ${data}                     Get From Dictionary     ${result}   Data
+        ${secondary_trust_id}       Get From Dictionary     ${data}     id
+                                    Set Suite Variable   ${secondary_trust_id}
+                                    Log To Console      ${secondary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status_code}              PCC.Ceph Download Trust File
+                               ...  id=${secondary_trust_id}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Primary End Trust Creation (LB)
+###################################################################################################################################
+        [Documentation]                *Primary End Trust Creation (LB)*
+
+        ${status}                   Login To PCC    ${pcc_setup}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+		${response}	                PCC.Ceph Primary End Trust
+			                   ...  masterAppID=${rgw_id}
+			                   ...  id=${secondary_trust_id}
+
+        ${result}                   Get Result    ${response}
+        ${data}                     Get From Dictionary     ${result}   Data
+        ${primary_trust_id}         Get From Dictionary     ${data}     id
+                                    Set Suite Variable   ${primary_trust_id}
+                                    Log To Console      ${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Primary Edit Trust (LB)
+###################################################################################################################################
+        [Documentation]                *Primary Edit Trust (LB)*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+		${response}	                PCC.Ceph Edit Trust
+			                   ...  id=${primary_trust_id}
+			                   ...  slaveAppID=${rgw_id_secondary}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${result}                   PCC.Ceph Wait Until Trust Established
+                               ...  id=${primary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Wait Until Trust Established - Secondary (LB)
+###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary  ${pcc_setup}
+
+        ${result}                   PCC.Ceph Wait Until Trust Established
+                               ...  id=${secondary_trust_id}
+
+
+###################################################################################################################################
+Create Primary Rgw Configuration File (LB)
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File (LB)*
+
+        ${status}                          Login To PCC    ${pcc_setup}
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=0.0.0.0
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Create Rgw Bucket - Primary (LB)
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Bucket (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw Make Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+List Rgw Bucket - Primary (LB)
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw List Buckets
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+ADD File - Primary (LB)
+###################################################################################################################################
+    [Documentation]                        *ADD File - Primary (LB)*
+
+        ${status}                          PCC.Ceph Rgw Upload File To Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                           Should Be Equal As Strings      ${status}    OK
+
+                                           Sleep  1m
+
+###################################################################################################################################
+Wait Until Secondary Replica Status: Caught up (LB)
+###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary    ${pcc_setup}
+
+
+        ${result}                   PCC.Ceph Wait Until Replica Status Caught Up
+                               ...  id=${secondary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Create Secondary Rgw Configuration File (LB)
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File (LB)*
+
+        ${status}                          Login To PCC    ${pcc_setup}
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=${SERVER_2_HOST_IP_SECONDARY}
+                                      ...  port=9898
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+List Rgw Bucket - Secondary (LB)
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw List Buckets
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+###################################################################################################################################
+List Rgw Objects inside Bucket - Secondary (LB)
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw List Objects inside Buckets
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Create Primary Rgw Configuration File (LB)
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+				                           Set Suite Variable   ${accessKey}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+				                           Set Suite Variable   ${secretKey}
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  targetNodeIp=0.0.0.0
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Delete A File From Rgw Bucket - Primary (LB)
+####################################################################################################################################
+    [Documentation]                        *Delete a file from Rgw Bucket (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw Delete File From Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Delete Rgw Bucket - Primary (LB)
+###################################################################################################################################
+      [Documentation]                      *Delete Rgw Bucket (LB)*
+
+        ${status}                          PCC.Ceph Get Pcc Status
+                                      ...  name=${CEPH_CLUSTER_NAME}
+                                           Should Be Equal As Strings      ${status}    OK
+
+        ${status}                          PCC.Ceph Rgw Delete Bucket
+                                      ...  pcc=${SERVER_1_HOST_IP}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Primary tear-down (LB)
+###################################################################################################################################
+
+        ${status}                   Login To PCC    ${pcc_setup}
+
+        ${response}                 PCC.Ceph Trust Delete
+                               ...  id=${primary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${result}                   PCC.Ceph Wait Until Trust Deleted
+                               ...  id=${primary_trust_id}
+                                    Should Be Equal As Strings      ${result}  OK
+
+###################################################################################################################################
+Secondary Delete Trust (LB)
+###################################################################################################################################
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${response}                 PCC.Ceph Trust Delete
+                               ...  id=${secondary_trust_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
+Removing Ceph Load balancer
+###################################################################################################################################
+    [Documentation]                 *Removing Ceph Load balancer*
+
+        ${response}                 PCC.Delete and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_2_NAME_SECONDARY}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_2_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
 #####################################################################################################################################
 Delete Primary Ceph Rados Gateway Delete
 #####################################################################################################################################
-       
+
     [Documentation]                 *Ceph Rados Gateway Delete*
+
+        ${status}                   Login To PCC    ${pcc_setup}
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...    name=${CEPH_RGW_NAME}
+                               ...  name=${CEPH_RGW_NAME}
 		                       ...  ceph_cluster_name=ceph-pvt
 		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
 
@@ -745,20 +1208,19 @@ Delete Primary Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${backend_status}    OK
 				                    Sleep    1 minutes
 ####################################################################################################################################
-
 Delete Seondary Ceph Rados Gateway
 #####################################################################################################################################
 
     [Documentation]                 *Ceph Rados Gateway Delete*
 
-	  ${status}                   Login To PCC Secondary  ${pcc_setup}
+	    ${status}                   Login To PCC Secondary  ${pcc_setup}
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...    name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
 		                       ...  ceph_cluster_name=ceph-pvt
 		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
 
@@ -779,4 +1241,3 @@ Delete Seondary Ceph Rados Gateway
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 				                    Sleep    1 minutes
-####################################################################################################################################

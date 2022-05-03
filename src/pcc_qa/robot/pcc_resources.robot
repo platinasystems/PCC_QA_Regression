@@ -44,6 +44,8 @@ Library                         pcc_qa.pcc.Users
 Library				            pcc_qa.pcc.Gmail
 Library                         pcc_qa.pcc.Roles
 Library                         pcc_qa.pcc.Pcc
+Library                         pcc_qa.pcc.Notifications
+Library                         pcc_qa.pcc.Tags
 Library                         Collections
 
 
@@ -1523,6 +1525,12 @@ Load Ceph Rgw Data Secondary
 
         ${CEPH_RGW_CERT_URL_SECONDARY}        Evaluate    $CEPH_RGW_SECONDARY.get("certificateUrl", None)
                                      Set Suite Variable    ${CEPH_RGW_CERT_URL_SECONDARY}
+
+        ${CEPH_RGW_CERT_NAME_LB_SECONDARY}     Evaluate    $CEPH_RGW_SECONDARY.get("certificateNameLB", None)
+                                     Set Suite Variable    ${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+
+        ${CEPH_RGW_CERT_URL_LB_SECONDARY}       Evaluate    $CEPH_RGW_SECONDARY.get("certificateUrlLB", None)
+                                     Set Suite Variable    ${CEPH_RGW_CERT_URL_LB_SECONDARY}
 
         ${CEPH_RGW_S3ACCOUNTS_SECONDARY}       Evaluate    $CEPH_RGW_SECONDARY.get("S3Accounts", None)
                                      Set Suite Variable    ${CEPH_RGW_S3ACCOUNTS_SECONDARY}

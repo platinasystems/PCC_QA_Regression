@@ -249,7 +249,7 @@
             "targetNodes":["consul-01"],
             "port":443,
             "certificateName":"rgw-crt",
-            "certificateUrl": "rgw.platinasystems.com",
+            "certificateUrl":"rgw.platinasystems.com",
             "S3Accounts":"rgw-app",
             "name-ec":"rados-pvt-ec",
             "poolName-ec":"rgw-pool-ec",
@@ -350,7 +350,9 @@
             "S3Accounts":"rgw-app",
             "name-ec":"rados-pvt-secondary-ec",
             "poolName-ec":"rgw-pool-ec",
-            "targetNodes-ec":["sv50"]
+            "targetNodes-ec":["sv50"],
+            "certificateNameLB": "lb-rgw-crt",
+            "certificateUrlLB":"rgw-test1.com"
         }
     },
 

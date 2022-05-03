@@ -11,6 +11,7 @@ ${pcc_setup}    pcc_212
 Login to PCC
 ###################################################################################################################################
                         Load Ceph Rgw Data    ${pcc_setup}
+                        Load Ceph Rgw Data Secondary    ${pcc_setup}
                         Load Clusterhead 1 Test Data    ${pcc_setup}
                         Load Clusterhead 2 Test Data    ${pcc_setup}
                         Load Server 1 Test Data     ${pcc_setup}
@@ -41,6 +42,27 @@ Ceph Certificate For Rgws
         ${status}                    Get From Dictionary    ${result}    statusCodeValue
                                      Should Be Equal As Strings    ${status}    200
 
+##################################################################################################################################
+Ceph Certificate For Rgws (LOAD BALANCER)
+###################################################################################################################################
+
+        [Documentation]              *Ceph Ceph Certificate For Rgws (LOAD BALANCER)*
+        #[Tags]    This
+        ${cert_id}                   PCC.Get Certificate Id
+                                ...  Alias=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there
+
+        ${response}                  PCC.Add Certificate
+                                ...  Alias=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                                ...  Description=certificate-for-rgw-lb
+                                ...  Private_key=domain-lb.key
+                                ...  Certificate_upload=domain-lb.crt
+
+                                     Log To Console    ${response}
+        ${result}                    Get Result    ${response}
+        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+                                     Should Be Equal As Strings    ${status}    200
+
 ###################################################################################################################################
 Create a trusted ca policy
 ###################################################################################################################################
@@ -52,6 +74,10 @@ Create a trusted ca policy
         ${cert_id}       PCC.Get Certificate Id
                          ...  Alias=${CEPH_RGW_CERT_NAME}
                          Log To Console    ${cert_id}
+
+        ${cert_lb_id}    PCC.Get Certificate Id
+                         ...  Alias=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                         Log To Console    ${cert_lb_id}
 
         ${app_id}        PCC.Get App Id from Policies
                          ...  Name=TRUSTED-CA-CERTIFICATE
@@ -75,7 +101,7 @@ Create a trusted ca policy
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=trust-ca-policy
-                       ...  inputs=[{"name": "ca_certificate_list","value": "${cert_id}"}]
+                       ...  inputs=[{"name": "ca_certificate_list","value": "${cert_id},${cert_lb_id}"}]
                        ...  scopeIds=[${scope2_id}]
 
                        Log To Console    ${response}
@@ -190,6 +216,28 @@ Ceph Certificate For Rgws Secondary
         ${status}                    Get From Dictionary    ${result}    statusCodeValue
                                      Should Be Equal As Strings    ${status}    200
 
+
+##################################################################################################################################
+Ceph Certificate For Rgws (LOAD BALANCER)
+###################################################################################################################################
+
+        [Documentation]              *Ceph Ceph Certificate For Rgws (LOAD BALANCER)*
+        #[Tags]    This
+        ${cert_id}                   PCC.Get Certificate Id
+                                ...  Alias=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                                     Pass Execution If    ${cert_id} is not ${None}    Certificate is already there
+
+        ${response}                  PCC.Add Certificate
+                                ...  Alias=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                                ...  Description=certificate-for-rgw-lb
+                                ...  Private_key=domain-lb.key
+                                ...  Certificate_upload=domain-lb.crt
+
+                                     Log To Console    ${response}
+        ${result}                    Get Result    ${response}
+        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+                                     Should Be Equal As Strings    ${status}    200
+
 ###################################################################################################################################
 Create a trusted ca policy secondary
 ###################################################################################################################################
@@ -201,6 +249,10 @@ Create a trusted ca policy secondary
         ${cert_id}       PCC.Get Certificate Id
                          ...  Alias=${CEPH_RGW_CERT_NAME_SECONDARY}
                          Log To Console    ${cert_id}
+
+        ${cert_lb_id}    PCC.Get Certificate Id
+                         ...  Alias=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                         Log To Console    ${cert_lb_id}
 
         ${app_id}        PCC.Get App Id from Policies
                          ...  Name=TRUSTED-CA-CERTIFICATE
@@ -224,7 +276,7 @@ Create a trusted ca policy secondary
         ${response}    PCC.Create Policy
                        ...  appId=${app_id}
                        ...  description=trust-ca-policy
-                       ...  inputs=[{"name": "ca_certificate_list","value": "${cert_id}"}]
+                       ...  inputs=[{"name": "ca_certificate_list","value": "${cert_id},${cert_lb_id}"}]
                        ...  scopeIds=[${scope2_id}]
 
                        Log To Console    ${response}

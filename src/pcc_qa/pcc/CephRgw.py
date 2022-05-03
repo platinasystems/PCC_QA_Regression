@@ -45,6 +45,7 @@ class CephRgw(PccBase):
         self.service_ip="no"
         self.password="cals0ft"
         self.fileName="rgwFile"
+        self.bucketName="testbucket"
         self.control_cidr=None
         self.data_cidr=None
         self.ceph_cluster_name = None
@@ -455,7 +456,7 @@ class CephRgw(PccBase):
         banner("PCC.Ceph Rgw Make Bucket")
         self._load_kwargs(kwargs)
         
-        cmd='sudo s3cmd mb s3://testbucket -c /home/pcc/.s3cfg'
+        cmd='sudo s3cmd mb s3://{} -c /home/pcc/.s3cfg'.format(self.bucketName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("created",str(data)):
@@ -474,7 +475,7 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)       
         cmd='sudo dd if=/dev/zero of={} bs=10MiB count=1'.format(self.fileName)
         file_create=cli_run(self.pcc,self.user,self.password,cmd)
-        cmd='sudo s3cmd put {} s3://testbucket/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.fileName)
+        cmd='sudo s3cmd put {} s3://{}/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.bucketName,self.fileName)
         print("Command:"+str(cmd))
         trace("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      

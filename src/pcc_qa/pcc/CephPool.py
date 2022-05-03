@@ -42,6 +42,7 @@ class CephPool(PccBase):
         self.data_pool_name= None
         self.cache_pool_name= None
         self.resilienceScheme= None
+        self.filename=""
 
         super().__init__()
 
@@ -525,3 +526,39 @@ class CephPool(PccBase):
         else:
             return "Validation failed for datapool- {} and cache_pool- {}".format(self.data_pool_name,self.cache_pool_name)
 
+
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Pool Add File By Size")
+    ###########################################################################
+    def add_file_to_pool_by_size(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Pool Add File By Size")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        file_name = self.size + "_file"
+        cmd = "fallocate -l {} {}".format(self.size, file_name)
+        out = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+        cmd = "sudo rados -p {} put {} {}".format(self.name, file_name, file_name)
+        out = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+        cmd = "rm {}".format(file_name)
+        out = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+        return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Pool Delete File By Name")
+    ###########################################################################
+    def delete_file_from_pool(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Pool Delete File By Name")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cmd = "sudo rados -p {} rm {}".format(self.name, self.filename)
+        out = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+        return "OK"

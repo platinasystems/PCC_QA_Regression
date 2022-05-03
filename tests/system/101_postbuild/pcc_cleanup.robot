@@ -299,7 +299,6 @@ Network Manager Delete
         ${status}                   PCC.Network Manager Delete All
                                     Should be equal as strings    ${status}    OK
 
-                                    sleep  5m
 
 ###################################################################################################################################
 Delete Multiple Subnet
@@ -435,6 +434,18 @@ Delete All Tenants
 
                        Log To Console    ${status}
                        Should Be Equal As Strings    ${status}    OK    Not Deleted
+
+###################################################################################################################################
+Delete All Tags
+###################################################################################################################################
+
+        [Documentation]    *Delete All Tags*
+
+
+
+        ${response}     PCC.Delete All Tag
+
+                        Should Be Equal As Strings    ${response}    OK
 
 ###################################################################################################################################
 Policy driven management cleanup
