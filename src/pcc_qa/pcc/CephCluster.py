@@ -495,7 +495,7 @@ class CephCluster(PccBase):
             cmd_exec=cli_run(host_ip,self.user,self.password,cmd)
             print("cmd:"+str(cmd))
             print("cmd output:"+str(cmd_exec))    
-            time.sleep(10)            
+            time.sleep(60)
             cmd_verify="sudo ceph osd tree|grep osd.{} |grep up|wc -l".format(data['osd'])
             cmd_verify_exec= cli_run(host_ip,self.user,self.password, cmd_verify)
             serialise_output=self._serialize_response(time.time(), cmd_verify_exec )['Result']['stdout']

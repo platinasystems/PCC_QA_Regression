@@ -152,68 +152,10 @@ Alert Delete Raw Rule
         ${status}                   PCC.Alert Delete All Rule
                                     Should Be Equal As Strings      ${status}  OK
 
-
 ###################################################################################################################################
-Alert osd down/out
+Check Deactivate High Pool Usage Alert
 ###################################################################################################################################
-    [Documentation]                 *Alert osd down/out*
-
-       ${alert_id}                 PCC.Alert Get Rule Id
-                               ...  name=osds down/out
-
-       ${response}                 PCC.Alert Edit Rule Notifications
-                               ...  id=${alert_id}
-                               ...  mail=${TENANT_USER_PCC_USERNAME}
-
-       ${status_code}              Get Response Status Code        ${response}
-       ${message}                  Get Response Message        ${response}
-                                   Should Be Equal As Strings      ${status_code}  200
-
-       ${response}                  PCC.Ceph Make Osds Down
-                               ...  name=${CEPH_CLUSTER_NAME}
-                               ...  limit=1
-                                    Should Be Equal As Strings      ${response}  OK
-
-                                    sleep  10m
-
-       ${response}                  PCC.Find Notification
-                               ...  type=alert
-                               ...  message=osds down/out. Status:firing
-                                    Should Be Equal As Strings      ${response}  OK
-
-       ${mail}                       PCC.Get Body From Last Mail
-                               ...   Email=${TENANT_USER_PCC_USERNAME}
-
-       ${result}                     PCC.Find Alert Mail
-                               ...   mail=${mail}
-                               ...   info=["osds down/out", "firing"]
-                                     Should Be Equal As Strings      ${result}  OK
-
-       ${response}                   PCC.Ceph Make Osds Up
-                               ...   name=${CEPH_CLUSTER_NAME}
-                                     Should Be Equal As Strings      ${response}  OK
-
-                                     sleep  5m
-
-       ${response}                  PCC.Find Notification
-                               ...  type=alert
-                               ...  message=osds down/out. Status:resolved
-                                    Should Be Equal As Strings      ${response}  OK
-
-       ${mail}                       PCC.Get Body From Last Mail
-                               ...   Email=${TENANT_USER_PCC_USERNAME}
-
-       ${result}                     PCC.Find Alert Mail
-                               ...   mail=${mail}
-                               ...   info=["osds down/out", "resolved"]
-                                     Should Be Equal As Strings      ${result}  OK
-
-
-###################################################################################################################################
-Alert High Pool Usage 80% Firing
-###################################################################################################################################
-    [Documentation]                 *Alert High Pool Usage Firing*
-
+    [Documentation]                 *Deactivate High Pool Usage Alert *
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -244,9 +186,9 @@ Alert High Pool Usage 80% Firing
        ${alert_id}                 PCC.Alert Get Rule Id
                                ...  name=ceph pools high usage
 
-       ${response}                 PCC.Alert Edit Rule Notifications
+       ${response}                 PCC.Alert Set Disabled Flag
                                ...  id=${alert_id}
-                               ...  mail=${TENANT_USER_PCC_USERNAME}
+                               ...  disabled=${True}
 
        ${status_code}              Get Response Status Code        ${response}
        ${message}                  Get Response Message        ${response}
@@ -258,6 +200,38 @@ Alert High Pool Usage 80% Firing
                                ...  hostip=${SERVER_1_HOST_IP}
                                     Should Be Equal As Strings      ${result}  OK
                                     sleep  5m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=pool usage 80%. Status:firing
+                                    Should Be Equal As Strings      ${response}  Not Found
+
+###################################################################################################################################
+Alert High Pool Usage 80% Firing
+###################################################################################################################################
+    [Documentation]                 *Alert High Pool Usage Firing*
+
+
+       ${alert_id}                 PCC.Alert Get Rule Id
+                               ...  name=ceph pools high usage
+
+       ${response}                 PCC.Alert Set Disabled Flag
+                               ...  id=${alert_id}
+                               ...  disabled=${False}
+
+       ${status_code}              Get Response Status Code        ${response}
+       ${message}                  Get Response Message        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
+
+       ${response}                 PCC.Alert Edit Rule Notifications
+                               ...  id=${alert_id}
+                               ...  mail=${TENANT_USER_PCC_USERNAME}
+
+       ${status_code}              Get Response Status Code        ${response}
+       ${message}                  Get Response Message        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
+
+                                    sleep  11m
 
        ${response}                  PCC.Find Notification
                                ...  type=alert
@@ -381,4 +355,60 @@ Alert High Pool Usage 90% Resolved
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
                                ...   info=["pool usage 90%", "resolved"]
+                                     Should Be Equal As Strings      ${result}  OK
+
+
+###################################################################################################################################
+Alert osd down/out
+###################################################################################################################################
+    [Documentation]                 *Alert osd down/out*
+
+       ${alert_id}                 PCC.Alert Get Rule Id
+                               ...  name=osds down/out
+
+       ${response}                 PCC.Alert Edit Rule Notifications
+                               ...  id=${alert_id}
+                               ...  mail=${TENANT_USER_PCC_USERNAME}
+
+       ${status_code}              Get Response Status Code        ${response}
+       ${message}                  Get Response Message        ${response}
+                                   Should Be Equal As Strings      ${status_code}  200
+
+       ${response}                  PCC.Ceph Make Osds Down
+                               ...  name=${CEPH_CLUSTER_NAME}
+                               ...  limit=1
+                                    Should Be Equal As Strings      ${response}  OK
+
+                                    sleep  10m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=osds down/out. Status:firing
+                                    Should Be Equal As Strings      ${response}  OK
+
+       ${mail}                       PCC.Get Body From Last Mail
+                               ...   Email=${TENANT_USER_PCC_USERNAME}
+
+       ${result}                     PCC.Find Alert Mail
+                               ...   mail=${mail}
+                               ...   info=["osds down/out", "firing"]
+                                     Should Be Equal As Strings      ${result}  OK
+
+       ${response}                   PCC.Ceph Make Osds Up
+                               ...   name=${CEPH_CLUSTER_NAME}
+                                     Should Be Equal As Strings      ${response}  OK
+
+                                     sleep  5m
+
+       ${response}                  PCC.Find Notification
+                               ...  type=alert
+                               ...  message=osds down/out. Status:resolved
+                                    Should Be Equal As Strings      ${response}  OK
+
+       ${mail}                       PCC.Get Body From Last Mail
+                               ...   Email=${TENANT_USER_PCC_USERNAME}
+
+       ${result}                     PCC.Find Alert Mail
+                               ...   mail=${mail}
+                               ...   info=["osds down/out", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK

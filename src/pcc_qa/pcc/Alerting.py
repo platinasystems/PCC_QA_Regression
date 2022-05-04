@@ -43,7 +43,8 @@ class Alerting(PccBase):
         self.filename=None
         self.mail=""
         self.cc=""
-        self.info=[]
+        self.info=[],
+        self.disabled = False
 
         super().__init__()
 
@@ -331,6 +332,26 @@ class Alerting(PccBase):
         print("Payload:-" + str(payload))
         return pcc.modify_alert_rule(conn, payload, self.id)
 
+    ###########################################################################
+    @keyword(name="PCC.Alert Set Disabled Flag")
+    ###########################################################################
+    def alert_set_disabled(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Alert Set Disabled Flag")
+
+        print("kwargs:-" + str(kwargs))
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        payload = {
+            "disabled": self.disabled
+        }
+        print("Payload:-" + str(payload))
+        return pcc.modify_alert_rule(conn, payload, self.id)
+
 
     ###########################################################################
     @keyword(name="PCC.Find Alert Mail")
@@ -343,8 +364,8 @@ class Alerting(PccBase):
         if self.mail:
             for v in self.info:
                 if v not in self.mail:
-                    return "NOT FOUND"
+                    return "Not Found"
             return "OK"
-        return "NOT FOUND"
+        return "Not Found"
 
 

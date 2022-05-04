@@ -29,4 +29,4 @@ class Notifications(PccBase):
         for n in notifications["Result"]["Data"]:
             if n["type"] == self.type and self.message in n["message"]:
                 return "OK"
-        return "NOT FOUND"
+        return "Not Found"
