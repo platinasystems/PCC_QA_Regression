@@ -241,7 +241,7 @@ Update K8 cluster with pools
         ${response}                 PCC.K8s Upgrade Cluster
                                ...  cluster_id=${cluster_id}
                                ...  k8sVersion=${K8S_VERSION}
-                               ...  pools=['fs-2','pool-pvt','pool2', 'pool3']
+                               ...  pools=['pool1','pool2','pool3','pool4']
 
         ${status_code}              Get Response Status Code        ${response}
                                     Log To Console      ${response}
@@ -267,7 +267,7 @@ Get Storage Classes
 
         @{strgclass_id}             PCC.K8s Get Storage Class Ids
                                ...  cluster_id=${cluster_id}
-                               ...  pools=['fs-2','pool-pvt','pool2', 'pool3']
+                               ...  pools=['pool1','pool2','pool3','pool4']
 
                                     Log To Console      ${strgclass_id}
         ${length}                   Get Length     ${strgclass_id}
@@ -290,7 +290,7 @@ Delete Storage Classes
 
         @{strgclass_id}             PCC.K8s Get Storage Class Ids
                                ...  cluster_id=${cluster_id}
-                               ...  pools=['pool3', 'pool-pvt','fs-2', 'pool2']
+                               ...  pools=['pool1','pool2','pool3','pool4']
 
                                     #Should Not Be Empty     ${strgclass_id}  msg=No Storage Class to delete
 
