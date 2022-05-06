@@ -11,7 +11,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json, midtext
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -188,7 +188,9 @@ class CephCluster(PccBase):
         except Exception as e:
             raise e
         print("Payoad:"+str(payload))
-        return pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload)
+        response = pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
+        code = get_response_data(response)["code"]
+        return pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "?code=" + code)
 
     ###########################################################################
     @keyword(name="PCC.Ceph Wait Until Cluster Ready")
@@ -341,20 +343,25 @@ class CephCluster(PccBase):
             print("Response To Look :-"+str(data))
             print("Ceph Cluster {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
-            del_response=pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload)
-            if del_response['Result']['status']==200:
-                del_check=self.wait_until_cluster_deleted()
-                if del_check=="OK":
-                    print("Ceph Cluster {} is deleted sucessfully".format(data['name']))
-                    return "OK"
+            response=pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
+            status_code = get_status_code(response)
+            if status_code == 202:
+                code = get_response_data(response)["code"]
+                del_response = pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "?code=" + code)
+                if del_response['Result']['status'] == 200:
+                    del_check=self.wait_until_cluster_deleted()
+                    if del_check == "OK":
+                        print("Ceph Cluster {} is deleted sucessfully".format(data['name']))
+                        return "OK"
+                    else:
+                        print("Ceph Cluster {} unable to delete".format(data['name']))
+                        return "Error"
                 else:
-                    print("Ceph Cluster {} unable to delete".format(data['name']))
+                    print("Delete Response:"+str(del_response))
+                    print("Issue: Not getting 200 response back")
                     return "Error"
             else:
-                print("Delete Response:"+str(del_response))
-                print("Issue: Not getting 200 response back")
                 return "Error"
-
         return "OK"
 
     ###########################################################################

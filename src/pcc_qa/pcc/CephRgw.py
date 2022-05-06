@@ -11,7 +11,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -207,7 +207,9 @@ class CephRgw(PccBase):
         
         self.ID = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
 
-        return pcc.delete_ceph_rgw_by_id(conn, str(self.ID))
+        response = pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "")
+        code = get_response_data(response)["code"]
+        return pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "?code=" + code)
 
     ###########################################################################
     @keyword(name="PCC.Ceph Wait Until Rgw Ready")
@@ -292,7 +294,7 @@ class CephRgw(PccBase):
         except Exception as e:
             raise e
         ceph_cluster_id = str(easy.get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
-        if ceph_cluster_id=="None":
+        if ceph_cluster_id == "None":
             return "OK"
         response = pcc.get_ceph_rgws(conn, ceph_cluster_id)
         print("Rgw Response:"+str(response))
@@ -304,20 +306,25 @@ class CephRgw(PccBase):
             print("Rados Gateway {} and id {} is deleting....".format(data['name'],data['ID']))
             self.ID=data['ID']
             self.name=data['name']
-            del_response=pcc.delete_ceph_rgw_by_id(conn, str(self.ID))
-            if del_response['Result']['status']==200:
-                del_check=self.wait_until_rados_deleted()
-                if del_check=="OK":
-                    print("Rados Gateway {} is deleted sucessfully".format(data['name']))
-                    return "OK"
+            del_response = pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "")
+            status_code = get_status_code(del_response)
+            code = get_response_data(del_response)["code"]
+            if status_code == 202:
+                del_response = pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "?code=" + code)
+                if del_response['Result']['status'] == 200:
+                    del_check=self.wait_until_rados_deleted()
+                    if del_check == "OK":
+                        print("Rados Gateway {} is deleted sucessfully".format(data['name']))
+                        return "OK"
+                    else:
+                        print("Rados Gateway {} unable to delete".format(data['name']))
+                        return "Error"
                 else:
-                    print("Rados Gateway {} unable to delete".format(data['name']))
+                    print("Delete Response:"+str(del_response))
+                    print("Issue: Not getting 200 response back")
                     return "Error"
             else:
-                print("Delete Response:"+str(del_response))
-                print("Issue: Not getting 200 response back")
                 return "Error"
-
         return "OK"
 
     ###########################################################################

@@ -10,7 +10,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -151,7 +151,9 @@ class CephFs(PccBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-        return pcc.delete_ceph_fs_by_id(conn,str(self.id))
+        response = pcc.delete_ceph_fs_by_id(conn, str(self.id), "")
+        code = get_response_data(response)["code"]
+        return pcc.delete_ceph_fs_by_id(conn, str(self.id), "?code=" + code)
 
 
     ###########################################################################
@@ -259,20 +261,26 @@ class CephFs(PccBase):
             if data["managed"] == True:
                 print("Response To Look :-"+str(data))
                 print("Ceph Fs {} and id {} is deleting....".format(data['name'],data['id']))
-                self.id=data['id']
-                del_response=pcc.delete_ceph_fs_by_id(conn, str(self.id))
-                if del_response['Result']['status']==200:
-                    del_check=self.wait_until_fs_deleted()
-                    if del_check=="OK":
-                        print("Ceph Fs {} is deleted sucessfully".format(data['name']))
-                        return "OK"
+                self.id = data['id']
+                response = pcc.delete_ceph_fs_by_id(conn, str(self.id), "")
+                status_code = get_status_code(response)
+                if status_code == 202:
+                    code = get_response_data(response)["code"]
+                    del_response = pcc.delete_ceph_fs_by_id(conn, str(self.id), "?code="+code)
+                    if del_response['Result']['status'] == 200:
+                        del_check = self.wait_until_fs_deleted()
+                        if del_check=="OK":
+                            print("Ceph Fs {} is deleted sucessfully".format(data['name']))
+                            return "OK"
+                        else:
+                            print("Ceph Fs {} unable to delete".format(data['name']))
+                            return "Error"
                     else:
-                        print("Ceph Fs {} unable to delete".format(data['name']))
+                        print("Delete Response:"+str(del_response))
+                        print("Issue: Not getting 200 response back")
                         return "Error"
                 else:
-                    print("Delete Response:"+str(del_response))
-                    print("Issue: Not getting 200 response back")
-                    return "Error"     
+                    return "Error"
         return "OK"
         
     ###############################################################################################################

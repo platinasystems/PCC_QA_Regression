@@ -11,7 +11,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -89,12 +89,15 @@ class CephRbd(PccBase):
 
         response = pcc.get_ceph_rbds(conn)
         for data in get_response_data(response):
-            if data["managed"] == True:
-                response=self.delete_ceph_rbd_by_id(id=data['id'])
-                status=self.wait_until_rbd_deleted(id=data['id'])
-                if status!="OK":
-                    print("{} deletion failed".format(data['name']))
-                    return "Error"
+            if data["managed"]:
+                response = self.delete_ceph_rbd_by_id(id=data['id'])
+                if get_status_code(response) == 200:
+                    status = self.wait_until_rbd_deleted(id=data['id'])
+                    if status != "OK":
+                        print("{} deletion failed".format(data['name']))
+                        return "Error"
+                else:
+                    "Error"
         return "OK"
 
     ###########################################################################
@@ -203,7 +206,9 @@ class CephRbd(PccBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-        return pcc.delete_ceph_rbd_by_id(conn,str(self.id))
+        response = pcc.delete_ceph_rbd_by_id(conn, str(self.id), "")
+        code = get_response_data(response)["code"]
+        return pcc.delete_ceph_rbd_by_id(conn, str(self.id), "?code=" + code)
 
 
     ###########################################################################

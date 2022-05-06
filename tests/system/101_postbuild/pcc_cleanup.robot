@@ -259,24 +259,24 @@ Ceph Cluster Force Delete (if cluster not deleted)
                                ...  PCC.Ceph Force Delete All Cluster
         [Tags]    Force_delete
 	${ceph_cluster_id}    PCC.Ceph Get Cluster Id
-			      ...    name=ceph-pvt
-			      Log To Console    ${ceph_cluster_id}
-			      Pass Execution If    ${ceph_cluster_id} is ${None}    ${ceph_cluster_id} ceph cluster already present     
-	
+                          ...    name=ceph-pvt
+                          Log To Console    ${ceph_cluster_id}
+                          Pass Execution If    ${ceph_cluster_id} is ${None}    ${ceph_cluster_id} ceph cluster already present
+
 	${response}    PCC.Ceph Delete Cluster
-		       ...    forceRemove=True
-		       ...    id=${ceph_cluster_id}
-		       Log To Console    ${response}
-		       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
+                   ...    forceRemove=True
+                   ...    id=${ceph_cluster_id}
+                   Log To Console    ${response}
+                   ${result}    Get Result    ${response}
+                   ${status}    Get From Dictionary    ${result}    status
+                   ${message}    Get From Dictionary    ${result}    message
+                   Log to Console    ${message}
+                   Should Be Equal As Strings    ${status}    200
 
 	${cluster_deletion_wait_status}    PCC.Ceph Wait Until Cluster Deleted
-					   ...    id=${ceph_cluster_id}
-					   Log To Console    ${cluster_deletion_wait_status}
-					   Should be equal as strings    ${cluster_deletion_wait_status}    OK	
+                                       ...    id=${ceph_cluster_id}
+                                       Log To Console    ${cluster_deletion_wait_status}
+                                       Should be equal as strings    ${cluster_deletion_wait_status}    OK
 
 ####################################################################################################################################
 #BE Ceph Cleanup
@@ -395,7 +395,7 @@ Delete All Profiles
         ${response}    PCC.Delete All Profiles
 
                        Log To Console    ${response}
-                       
+
 ###################################################################################################################################
 PCC-Users Deletion
 ###################################################################################################################################

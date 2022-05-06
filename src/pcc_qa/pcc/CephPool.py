@@ -11,7 +11,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print, convert
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -92,11 +92,20 @@ class CephPool(PccBase):
 
         response = pcc.get_ceph_pools(conn)
         for data in get_response_data(response):
-            if data['managed'] == True:
-                response=pcc.delete_ceph_pool_by_id(conn,str(data['id']))
-                status=self.wait_until_pool_deleted(id=data['id'])
-                if status!="OK":
-                    print("{} deletion failed".format(data['name']))
+            if data['managed']:
+                response=pcc.delete_ceph_pool_by_id(conn,str(data['id']),"")
+                status_code = get_status_code(response)
+                code = get_response_data(response)["code"]
+                if status_code == 202:
+                    response = pcc.delete_ceph_pool_by_id(conn, str(data['id']), "?code="+code)
+                    if response['Result']['status'] == 200:
+                        status=self.wait_until_pool_deleted(id=data['id'])
+                        if status!="OK":
+                            print("{} deletion failed".format(data['name']))
+                            return "Error"
+                    else:
+                        return "Error"
+                else:
                     return "Error"
         return "OK"
 
@@ -251,7 +260,12 @@ class CephPool(PccBase):
 
         except Exception as e:
             raise e
-        return pcc.delete_ceph_pool_by_id(conn,str(self.id))
+
+        response = pcc.delete_ceph_pool_by_id(conn, str(self.id), "")
+        code = get_response_data(response)["code"]
+        return pcc.delete_ceph_pool_by_id(conn, str(self.id), "?code=" + code)
+
+
 
 
     ###########################################################################
