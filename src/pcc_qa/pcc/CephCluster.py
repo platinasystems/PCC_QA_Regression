@@ -189,8 +189,11 @@ class CephCluster(PccBase):
             raise e
         print("Payoad:"+str(payload))
         response = pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
-        code = get_response_data(response)["code"]
-        return pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "?code=" + code)
+        status_code = get_status_code(response)
+        if status_code == 202:
+            code = get_response_data(response)["code"]
+            return pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "?code=" + code)
+        return response
 
     ###########################################################################
     @keyword(name="PCC.Ceph Wait Until Cluster Ready")
