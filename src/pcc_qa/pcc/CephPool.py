@@ -262,9 +262,11 @@ class CephPool(PccBase):
             raise e
 
         response = pcc.delete_ceph_pool_by_id(conn, str(self.id), "")
-        code = get_response_data(response)["code"]
-        return pcc.delete_ceph_pool_by_id(conn, str(self.id), "?code=" + code)
-
+        status_code = get_status_code(response)
+        if status_code == 202:
+            code = get_response_data(response)["code"]
+            return pcc.delete_ceph_pool_by_id(conn, str(self.id), "?code=" + code)
+        return response
 
 
 
