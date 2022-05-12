@@ -297,6 +297,18 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+###################################################################################################################################
+Check Pool Used By RGW
+###################################################################################################################################
+    [Documentation]                 *Check Pool Used By RGW*
+
+    ${response}                     PCC.Ceph Pool Check Used By
+                               ...  name=${CEPH_RGW_POOLNAME}
+                               ...  used_by_type=rgw
+                               ...  used_by_name=${CEPH_RGW_NAME}
+
+                                    Should Be Equal As Strings      ${response}    OK
+
 #####################################################################################################################################
 Ceph Rados Add S3Account
 #####################################################################################################################################
