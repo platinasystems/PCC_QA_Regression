@@ -26,23 +26,25 @@ class CephPool(PccBase):
         self.ceph_cluster_id = None
         self.name = ""
         self.size = None
-        self.tags =  []
+        self.tags = []
         self.pool_type = ""
         self.quota = None
         self.quota_unit = ""
-        self.user="pcc"
+        self.user = "pcc"
         self.password="cals0ft"
-        self.nodes_ip=[]
-        self.count=0
+        self.nodes_ip = []
+        self.count = 0
         self.pool_name = None
         self.hostip = None
-        self.storage_pool_id= None
+        self.storage_pool_id = None
         self.mode = None
         self.type = None
-        self.data_pool_name= None
-        self.cache_pool_name= None
-        self.resilienceScheme= None
-        self.filename=""
+        self.data_pool_name = None
+        self.cache_pool_name = None
+        self.resilienceScheme = None
+        self.filename = ""
+        self.used_by_type = ""
+        self.used_by_name = ""
 
         super().__init__()
 
@@ -61,6 +63,35 @@ class CephPool(PccBase):
 
         pool_id = easy.get_ceph_pool_id_by_name(conn,self.name)
         return pool_id
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Pool Check Used By")
+    ###########################################################################
+    def check_used_by(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Pool Check Used By")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        response = get_response_data(pcc.get_ceph_pools(conn))
+        for pool in response:
+            if pool["name"] == self.name:
+                if self.used_by_type == "rbd":
+                    cephRBD = pool["cephRBD"]
+                    if cephRBD and cephRBD["name"] == self.used_by_name:
+                        return "OK"
+                if self.used_by_type == "fs":
+                    cephFS = pool["cephFS"]
+                    if cephFS and cephFS["name"] == self.used_by_name:
+                        return "OK"
+                if self.used_by_type == "rgw":
+                    cephRGW = pool["cephRgw"]
+                    if cephRGW and cephRGW["name"] == self.used_by_name:
+                        return "OK"
+        return "Error"
 
     ###########################################################################
     @keyword(name="PCC.Ceph Get All Pools Data")

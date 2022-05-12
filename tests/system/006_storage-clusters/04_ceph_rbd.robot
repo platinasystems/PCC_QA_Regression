@@ -406,7 +406,7 @@ Ceph Rbd where size unit is in MiB
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -423,6 +423,19 @@ Ceph Rbd where size unit is in MiB
                                ...  name=${CEPH_RBD_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Check Pool Used By RBD
+###################################################################################################################################
+    [Documentation]                 *Check Pool Used By RBD*
+
+    ${response}                     PCC.Ceph Pool Check Used By
+                               ...  name=${CEPH_POOL_NAME}
+                               ...  used_by_type=rbd
+                               ...  used_by_name=${CEPH_RBD_NAME}
+
+                                    Should Be Equal As Strings      ${response}    OK
+
 
 ###################################################################################################################################
 #Ceph Rbd where size unit is in GiB
