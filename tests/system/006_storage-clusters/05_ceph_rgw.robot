@@ -302,10 +302,14 @@ Check Pool Used By RGW
 ###################################################################################################################################
     [Documentation]                 *Check Pool Used By RGW*
 
+    ${cluster_id}                   PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
     ${response}                     PCC.Ceph Pool Check Used By
                                ...  name=${CEPH_RGW_POOLNAME}
                                ...  used_by_type=rgw
                                ...  used_by_name=${CEPH_RGW_NAME}
+                               ...  ceph_cluster_id=${cluster_id}
 
                                     Should Be Equal As Strings      ${response}    OK
 

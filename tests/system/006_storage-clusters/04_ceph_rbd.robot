@@ -229,6 +229,22 @@ Ceph 2 RBDs with same name (Negative)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
+Check Pool Used By RBD
+###################################################################################################################################
+    [Documentation]                 *Check Pool Used By RBD*
+
+    ${cluster_id}                   PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+    ${response}                     PCC.Ceph Pool Check Used By
+                               ...  name=${CEPH_POOL_NAME}
+                               ...  used_by_type=rbd
+                               ...  used_by_name=abc
+                               ...  ceph_cluster_id=${cluster_id}
+
+                                    Should Be Equal As Strings      ${response}    OK
+
+###################################################################################################################################
 Ceph Rbd Creation without rdb name (Negative)
 ###################################################################################################################################
      [Documentation]                *Ceph Rbd Creation without rdb name*
@@ -334,7 +350,7 @@ Ceph Rbd without pool(Negative)
                                ...  name=xzymn
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -423,18 +439,6 @@ Ceph Rbd where size unit is in MiB
                                ...  name=${CEPH_RBD_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
-
-###################################################################################################################################
-Check Pool Used By RBD
-###################################################################################################################################
-    [Documentation]                 *Check Pool Used By RBD*
-
-    ${response}                     PCC.Ceph Pool Check Used By
-                               ...  name=${CEPH_POOL_NAME}
-                               ...  used_by_type=rbd
-                               ...  used_by_name=${CEPH_RBD_NAME}
-
-                                    Should Be Equal As Strings      ${response}    OK
 
 
 ###################################################################################################################################
@@ -583,7 +587,7 @@ Ceph 2 RBDs using same pool
                                ...  image_feature=${CEPH_RBD_IMG}
                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
 
@@ -602,7 +606,7 @@ Ceph 2 RBDs using same pool
                                ...  image_feature=${CEPH_RBD_IMG}
                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
 
@@ -636,7 +640,7 @@ Ceph 2 RBDs using same pool
 #                               ...  image_feature=${CEPH_RBD_IMG}
 #                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
 #
 #
@@ -670,7 +674,7 @@ Ceph 2 RBDs using same pool
 #                               ...  image_feature=${CEPH_RBD_IMG}
 #                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
 #
 #
@@ -709,7 +713,7 @@ Ceph 2 RBDs with same pool, size, size unit and tags
                                ...  image_feature=${CEPH_RBD_IMG}
                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
 
@@ -738,7 +742,7 @@ Ceph 2 RBDs with same pool, size, size unit and tags
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Rbd Multiple Creation 
+Ceph Rbd Multiple Creation
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Multiple Creation *
                                ...  keywords:
@@ -808,7 +812,7 @@ Ceph Rbd Multiple Creation
                                ...  image_feature=${CEPH_RBD_IMG}
                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
 
@@ -848,7 +852,7 @@ Ceph Rbd Multiple Creation
                                ...  image_feature=${CEPH_RBD_IMG}
                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
 
@@ -914,7 +918,7 @@ Ceph Rbd Update - Edit name - Remove name (Negative)
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-                                    
+
 ###################################################################################################################################
 Ceph Rbd Update - Remove pool (Negative)
 ###################################################################################################################################
@@ -1022,7 +1026,7 @@ Ceph Rbd Update Name - Rename
 #Ceph RBD Resize - Create 1 RBD image with 1GiB (image-feature=layring) on one replicated profile pool(pool_quota>100GiB) and extend image to 100GiB
 ####################################################################################################################################
 #    [Documentation]                 *Updating Ceph RBD Size*
-# 
+#
 #
 #        ${cluster_id}               PCC.Ceph Get Cluster Id
 #                               ...  name=${CEPH_Cluster_NAME}
@@ -1037,13 +1041,13 @@ Ceph Rbd Update Name - Rename
 #                               ...  quota=120
 #                               ...  quota_unit=GiB
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
+#
 #        ${status}                   PCC.Ceph Wait Until Pool Ready
 #                               ...  name=pool-rbd
 #
-#                                    Should Be Equal As Strings      ${status}    OK        
+#                                    Should Be Equal As Strings      ${status}    OK
 #
 #        ${pool_id}                  PCC.Ceph Get Pool Id
 #                               ...  name=pool-rbd
@@ -1056,8 +1060,8 @@ Ceph Rbd Update Name - Rename
 #                               ...  tags=${CEPH_RBD_TAGS}
 #                               ...  image_feature=${CEPH_RBD_IMG}
 #                               ...  size_units=GiB
-#                               
-#        ${status_code}              Get Response Status Code        ${response}     
+#
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
 #
 #
@@ -1065,7 +1069,7 @@ Ceph Rbd Update Name - Rename
 #                               ...  name=rbd-1
 #
 #                                    Should Be Equal As Strings      ${status}    OK
-#     
+#
 #        ${id}                       PCC.Ceph Get Rbd Id
 #                               ...  name=rbd-1
 #
@@ -1086,7 +1090,7 @@ Ceph Rbd Update Name - Rename
 #                               ...  name=rbd-1
 #
 #                                    Should Be Equal As Strings      ${status}    OK
-#                                    
+#
 ####################################################################################################################################
 #Ceph RBD Resize - Create 1 RBD image with 1GiB (image-feature=layring) on one replicated profile pool(pool_quota>10GiB) and extend image to 10GiB
 ####################################################################################################################################
@@ -1105,9 +1109,9 @@ Ceph Rbd Update Name - Rename
 #                               ...  quota=11
 #                               ...  quota_unit=GiB
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
+#
 #        ${status}                   PCC.Ceph Wait Until Pool Ready
 #                               ...  name=pool-rbd1
 #
@@ -1123,7 +1127,7 @@ Ceph Rbd Update Name - Rename
 #                               ...  image_feature=${CEPH_RBD_IMG}
 #                               ...  size_units=GiB
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
 #
 #
@@ -1131,8 +1135,8 @@ Ceph Rbd Update Name - Rename
 #                               ...  name=rbd-2
 #
 #                                    Should Be Equal As Strings      ${status}    OK
-# 
-#     
+#
+#
 #        ${id}                       PCC.Ceph Get Rbd Id
 #                               ...  name=rbd-2
 #
@@ -1153,9 +1157,9 @@ Ceph Rbd Update Name - Rename
 #                               ...  name=rbd-2
 #
 #                                    Should Be Equal As Strings      ${status}    OK
-#                                    
+#
 ###################################################################################################################################
-Ceph Rbd Resize_decrease 
+Ceph Rbd Resize_decrease
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Resize_decrease*
                                ...  keywords:
@@ -1164,17 +1168,17 @@ Ceph Rbd Resize_decrease
                                ...  PCC.Ceph Rbd Update
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Wait Until Rbd Ready
-  
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
-  
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
         ${pool_id}                  PCC.Ceph Get Pool Id
                                ...  name=${CEPH_POOL_NAME}
-                               
+
         ${response}                 PCC.Ceph Create Rbd
 				 ...  pool_type=replicated
                                ...  name=rbd-3
@@ -1193,7 +1197,7 @@ Ceph Rbd Resize_decrease
                                ...  name=rbd-3
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
         ${id}                       PCC.Ceph Get Rbd Id
                                ...  name=rbd-3
 
@@ -1244,9 +1248,9 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                ...  quota=10
                                ...  quota_unit=MiB
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool-rbd2
 
@@ -1262,7 +1266,7 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
                                ...  size_units=MiB
-                               
+
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
@@ -1290,7 +1294,7 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                     Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Ceph Rbd Resize_increase - equal to pool quota 
+Ceph Rbd Resize_increase - equal to pool quota
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Resize_increase - equal to pool quota*
                                ...  keywords:
@@ -1371,7 +1375,7 @@ Ceph Rbd Resize_increase - equal to pool quota
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Ceph Rbd Resize_increase 
+Ceph Rbd Resize_increase
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Resize_increase*
                                ...  keywords:
@@ -1410,7 +1414,7 @@ Ceph Rbd Resize_increase
                                ...  name=rbd-5
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
         ${id}                       PCC.Ceph Get Rbd Id
                                ...  name=rbd-5
 
@@ -1444,8 +1448,8 @@ Ceph Rbd Mount Test
                                ...  PCC.Ceph Create Rbd
                                ...  PCC.Ceph Wait Until Rbd Ready
                                ...  PCC.Ceph Rbd Update
-	[Tags]    Map					   
-							   
+	[Tags]    Map
+
         ###  Get INET IP  ###
         ${inet_ip}     PCC.Get CEPH Inet IP
                        ...    hostip=${SERVER_1_HOST_IP}
@@ -1482,8 +1486,8 @@ Ceph Rbd Mount Test
                      ...    password=${PCC_LINUX_PASSWORD}
 		     Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
-		
-		
+
+
 		${status}      PCC.Mount RBD to Mount Point
                        ...    mount_folder_name=test_rbd_mnt
                        ...    hostip=${SERVER_1_HOST_IP}
@@ -1493,7 +1497,7 @@ Ceph Rbd Mount Test
                        Log To Console    ${status}
                        Should be equal as strings    ${status}    OK
 
-                       Sleep    1 minutes 
+                       Sleep    1 minutes
 
         ${status}      Create dummy file and copy to mount path
                        ...    dummy_file_name=test_rbd_mnt_4mb.bin
@@ -1501,12 +1505,12 @@ Ceph Rbd Mount Test
                        ...    mount_folder_name=test_rbd_mnt
                        ...    hostip=${SERVER_1_HOST_IP}
                        ...    user=${PCC_LINUX_USER}
-                       ...    password=${PCC_LINUX_PASSWORD}  
+                       ...    password=${PCC_LINUX_PASSWORD}
 
                        Log To Console    ${status}
-                       Should be equal as strings    ${status}    OK     
+                       Should be equal as strings    ${status}    OK
 
-                       Sleep    2 minutes  
+                       Sleep    2 minutes
 
 
         ###  Get Stored size after mount  ###
@@ -1517,20 +1521,20 @@ Ceph Rbd Mount Test
                                                 Log To Console    ${size_replicated_pool_after_mount}
                                                 Set Suite Variable    ${size_replicated_pool_after_mount}
                                                 Should Be True    ${size_replicated_pool_after_mount} > ${size_replicated_pool_before_mount}
-		
+
 		###  Unmount and unmap RBD  ###
 		${status}		PCC.Unmount and Unmap RBD
 						...    mount_folder_name=test_rbd_mnt
 						...    hostip=${SERVER_1_HOST_IP}
                         ...    username=${PCC_LINUX_USER}
                         ...    password=${PCC_LINUX_PASSWORD}
-						
+
 						Log To Console    ${status}
                         Should be equal as strings    ${status}    OK
-						
+
 		${status}    Remove dummy file
                      ...    dummy_file_name=test_rbd_mnt_4mb.bin
-                     ...    hostip=${SERVER_1_HOST_IP} 
+                     ...    hostip=${SERVER_1_HOST_IP}
 					 ...    user=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
 					 Log To Console    ${status}
@@ -1540,7 +1544,7 @@ Ceph Rbd Mount Test
 #Ceph Rbd Change pool (Negative)
 ####################################################################################################################################
 #    [Documentation]                 *Creating Ceph Rbd*
-#                               
+#
 #        ${cluster_id}               PCC.Ceph Get Cluster Id
 #                               ...  name=${CEPH_Cluster_NAME}
 #
@@ -1554,12 +1558,12 @@ Ceph Rbd Mount Test
 #                               ...  quota=10
 #                               ...  quota_unit=MiB
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
+#
 #        ${status}                   PCC.Ceph Wait Until Pool Ready
 #                               ...  name=pool-rbd3
-#                               
+#
 #        ${response}                 PCC.Ceph Create Pool
 #                               ...  name=pool-rbd4
 #                               ...  ceph_cluster_id=${cluster_id}
@@ -1570,15 +1574,15 @@ Ceph Rbd Mount Test
 #                               ...  quota=10
 #                               ...  quota_unit=MiB
 #
-#        ${status_code}              Get Response Status Code        ${response}     
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
-#                                    
+#
 #        ${status}                   PCC.Ceph Wait Until Pool Ready
 #                               ...  name=pool-rbd4
 #
 #        ${pool_id}                  PCC.Ceph Get Pool Id
 #                               ...  name=pool-rbd3
-#                               
+#
 #        ${response}                 PCC.Ceph Create Rbd
 #                               ...  name=rbd66
 #                               ...  ceph_cluster_id=${cluster_id}
@@ -1587,8 +1591,8 @@ Ceph Rbd Mount Test
 #                               ...  tags=${CEPH_RBD_TAGS}
 #                               ...  image_feature=${CEPH_RBD_IMG}
 #                               ...  size_units=${CEPH_RBD_SIZE_UNIT}
-#                               
-#        ${status_code}              Get Response Status Code        ${response}     
+#
+#        ${status_code}              Get Response Status Code        ${response}
 #                                    Should Be Equal As Strings      ${status_code}  200
 #
 #
@@ -1596,10 +1600,10 @@ Ceph Rbd Mount Test
 #                               ...  name=rbd66
 #
 #                                    Should Be Equal As Strings      ${status}    OK
-#                                    
+#
 #        ${id}                       PCC.Ceph Get Rbd Id
 #                               ...  name=rbd66
-#                               
+#
 #        ${pool_id}                  PCC.Ceph Get Pool Id
 #                               ...  name=pool-rbd4
 #
@@ -1619,8 +1623,8 @@ Ceph Rbd Mount Test
 ###################################################################################################################################
 #Ceph Create 20 Rbd
 ####################################################################################################################################
-#    [Documentation]                 *Ceph Create 20 Rbd*  
-#                               ...  keywords:    
+#    [Documentation]                 *Ceph Create 20 Rbd*
+#                               ...  keywords:
 #                               ...  PCC.Ceph Get Cluster Id
 #                               ...  PCC.Ceph Create Rbd Multiple
 #                               ...  PCC.Ceph Wait Until Rbd Ready
@@ -1655,9 +1659,9 @@ Ceph Rbd Mount Test
 
 ###################################################################################################################################
 Fetching RBD ID before backup
-###################################################################################################################################   
+###################################################################################################################################
 
          ${rbd_id_before_backup}    PCC.Ceph Get Rbd Id
-                                    ...  name=rbd-5                            
+                                    ...  name=rbd-5
                                     Log To Console    ${rbd_id_before_backup}
-                                    Set Global Variable    ${rbd_id_before_backup}  
+                                    Set Global Variable    ${rbd_id_before_backup}

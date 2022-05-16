@@ -89,10 +89,14 @@ Check Pool Used By FS
 ###################################################################################################################################
     [Documentation]                 *Check Pool Used By FS*
 
+    ${cluster_id}                   PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
     ${response}                     PCC.Ceph Pool Check Used By
                                ...  name=${CEPH_FS_DATA}
                                ...  used_by_type=fs
                                ...  used_by_name=${CEPH_FS_NAME}
+                               ...  ceph_cluster_id=${cluster_id}
 
                                     Should Be Equal As Strings      ${response}    OK
 
