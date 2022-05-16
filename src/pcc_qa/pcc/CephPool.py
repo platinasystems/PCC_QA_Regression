@@ -76,7 +76,7 @@ class CephPool(PccBase):
         except Exception as e:
             raise e
 
-        response = get_response_data(pcc.get_ceph_pools(conn))
+        response = get_response_data(pcc.get_ceph_pools_by_cluster_id(conn, str(self.ceph_cluster_id)))
         for pool in response:
             if pool["name"] == self.name:
                 if self.used_by_type == "rbd":
