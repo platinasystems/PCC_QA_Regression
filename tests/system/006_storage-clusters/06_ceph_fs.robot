@@ -70,20 +70,6 @@ Ceph Fs Creation
 
                                      Should Be Equal As Strings      ${status}    OK
 
-        ${id}                       PCC.Ceph Get Fs Id
-                               ...  name=${CEPH_FS_NAME}
-                                    Pass Execution If    ${id} is ${None}    Fs is alredy Deleted
-
-        ${response}                 PCC.Ceph Delete Fs
-                               ...  id=${id}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Fs Deleted
-                               ...  id=${id}
-                                    Should Be Equal     ${status}  OK
-
 ###################################################################################################################################
 Check Pool Used By FS
 ###################################################################################################################################
@@ -99,6 +85,20 @@ Check Pool Used By FS
                                ...  ceph_cluster_id=${cluster_id}
 
                                     Should Be Equal As Strings      ${response}    OK
+
+        ${id}                       PCC.Ceph Get Fs Id
+                               ...  name=${CEPH_FS_NAME}
+                                    Pass Execution If    ${id} is ${None}    Fs is alredy Deleted
+
+        ${response}                 PCC.Ceph Delete Fs
+                               ...  id=${id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Fs Deleted
+                               ...  id=${id}
+                                    Should Be Equal     ${status}  OK
 
 
 ###################################################################################################################################
