@@ -962,3 +962,275 @@ class CephCluster(PccBase):
 
         except Exception as e:
             trace("Error in getting ceph version: {}".format(e))
+    
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get Used Drives")
+    ###############################################################################################################
+    def get_used_drives(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Used drives : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        trace("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+
+        nodes_drives_dict = {}
+        if not cluster_id:
+            raise Exception("[PCC.Ceph Get Used drives]: cluster id is not specified.")
+        else:
+            try:
+                list_of_used_drives = pcc.get_used_drives_by_cluster_id(conn, str(cluster_id))['Result'][
+                    'Data']
+
+                for ids, values in list_of_used_drives.items():
+                    drive_names = []
+                    for data in values:
+                        drive_names.append(data["name"])
+
+                    nodes_drives_dict[ids] = drive_names
+
+                trace(nodes_drives_dict)
+                return nodes_drives_dict
+            except Exception as e:
+                return {"...Error in get_used_drives": str(e)}
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get Used Drives by Hostname")
+    ###############################################################################################################
+    def get_used_drives_by_hostname(self, server_name=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Used drives : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        trace("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        drive_names = []
+        list_of_used_drives = pcc.get_used_drives_by_cluster_id(conn, str(cluster_id))['Result']['Data']
+        host_id = easy.get_node_id_by_name(conn, server_name)
+        trace("host_id: {}".format(host_id))
+        for ids, values in list_of_used_drives.items():
+            if int(ids) == host_id:
+                trace("debug")
+                for data in values:
+                    drive_names.append(data["id"])
+        # break
+        trace(drive_names)
+        return drive_names
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get Unused drives")
+    ###############################################################################################################
+    def get_unused_drives(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Unused drives : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, str(cluster_id)))
+
+        nodes_drives_dict = {}
+        if not cluster_id:
+            raise Exception("[PCC.Ceph Get Unused drives]: cluster id is not specified.")
+        else:
+            try:
+                list_of_unused_drives = pcc.get_unused_drives_by_cluster_id(conn, str(cluster_id))['Result'][
+                    'Data']
+                trace(list_of_unused_drives)
+                for ids, values in list_of_unused_drives.items():
+                    drive_names = []
+                    for data in values:
+                        drive_names.append(data["name"])
+
+                    nodes_drives_dict[ids] = drive_names
+
+                print(nodes_drives_dict)
+                return nodes_drives_dict
+            except Exception as e:
+                return {"...Error in test get_unused_drives": str(e)}
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get Unused Drives by Hostname")
+    ###############################################################################################################
+    def get_unused_drives_by_hostname(self, server_name=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Unused drives : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        trace("Cluster Name: {} Id: {}".format(self.name, str(cluster_id)))
+        drive_names = []
+        list_of_unused_drives = pcc.get_unused_drives_by_cluster_id(conn, str(cluster_id))['Result'][
+            'Data']
+        trace(list_of_unused_drives)
+        host_id = easy.get_node_id_by_name(conn, server_name)
+        print("host_id: {}".format(host_id))
+        for ids, values in list_of_unused_drives.items():
+            if int(ids) == host_id:
+                for data in values:
+                    drive_names.append(data["id"])
+            # break
+        print(drive_names)
+        return drive_names
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph get OSD Drives by Hostname")
+    ###############################################################################################################
+    def get_osd_drives_by_hostname(self, server_name=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph get OSD Drives by Hostname : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        response_data = pcc.get_osds_by_cluster_id(conn, str(cluster_id))['Result'][
+            'Data']
+        trace(response_data)
+        temp_osd_ids = []
+
+        for data in response_data:
+            trace(data['server'])
+            if data['server'] == server_name:
+                temp_osd_ids.append(data['osd'])
+                trace(temp_osd_ids)
+
+        print("temp_osd_ids:{}".format(temp_osd_ids))
+        return temp_osd_ids
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph get OSD drive names by osd id")
+    ################################################################################################################
+    def get_osd_drivename_by_hostname_osd_id(self, osd_id=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph get OSD drive names by osd id : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        response_data = pcc.get_osds_by_cluster_id(conn, str(cluster_id))['Result'][
+            'Data']
+        trace(response_data)
+
+        for data in response_data:
+            if data['osd'] == osd_id:
+                drivename = data['driveName']
+                trace(drivename)
+                break
+
+        print("drivename:{}".format(drivename))
+        return drivename
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Delete OSD drives")
+    ###############################################################################################################
+    def delete_osd_drive(self, osd_id=None, wipe=True, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Delete OSD drives : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        trace("osd_id:{}".format(osd_id))
+        try:
+
+            payload = {
+                "ids": [osd_id],
+                "wipe": wipe
+            }
+            print("payload {}".format(payload))
+            response = pcc.delete_osd_from_cluster(conn, str(cluster_id), "", payload)
+            trace("response: {}".format(response))
+            code = get_response_data(response)["code"]
+            print("code: {}".format(code))
+            return pcc.delete_osd_from_cluster(conn, str(cluster_id), "?code=" + code, payload)
+        except Exception as e:
+            return {"...Error in delete_osd_drive test": str(e)}
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Add OSD drives")
+    ###############################################################################################################
+    def add_osd_drive(self, osd_id=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Add OSD drives : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        trace("osd_id:{}".format(osd_id))
+        payload = {
+            "driveIDs": [osd_id]
+        }
+        try:
+            print("payload: {}".format(payload))
+            response = pcc.add_osd_to_cluster(conn, str(cluster_id), payload)
+            print("response: {}".format(response))
+            return response
+        except Exception as e:
+            return {"...Error in add_osd_drive test": str(e)}
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Wait Until OSD Deleted")
+    ###############################################################################################################
+    def wait_until_osd_deleted(self, osd_id=None, *args, **kwargs):
+        banner("PCC.Ceph Wait Until OSD Deleted")
+        self._load_kwargs(kwargs)
+
+        if osd_id is None:
+            return {"Error": "osd_id of the cluster is not specified."}
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        id_found_in_list_osds = True
+        timeout = time.time() + PCCSERVER_TIMEOUT
+
+        while id_found_in_list_osds:
+            id_found_in_list_osds = False
+            response_data = pcc.get_osds_by_cluster_id(conn, str(cluster_id))['Result'][
+                'Data']
+            trace(response_data)
+
+            for data in response_data:
+                trace(data)
+                trace(data['osd'])
+                if data['osd'] == osd_id:
+                    print("Response:-"+str(data))
+                    trace(str(data))
+                    if re.search('removing', str(data['state'])):
+                        id_found_in_list_osds = True
+                        break
+            if time.time() > timeout:
+                raise Exception("[PCC.Ceph Wait Until OSD Deleted] Timeout")
+            if id_found_in_list_osds:
+                trace("Waiting until cluster osd : %s is deleted. Timeout in %.1f seconds." %
+                       (data['state'], timeout-time.time()))
+                time.sleep(5)
+        return "OK"
+
+    ###############################################################################################################
