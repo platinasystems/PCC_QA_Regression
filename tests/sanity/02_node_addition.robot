@@ -25,13 +25,12 @@ Add Nodes
 
     [Documentation]                 *Add Nodes Test*                 
     
-    ${status}                       PCC.Add mutliple nodes and check online
-                                    ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}']
-                                    ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}']
+    ${status}                       PCC.Add multiple nodes and check online
+                                    ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}']
+                                    ...  Names=['${CLUSTERHEAD_1_NAME}', '${CLUSTERHEAD_2_NAME}', '${SERVER_1_NAME}','${SERVER_2_NAME}','${SERVER_3_NAME}']
 
                                     Log To Console    ${status}
-                                    Run Keyword If  "${status}" != "OK"  Fatal Error
-				    Should be equal as strings    ${status}    OK
+				                    Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
 Nodes Verification Back End (Services should be running and active)
@@ -41,9 +40,8 @@ Nodes Verification Back End (Services should be running and active)
                                     ...  PCC.Node Verify Back End
 
         ${status}                   PCC.Node Verify Back End
-                                    ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+                                    ...  host_ips=["${SERVER_3_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
                                     Log To Console    ${status}
-                                    Run Keyword If  "${status}" != "OK"  Fatal Error
-				    Should Be Equal As Strings      ${status}    OK
+				                    Should Be Equal As Strings      ${status}    OK
 
 

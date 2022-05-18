@@ -63,7 +63,7 @@ K8s Cluster Verification Back End
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_2_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -136,7 +136,7 @@ Add Node to Kubernetes cluster
        ${response}                 PCC.K8s Update Cluster Nodes
                               ...  cluster_id=${cluster_id}
                               ...  name=${K8S_NAME}
-                              ...  toAdd=["${CLUSTERHEAD_2_NAME}"]
+                              ...  toAdd=["${CLUSTERHEAD_1_NAME}"]
                               ...  rolePolicy=auto
 
        ${status_code}              Get Response Status Code        ${response}

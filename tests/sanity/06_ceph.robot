@@ -45,7 +45,7 @@ Ceph Cluster Creation
 
         ${status}                   PCC.Health Check Network Manager
                                ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Ceph Create Cluster
                                ...  name=${CEPH_CLUSTER_NAME}
@@ -53,7 +53,7 @@ Ceph Cluster Creation
                                ...  tags=${CEPH_CLUSTER_TAGS}
                                ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
@@ -90,7 +90,7 @@ Ceph Pool Creation And PCC Verification
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Get Pcc Status
-                               
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
@@ -104,77 +104,82 @@ Ceph Pool Creation And PCC Verification
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
 
-                                    Should Be Equal As Strings      ${status}    OK 
- 
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-        
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool1
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
- 
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool2
-                                    Should Be Equal As Strings      ${status}    OK 
-        
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool3
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool3
-                                    Should Be Equal As Strings      ${status}    OK                                    
-                                    
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool4
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool4
                                     Should Be Equal As Strings      ${status}    OK
@@ -185,6 +190,7 @@ Ceph Pool Creation And PCC Verification
                                ...  size=${CEPH_POOL_SIZE}
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=2
                                ...  quota_unit=GiB
 
@@ -194,7 +200,7 @@ Ceph Pool Creation And PCC Verification
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_RGW_POOLNAME}
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Verification Back End
 ###################################################################################################################################
@@ -204,8 +210,8 @@ Ceph Pool Verification Back End
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK                               
-                               
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${status}                   PCC.Ceph Pool Verify BE
                                ...  name=${CEPH_POOL_NAME}
                                ...  user=${PCC_LINUX_USER}
@@ -236,6 +242,7 @@ Ceph Rbd Creation
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
+                               ...  pool_type=replicated
                                ...  size=${CEPH_RBD_SIZE}
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
@@ -287,6 +294,7 @@ Ceph Pool Update Size
                                ...  size=1
                                ...  tags=${CEPH_POOL_TAGS}
                                ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
                                
@@ -327,6 +335,7 @@ Ceph Rbd Update Size
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
+                               ...  pool_type=replicated
                                ...  size=1
                                ...  tags=${CEPH_RBD_TAGS}
                                ...  image_feature=${CEPH_RBD_IMG}
@@ -341,15 +350,33 @@ Ceph Rbd Update Size
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
+Create Application credential profile without application For Rados
+###################################################################################################################################
+
+        [Documentation]               *Create Metadata Profile* test
+                                      ...  keywords:
+                                      ...  PCC.Add Metadata Profile
+        #[Tags]    This
+        ${response}                   PCC.Add Metadata Profile
+                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                                      ...    Type=ceph
+
+                                      Log To Console    ${response}
+                                      ${result}    Get Result    ${response}
+                                      ${status}    Get From Dictionary    ${result}    status
+                                      ${message}    Get From Dictionary    ${result}    message
+                                      Log to Console    ${message}
+                                      Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
 #####################################################################################################################################
 
      [Documentation]                 *Ceph Rados Gateway Creation*
-
+	#[Tags]    This
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
-
 
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
@@ -357,12 +384,51 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
 
         ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_Cluster_NAME}
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                                    Should Be Equal As Strings      ${backend_status}    OK
+
+#####################################################################################################################################
+Ceph Rados Add S3Account
+#####################################################################################################################################
+     [Documentation]                *Ceph Rados Gateway Update*
+	#[Tags]    This
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=ceph-pvt
+
+        ${response}                 PCC.Ceph Update Rgw
+                               ...  ID=${rgw_id}
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=${CEPH_RGW_POOLNAME}
+                               ...  targetNodes=${CEPH_RGW_NODES}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
+                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
@@ -488,37 +554,6 @@ Ceph Fs Update
 
                                     Should Be Equal As Strings      ${status}    OK
 
-###################################################################################################################################
-Ceph Cluster Update - Add Invader
-###################################################################################################################################
-    [Documentation]                 *Ceph Cluster Update - Add Invade*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Health Check Network Manager
-                               ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK 
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_2_NAME}","${CLUSTERHEAD_1_NAME}"]
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Cluster Ready
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
                                     
 
                                     

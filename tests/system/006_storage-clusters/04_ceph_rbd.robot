@@ -216,7 +216,7 @@ Ceph 2 RBDs with same name (Negative)
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=abc
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}

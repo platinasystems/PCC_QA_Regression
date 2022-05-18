@@ -83,7 +83,7 @@ Check if PCC assign the Default node role to the node when a node is added to PC
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
 
-        ${status}    PCC.Add mutliple nodes and check online
+        ${status}    PCC.Add multiple nodes and check online
                      ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${SERVER_1_HOST_IP}']
                      ...  Names=['${CLUSTERHEAD_1_NAME}','${SERVER_1_NAME}']
 
