@@ -128,7 +128,8 @@ class Tags(PccBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
 
         tags = get_response_data(pcc.get_tags(conn))
-        if not tags:
+        trace(tags)
+        if tags is None:
             return "OK"
         result = "OK"
         for tag in tags:

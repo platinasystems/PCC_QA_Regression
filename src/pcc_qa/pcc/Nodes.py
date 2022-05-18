@@ -372,7 +372,7 @@ class Nodes(PccBase):
         return pcc.modify_node(conn, payload)
     
     ###############################################################################################################
-    @keyword(name="PCC.Add mutliple nodes and check online")
+    @keyword(name="PCC.Add multiple nodes and check online")
     ###############################################################################################################   
     
     def add_multiple_nodes_and_check_online(self, *args, **kwargs):
@@ -387,7 +387,7 @@ class Nodes(PccBase):
             else: returns "Error"
         """
         
-        banner("Add mutliple nodes and check online")
+        banner("PCC.Add multiple nodes and check online")
         self._load_kwargs(kwargs)
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
