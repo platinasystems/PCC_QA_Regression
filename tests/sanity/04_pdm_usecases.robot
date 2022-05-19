@@ -328,3 +328,152 @@ Verify Scope Policy Backend
                         ...  Alias=rgw-crt
 
                              Should Be Equal As Strings    ${result}    OK
+
+###################################################################################################################################
+Re-assign default location to multiple nodes:TCP-1431
+###################################################################################################################################
+
+        [Documentation]    *Re-assign default location to multiple nodes* test
+                           ...  keywords:
+                           ...  PCC.Apply scope to multiple nodes
+
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default region
+                        Log To Console    ${parent1_Id}
+
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${parent1_Id}
+                        Log To Console    ${parent2_Id}
+
+        ${parent3_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default site
+                        ...  parentID=${parent2_Id}
+
+                        Log To Console    ${parent3_Id}
+
+        ${scope_id}    PCC.Get Scope Id
+                        ...  scope_name=Default rack
+                        ...  parentID=${parent3_Id}
+
+                        Log To Console    ${scope_id}
+
+        ${status}      PCC.Apply scope to multiple nodes
+                       ...  node_names=['${SERVER_2_NAME}']
+                       ...  scopeId=${scope_id}
+
+                       Log to Console    ${status}
+                       Should Be Equal As Strings    ${status}    OK
+
+        ${status}     PCC.Wait Until All Nodes Are Ready
+
+                      Log To Console    ${status}
+                      Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
+Check if a rack can be deleted if it does not have nodes assigned:TCP-1392
+###################################################################################################################################
+
+        [Documentation]    *Check if a rack can be deleted if it does not have nodes assigned* test
+                           ...  keywords:
+                           ...  PCC.Delete Scope
+
+
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+                        Log To Console    ${parent1_Id}
+
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=zone-1
+                        ...  parentID=${parent1_Id}
+                        Log To Console    ${parent2_Id}
+
+        ${parent3_Id}    PCC.Get Scope Id
+                        ...  scope_name=site-1
+                        ...  parentID=${parent2_Id}
+
+                        Log To Console    ${parent3_Id}
+
+
+        ${response}    PCC.Delete Scope
+                       ...  scope_name=rack-1
+                       ...  parentID=${parent3_Id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+
+###################################################################################################################################
+Check if a site can be deleted if its child rack does not have nodes assigned:TCP-1393
+###################################################################################################################################
+
+        [Documentation]    *Check if a site can be deleted if its child rack does not have nodes assigned* test
+                           ...  keywords:
+                           ...  PCC.Delete Scope
+        [Tags]    delete
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+                        Log To Console    ${parent1_Id}
+
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=zone-1
+                        ...  parentID=${parent1_Id}
+                        Log To Console    ${parent2_Id}
+
+        ${response}    PCC.Delete Scope
+                       ...  scope_name=site-1
+                       ...  parentID=${parent2_Id}
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Check if a zone can be deleted if its child rack does not have nodes assigned:TCP-1394
+###################################################################################################################################
+
+        [Documentation]    *Check if a zone can be deleted if its child rack does not have nodes assigned* test
+                           ...  keywords:
+                           ...  PCC.Delete Scope
+        [Tags]    delete
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=region-1
+                        Log To Console    ${parent1_Id}
+
+
+        ${response1}    PCC.Delete Scope
+                       ...  scope_name=zone-1
+                       ...  parentID=${parent1_Id}
+
+                       Log To Console    ${response1}
+                       ${result}    Get Result    ${response1}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
+
+
+###################################################################################################################################
+Check if a region can be deleted if its child rack does not have nodes assigned:TCP-1395
+###################################################################################################################################
+
+        [Documentation]    *Check if a region can be deleted if its child rack does not have nodes assigned* test
+                           ...  keywords:
+                           ...  PCC.Delete Scope
+
+        ${response}    PCC.Delete Scope
+                       ...  scope_name=region-1
+
+                       Log To Console    ${response}
+                       ${result}    Get Result    ${response}
+                       ${status}    Get From Dictionary    ${result}    status
+                       ${message}    Get From Dictionary    ${result}    message
+                       Log to Console    ${message}
+                       Should Be Equal As Strings    ${status}    200
