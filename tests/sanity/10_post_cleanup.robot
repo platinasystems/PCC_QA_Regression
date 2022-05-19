@@ -299,6 +299,8 @@ Network Manager Delete
         ${status}                   PCC.Network Manager Delete All
                                     Should be equal as strings    ${status}    OK
 
+                                    sleep  2m
+
 
 ###################################################################################################################################
 Delete Multiple Subnet
