@@ -226,6 +226,7 @@ Alert High Pool Usage 80% Firing
        ${response}                 PCC.Alert Edit Rule Notifications
                                ...  id=${alert_id}
                                ...  mail=${TENANT_USER_PCC_USERNAME}
+                               ...  subject=Custom alert subject 80
 
        ${status_code}              Get Response Status Code        ${response}
        ${message}                  Get Response Message        ${response}
@@ -243,7 +244,7 @@ Alert High Pool Usage 80% Firing
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["pool usage 80%", "firing", "The ceph pool high-usage-pool usage is greather than 80%"]
+                               ...   info=["Custom alert subject 80","pool usage 80%", "firing", "The ceph pool high-usage-pool usage is greather than 80%"]
                                      Should Be Equal As Strings      ${result}  OK
 
        ${result}                     PCC.Ceph Pool Delete File By Name
@@ -264,7 +265,7 @@ Alert High Pool Usage 80% Firing
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["pool usage 80%", "resolved"]
+                               ...   info=["Custom alert subject 80","pool usage 80%", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK
 
 
@@ -291,7 +292,7 @@ Alert High Pool Usage 80% Resolved
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["pool usage 80%", "resolved"]
+                               ...   info=["Custom alert subject 80","pool usage 80%", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
@@ -305,6 +306,7 @@ Alert High Pool Usage 90% Firing
        ${response}                 PCC.Alert Edit Rule Notifications
                                ...  id=${alert_id}
                                ...  mail=${TENANT_USER_PCC_USERNAME}
+                               ...  subject=Custom alert subject 90
 
        ${status_code}              Get Response Status Code        ${response}
        ${message}                  Get Response Message        ${response}
@@ -327,7 +329,7 @@ Alert High Pool Usage 90% Firing
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["pool usage 90%", "firing", "The ceph pool high-usage-pool usage is greather than 90%"]
+                               ...   info=["Custom alert subject 90","pool usage 90%", "firing", "The ceph pool high-usage-pool usage is greather than 90%"]
                                      Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
@@ -354,7 +356,7 @@ Alert High Pool Usage 90% Resolved
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["pool usage 90%", "resolved"]
+                               ...   info=["Custom alert subject 90",","pool usage 90%", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK
 
 
@@ -369,6 +371,7 @@ Alert osd down/out
        ${response}                 PCC.Alert Edit Rule Notifications
                                ...  id=${alert_id}
                                ...  mail=${TENANT_USER_PCC_USERNAME}
+                               ...  subject=Custom alert subject osd
 
        ${status_code}              Get Response Status Code        ${response}
        ${message}                  Get Response Message        ${response}
@@ -391,7 +394,7 @@ Alert osd down/out
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["osds down/out", "firing"]
+                               ...   info=["Custom alert subject osd","osds down/out", "firing"]
                                      Should Be Equal As Strings      ${result}  OK
 
        ${response}                   PCC.Ceph Make Osds Up
@@ -410,5 +413,5 @@ Alert osd down/out
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
-                               ...   info=["osds down/out", "resolved"]
+                               ...   info=["Custom alert subject osd","osds down/out", "resolved"]
                                      Should Be Equal As Strings      ${result}  OK

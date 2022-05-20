@@ -45,6 +45,7 @@ class Alerting(PccBase):
         self.cc=""
         self.info=[],
         self.disabled = False
+        self.subject=""
 
         super().__init__()
 
@@ -324,6 +325,10 @@ class Alerting(PccBase):
                             {
                                "name": "cc",
                                "value": self.cc
+                            },
+                            {
+                                "name": "subject",
+                                "value": self.subject
                             }
                          ]
                       }
