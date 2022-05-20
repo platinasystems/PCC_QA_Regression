@@ -28,7 +28,7 @@ Adding Maas To Invaders
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Baremetal Management Node","Default"]
+                               ...  roles=["Baremetal Management Node"]
 
                                     Should Be Equal As Strings      ${response}  OK
 

@@ -31,6 +31,8 @@ class Monitor(PccBase):
         self.nodes_ip=[]
         self.user="pcc"
         self.password="cals0ft"
+        self.check_disk=False
+        self.check_health_level=False
         super().__init__()
 
     ###########################################################################
@@ -193,19 +195,49 @@ class Monitor(PccBase):
                         failed_chk.append(nodeId) 
                                            
                 elif topic.lower()=='storage':
-                    payload = {
-                        "query": "{{job='storage',nodeId='{}'}}".format(nodeId)
-                    }
-                    data = get_response_data(pcc.query_metric(conn, payload))
-                    
-                    print("################--STORAGE--##############")    
-                    print("Storage Data:"+str(data))
-                    print("#####################################")
-                    if data:
-                        continue
-                    else:
-                        failed_chk.append(nodeId)                     
+                    if not self.check_disk and not self.check_health_level:
+                        payload = {
+                            "query": "{{job='storage',nodeId='{}'}}".format(nodeId)
+                        }
+                        data = get_response_data(pcc.query_metric(conn, payload))
 
+                        print("################--STORAGE--##############")
+                        print("Storage Data:"+str(data))
+                        print("#####################################")
+                        if data:
+                            continue
+                        else:
+                            failed_chk.append(nodeId)
+                    if self.check_disk:
+                        payload = {
+                            "query": "{{job='storage',nodeId='{}',__name__=~'storageControllers:Drive:sdb:Online'}}".format(nodeId)
+                        }
+                        data = get_response_data(pcc.query_metric(conn, payload))
+
+                        print("################--STORAGE--##############")
+                        print("Storage Data:" + str(data))
+                        print("#####################################")
+                        if data:
+                            value = data[0]["value"]
+                            if value:
+                                continue
+                            failed_chk.append(nodeId)
+                        else:
+                            failed_chk.append(nodeId)
+                    if self.check_health_level:
+                        payload = {
+                            "query": "{{job='storage',nodeId='{}',__name__=~'storageControllers:Drive:sdb:healthLevel'}}".format(
+                                nodeId)
+                        }
+                        data = get_response_data(pcc.query_metric(conn, payload))
+
+                        print("################--STORAGE--##############")
+                        print("Storage Data:" + str(data))
+                        print("#####################################")
+                        if data:
+                            continue
+                        else:
+                            failed_chk.append(nodeId)
                 elif topic.lower()=='sensor':
                     payload = {
                         "query": "{{job='sensor',nodeId='{}'}}".format(nodeId)
