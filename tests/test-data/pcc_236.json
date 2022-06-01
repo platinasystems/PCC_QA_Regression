@@ -246,6 +246,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
+            "numDaemonsMap": {"consul-01": 1},
             "targetNodes":["consul-01"],
             "port":443,
             "certificateName":"rgw-crt",
@@ -343,6 +344,7 @@
         {
             "name":"rados-pvt-secondary",
             "poolName":"rgw-pool",
+            "numDaemonsMap": {"sv46": 1},
             "targetNodes":["sv46"],
             "port":443,
             "certificateName":"rgw-crt",

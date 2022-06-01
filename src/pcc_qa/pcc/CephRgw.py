@@ -9,6 +9,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
+from pcc_qa.common.PccUtility import get_ceph_cluster_id_by_name
 
 from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json
 from pcc_qa.common.Result import get_response_data, get_status_code
@@ -49,6 +50,7 @@ class CephRgw(PccBase):
         self.control_cidr=None
         self.data_cidr=None
         self.ceph_cluster_name = None
+        self.num_daemons_map = None
 
 
     ###########################################################################
@@ -67,6 +69,27 @@ class CephRgw(PccBase):
         return rados_id
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Get RGW Interfaces Map")
+    ###########################################################################
+    def get_ceph_rgw_interface(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get RGW Interfaces Map")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        ceph_cluster_id = str(get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
+        list_of_ceph_rgws = pcc.get_ceph_rgws(conn, ceph_cluster_id)['Result']['Data']
+        trace(list_of_ceph_rgws)
+        for ceph_rgw in list_of_ceph_rgws:
+            if ceph_rgw['name'] == self.name:
+                trace(ceph_rgw["interfaces"])
+                return ceph_rgw["interfaces"]
+        return "Error"
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Create Rgw")
     ###########################################################################
     def add_rados_gateway(self, *args, **kwargs):
@@ -79,29 +102,26 @@ class CephRgw(PccBase):
         except Exception as e:
             raise e
 
-        if  self.cephPoolID==None:
+        if self.cephPoolID==None:
             self.cephPoolID=easy.get_ceph_pool_id_by_name(conn,self.poolName)
         if self.certificateID==None:
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
-        if  self.port:
+        if self.port:
             self.port=ast.literal_eval(str(self.port))
         if self.S3Accounts!=None or self.S3Accounts!=[]:
             tmp_cert={}
             for cert in eval(str(self.S3Accounts)):
                 cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
                 tmp_cert[str(cert_id)]={}
-            self.S3Accounts=tmp_cert           
-        
-        tmp_node=[]
-        if self.targetNodes!=[] or self.targetNodes!='':
-            for node_name in eval(str(self.targetNodes)):
-                print("Node Name:"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print("Node Id:"+str(node_id))
-                tmp_node.append(node_id)
-            print("Node List:"+str(tmp_node))
-            
-        self.targetNodes=tmp_node
+            self.S3Accounts=tmp_cert
+
+        tmp_daemons_map = {}
+        if self.num_daemons_map:
+            for node_name,num_daemons in self.num_daemons_map.items():
+                node_id = easy.get_node_id_by_name(conn, node_name)
+                tmp_daemons_map[str(node_id)] = num_daemons
+        self.num_daemons_map = tmp_daemons_map
+
         if self.service_ip.lower()=="yes":
             serviceIpType="NodeIp"
         else:
@@ -110,7 +130,7 @@ class CephRgw(PccBase):
         payload = {
                     "name":self.name,
                     "cephPoolID":self.cephPoolID,
-                    "targetNodes":self.targetNodes,
+                    "numDaemonsMap": self.num_daemons_map,
                     "port":self.port,
                     "certificateID": self.certificateID,
                     "address":self.certificateUrl,
@@ -159,16 +179,12 @@ class CephRgw(PccBase):
         #        tmp_cert[str(cert_id)]={}
         #    self.S3Accounts=tmp_cert
         
-        tmp_node=[]
-        if self.targetNodes!=[] or self.targetNodes!='':
-            for node_name in eval(str(self.targetNodes)):
-                print("Node Name:"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print("Node Id:"+str(node_id))
-                tmp_node.append(node_id)
-            print("Node List:"+str(tmp_node))
-            
-        self.targetNodes=tmp_node
+        tmp_daemons_map = {}
+        if self.num_daemons_map:
+            for node_name,num_daemons in self.num_daemons_map.items():
+                node_id = easy.get_node_id_by_name(conn, node_name)
+                tmp_daemons_map[str(node_id)] = num_daemons
+        self.num_daemons_map = tmp_daemons_map
 
         if self.service_ip.lower()=="yes":
             serviceIpType="NodeIp"
@@ -179,7 +195,7 @@ class CephRgw(PccBase):
                     "ID":self.ID,
                     "name":self.name,
                     "cephPoolID":self.cephPoolID,
-                    "targetNodes":self.targetNodes,
+                    "numDaemonsMap": self.num_daemons_map,
                     "port":self.port,
                     "certificateID": self.certificateID,
                     "address": self.certificateUrl,
