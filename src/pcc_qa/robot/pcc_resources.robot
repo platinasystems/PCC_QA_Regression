@@ -630,6 +630,9 @@ Load Ceph Rgw Data
         ${CEPH_RGW_NODES}            Evaluate    $pcc_server_dict.get("targetNodes", None)
                                      Set Suite Variable    ${CEPH_RGW_NODES}
 
+        ${CEPH_RGW_NUMDAEMONSMAP}    Evaluate    $pcc_server_dict.get("numDaemonsMap", None)
+                                     Set Suite Variable    ${CEPH_RGW_NUMDAEMONSMAP}
+
         ${CEPH_RGW_PORT}             Evaluate    $pcc_server_dict.get("port", None)
                                      Set Suite Variable    ${CEPH_RGW_PORT}
                                    
@@ -1513,6 +1516,9 @@ Load Ceph Rgw Data Secondary
 
         ${CEPH_RGW_POOLNAME_SECONDARY}         Evaluate    $CEPH_RGW_SECONDARY.get("poolName", None)
                                      Set Suite Variable    ${CEPH_RGW_POOLNAME_SECONDARY}
+
+        ${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}    Evaluate    $pcc_server_dict.get("numDaemonsMap", None)
+                                     Set Suite Variable    ${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
 
         ${CEPH_RGW_NODES_SECONDARY}            Evaluate    $CEPH_RGW_SECONDARY.get("targetNodes", None)
                                      Set Suite Variable    ${CEPH_RGW_NODES_SECONDARY}
