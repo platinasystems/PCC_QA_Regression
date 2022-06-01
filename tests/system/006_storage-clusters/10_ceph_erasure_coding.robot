@@ -4,7 +4,7 @@ Resource    pcc_resources.robot
 
 *** Variables ***
 ${pcc_setup}    pcc_226
-@{poolsToDelete}    ceph-erasure-pool-mib-4-2   ceph-erasure-pool-pib-4-2   ceph-erasure-pool-eib-4-2   pool123456  pool11  pool13  pool4   pool5   pool6   pool7
+@{poolsToDelete}    ceph-erasure-pool-mib-4-2   ceph-erasure-pool-pib-4-2   ceph-erasure-pool-eib-4-2   pool1   pool2   pool3   pool123456  pool11  pool13  pool4   pool5   pool6   pool7
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -783,9 +783,7 @@ Ceph Delete Unused Pools
                                ...  PCC.Ceph Delete Pool
                                ...  PCC.Ceph Wait Until Pool Deleted
 
-        [Tags]    Runonly
-
-        ############  Deleting ceph-erasure-pool-mib-4-2  ################
+    
 
     FOR     ${pool_name}    IN  @{poolsToDelete}
 

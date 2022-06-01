@@ -859,3 +859,28 @@ EC-Login to PCC Primary -Delete RGW
                                     Should Be Equal As Strings      ${backend_status}    OK
 	                            Sleep    1 minutes
 ####################################################################################################################################
+Ceph Delete EC Pool
+###################################################################################################################################
+
+    [Documentation]            *Delete Unused Pools*
+                               ...  keywords:
+                               ...  PCC.Ceph Get Pool Id
+                               ...  PCC.Ceph Delete Pool
+                               ...  PCC.Ceph Wait Until Pool Deleted
+
+        [Tags]    Runonly
+
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=${CEPH_RGW_POOLNAME_EC}
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+
+####################################################################################################################################

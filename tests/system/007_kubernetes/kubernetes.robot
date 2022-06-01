@@ -3,6 +3,7 @@ Resource    pcc_resources.robot
 
 *** Variables ***
 ${pcc_setup}                 pcc_212
+@{poolsToDelete}    k8s-pool-1  k8s-pool-2
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -270,7 +271,7 @@ Update K8 cluster with pools
         ${response}                 PCC.K8s Upgrade Cluster
                                ...  cluster_id=${cluster_id}
                                ...  k8sVersion=${K8S_VERSION}
-                               ...  pools=['k8s-pool-1','k8s-pool-2','k8s-pool-3','k8s-pool-4']
+                               ...  pools=['k8s-pool-1','k8s-pool-2']
 
         ${status_code}              Get Response Status Code        ${response}
                                     Log To Console      ${response}
@@ -296,12 +297,12 @@ Get Storage Classes
 
         @{strgclass_id}             PCC.K8s Get Storage Class Ids
                                ...  cluster_id=${cluster_id}
-                               ...  pools=['k8s-pool-1','k8s-pool-2','k8s-pool-3','k8s-pool-4']
+                               ...  pools=['k8s-pool-1','k8s-pool-2']
 
                                     Log To Console      ${strgclass_id}
         ${length}                   Get Length     ${strgclass_id}
                                     
-						            Should Be Equal As Integers     ${length}        4
+						            Should Be Equal As Integers     ${length}        2
 
 ###################################################################################################################################
 Delete Storage Classes
@@ -319,7 +320,7 @@ Delete Storage Classes
 
         @{strgclass_id}             PCC.K8s Get Storage Class Ids
                                ...  cluster_id=${cluster_id}
-                               ...  pools=['k8s-pool-1','k8s-pool-2','k8s-pool-3','k8s-pool-4']
+                               ...  pools=['k8s-pool-1','k8s-pool-2']
 
                                     #Should Not Be Empty     ${strgclass_id}  msg=No Storage Class to delete
 
@@ -344,3 +345,34 @@ Delete Storage Classes
 #        ${status}                   PCC.K8s Delete All Cluster
 #                                    Should be equal as strings    ${status}    OK
 ##################################################################################################################################
+Ceph Delete Unused Pools
+###################################################################################################################################
+
+    [Documentation]            *Delete Unused Pools*
+                               ...  keywords:
+                               ...  PCC.Ceph Get Pool Id
+                               ...  PCC.Ceph Delete Pool
+                               ...  PCC.Ceph Wait Until Pool Deleted
+
+            
+
+    FOR     ${pool_name}    IN  @{poolsToDelete}
+
+                               Log To Console   ${pool_name}
+
+        ${id}                  PCC.Ceph Get Pool Id
+                               ...  name=${pool_name}
+                               Continue For Loop If    ${id} is ${None}
+
+        ${response}            PCC.Ceph Delete Pool
+                               ...  id=${id}
+
+        ${status_code}         Get Response Status Code        ${response}
+                               Should Be Equal As Strings      ${status_code}  200
+
+        ${status}              PCC.Ceph Wait Until Pool Deleted
+                               ...  id=${id}
+                               Should Be Equal     ${status}  OK
+    END
+
+####################################################################################################################################
