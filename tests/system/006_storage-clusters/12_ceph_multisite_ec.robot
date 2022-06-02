@@ -158,6 +158,7 @@ EC-Ceph Rados Gateway Creation With Erasure Coded Pool Without S3 Accounts
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME_EC}
                                ...  poolName=${CEPH_RGW_POOLNAME_EC}
+					   ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
@@ -276,6 +277,7 @@ Ceph Rados Gateway Secondary Creation
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
                                ...  poolName=${CEPH_RGW_POOLNAME_EC_SECONDARY}
+					   ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
                                ...  targetNodes=${CEPH_RGW_NODES_SECONDARY}
                                ...  port=${CEPH_RGW_PORT_SECONDARY}
                                ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}

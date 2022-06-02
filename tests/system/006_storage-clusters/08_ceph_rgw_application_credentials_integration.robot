@@ -98,6 +98,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
         ${response}                 PCC.Ceph Create Rgw
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=pool-for-app-credentials
+					   ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
@@ -128,6 +129,7 @@ Ceph Rados Add S3Account
                                ...  ID=${rgw_id}
                                ...  name=${CEPH_RGW_NAME}
                                ...  poolName=pool-for-app-credentials
+					   ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
                                ...  targetNodes=${CEPH_RGW_NODES}
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
