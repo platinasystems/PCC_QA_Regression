@@ -394,12 +394,24 @@ Create Primary Rgw Configuration File
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
 				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+        ${server1_id}                      PCC.Get Node Id    Name=${SERVER_1_NAME}
+                                           Log To Console    ${server1_id}
 
+        ${server1_id_str}                  Convert To String    ${server1_id}
+
+        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=ceph-pvt
+
+		${rgw_server1_interfaces}		   Get From Dictionary  ${interfaces}  ${server1_id_str}
+                                           Log To Console    ${rgw_server1_interfaces}
+		${rgw_server1_interface0}		   Get From List  ${rgw_server1_interfaces}  0
+                                           Log To Console    ${rgw_server1_interface0}
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=0.0.0.0
+                                      ...  targetNodeIp=${rgw_server1_interface0}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -530,12 +542,24 @@ Create Primary Rgw Configuration File
                                       ...  name=${CEPH_RGW_NAME}
 				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
 				                           Set Suite Variable   ${secretKey}
+        ${server1_id}                      PCC.Get Node Id    Name=${SERVER_1_NAME}
+                                           Log To Console    ${server1_id}
 
+        ${server1_id_str}                  Convert To String    ${server1_id}
+
+        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=ceph-pvt
+
+		${rgw_server1_interfaces}		   Get From Dictionary  ${interfaces}  ${server1_id_str}
+                                           Log To Console    ${rgw_server1_interfaces}
+		${rgw_server1_interface0}		   Get From List  ${rgw_server1_interfaces}  0
+                                           Log To Console    ${rgw_server1_interface0}
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=0.0.0.0
+                                      ...  targetNodeIp=${rgw_server1_interface0}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -951,12 +975,24 @@ Create Primary Rgw Configuration File (LB)
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME}
 				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+        ${server1_id}                      PCC.Get Node Id    Name=${SERVER_1_NAME}
+                                           Log To Console    ${server1_id}
 
+        ${server1_id_str}                  Convert To String    ${server1_id}
+
+        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
+                                      ...  name=${CEPH_RGW_NAME}
+				                      ...  ceph_cluster_name=ceph-pvt
+
+		${rgw_server1_interfaces}		   Get From Dictionary  ${interfaces}  ${server1_id_str}
+                                           Log To Console    ${rgw_server1_interfaces}
+		${rgw_server1_interface0}		   Get From List  ${rgw_server1_interfaces}  0
+                                           Log To Console    ${rgw_server1_interface0}
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=0.0.0.0
+                                      ...  targetNodeIp=${rgw_server1_interface0}
                                       ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
