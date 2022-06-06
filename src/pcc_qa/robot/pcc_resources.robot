@@ -627,9 +627,6 @@ Load Ceph Rgw Data
         ${CEPH_RGW_POOLNAME}         Evaluate    $pcc_server_dict.get("poolName", None)
                                      Set Suite Variable    ${CEPH_RGW_POOLNAME}
 
-        ${CEPH_RGW_NODES}            Evaluate    $pcc_server_dict.get("targetNodes", None)
-                                     Set Suite Variable    ${CEPH_RGW_NODES}
-
         ${CEPH_RGW_NUMDAEMONSMAP}    Evaluate    $pcc_server_dict.get("numDaemonsMap", None)
                                      Set Suite Variable    ${CEPH_RGW_NUMDAEMONSMAP}
 
@@ -649,8 +646,6 @@ Load Ceph Rgw Data
 
         ${CEPH_RGW_POOLNAME_EC}         Evaluate    $pcc_server_dict.get("poolName-ec", None)
                                      Set Suite Variable    ${CEPH_RGW_POOLNAME_EC}
-        ${CEPH_RGW_NODES_EC}            Evaluate    $pcc_server_dict.get("targetNodes-ec", None)
-                                     Set Suite Variable    ${CEPH_RGW_NODES_EC}
 
 ###################################################################################################################################
 Load Auth Profile Data
@@ -1520,9 +1515,6 @@ Load Ceph Rgw Data Secondary
         ${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}    Evaluate    $CEPH_RGW_SECONDARY.get("numDaemonsMap", None)
                                      Set Suite Variable    ${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
 
-        ${CEPH_RGW_NODES_SECONDARY}            Evaluate    $CEPH_RGW_SECONDARY.get("targetNodes", None)
-                                     Set Suite Variable    ${CEPH_RGW_NODES_SECONDARY}
-
         ${CEPH_RGW_PORT_SECONDARY}             Evaluate    $CEPH_RGW_SECONDARY.get("port", None)
                                      Set Suite Variable    ${CEPH_RGW_PORT_SECONDARY}
 
@@ -1546,5 +1538,3 @@ Load Ceph Rgw Data Secondary
 
         ${CEPH_RGW_POOLNAME_EC_SECONDARY}         Evaluate    $CEPH_RGW_SECONDARY.get("poolName-ec", None)
                                      Set Suite Variable    ${CEPH_RGW_POOLNAME_EC_SECONDARY}
-        ${CEPH_RGW_NODES_EC_SECONDARY}            Evaluate    $CEPH_RGW_SECONDARY.get("targetNodes-ec", None)
-                                     Set Suite Variable    ${CEPH_RGW_NODES_EC_SECONDARY}

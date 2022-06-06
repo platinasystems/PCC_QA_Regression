@@ -32,7 +32,6 @@ class CephRgw(PccBase):
         self.name=None
         self.cephPoolID=None
         self.poolName=None
-        self.targetNodes=[]
         self.targetNodeIp=None
         self.pcc=None
         self.port=None
