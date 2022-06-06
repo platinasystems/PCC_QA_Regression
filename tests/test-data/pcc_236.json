@@ -247,14 +247,12 @@
             "name":"rados-pvt",
             "poolName":"rgw-pool",
             "numDaemonsMap": {"consul-01": 1},
-            "targetNodes":["consul-01"],
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl":"rgw.platinasystems.com",
             "S3Accounts":"rgw-app",
             "name-ec":"rados-pvt-ec",
-            "poolName-ec":"rgw-pool-ec",
-            "targetNodes-ec":["consul-02"]
+            "poolName-ec":"rgw-pool-ec"
         },
     "ceph_multisite": {
         "pcc_server":
@@ -345,14 +343,12 @@
             "name":"rados-pvt-secondary",
             "poolName":"rgw-pool",
             "numDaemonsMap": {"sv46": 1},
-            "targetNodes":["sv46"],
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl": "rgw.platinasystems.com",
             "S3Accounts":"rgw-app",
             "name-ec":"rados-pvt-secondary-ec",
             "poolName-ec":"rgw-pool-ec",
-            "targetNodes-ec":["sv50"],
             "certificateNameLB": "lb-rgw-crt",
             "certificateUrlLB":"rgw-test1.com"
         }
