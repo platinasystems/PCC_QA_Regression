@@ -19,153 +19,153 @@ Load Test Variable
                         Load Server 2 Secondary Test Data    ${pcc_setup}
 
 
-####################################################################################################################################
-#Create Application credential profile without application For Rados
-####################################################################################################################################
-#
-#        [Documentation]               *Create Metadata Profile* test
-#                                      ...  keywords:
-#                                      ...  PCC.Add Metadata Profile
-#
-#        ${status}                     Login To PCC    ${pcc_setup}
-#
-#        ${response}                   PCC.Add Metadata Profile
-#                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
-#                                      ...    Type=ceph
-#
-#                                      Log To Console    ${response}
-#                                      ${result}    Get Result    ${response}
-#                                      ${status}    Get From Dictionary    ${result}    status
-#                                      ${message}    Get From Dictionary    ${result}    message
-#                                      Log to Console    ${message}
-#                                      Should Be Equal As Strings    ${status}    200
-#
-####################################################################################################################################
-#Primary - Ceph Rados Gateway Creation
-######################################################################################################################################
-#
-#     [Documentation]                 *Primary - Ceph Rados Gateway Creation*
-#
-#        ${status}                   Login To PCC    ${pcc_setup}
-#
-#        ${status}                   PCC.Ceph Get Pcc Status
-#                               ...  name=${CEPH_CLUSTER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${rgw_id}                   PCC.Ceph Get Rgw Id
-#                               ...  name=${CEPH_RGW_NAME}
-#		                       ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-#		                            Pass Execution If    ${rgw_id} is not ${None}    There is already a radosgw
-#
-#        ${response}                 PCC.Ceph Create Rgw
-#                               ...  name=${CEPH_RGW_NAME}
-#                               ...  poolName=${CEPH_RGW_POOLNAME}
-#                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
-#                               ...  port=${CEPH_RGW_PORT}
-#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
-#                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
-#                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#        ${message}                  Get Response Message        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Ceph Wait Until Rgw Ready
-#                               ...  name=${CEPH_RGW_NAME}
-#			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#
-######################################################################################################################################
-#Ceph Local Load Balancer create on Rgw (primary)
-######################################################################################################################################
-#     [Documentation]                *Ceph Local Load Balancer create on Rgw (primary)*
-#
-#        ${status}              Login To PCC    ${pcc_setup}
-#
-#
-#        ${app_id}              PCC.Get App Id from Policies
-#                               ...  Name=loadbalancer-ceph
-#                               Log To Console    ${app_id}
-#
-#        ${rgw_id}              PCC.Ceph Get Rgw Id
-#                               ...  name=${CEPH_RGW_NAME}
-#                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-#                               Set Suite Variable   ${rgw_id}
-#
-#        ${scope1_id}           PCC.Get Scope Id
-#                               ...  scope_name=Default region
-#
-#        ${response}            PCC.Create Policy
-#                               ...  appId=${app_id}
-#                               ...  description=test-ceph-lb
-#                               ...  scopeIds=[${scope1_id}]
-#                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id}"}]
-#
-#                               Log To Console    ${response}
-#                               ${result}    Get Result    ${response}
-#                               ${status}    Get From Dictionary    ${result}    status
-#                               ${message}    Get From Dictionary    ${result}    message
-#                               Log to Console    ${message}
-#                               Should Be Equal As Strings    ${status}    200
-#
-#        ${response}            PCC.Add and Verify Roles On Nodes
-#                               ...  nodes=["${SERVER_1_NAME}"]
-#                               ...  roles=["Ceph Load Balancer"]
-#
-#                               Should Be Equal As Strings      ${response}  OK
-#
-#        ${node_wait_status}    PCC.Wait Until Node Ready
-#                               ...  Name=${SERVER_1_NAME}
-#
-#                               Log To Console    ${node_wait_status}
-#                               Should Be Equal As Strings    ${node_wait_status}    OK
-#
-#
-######################################################################################################################################
-#Ceph Local Load Balancer create on Rgw (secondary)
-######################################################################################################################################
-#     [Documentation]                *Ceph Local Load Balancer create on Rgw (secondary)*
-#
-#        ${status}              Login To PCC Secondary   ${pcc_setup}
-#
-#
-#        ${app_id}              PCC.Get App Id from Policies
-#                               ...  Name=loadbalancer-ceph
-#                               Log To Console    ${app_id}
-#
-#        ${rgw_id_secondary}    PCC.Ceph Get Rgw Id
-#                               ...  name=${CEPH_RGW_NAME_SECONDARY}
-#                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
-#                               Set Suite Variable   ${rgw_id_secondary}
-#
-#        ${scope1_id}           PCC.Get Scope Id
-#                               ...  scope_name=Default region
-#
-#        ${response}            PCC.Create Policy
-#                               ...  appId=${app_id}
-#                               ...  description=test-ceph-lb
-#                               ...  scopeIds=[${scope1_id}]
-#                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id_secondary}"}]
-#
-#                               Log To Console    ${response}
-#                               ${result}    Get Result    ${response}
-#                               ${status}    Get From Dictionary    ${result}    status
-#                               ${message}    Get From Dictionary    ${result}    message
-#                               Log to Console    ${message}
-#                               Should Be Equal As Strings    ${status}    200
-#
-#        ${response}            PCC.Add and Verify Roles On Nodes
-#                               ...  nodes=["${SERVER_1_NAME_SECONDARY}"]
-#                               ...  roles=["Ceph Load Balancer"]
-#
-#                               Should Be Equal As Strings      ${response}  OK
-#
-#        ${node_wait_status}    PCC.Wait Until Node Ready
-#                               ...  Name=${SERVER_1_NAME_SECONDARY}
-#
-#                               Log To Console    ${node_wait_status}
-#                               Should Be Equal As Strings    ${node_wait_status}    OK
+###################################################################################################################################
+Create Application credential profile without application For Rados
+###################################################################################################################################
+
+        [Documentation]               *Create Metadata Profile* test
+                                      ...  keywords:
+                                      ...  PCC.Add Metadata Profile
+
+        ${status}                     Login To PCC    ${pcc_setup}
+
+        ${response}                   PCC.Add Metadata Profile
+                                      ...    Name=${CEPH_RGW_S3ACCOUNTS}
+                                      ...    Type=ceph
+
+                                      Log To Console    ${response}
+                                      ${result}    Get Result    ${response}
+                                      ${status}    Get From Dictionary    ${result}    status
+                                      ${message}    Get From Dictionary    ${result}    message
+                                      Log to Console    ${message}
+                                      Should Be Equal As Strings    ${status}    200
+
+###################################################################################################################################
+Primary - Ceph Rados Gateway Creation
+#####################################################################################################################################
+
+     [Documentation]                 *Primary - Ceph Rados Gateway Creation*
+
+        ${status}                   Login To PCC    ${pcc_setup}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+		                       ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+		                            Pass Execution If    ${rgw_id} is not ${None}    There is already a radosgw
+
+        ${response}                 PCC.Ceph Create Rgw
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  poolName=${CEPH_RGW_POOLNAME}
+                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
+                               ...  port=${CEPH_RGW_PORT}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
+                               ...  S3Accounts=["${CEPH_RGW_S3Accounts}"]
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+#####################################################################################################################################
+Ceph Local Load Balancer create on Rgw (primary)
+#####################################################################################################################################
+     [Documentation]                *Ceph Local Load Balancer create on Rgw (primary)*
+
+        ${status}              Login To PCC    ${pcc_setup}
+
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id}              PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               Set Suite Variable   ${rgw_id}
+
+        ${scope1_id}           PCC.Get Scope Id
+                               ...  scope_name=Default region
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb
+                               ...  scopeIds=[${scope1_id}]
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id}"}]
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               Log to Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
+        ${response}            PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                               Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+#####################################################################################################################################
+Ceph Local Load Balancer create on Rgw (secondary)
+#####################################################################################################################################
+     [Documentation]                *Ceph Local Load Balancer create on Rgw (secondary)*
+
+        ${status}              Login To PCC Secondary   ${pcc_setup}
+
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id_secondary}    PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                               Set Suite Variable   ${rgw_id_secondary}
+
+        ${scope1_id}           PCC.Get Scope Id
+                               ...  scope_name=Default region
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb
+                               ...  scopeIds=[${scope1_id}]
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id_secondary}"}]
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               Log to Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
+        ${response}            PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME_SECONDARY}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                               Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
 
 ###################################################################################################################################
 Primary Started Trust Creation
