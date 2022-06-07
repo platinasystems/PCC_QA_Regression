@@ -30,3 +30,18 @@ Install s3cmd utility on nodes
                  
                  Log To Console    ${status}
                  Should be equal as strings    ${status}    OK
+
+
+#####################################################################################################################################
+Install s3cmd utility on Secondary nodes
+#####################################################################################################################################
+
+    [Documentation]    *Install s3cmd utility on Secondary nodes* test
+    [Tags]    addù
+
+    ${status}    Login To PCC Secondary  ${pcc_setup}
+
+    ${status}    Install s3cmd command
+
+                 Log To Console    ${status}
+                 Should be equal as strings    ${status}    OK
