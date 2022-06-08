@@ -122,6 +122,7 @@ PCC-Get Link From Gmail Read Only User
 
         ${password_token}     PCC.Get Link From Gmail
                               ...   Email=${READONLY_USER_PCC_USERNAME}
+                              ...   Password=xotajjbguvofxonr
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}
@@ -189,6 +190,7 @@ PCC-Get Link From Gmail Admin User
 
         ${password_token}     PCC.Get Link From Gmail
                               ...   Email=${TENANT_USER_PCC_USERNAME}
+                              ...   Password=wijvlumrtydqjras
 
                               Log To Console    ${password_token}
                               Set Suite Variable    ${password_token}

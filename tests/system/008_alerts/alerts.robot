@@ -241,6 +241,7 @@ Alert High Pool Usage 80% Firing
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
@@ -262,6 +263,7 @@ Alert High Pool Usage 80% Firing
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
@@ -289,6 +291,7 @@ Alert High Pool Usage 80% Resolved
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
@@ -326,6 +329,7 @@ Alert High Pool Usage 90% Firing
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
@@ -353,6 +357,7 @@ Alert High Pool Usage 90% Resolved
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
@@ -391,6 +396,7 @@ Alert osd down/out
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}
@@ -410,6 +416,7 @@ Alert osd down/out
 
        ${mail}                       PCC.Get Body From Last Mail
                                ...   Email=${TENANT_USER_PCC_USERNAME}
+                               ...   Password=wijvlumrtydqjras
 
        ${result}                     PCC.Find Alert Mail
                                ...   mail=${mail}

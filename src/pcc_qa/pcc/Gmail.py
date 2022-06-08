@@ -19,7 +19,7 @@ class Gmail(PccBase):
 
     def __init__(self):
         self.Email = None
-#        self.Password =None
+        self.Password = None
         super().__init__()
 
     ###########################################################################
@@ -33,7 +33,7 @@ class Gmail(PccBase):
 
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
         #mail.login('calsoftplatina@gmail.com', 'plat1n@!')
-        mail.login(self.Email, 'plat1n@!')
+        mail.login(self.Email, self.Password)
         mail.list()
         # Out: list of "folders" aka labels in gmail.
         mail.select("inbox")  # connect to inbox.
@@ -70,7 +70,7 @@ class Gmail(PccBase):
 
         mail = imaplib.IMAP4_SSL('imap.gmail.com')
         # mail.login('calsoftplatina@gmail.com', 'plat1n@!')
-        mail.login(self.Email, 'plat1n@!')
+        mail.login(self.Email, self.Password)
         mail.list()
         # Out: list of "folders" aka labels in gmail.
         mail.select("inbox")  # connect to inbox.
