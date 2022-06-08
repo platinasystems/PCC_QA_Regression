@@ -289,6 +289,98 @@ Ceph Rados Gateway Secondary Creation
                                ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
 			                   ...  ceph_cluster_name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
+
+ #####################################################################################################################################
+Ceph Local Load Balancer create on Rgw (primary)
+#####################################################################################################################################
+     [Documentation]                *Ceph Local Load Balancer create on Rgw (primary)*
+
+        ${status}              Login To PCC    ${pcc_setup}
+
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id}              PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_EC}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               Set Suite Variable   ${rgw_id}
+
+        ${scope1_id}           PCC.Get Scope Id
+                               ...  scope_name=Default region
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb
+                               ...  scopeIds=[${scope1_id}]
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id}"}]
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               Log to Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
+        ${response}            PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                               Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+#####################################################################################################################################
+Ceph Local Load Balancer create on Rgw (secondary)
+#####################################################################################################################################
+     [Documentation]                *Ceph Local Load Balancer create on Rgw (secondary)*
+
+        ${status}              Login To PCC Secondary   ${pcc_setup}
+
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id_secondary}    PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                               Set Suite Variable   ${rgw_id_secondary}
+
+        ${scope1_id}           PCC.Get Scope Id
+                               ...  scope_name=Default region
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb
+                               ...  scopeIds=[${scope1_id}]
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id_secondary}"}]
+
+                               Log To Console    ${response}
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               Log to Console    ${message}
+                               Should Be Equal As Strings    ${status}    200
+
+        ${response}            PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME_SECONDARY}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                               Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
 ###################################################################################################################################
 EC-Login to PCC Primary and Create Trust
 #######################################EC-Login to PCC Primary1############################################################################################
@@ -400,8 +492,9 @@ EC-Wait Until Trust Established - Primary
 ###################################################################################################################################
 EC-Create Primary Rgw Configuration File
 ###################################################################################################################################
-    [Tags]  EC1
-    [Documentation]                        *Create Rgw Configuration File*
+    [Documentation]                        *EC-Create Primary Rgw Configuration File*
+
+        ${status}                          Login To PCC    ${pcc_setup}
 
         ${status}                          PCC.Ceph Get Pcc Status
                                       ...  name=${CEPH_CLUSTER_NAME}
@@ -410,10 +503,12 @@ EC-Create Primary Rgw Configuration File
         ${accessKey}                       PCC.Ceph Get Rgw Access Key
                                       ...  name=${CEPH_RGW_NAME_EC}
 				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+				                           Set Suite Variable  ${accessKey}
 
         ${secretKey}                       PCC.Ceph Get Rgw Secret Key
                                       ...  name=${CEPH_RGW_NAME_EC}
 				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+				                           Set Suite Variable  ${secretKey}
 
         ${server1_id}                      PCC.Get Node Id    Name=${SERVER_1_NAME}
                                            Log To Console    ${server1_id}
@@ -491,36 +586,34 @@ EC-Login to PCC Secondary -Wait Until Secondary Replica Status: Caught up
                                     Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
-EC-Login to PCC Primary
-###################################################################################################################################
-    [Tags]  EC1
-        ${status}        Login To PCC    ${pcc_setup}
-
-
-###################################################################################################################################
 EC-Create Secondary Rgw Configuration File
 ###################################################################################################################################
     [Tags]  EC1
-    [Documentation]                        *Create Rgw Configuration File*
+        ${status}                          Login To PCC Secondary   ${pcc_setup}
 
         ${status}                          PCC.Ceph Get Pcc Status
-                                      ...  name=${CEPH_CLUSTER_NAME}
+                                      ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
                                            Should Be Equal As Strings      ${status}    OK
 
-        ${accessKey}                       PCC.Ceph Get Rgw Access Key
-                                      ...  name=${CEPH_RGW_NAME_EC}
-				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+        ${server1_id}                      PCC.Get Node Id    Name=${SERVER_1_NAME_SECONDARY}
+                                           Log To Console    ${server1_id}
 
-        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
-                                      ...  name=${CEPH_RGW_NAME_EC}
-				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+        ${server1_id_str}                  Convert To String    ${server1_id}
 
+        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
+                                      ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
+				                      ...  ceph_cluster_name=ceph-pvt
+
+		${rgw_server1_interfaces}		   Get From Dictionary  ${interfaces}  ${server1_id_str}
+                                           Log To Console    ${rgw_server1_interfaces}
+		${rgw_server1_interface0}		   Get From List  ${rgw_server1_interfaces}  0
+                                           Log To Console    ${rgw_server1_interface0}
 
         ${status}                          PCC.Ceph Rgw Configure
                                       ...  accessKey=${accessKey}
                                       ...  secretKey=${secretKey}
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP_SECONDARY}
+                                      ...  pcc=${SERVER_1_HOST_IP_SECONDARY}
+                                      ...  targetNodeIp=${rgw_server1_interface0}
                                       ...  port=${CEPH_RGW_PORT_SECONDARY}
 
                                            Should Be Equal As Strings      ${status}    OK
@@ -536,7 +629,7 @@ EC-List Rgw Bucket - Secondary
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw List Buckets
-                                      ...  pcc=${SERVER_1_HOST_IP}
+                                      ...  pcc=${SERVER_1_HOST_IP_SECONDARY}
 
                                            Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
@@ -551,50 +644,7 @@ EC-List Rgw Objects inside Bucket - Secondary
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw List Objects inside Buckets
-                                      ...  pcc=${SERVER_1_HOST_IP}
-
-                                           Should Be Equal As Strings      ${status}    OK
-
-###################################################################################################################################
-EC-Create Primary Rgw Configuration File-1
-###################################################################################################################################
-        [Tags]  EC1
-
-    [Documentation]                        *Create Rgw Configuration File*
-
-        ${status}                          PCC.Ceph Get Pcc Status
-                                      ...  name=${CEPH_CLUSTER_NAME}
-                                           Should Be Equal As Strings      ${status}    OK
-
-        ${accessKey}                       PCC.Ceph Get Rgw Access Key
-                                      ...  name=${CEPH_RGW_NAME_EC}
-				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-				                           Set Suite Variable   ${accessKey}
-
-        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
-                                      ...  name=${CEPH_RGW_NAME_EC}
-				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-				                           Set Suite Variable   ${secretKey}
-
-        ${server1_id}                      PCC.Get Node Id    Name=${SERVER_1_NAME}
-                                           Log To Console    ${server1_id}
-
-        ${server1_id_str}                  Convert To String    ${server1_id}
-
-        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
-                                      ...  name=${CEPH_RGW_NAME_EC}
-				                      ...  ceph_cluster_name=ceph-pvt
-
-		${rgw_server1_interfaces}		   Get From Dictionary  ${interfaces}  ${server1_id_str}
-                                           Log To Console    ${rgw_server1_interfaces}
-		${rgw_server1_interface0}		   Get From List  ${rgw_server1_interfaces}  0
-                                           Log To Console    ${rgw_server1_interface0}
-        ${status}                          PCC.Ceph Rgw Configure
-                                      ...  accessKey=${accessKey}
-                                      ...  secretKey=${secretKey}
-                                      ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${rgw_server1_interface0}
-                                      ...  port=${CEPH_RGW_PORT}
+                                      ...  pcc=${SERVER_1_HOST_IP_SECONDARY}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -604,14 +654,14 @@ EC-Delete A File From Rgw Bucket - Primary
     [Tags]  EC1
     [Documentation]                        *Delete a file from Rgw Bucket*
 
+        ${status}                          Login To PCC   ${pcc_setup}
+
         ${status}                          PCC.Ceph Get Pcc Status
                                       ...  name=ceph-pvt
                                            Should Be Equal As Strings      ${status}    OK
 
         ${status}                          PCC.Ceph Rgw Delete File From Bucket
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
-                                      ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -627,8 +677,6 @@ EC-Delete Rgw Bucket - Primary
 
         ${status}                          PCC.Ceph Rgw Delete Bucket
                                       ...  pcc=${SERVER_1_HOST_IP}
-                                      ...  targetNodeIp=${SERVER_1_HOST_IP}
-                                      ...  port=${CEPH_RGW_PORT}
 
                                            Should Be Equal As Strings      ${status}    OK
 
@@ -821,8 +869,50 @@ EC-Secondary Delete Trust -Teardown
         ${message}                  Get Response Message        ${response}
 
 
+###################################################################################################################################
+Removing Ceph Load balancer Primary
+###################################################################################################################################
+    [Documentation]                 *Removing Ceph Load balancer*
+
+
+        ${status}                   Login To PCC   ${pcc_setup}
+
+        ${response}                 PCC.Delete and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+###################################################################################################################################
+Removing Ceph Load balancer Secondary
+###################################################################################################################################
+    [Documentation]                 *Removing Ceph Load balancer*
+
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${response}                 PCC.Delete and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME_SECONDARY}"]
+                               ...  roles=["Ceph Load Balancer"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
 ####################################################################################################################################
-EC-Ceph Rados Gateway Delete Secondary -Teardown
+EC-Ceph Rados Gateway Delete Secondary
 ####################################################################################################################################
 
     [Documentation]                 *Ceph Rados Gateway Delete*
@@ -884,6 +974,7 @@ EC-Login to PCC Primary -Delete RGW
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
 	                            Sleep    1 minutes
+
 ####################################################################################################################################
 Ceph Delete EC Pool
 ###################################################################################################################################

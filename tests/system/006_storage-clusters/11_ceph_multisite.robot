@@ -1312,6 +1312,60 @@ Removing Ceph Load balancer Secondary
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
+
+###################################################################################################################################
+Removing Ceph Load balancer Policy Primary
+###################################################################################################################################
+    [Documentation]                 *Removing Ceph Load balancer Policy Primary*
+
+
+        ${status}                   Login To PCC   ${pcc_setup}
+
+        ${policy_id}                PCC.Get Policy Id
+                               ...  Name=loadbalancer-ceph
+                               ...  description=test-ceph-lb
+
+        ${policy_id_str}            Convert To String    ${policy_id}
+
+        ${response}                 PCC.Unassign Locations Assigned from Policy
+                               ...  Id=${policy_id_str}
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${response}                 PCC.Delete Policy
+                               ...  Name=loadbalancer-ceph
+                               ...  description=test-ceph-lb
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Removing Ceph Load balancer Policy Secondary
+###################################################################################################################################
+    [Documentation]                 *Removing Ceph Load balancer Policy Primary*
+
+
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${policy_id}                PCC.Get Policy Id
+                               ...  Name=loadbalancer-ceph
+                               ...  description=test-ceph-lb
+
+        ${policy_id_str}            Convert To String    ${policy_id}
+
+        ${response}                 PCC.Unassign Locations Assigned from Policy
+                               ...  Id=${policy_id_str}
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${response}                 PCC.Delete Policy
+                               ...  Name=loadbalancer-ceph
+                               ...  description=test-ceph-lb
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
 #####################################################################################################################################
 Delete Primary Ceph Rados Gateway Delete
 #####################################################################################################################################

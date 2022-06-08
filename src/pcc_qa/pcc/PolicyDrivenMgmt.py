@@ -13,7 +13,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 from pcc_qa.pcc.Nodes import Nodes
@@ -488,6 +488,32 @@ class PolicyDrivenMgmt(PccBase):
                 return "OK"  
             else:
                 return "Error: while unassignment of locations from all policies: {}".format(location_unassign_status)
+
+    ###########################################################################
+    @keyword(name="PCC.Unassign Locations Assigned from Policy")
+    ###########################################################################
+    def unassign_locations_policy(self, *args, **kwargs):
+        banner("PCC.Unassign Locations Assigned from Policy")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        data = pcc.get_policy(conn, id=self.Id)['Result']['Data']
+        if data == None:
+            return "Error"
+        else:
+            payload = {"id": data['id'],
+                       "appId": data['appId'],
+                       "scopeIDs": [],
+                       "description": data['description'],
+                       "inputs": data['inputs'],
+                       "owner": data['owner']
+                       }
+            response = pcc.modify_policy_by_id(conn, str(data['id']), payload)
+            print("Response is {}".format(response))
+            status = get_status_code(response)
+            if status == 200:
+                return "OK"
+            else:
+                return "Error"
 
     ###########################################################################
     @keyword(name="PCC.Get Node RSOP")
