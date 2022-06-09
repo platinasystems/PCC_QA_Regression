@@ -45,7 +45,7 @@ Ceph Cluster Get Used Drives
 
         @{used_drives_id}           PCC.Ceph Get Used Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME}
-                              ...   server_name=${SERVER_2_NAME}
+                              ...   server_name=${SERVER_1_NAME}
                                     Log To Console       ${used_drives_id}
 
         ${length}                   Get Length     ${used_drives_id}
@@ -67,12 +67,12 @@ Ceph Cluster Get Unused Drives
 
         @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME}
-                              ...   server_name=${SERVER_2_NAME}
+                              ...   server_name=${SERVER_1_NAME}
                                     Log To Console       ${unused_drives_id}
 
         @{osd_ids}                  PCC.Ceph get OSD Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME}
-                              ...   server_name=${SERVER_2_NAME}
+                              ...   server_name=${SERVER_1_NAME}
                                     Log To Console       ${osd_ids}
 
 
@@ -95,7 +95,7 @@ Ceph Cluster Delete OSD Drives
 
         @{osd_ids}                  PCC.Ceph get OSD Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME}
-                              ...   server_name=${SERVER_2_NAME}
+                              ...   server_name=${SERVER_1_NAME}
                                     Log To Console       ${osd_ids}
                                  #  Log To Console       ${osd_ids}[0]
 
@@ -135,7 +135,7 @@ Ceph Cluster Add OSD Drive
 
         @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME}
-                              ...   server_name=${SERVER_2_NAME}
+                              ...   server_name=${SERVER_1_NAME}
                                     Log To Console      ${unused_drives_id}
                                     Should Be True      ${unused_drives_id} is not ${None}     PCC.Ceph Get Unused Drives by Hostname
 
@@ -150,7 +150,7 @@ Ceph Cluster Add OSD Drive
 
         @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME}
-                              ...   server_name=${SERVER_2_NAME}
+                              ...   server_name=${SERVER_1_NAME}
                                     Log To Console       ${unused_drives_id}
                                     Pass Execution If    ${unused_drives_id} is ${None}     PCC.Ceph Get Unused Drives by Hostname
 
