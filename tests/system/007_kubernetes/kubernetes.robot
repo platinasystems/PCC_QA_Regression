@@ -247,7 +247,7 @@ Update K8 cluster with pools
                                ...  name=${CEPH_Cluster_NAME}
 
         ${response}                 PCC.Ceph Create Pool Multiple
-                               ...  count=4
+                               ...  count=2
                                ...  name=k8s-pool
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
@@ -261,7 +261,7 @@ Update K8 cluster with pools
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=k8s-pool-4
+                               ...  name=k8s-pool-2
 
                                     Should Be Equal As Strings      ${status}    OK
 
