@@ -51,7 +51,6 @@ class CephRgw(PccBase):
         self.ceph_cluster_name = None
         self.num_daemons_map = None
 
-
     ###########################################################################
     @keyword(name="PCC.Ceph Get Rgw Id")
     ###########################################################################
@@ -261,7 +260,7 @@ class CephRgw(PccBase):
                         break
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Rgw Ready] Timeout")
-            time.sleep(5)
+            time.sleep(15)
         return "OK"
 
 
@@ -295,7 +294,7 @@ class CephRgw(PccBase):
                         raise Exception("[PCC.Wait Until Rados Gateway Deleted] Timeout")
                     if Id_found_in_list_of_rgws:
                         trace("  Waiting until Rgws: %s is deleted. Timeout in %.1f seconds." %(data['name'], timeout-time.time()))
-            time.sleep(5)
+            time.sleep(15)
         return "OK"
 
 
@@ -628,41 +627,39 @@ class CephRgw(PccBase):
         except Exception as e:
             raise e        
 
-        ceph_be_cmd="sudo ceph -s"
-        wait_time=400
+        tick = 30
+        ceph_be_cmd = "sudo ceph -s"
+        wait_time = 5 * tick
         
-        for i in range(4):
-            time.sleep(100)
-            wait_time-=100
+        while wait_time > 0:
+            failed = False
+            failed_chk_map = {}
+            if self.num_daemons_map:
+                for host_name, num_daemons in self.num_daemons_map.items():
+                    host_ip = easy.get_hostip_by_name(conn, host_name)
+                    failed_chk_map[host_name] = 0
+                    for j in range(num_daemons):
+                        cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name,j)
+                        ceph_check=cli_run(host_ip,self.user,self.password,ceph_be_cmd)
+                        rgw_check=cli_run(host_ip,self.user,self.password,cmd_rgw)
+                        print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
+                        print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
+                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
+                            continue
+                        else:
+                            failed_chk_map[host_name] += 1
+                    if failed_chk_map[host_name] > 0:
+                        failed = True
+                if not failed:
+                    return "OK"
+            time.sleep(tick)
+            wait_time -= tick
             print("wait time left for RGW backend check {}s".format(wait_time))
             trace("wait time left for RGW backend check {}s".format(wait_time))
-            failed_chk=[]
-            success_chk=[]
-            for ip in eval(str(self.targetNodeIp)):
-                host_name=easy.get_host_name_by_ip(conn,ip)
-                cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)
-                ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
-                rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
-                print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
-                print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
-                if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
-                    success_chk.append(ip)
-                    
-                else:
-                    failed_chk.append(ip)
-                    
-                if len(success_chk)==len(eval(str(self.targetNodeIp))):
-                    print("Backend verification successfuly done for : {}".format(success_chk))
-                    return "OK"
-        if wait_time<=0:
-            print("Rgw Check: "+str(rgw_check)) 
-            print("Ceph Rgw Check: "+str(ceph_check))     
-                              
-        if failed_chk:  
-            print("Rgw service are down for {}".format(failed_chk))     
-            return "Error"
-        else:
-            return "OK"
+
+        print("Number Of Instances Down Per Node: {}".format(failed_chk_map))
+        return "Error"
+
 
     ###########################################################################
     @keyword(name="PCC.Ceph Rgw Verify BE Deletion")
@@ -675,40 +672,37 @@ class CephRgw(PccBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-        
-        ceph_be_cmd="sudo ceph -s"
-        wait_time=180
-        
-        for i in range(9):
-            time.sleep(20)
-            wait_time-=20
+
+        tick = 30
+        ceph_be_cmd = "sudo ceph -s"
+        wait_time = 5 * tick
+
+        while wait_time > 0:
+            failed = False
+            failed_chk_map = {}
+            if self.num_daemons_map:
+                for host_name, num_daemons in self.num_daemons_map.items():
+                    host_ip = easy.get_hostip_by_name(conn, host_name)
+                    failed_chk_map[host_name] = 0
+                    for j in range(num_daemons):
+                        cmd_rgw = "sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name, j)
+                        ceph_check = cli_run(host_ip, self.user, self.password, ceph_be_cmd)
+                        rgw_check = cli_run(host_ip, self.user, self.password, cmd_rgw)
+                        print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
+                        print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
+                        if re.search("rgw", str(ceph_check)) and re.search("running", str(rgw_check)):
+                            failed_chk_map[host_name] += 1
+                    if failed_chk_map[host_name] > 0:
+                        failed = True
+                if not failed:
+                    return "OK"
+            time.sleep(tick)
+            wait_time -= tick
             print("wait time left for RGW backend check {}s".format(wait_time))
             trace("wait time left for RGW backend check {}s".format(wait_time))
-            failed_chk=[]
-            success_chk=[]
-            for ip in eval(str(self.targetNodeIp)):
-                host_name=easy.get_host_name_by_ip(conn,ip)
-                cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw0".format(host_name)            
-                ceph_check=cli_run(ip,self.user,self.password,ceph_be_cmd)
-                rgw_check=cli_run(ip,self.user,self.password,cmd_rgw)
-                if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
-                    failed_chk.append(ip)
-                else:
-                    success_chk.append(ip)
-                                         
-                if len(success_chk)==len(eval(str(self.targetNodeIp))):
-                    print("Backend verification successfuly done for : {}".format(success_chk))
-                    return "OK"
 
-        if wait_time<=0:
-            print("Rgw Check: "+str(rgw_check)) 
-            print("Ceph Rgw Check: "+str(ceph_check))
-                                                        
-        if failed_chk:  
-            print("Rgw service are not down for {}".format(failed_chk))     
-            return "Error"
-        else:
-            return "OK"
+        print("Number Of Instances Up Per Node: {}".format(failed_chk_map))
+        return "Error"
 
     ###########################################################################
     @keyword(name="PCC.Ceph Rgw Verify Service IP BE")
