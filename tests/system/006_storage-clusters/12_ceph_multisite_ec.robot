@@ -941,8 +941,8 @@ EC-Ceph Rados Gateway Delete Secondary
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-	                                Sleep    1 minutes
-                                    Should Be Equal As Strings      ${status_code}  200
+	                                Sleep    2 minutes
+                                    
 ###################################################################################################################################
 EC-Login to PCC Primary -Delete RGW
 ###################################################################################################################################
@@ -973,7 +973,7 @@ EC-Login to PCC Primary -Delete RGW
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-	                            Sleep    1 minutes
+	                            Sleep    2 minutes
 
 ####################################################################################################################################
 Ceph Delete EC Pool

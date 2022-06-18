@@ -1399,7 +1399,7 @@ Delete Primary Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-				                    Sleep    1 minutes
+				                    Sleep    2 minutes
 ####################################################################################################################################
 Delete Seondary Ceph Rados Gateway
 #####################################################################################################################################
@@ -1433,7 +1433,7 @@ Delete Seondary Ceph Rados Gateway
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  targetNodeIp=['${SERVER_1_HOST_IP}']
                                     Should Be Equal As Strings      ${backend_status}    OK
-				                    Sleep    1 minutes
+				                    Sleep    2 minutes
 ####################################################################################################################################
 #Ceph Delete Unused Pools
 ####################################################################################################################################
