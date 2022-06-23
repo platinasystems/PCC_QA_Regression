@@ -396,7 +396,7 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
@@ -432,7 +432,7 @@ Ceph Rados Add S3Account
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  targetNodeIp=['${SERVER_1_HOST_IP}']
+                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
