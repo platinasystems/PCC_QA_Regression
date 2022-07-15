@@ -23,6 +23,18 @@ Login
         ${status}                           Login To PCC        testdata_key=${pcc_setup}
                                             Should Be Equal     ${status}  OK
 
+###################################################################################################################################
+Ceph Delete Unused Pools
+###################################################################################################################################
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${status}                   PCC.Ceph Delete Unused Pools
+                               ...  ceph_cluster_id=${cluster_id}
+                                    Should be equal as strings    ${status}    OK
+
+                                    sleep  1m
 
 ###################################################################################################################################
 Ceph Pool For Rgws
