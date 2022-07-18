@@ -23,6 +23,53 @@ Login
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
+Ceph Delete Unused Pools
+###################################################################################################################################
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${status}                   PCC.Ceph Delete Unused Pools
+                               ...  ceph_cluster_id=${cluster_id}
+                                    Should be equal as strings    ${status}    OK
+
+                                    sleep  1m
+
+##################################################################################################################################
+Ceph Create For CephFS
+###################################################################################################################################
+    [Documentation]                 *Ceph Create For CephFS*
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+        ${response}                 PCC.Ceph Create Pool Multiple
+                               ...  count=8
+                               ...  name=pool
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                               ...  quota=1
+                               ...  quota_unit=GiB
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=${CEPH_FS_META}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=${CEPH_FS_DATA}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=${CEPH_FS_DEFAULT}
+                                    Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
 Ceph Fs Creation
 ###################################################################################################################################
     [Documentation]                 *Creating Cepf FS*
@@ -128,13 +175,13 @@ Create CephFS - with mutiple data pools
                                ...  name=${CEPH_FS_DATA}
 
         ${data1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool4
+                               ...  name=pool-4
 
         ${data2}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool5
+                               ...  name=pool-5
 
         ${data3}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool6
+                               ...  name=pool-6
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
@@ -385,10 +432,10 @@ Create CephFS - with multiple default pools (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${default1}                 PCC.Ceph Get Pool Details For FS
-                               ...  name= Pool4
+                               ...  name= pool-4
 
         ${default2}                 PCC.Ceph Get Pool Details For FS
-                               ...  name= Pool5
+                               ...  name= pool-5
 
         ${response}                 PCC.Ceph Create Fs
                                ...  name=cfs4
@@ -420,10 +467,10 @@ Create CephFS - with multiple metadata pools (Negative)
                                ...  name=${CEPH_FS_META}
 
         ${meta1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool6
+                               ...  name=pool-6
 
         ${meta2}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool7
+                               ...  name=pool-7
 
         ${data}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DATA}
@@ -619,13 +666,13 @@ Ceph Fs Update with multiple pool data
                                ...  name=${CEPH_FS_DATA}
 
         ${data1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool4
+                               ...  name=pool-4
 
         ${data2}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool5
+                               ...  name=pool-5
 
         ${data3}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool6
+                               ...  name=pool-6
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
@@ -766,7 +813,7 @@ Update CephFS - add_metadata_pool (Negative)
                                ...  name=${CEPH_FS_META}
 
         ${meta1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool8
+                               ...  name=pool-8
 
         ${data}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DATA}
@@ -1002,7 +1049,7 @@ Pool released from RBD is used for creating/updating CephFS
 
         ${response}                 PCC.Ceph Create Rbd
                                ...  pool_type=replicated
-			       ...  name=fs-rbd
+			                   ...  name=fs-rbd
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
                                ...  size=${CEPH_RBD_SIZE}
