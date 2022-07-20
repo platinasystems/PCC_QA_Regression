@@ -4,7 +4,6 @@ Resource    pcc_resources.robot
 
 *** Variables ***
 ${pcc_setup}    pcc_226
-@{poolsToDelete}    ceph-erasure-pool-mib-4-2   ceph-erasure-pool-pib-4-2   ceph-erasure-pool-eib-4-2   pool1   pool2   pool3   pool123456  pool11  pool13  pool4   pool5   pool6   pool7
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -41,6 +40,19 @@ Login to PCC
         ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
+
+###################################################################################################################################
+Ceph Delete Unused Pools
+###################################################################################################################################
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${status}                   PCC.Ceph Delete Unused Pools
+                               ...  ceph_cluster_id=${cluster_id}
+                                    Should be equal as strings    ${status}    OK
+
+                                    sleep  1m
 
 ############################################################################################################################################################
 Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Also covers 4-2, 8-3 and 8-4 chunk ratio profiles
@@ -93,74 +105,6 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                Should Be Equal As Strings      ${status}    OK
                                Sleep    5s
 
-#       ####  Quota Size in MiB (12:3 ratio) ####
-#       ${response}            PCC.Ceph Create Erasure Pool
-#
-#                               ...  name=ceph-erasure-pool-mib-12-3
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  pool_type=data
-#                               ...  resilienceScheme=erasure
-#                               ...  quota=3
-#                               ...  quota_unit=MiB
-#                               ...  Datachunks=12
-#                               ...  Codingchunks=3
-#
-#
-#
-#        ${status_code}          Get Response Status Code        ${response}
-#                                Should Be Equal As Strings      ${status_code}  200
-#
-#
-#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-#                               ...  name=ceph-erasure-pool-mib-12-3
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#
-#
-#       ${status}               PCC.Ceph Erasure Pool Verify BE
-#                               ...  name=ceph-erasure-pool-mib-12-3
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#                               Sleep    5s
-#
-#       ####  Quota Size in MiB (16:4 ratio) ####
-#       ${response}            PCC.Ceph Create Erasure Pool
-#
-#                               ...  name=ceph-erasure-pool-mib-16-4
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  pool_type=data
-#                               ...  resilienceScheme=erasure
-#                               ...  quota=3
-#                               ...  quota_unit=MiB
-#                               ...  Datachunks=16
-#                               ...  Codingchunks=4
-#
-#
-#
-#        ${status_code}          Get Response Status Code        ${response}
-#                                Should Be Equal As Strings      ${status_code}  200
-#
-#
-#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-#                               ...  name=ceph-erasure-pool-mib-16-4
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#
-#
-#       ${status}               PCC.Ceph Erasure Pool Verify BE
-#                               ...  name=ceph-erasure-pool-mib-16-4
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#                               Sleep    5s
-#
        #### Quota Size in MiB (4:2 ratio) ####
 
         ${response}            PCC.Ceph Create Erasure Pool
@@ -196,85 +140,17 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                Should Be Equal As Strings      ${status}    OK
                                Sleep    5s
 
-#        ######### Quota Size in GiB (8:3 ratio)#########
-#
-#        ${response}            PCC.Ceph Create Erasure Pool
-#
-#                               ...  name=ceph-erasure-pool-gib-8-3
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  pool_type=data
-#                               ...  resilienceScheme=erasure
-#                               ...  quota=3
-#                               ...  quota_unit=GiB
-#                               ...  Datachunks=8
-#                               ...  Codingchunks=3
-#
-#        ${status_code}          Get Response Status Code        ${response}
-#                                Should Be Equal As Strings      ${status_code}  200
-#
-#
-#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-#                               ...  name=ceph-erasure-pool-gib-8-3
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#
-#
-#        ${status}              PCC.Ceph Erasure Pool Verify BE
-#                               ...  name=ceph-erasure-pool-gib-8-3
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#                               Sleep    5s
-#
-#
-#        ######### Quota Size in TiB #########
-#
-#        ${response}            PCC.Ceph Create Erasure Pool
-#
-#                               ...  name=ceph-erasure-pool-tib-8-4
-#                               ...  ceph_cluster_id=${cluster_id}
-#                               ...  size=${CEPH_POOL_SIZE}
-#                               ...  pool_type=data
-#                               ...  resilienceScheme=erasure
-#                               ...  quota=${CEPH_POOL_QUOTA}
-#                               ...  quota_unit=TiB
-#                               ...  Datachunks=8
-#                               ...  Codingchunks=4
-#
-#        ${status_code}          Get Response Status Code        ${response}
-#                                Should Be Equal As Strings      ${status_code}  200
-#
-#
-#        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-#                               ...  name=ceph-erasure-pool-tib-8-4
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#
-#
-#        ${status}              PCC.Ceph Erasure Pool Verify BE
-#                               ...  name=ceph-erasure-pool-tib-8-4
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-#
-#                               Should Be Equal As Strings      ${status}    OK
-#                               Sleep    5s
-#
-
-        ######### Quota Size in PiB #########
+        ######### Quota Size in TiB #########
 
         ${response}            PCC.Ceph Create Erasure Pool
 
-                               ...  name=ceph-erasure-pool-pib-4-2
+                               ...  name=ceph-erasure-pool-tib-4-2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  pool_type=data
                                ...  resilienceScheme=erasure
                                ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=PiB
+                               ...  quota_unit=TiB
                                ...  Datachunks=4
                                ...  Codingchunks=2
 
@@ -283,13 +159,13 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
 
 
         ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-pib-4-2
+                               ...  name=ceph-erasure-pool-tib-4-2
 
                                Should Be Equal As Strings      ${status}    OK
 
 
         ${status}              PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool-pib-4-2
+                               ...  name=ceph-erasure-pool-tib-4-2
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
@@ -297,38 +173,6 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                Should Be Equal As Strings      ${status}    OK
                                Sleep    5s
 
-        ######### Quota Size in EiB #########
-
-        ${response}            PCC.Ceph Create Erasure Pool
-
-                               ...  name=ceph-erasure-pool-eib-4-2
-                               ...  ceph_cluster_id=${cluster_id}
-                               ...  size=${CEPH_POOL_SIZE}
-                               ...  pool_type=data
-                               ...  resilienceScheme=erasure
-                               ...  quota=${CEPH_POOL_QUOTA}
-                               ...  quota_unit=EiB
-                               ...  Datachunks=4
-                               ...  Codingchunks=2
-
-        ${status_code}          Get Response Status Code        ${response}
-                                Should Be Equal As Strings      ${status_code}  200
-
-
-        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
-                               ...  name=ceph-erasure-pool-eib-4-2
-
-                               Should Be Equal As Strings      ${status}    OK
-
-
-        ${status}              PCC.Ceph Erasure Pool Verify BE
-                               ...  name=ceph-erasure-pool-eib-4-2
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-
-                               Should Be Equal As Strings      ${status}    OK
-                               Sleep    5s
 
 ############################################################################################################################################################
 Create erasure coded pool with explicit coding and data chunks (For eg. 10,6 ratio)
@@ -365,7 +209,7 @@ Create erasure coded pool with explicit coding and data chunks (For eg. 10,6 rat
 
 
 ###################################################################################################################################
-Create duplicate erasure coded pool
+Create duplicate erasure coded pool (Negative)
 ###################################################################################################################################
 
         [Documentation]    *Create duplicate erasure coded pool* test
@@ -381,7 +225,7 @@ Create duplicate erasure coded pool
 
         ${response}            PCC.Ceph Create Erasure Pool
 
-                               ...  name=ceph-erasure-pool-eib-4-2
+                               ...  name=ceph-erasure-pool-tib-4-2
                                ...  ceph_cluster_id=${cluster_id}
                                ...  size=${CEPH_POOL_SIZE}
                                ...  pool_type=data
@@ -632,20 +476,39 @@ Ceph Rbd Creation with Erasure Coded Pool
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Rbd
 
-        [Tags]    xyz
-
-        ${cluster_id}          PCC.Ceph Get Cluster Id
+        ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
-        ${pool_id}             PCC.Ceph Get Pool Id
+        ${response}                 PCC.Ceph Create Pool Multiple
+                               ...  count=1
+                               ...  name=pool
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                               ...  quota=1
+                               ...  quota_unit=GiB
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=pool-1
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+        ${pool_id}                  PCC.Ceph Get Pool Id
                                ...  name=ceph-erasure-pool-mib-2-1
 
-	${metadata_pool_id}    PCC.Ceph Get Pool Id
-                               ...  name=pool9
+	${metadata_pool_id}             PCC.Ceph Get Pool Id
+                               ...  name=pool-1
 
-        ${response}            PCC.Ceph Create Rbd
-			       ...  pool_type=erasure
-			       ...  ceph_metadata_pool_id=${metadata_pool_id}		
+        ${response}                 PCC.Ceph Create Rbd
+			                   ...  pool_type=erasure
+			                   ...  ceph_metadata_pool_id=${metadata_pool_id}
                                ...  name=ceph-rbd-erasure-1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -671,12 +534,12 @@ Get CEPH Inet IP
 
         [Tags]    RBD
 
-        ${inet_ip}     PCC.Get CEPH Inet IP
+        ${inet_ip}            PCC.Get CEPH Inet IP
                        ...    hostip=${SERVER_1_HOST_IP}
 
 
-                       Log To Console    ${inet_ip}
-                       Set Global Variable    ${inet_ip}
+                               Log To Console    ${inet_ip}
+                               Set Global Variable    ${inet_ip}
 
 ###################################################################################################################################
 RBD Mount use case (2-1 erasure coded pool)
@@ -701,7 +564,7 @@ RBD Mount use case (2-1 erasure coded pool)
         ###  Mount RBD to Mount Point  ###
 
 
-        ${status}    Create mount folder
+        ${status}           Create mount folder
                      ...    mount_folder_name=test_rbd_mnt
                      ...    hostip=${SERVER_2_HOST_IP}
                      ...    user=${PCC_LINUX_USER}
@@ -710,18 +573,19 @@ RBD Mount use case (2-1 erasure coded pool)
                      Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 
-        ${status}    PCC.Map RBD
-		     ...    name=ceph-rbd-erasure-1
-		     ...    pool_name=pool9
-		     ...    inet_ip=${inet_ip}
-		     ...    hostip=${SERVER_2_HOST_IP}
+        ${status}           PCC.Map RBD
+                     ...    name=ceph-rbd-erasure-1
+                     ...    pool_name=pool-1
+                     ...    inet_ip=${inet_ip}
+                     ...    hostip=${SERVER_2_HOST_IP}
                      ...    username=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
-		     Log To Console    ${status}
+
+                     Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 		
 		
-		${status}      PCC.Mount RBD to Mount Point
+		${status}             PCC.Mount RBD to Mount Point
                        ...    mount_folder_name=test_rbd_mnt
                        ...    hostip=${SERVER_2_HOST_IP}
                        ...    username=${PCC_LINUX_USER}
@@ -756,7 +620,7 @@ RBD Mount use case (2-1 erasure coded pool)
                                                 Should Be True    ${size_erasure_pool_after_mount} > ${size_erasure_pool_before_mount}
 		
 		###  Unmount and unmap RBD  ###
-		${status}		PCC.Unmount and Unmap RBD
+		${status}		       PCC.Unmount and Unmap RBD
 						...    mount_folder_name=test_rbd_mnt
 						...    hostip=${SERVER_2_HOST_IP}
                         ...    username=${PCC_LINUX_USER}
@@ -765,44 +629,14 @@ RBD Mount use case (2-1 erasure coded pool)
 						Log To Console    ${status}
                         Should be equal as strings    ${status}    OK
 						
-		${status}    Remove dummy file
+		${status}           Remove dummy file
                      ...    dummy_file_name=test_rbd_mnt_4mb.bin
                      ...    hostip=${SERVER_2_HOST_IP} 
-		     ...    user=${PCC_LINUX_USER}
+		             ...    user=${PCC_LINUX_USER}
                      ...    password=${PCC_LINUX_PASSWORD}
 					 Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 
-###################################################################################################################################
-Ceph Delete Unused Pools
-###################################################################################################################################
-
-    [Documentation]            *Delete Unused Pools*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Delete Pool
-                               ...  PCC.Ceph Wait Until Pool Deleted
-
-    
-
-    FOR     ${pool_name}    IN  @{poolsToDelete}
-
-                               Log To Console   ${pool_name}
-
-        ${id}                  PCC.Ceph Get Pool Id
-                               ...  name=${pool_name}
-                               Continue For Loop If    ${id} is ${None}
-
-        ${response}            PCC.Ceph Delete Pool
-                               ...  id=${id}
-
-        ${status_code}         Get Response Status Code        ${response}
-                               Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Pool Deleted
-                               ...  id=${id}
-                               Should Be Equal     ${status}  OK
-    END
 
 ####################################################################################################################################
 #Ceph Fs Creation with Erasure Coded Pool - Replicated Pool in metadata

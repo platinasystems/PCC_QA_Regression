@@ -26,6 +26,20 @@ Load Test Variable
                         Load Ceph Cluster Data Secondary   ${pcc_setup}
 
 ###################################################################################################################################
+Ceph Delete Unused Pools
+###################################################################################################################################
+        ${status}                   Login To PCC    ${pcc_setup}
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${status}                   PCC.Ceph Delete Unused Pools
+                               ...  ceph_cluster_id=${cluster_id}
+                                    Should be equal as strings    ${status}    OK
+
+                                    sleep  1m
+
+###################################################################################################################################
 Login to PCC Primary -Ceph Rados Gateway Delete Primary
 ###################################################################################################################################
 
