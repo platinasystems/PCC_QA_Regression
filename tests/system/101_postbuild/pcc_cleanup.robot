@@ -278,17 +278,17 @@ Ceph Cluster Force Delete (if cluster not deleted)
                                        Log To Console    ${cluster_deletion_wait_status}
                                        Should be equal as strings    ${cluster_deletion_wait_status}    OK
 
-####################################################################################################################################
-#BE Ceph Cleanup
-####################################################################################################################################
-#
-#        ${status}                   PCC.Ceph Cleanup BE
-#                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
-#                               ...  user=${PCC_LINUX_USER}
-#                               ...  password=${PCC_LINUX_PASSWORD}
-#
-#                                    Should be equal as strings    ${status}    OK
-#
+###################################################################################################################################
+BE Ceph Cleanup
+###################################################################################################################################
+
+        ${status}                   PCC.Ceph Cleanup BE
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+
+                                    Should be equal as strings    ${status}    OK
+
 ###################################################################################################################################
 Network Manager Delete
 ###################################################################################################################################

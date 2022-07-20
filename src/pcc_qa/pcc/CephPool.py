@@ -153,22 +153,23 @@ class CephPool(PccBase):
             raise e
 
         response = pcc.get_ceph_pools_by_cluster_id(conn, str(self.ceph_cluster_id))
-        for data in get_response_data(response):
-            if data.get('managed') and not data.get('cephFS') and not data.get('cephRBD') and not data.get('cephRgw'):
-                response=pcc.delete_ceph_pool_by_id(conn,str(data['id']),"")
-                status_code = get_status_code(response)
-                code = get_response_data(response)["code"]
-                if status_code == 202:
-                    response = pcc.delete_ceph_pool_by_id(conn, str(data['id']), "?code="+code)
-                    if response['Result']['status'] == 200:
-                        status=self.wait_until_pool_deleted(id=data['id'])
-                        if status!="OK":
-                            print("{} deletion failed".format(data['name']))
+        if not response:
+            for data in get_response_data(response):
+                if data.get('managed') and not data.get('cephFS') and not data.get('cephRBD') and not data.get('cephRgw'):
+                    response=pcc.delete_ceph_pool_by_id(conn,str(data['id']),"")
+                    status_code = get_status_code(response)
+                    code = get_response_data(response)["code"]
+                    if status_code == 202:
+                        response = pcc.delete_ceph_pool_by_id(conn, str(data['id']), "?code="+code)
+                        if response['Result']['status'] == 200:
+                            status=self.wait_until_pool_deleted(id=data['id'])
+                            if status != "OK":
+                                print("{} deletion failed".format(data['name']))
+                                return "Error"
+                        else:
                             return "Error"
                     else:
                         return "Error"
-                else:
-                    return "Error"
         return "OK"
 
 
