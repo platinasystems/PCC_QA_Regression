@@ -265,12 +265,12 @@
             "pcc_password":"admin"
         },
         "clusterhead-1":
-        {
+            {
             "invader_name":"invader71",
             "pcc_host_ip": "172.17.2.71",
             "pcc_username": "pcc",
             "pcc_password": "cals0ft"
-        },
+            },
 
         "clusterhead-2":
             {
@@ -304,6 +304,27 @@
               "pcc_username": "pcc",
               "pcc_password": "cals0ft"
            },
+        "server-4":
+            {
+              "server_name":"sv44",
+              "pcc_host_ip": "172.17.2.244",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
+        "server-5":
+            {
+              "server_name":"sv45",
+              "pcc_host_ip": "172.17.2.245",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
+        "server-6":
+            {
+              "server_name":"sv49",
+              "pcc_host_ip": "172.17.2.137",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
         "ipam":
         {
             "controlName":"control-pvt",
@@ -314,8 +335,8 @@
         "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["invader71","invader72","sv46","sv50","sv51"],
-            "nodes_ip":["172.17.2.71","172.17.2.72","172.17.2.246","172.17.2.138","172.17.2.139"],
+            "nodes":["invader71","invader72","sv44","sv45","sv46","sv49","sv50","sv51"],
+            "nodes_ip":["172.17.2.71","172.17.2.72","172.17.2.244","172.17.2.245","172.17.2.246","172.17.2.137","172.17.2.138","172.17.2.139"],
             "dataCIDR":"data-pvt",
             "controlCIDR":"control-pvt",
             "igwPolicy":"default"
@@ -323,8 +344,8 @@
         "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["sv46","sv50","sv51"],
-            "nodes_ip":["172.17.2.246","172.17.2.138","172.17.2.139"],
+            "nodes":["sv44","sv45","sv46","sv49","sv50","sv51"],
+            "nodes_ip":["172.17.2.244","172.17.2.245","172.17.2.246","172.17.2.137","172.17.2.138","172.17.2.139"],
             "tags":["All"],
             "networkClusterName":"network-pvt"
         },
