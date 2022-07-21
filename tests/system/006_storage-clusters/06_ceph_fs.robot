@@ -722,7 +722,7 @@ Ceph Fs Update Data Pool with One pool data
                                ...  name=${CEPH_FS_DATA}
 
         ${data1}                    PCC.Ceph Get Pool Details For FS
-                               ...  name=pool7
+                               ...  name=pool-7
 
         ${default}                  PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_DEFAULT}
