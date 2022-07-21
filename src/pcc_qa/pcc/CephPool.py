@@ -143,7 +143,7 @@ class CephPool(PccBase):
     ###########################################################################
     @keyword(name="PCC.Ceph Delete Unused Pools")
     ###########################################################################
-    def delete_all_pools(self,*args,**kwargs):
+    def delete_unused_pools(self,*args,**kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Ceph Delete Unused Pool")
 
