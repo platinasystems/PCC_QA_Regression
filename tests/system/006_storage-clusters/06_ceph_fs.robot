@@ -577,7 +577,7 @@ Update CephFS – when it is in deploying state (Negative)
                                ...  name=${CEPH_Cluster_NAME}
 
         ${data}                     PCC.Ceph Get Pool Details For FS
-                               ...  name=pool4
+                               ...  name=pool-4
 
         ${meta}                     PCC.Ceph Get Pool Details For FS
                                ...  name=${CEPH_FS_META}
@@ -775,7 +775,7 @@ Update CephFS - add_default_pool (Negative)
                                ...  name=${CEPH_FS_DEFAULT}
 
         ${default1}                 PCC.Ceph Get Pool Details For FS
-                               ...  name=pool8
+                               ...  name=pool-8
 
         ${response}                 PCC.Ceph Update Fs
                                ...  id=${id}
