@@ -1381,6 +1381,84 @@ Load Server 3 Secondary Test Data
                                             Set Suite Variable    ${SERVER_3_PWD_SECONDARY}
 
 ###################################################################################################################################
+Load Server 4 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Server 4 Secondary Test Data*
+                                Log To Console          **** Load Server 4 Secondary Test Data ****
+
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${SERVER_4_SECONDARY}          Evaluate                $pcc_multisite_dict.get("server-4", None)
+                                           Set Suite Variable      ${SERVER_4_SECONDARY}
+
+
+            ${SERVER_4_NAME_SECONDARY}      Evaluate    $SERVER_4_SECONDARY.get("server_name", None)
+                                            Set Suite Variable    ${SERVER_4_NAME_SECONDARY}
+
+            ${SERVER_4_HOST_IP_SECONDARY}   Evaluate    $SERVER_4_SECONDARY.get("pcc_host_ip", None)
+                                            Set Suite Variable    ${SERVER_4_HOST_IP_SECONDARY}
+
+            ${SERVER_4_UNAME_SECONDARY}     Evaluate    $SERVER_4_SECONDARY.get("pcc_username", None)
+                                            Set Suite Variable    ${SERVER_4_UNAME_SECONDARY}
+
+            ${SERVER_4_PWD_SECONDARY}       Evaluate    $SERVER_4_SECONDARY.get("pcc_password", None)
+                                            Set Suite Variable    ${SERVER_4_PWD_SECONDARY}
+
+###################################################################################################################################
+Load Server 5 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Server 5 Secondary Test Data*
+                                Log To Console          **** Load Server 5 Secondary Test Data ****
+
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${SERVER_5_SECONDARY}          Evaluate                $pcc_multisite_dict.get("server-5", None)
+                                           Set Suite Variable      ${SERVER_5_SECONDARY}
+
+
+            ${SERVER_5_NAME_SECONDARY}      Evaluate    $SERVER_5_SECONDARY.get("server_name", None)
+                                            Set Suite Variable    ${SERVER_5_NAME_SECONDARY}
+
+            ${SERVER_5_HOST_IP_SECONDARY}   Evaluate    $SERVER_5_SECONDARY.get("pcc_host_ip", None)
+                                            Set Suite Variable    ${SERVER_5_HOST_IP_SECONDARY}
+
+            ${SERVER_5_UNAME_SECONDARY}     Evaluate    $SERVER_5_SECONDARY.get("pcc_username", None)
+                                            Set Suite Variable    ${SERVER_5_UNAME_SECONDARY}
+
+            ${SERVER_5_PWD_SECONDARY}       Evaluate    $SERVER_5_SECONDARY.get("pcc_password", None)
+                                            Set Suite Variable    ${SERVER_5_PWD_SECONDARY}
+
+
+###################################################################################################################################
+Load Server 6 Secondary Test Data
+###################################################################################################################################
+    [Arguments]                 ${testdata_key}
+
+        [Documentation]         *Load Server 6 Secondary Test Data*
+                                Log To Console          **** Load Server 6 Secondary Test Data ****
+
+            ${pcc_multisite_dict}            TESTDATA.Get            ${testdata_key}.json        ceph_multisite
+
+            ${SERVER_6_SECONDARY}          Evaluate                $pcc_multisite_dict.get("server-6", None)
+                                           Set Suite Variable      ${SERVER_6_SECONDARY}
+
+
+            ${SERVER_6_NAME_SECONDARY}      Evaluate    $SERVER_6_SECONDARY.get("server_name", None)
+                                            Set Suite Variable    ${SERVER_6_NAME_SECONDARY}
+
+            ${SERVER_6_HOST_IP_SECONDARY}   Evaluate    $SERVER_6_SECONDARY.get("pcc_host_ip", None)
+                                            Set Suite Variable    ${SERVER_6_HOST_IP_SECONDARY}
+
+            ${SERVER_6_UNAME_SECONDARY}     Evaluate    $SERVER_6_SECONDARY.get("pcc_username", None)
+                                            Set Suite Variable    ${SERVER_6_UNAME_SECONDARY}
+
+            ${SERVER_6_PWD_SECONDARY}       Evaluate    $SERVER_6_SECONDARY.get("pcc_password", None)
+                                            Set Suite Variable    ${SERVER_6_PWD_SECONDARY}
+###################################################################################################################################
 Load Ipam Data Secondary
 ###################################################################################################################################
     [Arguments]                        ${testdata_filename}

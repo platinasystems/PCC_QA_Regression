@@ -191,6 +191,9 @@ Login To PCC Secondary
                         Load Server 1 Secondary Test Data    ${pcc_setup}
                         Load Server 2 Secondary Test Data    ${pcc_setup}
                         Load Server 3 Secondary Test Data    ${pcc_setup}
+                        Load Server 4 Secondary Test Data    ${pcc_setup}
+                        Load Server 5 Secondary Test Data    ${pcc_setup}
+                        Load Server 6 Secondary Test Data    ${pcc_setup}
 
 
         ${status}        Login To PCC Secondary   ${pcc_setup}
@@ -322,7 +325,7 @@ Associate trusted ca certificate client node role to all ceph nodes
                                ...  PCC.Wait Until Roles Ready On Nodes
 
         ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME_SECONDARY}","${CLUSTERHEAD_2_NAME_SECONDARY}","${SERVER_1_NAME_SECONDARY}","${SERVER_2_NAME_SECONDARY}","${SERVER_3_NAME_SECONDARY}"]
+                               ...  nodes=["${CLUSTERHEAD_1_NAME_SECONDARY}","${CLUSTERHEAD_2_NAME_SECONDARY}","${SERVER_1_NAME_SECONDARY}","${SERVER_2_NAME_SECONDARY}","${SERVER_3_NAME_SECONDARY}","${SERVER_4_NAME_SECONDARY}","${SERVER_5_NAME_SECONDARY}","${SERVER_6_NAME_SECONDARY}"]
                                ...  roles=["trusted-ca-certificate"]
 
                                     Should Be Equal As Strings      ${response}  OK
@@ -353,6 +356,24 @@ Associate trusted ca certificate client node role to all ceph nodes
 
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_3_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_4_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_5_NAME_SECONDARY}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${node_wait_status}    PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_6_NAME_SECONDARY}
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
