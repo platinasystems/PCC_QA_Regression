@@ -153,7 +153,7 @@ class CephPool(PccBase):
             raise e
 
         response = pcc.get_ceph_pools_by_cluster_id(conn, str(self.ceph_cluster_id))
-        if not response:
+        if get_response_data(response):
             for data in get_response_data(response):
                 if data.get('managed') and not data.get('cephFS') and not data.get('cephRBD') and not data.get('cephRgw'):
                     response=pcc.delete_ceph_pool_by_id(conn,str(data['id']),"")
@@ -274,6 +274,8 @@ class CephPool(PccBase):
         banner("PCC.Ceph Create Pool")
         self._load_kwargs(kwargs)
 
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
         if self.size:
             try:
                 self.size= ast.literal_eval(str(self.size))
@@ -287,6 +289,7 @@ class CephPool(PccBase):
             self.count=int(self.count)
 
         name_bkup = self.name
+        result = "OK"
         for i in range(1,self.count+1):
             name=str(name_bkup)+"-"+str(i)
             payload = {
@@ -300,15 +303,14 @@ class CephPool(PccBase):
                 "quota_unit":self.quota_unit
                 }
             print(payload)
-            conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            if self.count==i:
-                return pcc.add_ceph_pool(conn, payload)
-            else:
-                response=pcc.add_ceph_pool(conn, payload)
-                print(response)
-                self.name=name
-                status=self.wait_until_pool_ready()
+            response = pcc.add_ceph_pool(conn, payload)
+            print(response)
+            self.name = name
+            status = self.wait_until_pool_ready()
+            if status is not "OK":
+                result = "Error"
             time.sleep(10)
+        return result
 
     ###########################################################################
     @keyword(name="PCC.Ceph Delete Pool")
