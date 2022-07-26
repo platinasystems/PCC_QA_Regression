@@ -490,8 +490,7 @@ Ceph Rbd Creation with Erasure Coded Pool
                                ...  quota=1
                                ...  quota_unit=GiB
 
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
+                                    Should Be Equal As Strings      ${response}  OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool-1
