@@ -54,8 +54,7 @@ Ceph Create For CephFS
                                ...  quota=1
                                ...  quota_unit=GiB
 
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
+                                    Should Be Equal As Strings      ${response}  OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_FS_META}
@@ -1035,8 +1034,7 @@ Pool released from RBD is used for creating/updating CephFS
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
+                                    Should Be Equal As Strings      ${response}  OK
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=fs-3
