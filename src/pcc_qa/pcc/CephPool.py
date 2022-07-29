@@ -309,7 +309,6 @@ class CephPool(PccBase):
             status = self.wait_until_pool_ready()
             if status is not "OK":
                 result = "Error"
-            time.sleep(10)
         return result
 
     ###########################################################################
