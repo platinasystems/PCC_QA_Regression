@@ -3,7 +3,6 @@ Resource    pcc_resources.robot
 
 *** Variables ***
 ${pcc_setup}                 pcc_212
-@{poolsToDelete}    k8s-pool-1  k8s-pool-2
 
 *** Test Cases ***
 ###################################################################################################################################
@@ -53,7 +52,7 @@ Create Kubernetes cluster:TCP-179,TCP-140
                                ...  k8sVersion=${K8S_VERSION}
                                ...  name=${K8S_NAME}
                                ...  cniPlugin=${K8S_CNIPLUGIN}
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+                               ...  nodes=${K8S_NODES}
                                ...  pools=${K8S_POOL}
                                ...  networkClusterName=${NETWORK_MANAGER_NAME}
 
@@ -72,7 +71,7 @@ Create Kubernetes cluster:TCP-179,TCP-140
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  nodes_ip=["${SERVER_1_HOST_IP},${SERVER_2_HOST_IP},${SERVER_3_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -131,31 +130,31 @@ Delete App To K8 Cluster:TCP-158
                                ...  name=${K8S_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-###################################################################################################################################
-Add Node to Kubernetes cluster:TCP-142
-###################################################################################################################################
-       #[Tags]  add
-       [Documentation]             *Add Node to Kubernetes cluster*
-                               ...  Keywords:
-                              ...  PCC.K8s Update Cluster Nodes
-                              ...  PCC.K8s Get Cluster Id
-                              ...  PCC.K8s Wait Until Cluster is Ready
-
-       ${cluster_id}               PCC.K8s Get Cluster Id
-                              ...  name=${K8S_NAME}
-
-       ${response}                 PCC.K8s Update Cluster Nodes
-                              ...  cluster_id=${cluster_id}
-                              ...  name=${K8S_NAME}
-                              ...  toAdd=["${CLUSTERHEAD_2_NAME}"]
-                              ...  rolePolicy=auto
-
-       ${status_code}              Get Response Status Code        ${response}
-                                   Should Be Equal As Strings      ${status_code}  200
-
-       ${status}                   PCC.K8s Wait Until Cluster is Ready
-                              ...  name=${K8S_NAME}
-                                   Should Be Equal As Strings      ${status}    OK
+####################################################################################################################################
+#Add Node to Kubernetes cluster:TCP-142
+####################################################################################################################################
+#       #[Tags]  add
+#       [Documentation]             *Add Node to Kubernetes cluster*
+#                               ...  Keywords:
+#                              ...  PCC.K8s Update Cluster Nodes
+#                              ...  PCC.K8s Get Cluster Id
+#                              ...  PCC.K8s Wait Until Cluster is Ready
+#
+#       ${cluster_id}               PCC.K8s Get Cluster Id
+#                              ...  name=${K8S_NAME}
+#
+#       ${response}                 PCC.K8s Update Cluster Nodes
+#                              ...  cluster_id=${cluster_id}
+#                              ...  name=${K8S_NAME}
+#                              ...  toAdd=["${CLUSTERHEAD_2_NAME}"]
+#                              ...  rolePolicy=auto
+#
+#       ${status_code}              Get Response Status Code        ${response}
+#                                   Should Be Equal As Strings      ${status_code}  200
+#
+#       ${status}                   PCC.K8s Wait Until Cluster is Ready
+#                              ...  name=${K8S_NAME}
+#                                   Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 #Reboot Node And Verify K8s Is Intact:TCP-175
@@ -200,7 +199,7 @@ Down And Up The Interface And Check For K8s:TCP-183
         ${status}                   PCC.K8s Verify BE
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+                               ...  nodes_ip=["${SERVER_1_HOST_IP}"]
 
                                     Should Be Equal As Strings      ${status}    OK
                                     
@@ -271,11 +270,6 @@ Update K8 cluster with pools
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
                                     Should Be Equal As Strings      ${response}  OK
-
-        ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=k8s-pool-2
-
-                                    Should Be Equal As Strings      ${status}    OK
 
         ${cluster_id}               PCC.K8s Get Cluster Id
                                ...  name=${K8S_NAME}
@@ -356,35 +350,4 @@ Delete Storage Classes
 #                               ...  PCC.K8s Delete All Cluster
 #        ${status}                   PCC.K8s Delete All Cluster
 #                                    Should be equal as strings    ${status}    OK
-##################################################################################################################################
-Ceph Delete Unused Pools
-###################################################################################################################################
 
-    [Documentation]            *Delete Unused Pools*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Delete Pool
-                               ...  PCC.Ceph Wait Until Pool Deleted
-
-            
-
-    FOR     ${pool_name}    IN  @{poolsToDelete}
-
-                               Log To Console   ${pool_name}
-
-        ${id}                  PCC.Ceph Get Pool Id
-                               ...  name=${pool_name}
-                               Continue For Loop If    ${id} is ${None}
-
-        ${response}            PCC.Ceph Delete Pool
-                               ...  id=${id}
-
-        ${status_code}         Get Response Status Code        ${response}
-                               Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Pool Deleted
-                               ...  id=${id}
-                               Should Be Equal     ${status}  OK
-    END
-
-####################################################################################################################################

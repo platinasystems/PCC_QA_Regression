@@ -243,10 +243,9 @@ class CephRgw(PccBase):
         except Exception as e:
             raise e
 
-        gateway_ready = False
         timeout = time.time() + PCCSERVER_TIMEOUT
         ceph_cluster_id = str(easy.get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
-        while gateway_ready == False:
+        while True:
             response = pcc.get_ceph_rgws(conn, ceph_cluster_id)
             for data in get_response_data(response):
                 if str(data['name']).lower() == str(self.name).lower():
@@ -259,9 +258,8 @@ class CephRgw(PccBase):
                     else:
                         break
             if time.time() > timeout:
-                raise Exception("[PCC.Ceph Wait Until Rgw Ready] Timeout")
+                return "[PCC.Ceph Wait Until Rgw Ready] Timeout"
             time.sleep(15)
-        return "OK"
 
 
     ###########################################################################

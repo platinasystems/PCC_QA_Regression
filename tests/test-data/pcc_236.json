@@ -378,10 +378,10 @@
     "k8s":
         {
             "id":0,
-            "k8sVersion":"v1.14.3",
+            "k8sVersion":"v1.23.1",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["cluster-head-69","consul-01","consul-02"],
+            "nodes":["consul-01","consul-02","servernode-130"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",

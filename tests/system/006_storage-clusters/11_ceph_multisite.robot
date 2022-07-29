@@ -942,7 +942,7 @@ Wait Until Trust Established - Secondary
 
         ${result}                   PCC.Ceph Wait Until Trust Established
                                ...  id=${secondary_trust_id}
-
+                                    Should Be Equal As Strings      ${result}  OK
 
 ###################################################################################################################################
 Primary tear-down
