@@ -541,15 +541,37 @@ def get_app_credentials_profile_id_by_name(conn:dict, Name:str)->int:
             None: if no match found, or
         (dict) Error response: If Exception occured
     """
-
+    profile_ids = []
     try:
         profiles_list = pcc.get_application_credential_profiles(conn)['Result']['Data']
         for profile in profiles_list:
             if str(profile['name']) == str(Name):
-                return profile['id']
-        return None
+                profile_ids.append(profile['id'])
+        return profile_ids
     except Exception as e:
         return {"Error": str(e)}
+
+def get_app_credentials_profile_by_name(conn: dict, Name: str) -> int:
+    """
+    Get App credentials Profile Id by Name
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of the App credential profile
+    [Returns]
+        (int) Id: Id of the matchining App credential profile, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    profiles = []
+    try:
+        profiles_list = pcc.get_application_credential_profiles(conn)['Result']['Data']
+        for profile in profiles_list:
+            if str(profile['name']) == str(Name):
+                profiles.append(profile)
+        return profiles
+    except Exception as e:
+        return {"Error": str(e)}
+
 
 ## Alerts
 def get_alert_id_by_name(conn:dict, Name:str)->int:

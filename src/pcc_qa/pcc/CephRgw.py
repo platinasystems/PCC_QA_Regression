@@ -106,12 +106,17 @@ class CephRgw(PccBase):
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
         if self.port:
             self.port=ast.literal_eval(str(self.port))
-        if self.S3Accounts!=None or self.S3Accounts!=[]:
-            tmp_cert={}
-            for cert in eval(str(self.S3Accounts)):
-                cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
-                tmp_cert[str(cert_id)]={}
-            self.S3Accounts=tmp_cert
+        if self.S3Accounts:
+            tmp_S3Accounts = {}
+
+            for cred in eval(str(self.S3Accounts)):
+                metadata_cred_id = easy.get_metadata_profile_id_by_name(conn, cred)
+                if type(metadata_cred_id) is not dict and metadata_cred_id:
+                    tmp_S3Accounts[str(metadata_cred_id)] = {}
+
+            self.S3Accounts = tmp_S3Accounts
+        else:
+            self.S3Accounts = {}
 
         tmp_daemons_map = {}
         if self.num_daemons_map:
@@ -157,25 +162,24 @@ class CephRgw(PccBase):
             self.certificateID=easy.get_certificate_id_by_name(conn,self.certificateName)
         if  self.port!=None or self.port!='':
             self.port=ast.literal_eval(str(self.port))
-        if self.S3Accounts!=None or self.S3Accounts!=[]:
-            tmp_cert={}
-            for cert in eval(str(self.S3Accounts)):
-                cert_id=str(easy.get_app_credentials_profile_id_by_name(conn,cert))
-                print("Output of app_credentials_profile_id: {}".format(cert_id))
-                if (cert_id!= None) and ("Error" not in cert_id):
-                    tmp_cert[str(cert_id)]={}
-                else:
-                    cert_id=str(easy.get_metadata_profile_id_by_name(conn,cert))
-                    print("Output of metadata_profile_id: {}".format(cert_id))
-                    tmp_cert[str(cert_id)]={}
-            self.S3Accounts=tmp_cert
+        if self.S3Accounts:
+            tmp_S3Accounts = {}
 
-        #if self.S3Accounts!=None or self.S3Accounts!=[]:
-        #    tmp_cert={}
-        #    for cert in eval(str(self.S3Accounts)):
-        #        cert_id=easy.get_metadata_profile_id_by_name(conn,cert)
-        #        tmp_cert[str(cert_id)]={}
-        #    self.S3Accounts=tmp_cert
+            for cred in eval(str(self.S3Accounts)):
+                cred_profiles = easy.get_app_credentials_profile_by_name(conn, cred)
+                if type(cred_profiles) is not dict:
+                    for cred_profile in cred_profiles:
+                        if cred_profile["applicationId"] == self.ID:
+                            tmp_S3Accounts[str(cred_profile["id"])] = {}
+                            break
+
+                metadata_cred_id = easy.get_metadata_profile_id_by_name(conn, cred)
+                if type(metadata_cred_id) is not dict and metadata_cred_id:
+                    tmp_S3Accounts[str(metadata_cred_id)] = {}
+
+            self.S3Accounts = tmp_S3Accounts
+        else:
+            self.S3Accounts = {}
         
         tmp_daemons_map = {}
         if self.num_daemons_map:
