@@ -1234,3 +1234,22 @@ class CephCluster(PccBase):
         return "OK"
 
     ###############################################################################################################
+
+
+    ###############################################################################################################
+    @keyword(name="PCC.Verify OSD Status BE")
+    ###############################################################################################################
+    def verify_osd_status_be(self, osd_id=None, *args, **kwargs):
+        banner("PCC.Verify OSD Status BE")
+        self._load_kwargs(kwargs)
+
+        cmd = "sudo systemctl status ceph-osd@{}".format(osd_id)
+        cmd_exec = cli_run(self.hostip, self.user, self.password, cmd)
+        pattern = "Active: " + self.state
+        if re.search(pattern, str(cmd_exec)):
+            return "OK"
+        return "Error"
+
+
+
+
