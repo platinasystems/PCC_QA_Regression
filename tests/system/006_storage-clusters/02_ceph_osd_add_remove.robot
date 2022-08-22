@@ -76,6 +76,7 @@ Ceph Cluster Get Unused Drives
                                     Log To Console       ${osd_ids}
 
 
+
         ${drive_name}               PCC.Ceph get OSD drive names by osd id
                               ...   name=${CEPH_CLUSTER_NAME}
                               ...   osd_id=${osd_ids}[0]
@@ -103,6 +104,7 @@ Ceph Cluster Delete OSD Drives
                               ...   name=${CEPH_CLUSTER_NAME}
                               ...   osd_id=${osd_ids}[0]
                                     Log To Console       ${drive_name}
+                                    Set Suite Variable   ${osd_ids}
 
         ${response}                 PCC.Ceph Delete OSD drives
                                ...   name=${CEPH_CLUSTER_NAME}
@@ -112,7 +114,7 @@ Ceph Cluster Delete OSD Drives
 
         ${status_code}              Get Response Status Code        ${response}
                                     Log To Console       ${status_code}
-                                   # Should Be Equal As Strings      ${status_code}    200
+                                    Should Be Equal As Strings      ${status_code}    200
         #${message}                  Get Response Message        ${response}
                                     Sleep    1m
 
@@ -122,6 +124,15 @@ Ceph Cluster Delete OSD Drives
 
                                     Log To Console       ${status}
                                     Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Verify OSD Status BE
+                               ...   hostip=${SERVER_1_HOST_IP}
+                               ...   osd_id=${osd_ids}[0]
+                               ...   state=inactive
+
+                                    Log To Console       ${status}
+                                    Should Be Equal As Strings      ${status}    OK
+
 
 ###################################################################################################################################
 Ceph Cluster Add OSD Drive
@@ -153,5 +164,13 @@ Ceph Cluster Add OSD Drive
                               ...   server_name=${SERVER_1_NAME}
                                     Log To Console       ${unused_drives_id}
                                     Pass Execution If    ${unused_drives_id} is ${None}     PCC.Ceph Get Unused Drives by Hostname
+
+        ${status}                   PCC.Verify OSD Status BE
+                               ...   hostip=${SERVER_1_HOST_IP}
+                               ...   osd_id=${osd_ids}[0]
+                               ...   state=active
+
+                                    Log To Console       ${status}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ####################################################################################################################################
