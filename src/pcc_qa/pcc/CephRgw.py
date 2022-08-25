@@ -334,7 +334,7 @@ class CephRgw(PccBase):
                     del_check=self.wait_until_rados_deleted()
                     if del_check == "OK":
                         print("Rados Gateway {} is deleted sucessfully".format(data['name']))
-                        return "OK"
+                        continue
                     else:
                         print("Rados Gateway {} unable to delete".format(data['name']))
                         return "Error"
