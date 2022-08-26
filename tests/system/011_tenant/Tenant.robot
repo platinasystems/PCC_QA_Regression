@@ -448,7 +448,7 @@ Pcc Tenant Assignment
                      
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant_id=${tenant_id}
-                       ...    ids=${server2_id}
+                       ...    ids=${invader1_id}
                       
                        Log To Console    ${response}
                        ${status}    Get From Dictionary    ${response}    StatusCode
@@ -456,7 +456,7 @@ Pcc Tenant Assignment
         
                      
         ${status}    PCC.Validate Tenant Assigned to Node
-                     ...    Name=${SERVER_2_NAME}
+                     ...    Name=${CLUSTERHEAD_1_NAME}
                      ...    Tenant_Name=${TENANT5}
                      
                      Log To Console    ${status}
@@ -464,7 +464,7 @@ Pcc Tenant Assignment
                      
                     
 ###################################################################################################################################
-Delete Tenant in the PCC when Tenant is associated with the Node
+Delete Tenant in the PCC when Tenant is associated with the Node (Negative)
 ###################################################################################################################################
 
         [Documentation]    *Delete Tenant in the PCC when Tenant is associated with the Node* test
@@ -504,7 +504,7 @@ Pcc Tenant Un-Assignment
 
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant_id=${parent_id}
-                       ...    ids=${server3_id}
+                       ...    ids=${invader1_id}
                       
                        Log To Console    ${response}
                        ${status}    Get From Dictionary    ${response}    StatusCode
