@@ -630,6 +630,7 @@ class CephRgw(PccBase):
         tick = 30
         ceph_be_cmd = "sudo ceph -s"
         wait_time = 5 * tick
+        intf_cmd = "sudo netstat -ntlp | grep radosgw"
         
         while wait_time > 0:
             failed = False
@@ -642,9 +643,14 @@ class CephRgw(PccBase):
                         cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name,j)
                         ceph_check=cli_run(host_ip,self.user,self.password,ceph_be_cmd)
                         rgw_check=cli_run(host_ip,self.user,self.password,cmd_rgw)
+                        intf_check=cli_run(host_ip,self.user,self.password,intf_cmd)
                         print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
                         print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
-                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)):
+                        print("=========== intf_check output is: {} \n==============".format(str(intf_check)))
+                        trace("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
+                        trace("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
+                        trace("=========== intf_check output is: {} \n==============".format(str(intf_check)))
+                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)) and re.search("radosgw",str(intf_check)):
                             continue
                         else:
                             failed_chk_map[host_name] += 1
