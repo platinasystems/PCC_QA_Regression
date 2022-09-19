@@ -312,7 +312,8 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
@@ -364,7 +365,8 @@ Ceph Rados Add S3Account
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
@@ -402,7 +404,8 @@ Ceph Rados Increase Number Of Deamons
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 
@@ -441,7 +444,8 @@ Ceph Rados Decrease Number Of Deamons
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
@@ -477,7 +481,8 @@ Ceph Rados Update Port
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
@@ -516,7 +521,8 @@ Ceph Rados Update Nodes (Add Node)
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ######################################################################################################################################
@@ -751,7 +757,8 @@ Ceph Rados Gateway Creation Multiple Daemons With S3 Accounts
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 ###################################################################################################################################
@@ -1149,9 +1156,10 @@ Ceph Rados Remove S3Account
   			                    ...  ceph_cluster_name=ceph-pvt
                                      Should Be Equal As Strings      ${status}    OK
 
-         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                                ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
-                                     Should Be Equal As Strings      ${backend_status}    OK
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
+                                    Should Be Equal As Strings      ${backend_status}    OK
 
 ####################################################################################################################################
 Ceph Rados Gateway Delete
@@ -1210,7 +1218,8 @@ Ceph Rados Create with Multiple Nodes
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
@@ -1248,7 +1257,8 @@ Ceph Rados Remove One Node
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
@@ -1310,7 +1320,8 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
                                     Should Be Equal As Strings      ${status}    OK
 
         ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  num_daemons_map=${num_daemons_map}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
 #####################################################################################################################################
