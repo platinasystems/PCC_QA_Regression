@@ -24,6 +24,27 @@ def get_node_id_by_name(conn:dict, Name:str)->int:
     except Exception as e:
         return {"Error": str(e)}
 
+## Node
+def get_node_by_id(conn:dict, Id:str)->dict:
+    """
+    Get Node Id by Name
+    [Args]
+        (dict) conn: Connection dictionary obtained after logging in
+        (str) Name: Name of the Node
+    [Returns]
+        (int) Id: Id of the matchining Node, or
+            None: if no match found, or
+        (dict) Error response: If Exception occured
+    """
+    node_list = pcc.get_nodes(conn)['Result']['Data']
+    try:
+        for node in node_list:
+            if str(node['Id']) == str(Id):
+                return node
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
+
 def get_hostip_by_name(conn:dict, Name:str)->str:
     """
     Get HostIP by Name
