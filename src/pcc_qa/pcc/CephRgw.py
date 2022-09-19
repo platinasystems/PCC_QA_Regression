@@ -9,7 +9,8 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 
 from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
-from pcc_qa.common.PccUtility import get_ceph_cluster_id_by_name
+from pcc_qa.common.PccUtility import get_ceph_cluster_id_by_name, get_node_by_id
+
 
 from pcc_qa.common.Utils import banner, trace, pretty_print, cmp_json
 from pcc_qa.common.Result import get_response_data, get_status_code
@@ -65,6 +66,26 @@ class CephRgw(PccBase):
 
         rados_id = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
         return rados_id
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get RGW By Name")
+    ###########################################################################
+    def get_ceph_rgw_by_name(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get RGW By Name")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        ceph_cluster_id = str(get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
+        list_of_ceph_rgws = pcc.get_ceph_rgws(conn, ceph_cluster_id)['Result']['Data']
+        trace(list_of_ceph_rgws)
+        for ceph_rgw in list_of_ceph_rgws:
+            if ceph_rgw['name'] == self.name:
+                return ceph_rgw
+        return []
 
     ###########################################################################
     @keyword(name="PCC.Ceph Get RGW Interfaces Map")
@@ -625,21 +646,43 @@ class CephRgw(PccBase):
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
-            raise e        
+            raise e
+
+        rgw = self.get_ceph_rgw_by_name()
+        trace(rgw)
+        if not rgw:
+            print("No RGW Found")
+            return "Error"
+
+        self.num_daemons_map = {}
+        for node_id in rgw["numDaemonsMap"].keys():
+            num_daemon = rgw["numDaemonsMap"][node_id]
+            interfaces = rgw["interfaces"][node_id]
+            trace(num_daemon)
+            trace(interfaces)
+            node_name = get_node_by_id(conn=conn, Id=node_id)["Name"]
+            trace(node_name)
+            if num_daemon == len(interfaces):
+                self.num_daemons_map[node_name] = {"num_daemon":num_daemon, "interfaces":interfaces}
+            else:
+                print("Mismatch num daemon {} num interfaces {}".format(num_daemon,len(interfaces)))
+                return "Error"
+        trace(self.num_daemons_map)
 
         tick = 30
         ceph_be_cmd = "sudo ceph -s"
         wait_time = 5 * tick
-        intf_cmd = "sudo netstat -ntlp | grep radosgw"
         
         while wait_time > 0:
             failed = False
             failed_chk_map = {}
             if self.num_daemons_map:
-                for host_name, num_daemons in self.num_daemons_map.items():
+                for host_name, daemons in self.num_daemons_map.items():
                     host_ip = easy.get_hostip_by_name(conn, host_name)
                     failed_chk_map[host_name] = 0
-                    for j in range(num_daemons):
+                    for j in range(daemons["num_daemon"]):
+                        intf = daemons["interfaces"][j]
+                        intf_cmd = "sudo netstat -ntlp | grep radosgw | grep {}:{}".format(intf,rgw["port"])
                         cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name,j)
                         ceph_check=cli_run(host_ip,self.user,self.password,ceph_be_cmd)
                         rgw_check=cli_run(host_ip,self.user,self.password,cmd_rgw)
@@ -650,7 +693,7 @@ class CephRgw(PccBase):
                         trace("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
                         trace("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
                         trace("=========== intf_check output is: {} \n==============".format(str(intf_check)))
-                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)) and re.search("radosgw",str(intf_check)):
+                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)) and str(intf_check):
                             continue
                         else:
                             failed_chk_map[host_name] += 1
