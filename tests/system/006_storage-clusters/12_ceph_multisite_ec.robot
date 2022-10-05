@@ -39,6 +39,17 @@ Ceph Delete Unused Pools
 
                                     sleep  1m
 
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${status}                   PCC.Ceph Delete Unused Pools
+                               ...  ceph_cluster_id=${cluster_id}
+                                    Should be equal as strings    ${status}    OK
+
+                                    sleep  1m
+
 ###################################################################################################################################
 Login to PCC Primary -Ceph Rados Gateway Delete Primary
 ###################################################################################################################################
@@ -134,6 +145,7 @@ Login to PCC Primary and Create Erasure coded pool
                                ...  quota_unit=GiB
                                ...  Datachunks=2
                                ...  Codingchunks=1
+                               ...  pg_num=1
 
 
 
@@ -246,6 +258,7 @@ Login To PCC Secondary and Create Erasure Coded Pool
                                        ...  quota_unit=GiB
                                        ...  Datachunks=2
                                        ...  Codingchunks=1
+                                       ...  pg_num=1
 
         ${status_code}                     Get Response Status Code        ${response}
         ${message}                         Get Response Message        ${response}

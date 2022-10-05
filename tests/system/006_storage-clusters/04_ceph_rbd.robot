@@ -1658,10 +1658,20 @@ Ceph Rbd Mount Test
 #
 
 ###################################################################################################################################
-Fetching RBD ID before backup
+Ceph Rbd Delete Multiple
 ###################################################################################################################################
+    [Documentation]                 *Ceph Rbd Delete Multiple*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Rbds
 
-         ${rbd_id_before_backup}    PCC.Ceph Get Rbd Id
-                                    ...  name=rbd-5
-                                    Log To Console    ${rbd_id_before_backup}
-                                    Set Global Variable    ${rbd_id_before_backup}
+        ${status}                   PCC.Ceph Delete All Rbds
+                                    Should be equal as strings    ${status}    OK
+
+####################################################################################################################################
+#Fetching RBD ID before backup
+####################################################################################################################################
+#
+#         ${rbd_id_before_backup}    PCC.Ceph Get Rbd Id
+#                                    ...  name=rbd-5
+#                                    Log To Console    ${rbd_id_before_backup}
+#                                    Set Global Variable    ${rbd_id_before_backup}
