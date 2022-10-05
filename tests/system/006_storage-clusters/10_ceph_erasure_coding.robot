@@ -637,6 +637,16 @@ RBD Mount use case (2-1 erasure coded pool)
                      Should be equal as strings    ${status}    OK
 
 
+###################################################################################################################################
+Ceph Rbd Delete Multiple
+###################################################################################################################################
+    [Documentation]                 *Ceph Rbd Delete Multiple*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Rbds
+
+        ${status}                   PCC.Ceph Delete All Rbds
+                                    Should be equal as strings    ${status}    OK
+
 ####################################################################################################################################
 #Ceph Fs Creation with Erasure Coded Pool - Replicated Pool in metadata
 ####################################################################################################################################

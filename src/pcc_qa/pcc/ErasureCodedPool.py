@@ -192,7 +192,7 @@ class ErasureCodedPool(PccBase):
                       "quota_unit":self.quota_unit,
                       "ceph_cluster_id":self.ceph_cluster_id,
                       "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)},
-                       "pgNum": self.pg_num
+                       "pgNum": int(self.pg_num)
                       }
                       
         elif self.pool_type == "data" and self.resilienceScheme == "erasure"  and self.ErasureCodeProfileID:
@@ -205,7 +205,7 @@ class ErasureCodedPool(PccBase):
                       "resilienceScheme":self.resilienceScheme,
                       "ceph_cluster_id":self.ceph_cluster_id,
                       "erasureCodeProfileId":self.ErasureCodeProfileID,
-                      "pgNum": self.pg_num
+                      "pgNum": int(self.pg_num)
                       }              
         
           
@@ -219,7 +219,7 @@ class ErasureCodedPool(PccBase):
                 "resilienceScheme":self.resilienceScheme,
                 "quota":str(self.quota),
                 "quota_unit":self.quota_unit,
-                "pgNum": self.pg_num
+                "pgNum": int(self.pg_num)
             }
             
         
@@ -275,7 +275,7 @@ class ErasureCodedPool(PccBase):
                           "resilienceScheme":self.resilienceScheme,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)},
-                          "pgNum": self.pg_num
+                          "pgNum": int(self.pg_num)
                           }
             
             if self.pool_type == "data" and self.resilienceScheme == "erasure"  and self.ErasureCodeProfileID:
@@ -288,7 +288,7 @@ class ErasureCodedPool(PccBase):
                           "resilienceScheme":self.resilienceScheme,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfileId":self.ErasureCodeProfileID,
-                           "pgNum": self.pg_num
+                           "pgNum": int(self.pg_num)
                           }
             
             else:
@@ -301,7 +301,7 @@ class ErasureCodedPool(PccBase):
                     "quota":self.quota,
                     "resilienceScheme":self.resilienceScheme,
                     "quota_unit":self.quota_unit,
-                    "pgNum": self.pg_num
+                    "pgNum": int(self.pg_num)
                     }
             #payload = json.dumps(payload)        
             print(payload)
@@ -396,6 +396,7 @@ class ErasureCodedPool(PccBase):
                 if str(pool['id']) == str(self.id):
                     name = pool["name"]
                     Id_found_in_list_of_pools = True
+                    break
             if time.time() > timeout:
                 raise Exception("[PCC.Wait Until Erasure Pool Deleted] Timeout")
             if Id_found_in_list_of_pools:
@@ -466,7 +467,7 @@ class ErasureCodedPool(PccBase):
                           "quota_unit":self.quota_unit,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)},
-                          "pgNum": self.pg_num
+                          "pgNum": int(self.pg_num)
                           }
                           
             elif self.pool_type == "data" and self.resilienceScheme == "erasure" and self.ErasureCodeProfileID:
@@ -480,7 +481,7 @@ class ErasureCodedPool(PccBase):
                           "quota_unit":self.quota_unit,
                           "ceph_cluster_id":self.ceph_cluster_id,
                           "erasureCodeProfileId":self.ErasureCodeProfileID,
-                          "pgNum": self.pg_num
+                          "pgNum": int(self.pg_num)
                           }
                           
             else:
@@ -494,7 +495,7 @@ class ErasureCodedPool(PccBase):
                 "resilienceScheme":self.resilienceScheme,
                 "quota":self.quota,
                 "quota_unit":self.quota_unit,
-                "pgNum": self.pg_num
+                "pgNum": int(self.pg_num)
                  }
             #payload = json.dumps(payload)
             print("Payload in update is : {}".format(payload))
