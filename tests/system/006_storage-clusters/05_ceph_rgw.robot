@@ -724,6 +724,8 @@ Ceph Rados Gateway Delete
                                ...  num_daemons_map=${num_daemons_map}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+                                    sleep  1m
+
 ###################################################################################################################################
 Ceph Rados Gateway Creation Multiple Daemons With S3 Accounts
 #####################################################################################################################################
@@ -1188,6 +1190,8 @@ Ceph Rados Gateway Delete
                                ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+                                    sleep  1m
+
 #####################################################################################################################################
 Ceph Rados Create with Multiple Nodes
 #####################################################################################################################################
@@ -1289,6 +1293,8 @@ Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  num_daemons_map=${num_daemons_map}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+                                    sleep  1m
 
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Ceph Node
