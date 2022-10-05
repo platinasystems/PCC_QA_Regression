@@ -45,6 +45,7 @@ class CephPool(PccBase):
         self.filename = ""
         self.used_by_type = ""
         self.used_by_name = ""
+        self.pg_num = 8
 
         super().__init__()
 
@@ -259,7 +260,8 @@ class CephPool(PccBase):
             "type":self.pool_type,
             "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
-            "quota_unit":self.quota_unit
+            "quota_unit":self.quota_unit,
+            "pgNum":self.pg_num
         }
 
         print(payload)
@@ -300,7 +302,8 @@ class CephPool(PccBase):
                 "type":self.pool_type,
                 "resilienceScheme":self.resilienceScheme,
                 "quota":self.quota,
-                "quota_unit":self.quota_unit
+                "quota_unit":self.quota_unit,
+                "pgNum": self.pg_num
                 }
             print(payload)
             response = pcc.add_ceph_pool(conn, payload)
@@ -449,7 +452,8 @@ class CephPool(PccBase):
             "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
             "quota_unit":self.quota_unit,
-            "managed":True
+            "managed":True,
+            "pgNum": self.pg_num
              }
 
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
