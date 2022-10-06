@@ -543,7 +543,7 @@ class CephRgw(PccBase):
     def ceph_rgw_get_file_bucket(self,**kwargs):
         banner("PCC.Ceph Rgw Get File To Bucket ")
         self._load_kwargs(kwargs)       
-        cmd='sudo s3cmd get s3://testbucket/{} -c /home/pcc/.s3cfg'.format(self.fileName)
+        cmd='sudo s3cmd get s3://testbucket/{} -c /home/pcc/.s3cfg --skip-existing'.format(self.fileName)
         print("Command:"+str(cmd))
         data=cli_run(self.pcc,self.user,self.password,cmd)      
         if re.search("download",str(data)):
