@@ -36,20 +36,16 @@ Ceph Delete Unused Pools
 
                                     sleep  1m
 
-###################################################################################################################################
-Ceph Secondary Pool For Rgws
-###################################################################################################################################
+        ${status}                   Login To PCC Secondary   ${pcc_setup}
 
-    ${status}                         Login To PCC Secondary   ${pcc_setup}
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
 
-    [Documentation]                        *Ceph Ceph Secondary Pool For Rgws*
-                                      ...  keywords:
-                                      ...  PCC.Ceph Get Cluster Id
-                                      ...  PCC.Ceph Create Pool
-                                      ...  PCC.Ceph Wait Until Pool Ready
+        ${status}                   PCC.Ceph Delete Unused Pools
+                               ...  ceph_cluster_id=${cluster_id}
+                                    Should be equal as strings    ${status}    OK
 
-
-
+                                    sleep  1m
 
 ##################################################################################################################################
 Ceph Ceph Certificate For Rgws Secondary
