@@ -1234,9 +1234,6 @@ class CephCluster(PccBase):
         return "OK"
 
     ###############################################################################################################
-
-
-    ###############################################################################################################
     @keyword(name="PCC.Verify OSD Status BE")
     ###############################################################################################################
     def verify_osd_status_be(self, osd_id=None, *args, **kwargs):
@@ -1249,7 +1246,32 @@ class CephCluster(PccBase):
         if re.search(pattern, str(cmd_exec)):
             return "OK"
         return "Error"
+    ###############################################################################################################
+    @keyword(name="PCC.Get CEPH RGW HAPROXY IP")
+    ###############################################################################################################
+    def get_ceph_rgw_haproxy_ip(self, *args, **kwargs):
+        banner("Get CEPH rgw haproxy IP")
+        self._load_kwargs(kwargs)
+        try:
+            cmd = "sudo netstat -ntlp |grep haproxy"
+            print("Command is: {}".format(cmd))
+            status = cli_run(self.hostip, self.user, self.password, cmd)
+            print(status)
+            serialised_status = self._serialize_response(time.time(), status)
+            print("serialised_haproxy_ip_status is:{}".format(serialised_status))
 
+            cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()
+            print("cli output:", cmd_output)
+
+            control_ip = self.get_ceph_inet_ip(self.hostip,self.user, self.password)
+            print("control_ip:", control_ip)
+            if re.search(str(control_ip), cmd_output):
+                return "OK"
+            return "Error"
+        except Exception as e:
+            trace("Error in get_ceph_rgw_haproxy_ip: {}".format(e))
+
+    ###############################################################################################################
 
 
 
