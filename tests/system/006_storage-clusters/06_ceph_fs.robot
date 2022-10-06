@@ -1195,5 +1195,14 @@ Fetching Ceph FS ID before backup
          ${ceph_fs_id_before_backup}        PCC.Ceph Get Fs Id
                                             ...  name=${CEPH_FS_NAME}                            
                                             Log To Console    ${ceph_fs_id_before_backup}
-                                            Set Global Variable    ${ceph_fs_id_before_backup}   
+                                            Set Global Variable    ${ceph_fs_id_before_backup}
+
+###################################################################################################################################
+Ceph Fs Delete
+###################################################################################################################################
+    [Documentation]                 *Delete Fs if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Fs
+        ${status}                   PCC.Ceph Delete All Fs
+                                    Should be equal as strings    ${status}    OK
                       
