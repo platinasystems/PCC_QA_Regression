@@ -1525,6 +1525,91 @@ Removing Ceph Load balancer Policy Primary
                                     Should Be Equal As Strings      ${status_code}  200
 
 #####################################################################################################################################
+Ceph Local Load Balancer with Control_IP on Rgw
+#####################################################################################################################################
+     [Tags]         lb
+     [Documentation]                *Ceph Local Load Balancer with Control_IP on Rgw*
+
+        ${status}                   Login To PCC    ${pcc_setup}
+                                    Log To Console    ${status}
+
+        ${app_id}                   PCC.Get App Id from Policies
+                                   ...  Name=loadbalancer-ceph
+                                    Log To Console    ${app_id}
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                                    ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+                                    Log To Console    ${CEPH_RGW_NAME}
+                                    Log To Console    ${CEPH_CLUSTER_NAME}
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                                    ...  name=${CEPH_RGW_NAME}
+			                        ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Set Suite Variable   ${rgw_id}
+                                    Log To Console    ${rgw_id}
+
+        ${scope1_id}                PCC.Get Scope Id
+                                    ...  scope_name=Default region
+                                    Log To Console    ${scope1_id}
+        ${response}                 PCC.Create Policy
+                                    ...  appId=${app_id}
+                                    ...  description=test-ceph-lb_ControlIP
+                                    ...  scopeIds=[${scope1_id}]
+                                    ...  inputs=[{"name": "lb_name","value": "testcephlbcontrolip"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "control_ip:443"},{"name": "lb_backends","value": "${rgw_id}"}]
+
+                                    Log To Console    ${response}
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${result}    status
+                                    ${message}    Get From Dictionary    ${result}    message
+                                    Log to Console    ${message}
+                                    Should Be Equal As Strings    ${status}    200
+
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                                    ...  nodes=["${SERVER_1_NAME}"]
+                                    ...  roles=["Ceph Load Balancer"]
+                                    Log To Console    ${response}
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}         PCC.Wait Until Node Ready
+                                    ...  Name=${SERVER_1_NAME}
+                                    Log To Console    ${node_wait_status}
+                                    Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${response}                 PCC.Get CEPH RGW HAPROXY IP
+                                    ...  hostip=${SERVER_1_HOST_IP}
+                                    Log To Console    ${response}
+                                    Should Be Equal As Strings      ${response}  OK
+
+###################################################################################################################################
+Removing Ceph Load balancer Policy
+###################################################################################################################################
+    [Tags]      lb
+    [Documentation]                 *Removing Ceph Load balancer Policy*
+
+
+        ${status}                   Login To PCC   ${pcc_setup}
+
+        ${policy_id}                PCC.Get Policy Id
+                               ...  Name=loadbalancer-ceph
+                               ...  description=test-ceph-lb_ControlIP
+
+        ${policy_id_str}            Convert To String    ${policy_id}
+
+        ${response}                 PCC.Unassign Locations Assigned from Policy
+                               ...  Id=${policy_id_str}
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${response}                 PCC.Delete Policy
+                               ...  Name=loadbalancer-ceph
+                               ...  description=test-ceph-lb_ControlIP
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+                                    Sleep    10s
+
+#####################################################################################################################################
 Ceph Rados Remove S3Account
 #####################################################################################################################################
      [Documentation]                 *Ceph Rados Gateway Update*
