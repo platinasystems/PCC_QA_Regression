@@ -56,3 +56,4 @@ setup(
         ('robot', ['src/' + SOURCE_PATH + "/robot/pcc_resources.robot"])
     ]
 )
+ 
