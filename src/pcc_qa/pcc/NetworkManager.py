@@ -37,7 +37,7 @@ class NetworkManager(PccBase):
         self.user="pcc"
         self.password="cals0ft"
         self.forceRemove=None
-        self.bgp_neighbors=None
+        self.bgp_neighbors=[]
         super().__init__()
 
     ###########################################################################
@@ -72,24 +72,18 @@ class NetworkManager(PccBase):
             raise e
         
         tmp_node=[]
-        if self.igwPolicy.lower()=="upstream":
-            for node_name in eval(str(self.nodes)):
-                print("Getting Node Id for -"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print(" Node Id retrieved -"+str(node_id))
-                bgp_data=eval(str(self.bgp_neighbors))
-                if node_name in bgp_data:
-                    data=bgp_data[node_name]
-                    data["id"]=node_id
-                    tmp_node.append(data)
-                else:
-                    tmp_node.append({"id": node_id, "bgp_neighbors":[]})
-        else:
-            for node_name in eval(str(self.nodes)):
-                print("Getting Node Id for -"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print(" Node Id retrieved -"+str(node_id))
-                tmp_node.append({"id":node_id})
+
+        for node_name in eval(str(self.nodes)):
+            print("Getting Node Id for -"+str(node_name))
+            node_id=easy.get_node_id_by_name(conn,node_name)
+            print(" Node Id retrieved -"+str(node_id))
+            bgp_data=eval(str(self.bgp_neighbors))
+            if node_name in bgp_data:
+                data=bgp_data[node_name]
+                data["id"]=node_id
+                tmp_node.append(data)
+            else:
+                tmp_node.append({"id": node_id, "bgp_neighbors":[]})
 
         self.nodes=tmp_node        
         
@@ -125,24 +119,18 @@ class NetworkManager(PccBase):
             raise Exception(e)
  
         tmp_node=[]
-        if self.igwPolicy.lower()=="upstream":
-            for node_name in eval(str(self.nodes)):
-                print("Getting Node Id for -"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print(" Node Id retrieved -"+str(node_id))
-                bgp_data=eval(str(self.bgp_neighbors))
-                if node_name in bgp_data:
-                    data=bgp_data[node_name]
-                    data["id"]=node_id
-                    tmp_node.append(data)
-                else:
-                    tmp_node.append({"id": node_id, "bgp_neighbors":[]})
-        else:
-            for node_name in eval(str(self.nodes)):
-                print("Getting Node Id for -"+str(node_name))
-                node_id=easy.get_node_id_by_name(conn,node_name)
-                print(" Node Id retrieved -"+str(node_id))
-                tmp_node.append({"id":node_id})
+
+        for node_name in eval(str(self.nodes)):
+            print("Getting Node Id for -"+str(node_name))
+            node_id=easy.get_node_id_by_name(conn,node_name)
+            print(" Node Id retrieved -"+str(node_id))
+            bgp_data=eval(str(self.bgp_neighbors))
+            if node_name in bgp_data:
+                data=bgp_data[node_name]
+                data["id"]=node_id
+                tmp_node.append(data)
+            else:
+                tmp_node.append({"id": node_id, "bgp_neighbors":[]})
 
         self.nodes=tmp_node       
 
@@ -203,8 +191,7 @@ class NetworkManager(PccBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
-        
-        time.sleep(30)    
+
         self.id=easy.get_network_clusters_id_by_name(conn,self.name)
 
         return pcc.refresh_network_cluster_by_id(conn, str(self.id))
@@ -373,14 +360,14 @@ class NetworkManager(PccBase):
             trace("Network verification for {} is in progress ...".format(ip))
             network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))
             print("Data Retrieve:"+str(network_check))
-            print("Word to search"+str(self.dataCIDR[0:11]))
-            print("Word to search"+str(self.controlCIDR[0:8]))
-            if re.search(self.dataCIDR[0:11],str(network_check)):
+            print("Word to search"+str(self.dataCIDR[0:6]))
+            print("Word to search"+str(self.controlCIDR[0:6]))
+            if re.search(self.dataCIDR[0:6],str(network_check)):
                 success_chk.append(ip)         
             else:
                 failed_chk.append(ip)
 
-            if re.search(self.controlCIDR[0:8],str(network_check)):
+            if re.search(self.controlCIDR[0:6],str(network_check)):
                 success_control_chk.append(ip)
                 
             else:

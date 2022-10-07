@@ -190,8 +190,8 @@
         {
             "controlName":"control-pvt",
             "dataName":"data-pvt",
-            "controlSubnet":"10.0.130.0/24",
-            "dataSubnet":"192.168.150.0/24"
+            "controlSubnet":"10.2.5.192/26",
+            "dataSubnet":"10.1.5.192/26"
         },
 
     "network_manager":
@@ -202,7 +202,7 @@
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
             "igwPolicy":"default",
-	    "bgp_neighbors":{"cluster-head-68":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.8","remote_as":64600},{"neighbor_ip":"10.0.10.12","remote_as":64601}]},"cluster-head-69":{"local_as":64643,"bgp_neighbors":[{"neighbor_ip":"10.0.10.10","remote_as":64600},{"neighbor_ip":"10.0.10.14","remote_as":64601}]}}
+	        "bgp_neighbors":{"cluster-head-68":{"local_as":64531,"bgp_neighbors":[{"neighbor_ip":"10.0.1.18","remote_as":64523}]},"cluster-head-69":{"local_as":64532,"bgp_neighbors":[{"neighbor_ip":"10.0.1.20","remote_as":64523}]}}
         },
 
     "ceph_cluster":
@@ -329,8 +329,8 @@
         {
             "controlName":"control-pvt",
             "dataName":"data-pvt",
-            "controlSubnet":"10.0.130.0/24",
-            "dataSubnet":"192.168.150.0/24"
+            "controlSubnet":"10.2.6.192/26",
+            "dataSubnet":"10.1.6.192/26"
         },
         "network_manager":
         {
@@ -339,7 +339,8 @@
             "nodes_ip":["172.17.2.71","172.17.2.72","172.17.2.244","172.17.2.245","172.17.2.246","172.17.2.137","172.17.2.138","172.17.2.139"],
             "dataCIDR":"data-pvt",
             "controlCIDR":"control-pvt",
-            "igwPolicy":"default"
+            "igwPolicy":"default",
+            "bgp_neighbors":{"invader71":{"local_as":64537,"bgp_neighbors":[{"neighbor_ip":"10.0.1.30","remote_as":64524}]},"invader72":{"local_as":64538,"bgp_neighbors":[{"neighbor_ip":"10.0.1.32","remote_as":64524}]}}
         },
         "ceph_cluster":
         {

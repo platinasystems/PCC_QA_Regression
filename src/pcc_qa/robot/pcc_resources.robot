@@ -1511,6 +1511,9 @@ Load Network Manager Data Secondary
 
         ${NETWORK_MANAGER_IGWPOLICY_SECONDARY}  Evaluate    $NETWORK_MANAGER_SECONDARY.get("igwPolicy", None)
                                                 Set Suite Variable    ${NETWORK_MANAGER_IGWPOLICY_SECONDARY}
+
+        ${NETWORK_MANAGER_BGP_NEIGHBORS_SECONDARY}        Evaluate    $NETWORK_MANAGER_SECONDARY.get("bgp_neighbors", None)
+                                                Set Suite Variable    ${NETWORK_MANAGER_BGP_NEIGHBORS_SECONDARY}
 ###################################################################################################################################
 Load Ceph Cluster Data Secondary
 ###################################################################################################################################
