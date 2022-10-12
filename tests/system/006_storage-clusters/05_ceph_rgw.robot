@@ -1957,7 +1957,7 @@ Create RGW With EC-Pool
                                            Should Be Equal As Strings      ${backend_status}    OK
 
         ${status}                          PCC.Ceph Verify RGW Node role
-                                       ...  ceph_cluster_name=${CEPH_RGW_NAME_EC_SECONDARY}
+                                       ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
                                            Should Be Equal As Strings      ${status}    OK
 
 
@@ -2094,7 +2094,7 @@ Ceph Rados Update Disjoint Nodes
                                     Should Be Equal As Strings      ${backend_status}    OK
 
         ${status}                   PCC.Ceph Verify RGW Node role
-                               ...  ceph_cluster_name=${CEPH_RGW_NAME_EC_SECONDARY}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
@@ -2186,7 +2186,7 @@ EC-Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${backend_status}    OK
 
         ${status}                   PCC.Ceph Verify RGW Node role
-                               ...  ceph_cluster_name=${CEPH_RGW_NAME_EC_SECONDARY}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
