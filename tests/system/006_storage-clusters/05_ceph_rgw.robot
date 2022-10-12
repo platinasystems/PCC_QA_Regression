@@ -322,6 +322,9 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
 Check Pool Used By RGW
 ###################################################################################################################################
@@ -374,6 +377,10 @@ Ceph Rados Add S3Account
                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 
 ###################################################################################################################################
@@ -507,6 +514,10 @@ Ceph Rados Increase Number Of Deamons
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Verify Data Durability
 ###################################################################################################################################
@@ -570,6 +581,10 @@ Ceph Rados Decrease Number Of Deamons
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 
 ###################################################################################################################################
 Verify Data Durability
@@ -632,6 +647,10 @@ Ceph Rados Update Port
                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 
 ###################################################################################################################################
@@ -730,6 +749,10 @@ Ceph Rados Update Nodes (Add Node)
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Verify Data Durability
 ###################################################################################################################################
@@ -827,6 +850,10 @@ Ceph Rados Update Disjoint Nodes
                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Verify Data Durability
@@ -1088,6 +1115,10 @@ Ceph Rados Gateway Delete
 
                                     sleep  1m
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Ceph Rados Gateway Creation Multiple Daemons With S3 Accounts
 #####################################################################################################################################
@@ -1124,6 +1155,10 @@ Ceph Rados Gateway Creation Multiple Daemons With S3 Accounts
                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Create Rgw Configuration File
@@ -1610,6 +1645,10 @@ Ceph Rados Remove S3Account
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 ####################################################################################################################################
 Ceph Rados Gateway Delete
 ####################################################################################################################################
@@ -1639,6 +1678,9 @@ Ceph Rados Gateway Delete
 
                                     sleep  1m
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 #####################################################################################################################################
 Ceph Rados Create with Multiple Nodes
 #####################################################################################################################################
@@ -1672,6 +1714,10 @@ Ceph Rados Create with Multiple Nodes
                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 #####################################################################################################################################
 Ceph Rados Remove One Node
@@ -1712,6 +1758,10 @@ Ceph Rados Remove One Node
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 #####################################################################################################################################
 Ceph Rados Gateway Delete
 #####################################################################################################################################
@@ -1742,6 +1792,10 @@ Ceph Rados Gateway Delete
                                     Should Be Equal As Strings      ${backend_status}    OK
 
                                     sleep  1m
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Ceph Node
@@ -1777,6 +1831,10 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Cep
                                ...  name=${CEPH_RGW_NAME}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
 #####################################################################################################################################
 Ceph Rados Gateway Delete
 #####################################################################################################################################
@@ -1805,6 +1863,10 @@ Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  num_daemons_map=${num_daemons_map}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Delete Metadata Profile
@@ -1893,6 +1955,10 @@ Create RGW With EC-Pool
                                        ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
                                        ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
                                            Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                          PCC.Ceph Verify RGW Node role
+                                       ...  ceph_cluster_name=${CEPH_RGW_NAME_EC_SECONDARY}
+                                           Should Be Equal As Strings      ${status}    OK
 
 
 ###################################################################################################################################
@@ -2027,6 +2093,10 @@ Ceph Rados Update Disjoint Nodes
                                ...  name=${CEPH_RGW_NAME_EC_SECONDARY}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_RGW_NAME_EC_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Verify Data Durability
 ###################################################################################################################################
@@ -2114,6 +2184,10 @@ EC-Ceph Rados Gateway Delete
         ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
                                ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
                                     Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_RGW_NAME_EC_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Delete Metadata Profile

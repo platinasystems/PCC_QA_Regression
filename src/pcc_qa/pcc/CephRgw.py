@@ -640,6 +640,37 @@ class CephRgw(PccBase):
         return
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Verify RGW Node role")
+    ###########################################################################
+    def ceph_verify_rgw_node_role(self, **kwargs):
+        banner("PCC.Ceph Verify RGW Node role")
+        self._load_kwargs(kwargs)
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        cluster = easy.get_ceph_cluster_by_name(conn, self.ceph_cluster_name)
+        nodes = cluster["nodes"]
+
+        ceph_rgws = pcc.get_ceph_rgws(conn, cluster["id"])['Result']['Data']
+
+        rgw_nodes = set()
+        for rgw in ceph_rgws:
+            rgw_nodes = rgw_nodes.union(rgw["numDaemonsMap"].keys())
+
+        for node in nodes:
+            if str(node["id"]) in rgw_nodes and "rgws" not in node["roles"]:
+                print("Node {} should have rgws ceph node role".format(node["name"]))
+                return "Error"
+            elif str(node["id"]) not in rgw_nodes and "rgws" in node["roles"]:
+                print("Node {} should not have rgws ceph node role".format(node["name"]))
+                return "Error"
+        return "OK"
+
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Rgw Verify BE Creation")
     ###########################################################################
     def ceph_rgw_verify_be_creation(self,**kwargs):
@@ -682,6 +713,14 @@ class CephRgw(PccBase):
             if self.num_daemons_map:
                 for host_name, daemons in self.num_daemons_map.items():
                     host_ip = easy.get_hostip_by_name(conn, host_name)
+                    ceph_conf_cmd = "sudo cat /etc/ceph/ceph.conf"
+                    ceph_conf = cli_run(host_ip, self.user, self.password, ceph_conf_cmd)
+                    realm_conf = "rgw_realm = {}".format(rgw["realm"])
+                    zone_conf = "rgw_zone = {}".format(rgw["zone"])
+                    zonegroup_conf = "rgw_zonegroup = {}".format(rgw["zonegroup"])
+                    if not re.search(realm_conf, str(ceph_conf)) or not re.search(zone_conf,str(ceph_conf)) or not re.search(zonegroup_conf, str(ceph_conf)):
+                        print("Mismatch on realm/zone/zonegroup conf {}".format(str(ceph_conf)))
+                        return "Error"
                     failed_chk_map[host_name] = 0
                     for j in range(daemons["num_daemon"]):
                         intf = daemons["interfaces"][j]

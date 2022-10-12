@@ -591,6 +591,57 @@ Change location on secondary side with replica established (Negative)
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
+
+###################################################################################################################################
+Change port on RGW secondary with replica established (Negative)
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Update Rgw
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  poolName=${CEPH_RGW_POOLNAME_SECONDARY}
+                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
+                               ...  port=4433
+                               ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Change certificate on RGW secondary with replica established (Negative)
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Update Rgw
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  poolName=${CEPH_RGW_POOLNAME_SECONDARY}
+                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
+                               ...  port=${CEPH_RGW_PORT_SECONDARY}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME_LB_SECONDARY}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL_LB_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Change target nodes on RGW secondary with replica established (Negative)
+###################################################################################################################################
+
+        ${num_daemons_map}          Create Dictionary      ${SERVER_2_NAME}=${1}
+
+        ${response}                 PCC.Ceph Update Rgw
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  poolName=${CEPH_RGW_POOLNAME_SECONDARY}
+                               ...  num_daemons_map=${num_daemons_map}
+                               ...  port=${CEPH_RGW_PORT_SECONDARY}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
 ###################################################################################################################################
 Create Primary Rgw Configuration File
 ###################################################################################################################################

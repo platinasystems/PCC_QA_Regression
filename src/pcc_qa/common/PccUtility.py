@@ -193,6 +193,16 @@ def get_ceph_cluster_id_by_name(conn:dict, Name:str)->int:
     except Exception as e:
         return {"Error": str(e)}
 
+def get_ceph_cluster_by_name(conn:dict, Name:str)->int:
+    try:
+        list_of_ceph_cluster = pcc.get_ceph_clusters(conn)['Result']['Data']
+        for ceph_cluster in list_of_ceph_cluster:
+            if str(ceph_cluster['name']) == str(Name):
+                return ceph_cluster
+        return None
+    except Exception as e:
+        return {"Error": str(e)}
+
 def get_ceph_pool_id_by_name(conn:dict, Name:str)->int:
     """
     Get Id of Ceph Pool with matching Name from PCC
