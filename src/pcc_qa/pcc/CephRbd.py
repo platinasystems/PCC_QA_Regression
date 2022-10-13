@@ -238,6 +238,7 @@ class CephRbd(PccBase):
                 print(data)
                 if str(data['id']) == str(self.id):
                     Id_found_in_list_of_rbd = True
+                    break
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Rbd Deleted] Timeout")
             if Id_found_in_list_of_rbd:

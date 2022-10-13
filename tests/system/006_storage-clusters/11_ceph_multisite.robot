@@ -628,7 +628,7 @@ Change certificate on RGW secondary with replica established (Negative)
 Change target nodes on RGW secondary with replica established (Negative)
 ###################################################################################################################################
 
-        ${num_daemons_map}          Create Dictionary      ${SERVER_2_NAME}=${1}
+        ${num_daemons_map}          Create Dictionary      ${SERVER_2_NAME_SECONDARY}=${1}
 
         ${response}                 PCC.Ceph Update Rgw
                                ...  name=${CEPH_RGW_NAME_SECONDARY}
