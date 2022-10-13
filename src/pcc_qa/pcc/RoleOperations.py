@@ -59,6 +59,7 @@ class RoleOperations(PccBase):
                 self.Host=data['Host']
                 self.node_name=data['Name']
                 role_ids = data['roles']
+                tags = data['tags']
                 if str(data['Name']).lower() == str(node).lower():
                     for role in eval(str(self.roles)):
                         tmp_id=easy.get_node_role_id_by_name(conn,str(role))
@@ -74,7 +75,8 @@ class RoleOperations(PccBase):
                              "Name":self.node_name,
                              "Host":self.Host,
                              "roles":role_ids,
-                             "scopeId":self.scopeId
+                             "scopeId":self.scopeId,
+                             "tags":tags
                              }
                     print("Payload:-"+str(payload))
                     api_response=pcc.modify_node(conn, payload)

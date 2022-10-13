@@ -110,6 +110,7 @@ Create And Apply Policies To Tags
                                     ${status}    Get From Dictionary    ${result}    status
                                     ${data}      Get From Dictionary    ${result}    Data
                                     ${policy_tag_1_id}      Get From Dictionary    ${data}     id
+                                    Set Suite Variable  ${policy_tag_1_id}
                                     Should Be Equal As Strings    ${status}    200
 
         ${response}                  PCC.Create Policy
@@ -177,6 +178,42 @@ Create And Apply Policies To Tags
                                     ${status}    Get From Dictionary    ${result}    status
                                     Should Be Equal As Strings    ${status}    200
 
+###################################################################################################################################
+Create Policy With Tag Already Associated To Another Policy (Negative)
+###################################################################################################################################
+
+
+        ${cert_tag_1}               PCC.Get Certificate Id
+                               ...  Alias=cert-tag-1
+                                    Log To Console    ${cert_tag_1}
+
+        ${app_id}                   PCC.Get App Id from Policies
+                               ...  Name=TRUSTED-CA-CERTIFICATE
+                                    Log To Console    ${app_id}
+
+        ${response}                 PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=policy-negative
+                               ...  inputs=[{"name": "ca_certificate_list","value": "${cert_tag_1}"}]
+
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${result}    status
+                                    ${data}      Get From Dictionary    ${result}    Data
+                                    ${policy_negative_id}      Get From Dictionary    ${data}     id
+                                    Should Be Equal As Strings    ${status}    200
+
+        ${tag_1}                    PCC.Get Tag By Name
+                              ...   Name=tag-1
+        ${tag_1_id}                 Get From Dictionary    ${tag_1}    id
+
+        ${response}                 PCC.Edit Tag
+                               ...  Id=${tag_1_id}
+                               ...  Name=tag-1
+                               ...  PolicyIDs=[${policy_tag_1_id},${policy_negative_id}]
+
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${result}    status
+                                    Should Not Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
 Verify Scope Policy Backend
@@ -262,6 +299,63 @@ Remove Tags From Node
                              Should Be Equal As Strings    ${node_wait_status}    OK
 
 
+###################################################################################################################################
+Add Tag Before Node Role
+###################################################################################################################################
+
+        ${response}                 PCC.Delete and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  roles=["trusted-ca-certificate"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+
+        ${node_wait_status}         PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                                    Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+        ${result}                   PCC.Add and Verify Tags On Nodes
+                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  tags=["tag-1"]
+
+                                    Should Be Equal As Strings    ${result}    OK
+
+
+        ${response}                 PCC.Add and Verify Roles On Nodes
+                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  roles=["trusted-ca-certificate"]
+
+                                    Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}         PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                                    Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+    ${result}                       PCC.Verify Certificate On Node
+                               ...  ip=${SERVER_1_HOST_IP}
+                               ...  Alias=cert-tag-1
+
+                                    Should Be Equal As Strings    ${result}    OK
+
+###################################################################################################################################
+Remove Tags From Node
+###################################################################################################################################
+    [Documentation]                 *Add Tag To Node*
+
+    ${result}                PCC.Add and Verify Tags On Nodes
+                        ...  nodes=["${SERVER_1_NAME}"]
+                        ...  tags=[]
+
+                             Should Be Equal As Strings    ${result}    OK
+
+    ${node_wait_status}      PCC.Wait Until Node Ready
+                        ...  Name=${SERVER_1_NAME}
+
+                             Should Be Equal As Strings    ${node_wait_status}    OK
 
 ###################################################################################################################################
 Unassign Tags From Policies
@@ -293,7 +387,3 @@ Unassign Tags From Policies
                                     ${result}    Get Result    ${response}
                                     ${status}    Get From Dictionary    ${result}    status
                                     Should Be Equal As Strings    ${status}    200
-
-
-
-
