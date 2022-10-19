@@ -60,7 +60,7 @@ Check if PCC define default node role for the following to include Platina Syste
 
         ## Check for Network Resource node role
         ${status}          PCC.Validate Node Role
-                           ...    Name=Network Resource
+                           ...    Name=FRR Resource
 
                            Log To Console   ${status}
                            Should Be Equal As Strings    ${status}    OK
@@ -124,13 +124,13 @@ Check if user is able to assign the CEPH resource, Kubernetes resource, Network 
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
+                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "FRR Resource]
 
                                     Should Be Equal As Strings      ${response}  OK
 
                 ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${SERVER_1_NAME}"]
-                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "Network Resource"]
+                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "FRR Resource"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -166,7 +166,7 @@ Check if user is able to assign the CEPH resource, Kubernetes resource, Network 
                      Should Be Equal As Strings    ${status}    OK
 
         ${status}    PCC.Verify Node Role On Nodes
-                     ...    Name=Network Resource
+                     ...    Name=FRR Resource
                      ...    nodes=["${CLUSTERHEAD_1_NAME}"]
 
                      Log To Console    ${status}
