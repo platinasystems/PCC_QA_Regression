@@ -124,7 +124,7 @@ Check if user is able to assign the CEPH resource, Kubernetes resource, Network 
 
         ${response}                 PCC.Add and Verify Roles On Nodes
                                ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "FRR Resource]
+                               ...  roles=["Default", "Ceph Resource", "Kubernetes Resource", "FRR Resource"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
