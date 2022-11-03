@@ -231,10 +231,11 @@ class Tenants(PccBase):
         print("Kwargs are:{}".format(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         nodes_response = pcc.get_nodes(conn)['Result']['Data']
+        tenant_id = easy.get_tenant_id_by_name(conn, self.Tenant_Name)
         try:
             for node in nodes_response:
                 if str(node['Name']) == str(self.Name):
-                    if node['tenant'] == str(self.Tenant_Name):
+                    if node['owner'] == tenant_id:
                         return "OK"
             return "Not assigned"
         except Exception as e:

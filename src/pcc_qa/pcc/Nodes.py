@@ -224,21 +224,18 @@ class Nodes(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Wait Until Node Deleted")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        found = True
         time_waited = 0
         timeout = time.time() + PCC_TIMEOUT
         try:
-            while found:
-                node_list = pcc.get_nodes(conn)['Result']['Data']
-                if node_list ==None:
+            while True:
+                node = easy.get_node_by_name(conn,self.Name)
+                if node is None:
                     return "OK"
-                if re.search(self.Name,str(node_list)):
-                    trace("Node:{} not yet deleted".format(self.Name))
-                    time.sleep(3)
-                    if time.time()>timeout:
-                        return {"Error": "Timeout"}
-                else:
-                    return "OK"
+                trace("Node {} not yet deleted".format(node["Name"]))
+                time.sleep(3)
+                if time.time()>timeout:
+                    trace("timeout")
+                    return {"Error": "Timeout"}
         except Exception as e:
             return "Exception encountered: {}".format(e)
         
