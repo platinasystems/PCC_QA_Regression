@@ -191,9 +191,7 @@ def get_tenant_id_by_name(conn:dict, Name:str)->dict:
         return None
     except Exception as e:
         return {"Error": str(e)}
-      
 
-        return {"Error": str(e)} 
         
 ## Storage
 def get_ceph_cluster_id_by_name(conn:dict, Name:str)->int:
