@@ -454,7 +454,8 @@ Pcc Tenant Assignment
                        ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
         
-                     
+                     sleep  3s
+
         ${status}    PCC.Validate Tenant Assigned to Node
                      ...    Name=${CLUSTERHEAD_1_NAME}
                      ...    Tenant_Name=${TENANT5}

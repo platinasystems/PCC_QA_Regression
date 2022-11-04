@@ -693,6 +693,7 @@ class Nodes(PccBase):
                     print("update response status : {}".format(update_response_status))
                 update_result = len(update_response_status) > 0 and all(elem == 200 for elem in update_response_status)
                 banner("Node names : {}".format(node_names))
+                time.sleep(30)
                 for names in node_names:
                     resp = self.wait_until_node_ready(Name=names)
                     wait_until_node_ready_resp.append(resp)

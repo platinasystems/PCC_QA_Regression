@@ -340,10 +340,10 @@ Cleanup features associated to Node
 
                        Log To Console    ${scope_id}
 
-                ${status}       PCC.Cleanup features associated to Node
-                                                ...    scopeId=${scope_id}
-                                                Log To Console    ${status}
-                                                Should Be Equal As Strings      ${status}  OK
+        ${status}       PCC.Cleanup features associated to Node
+                        ...    scopeId=${scope_id}
+                        Log To Console    ${status}
+                        Should Be Equal As Strings      ${status}  OK
 
 ####################################################################################################################################
 Wait Until All Nodes Are Ready
