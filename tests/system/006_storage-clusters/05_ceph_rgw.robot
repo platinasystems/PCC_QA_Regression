@@ -307,6 +307,8 @@ Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts
                                ...  port=${CEPH_RGW_PORT}
                                ...  certificateName=${CEPH_RGW_CERT_NAME}
                                ...  certificateUrl=${CEPH_RGW_CERT_URL}
+                               ...  zone_group=custom_zonegroup
+                               ...  zone=custom_zone
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -1941,6 +1943,8 @@ Create RGW With EC-Pool
                                       ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
                                       ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
                                       ...  S3Accounts=["appcred_ec"]
+                                      ...  zone_group=custom_zonegroup
+                                      ...  zone=custom_zone
 
         ${status_code}                     Get Response Status Code        ${response}
         ${message}                         Get Response Message        ${response}

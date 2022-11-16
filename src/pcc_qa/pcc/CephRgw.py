@@ -51,6 +51,8 @@ class CephRgw(PccBase):
         self.data_cidr=None
         self.ceph_cluster_name = None
         self.num_daemons_map = None
+        self.zone_group = ""
+        self.zone = ""
 
     ###########################################################################
     @keyword(name="PCC.Ceph Get Rgw Id")
@@ -145,11 +147,6 @@ class CephRgw(PccBase):
                 node_id = easy.get_node_id_by_name(conn, node_name)
                 tmp_daemons_map[str(node_id)] = num_daemons
         self.num_daemons_map = tmp_daemons_map
-
-        if self.service_ip.lower()=="yes":
-            serviceIpType="NodeIp"
-        else:
-            serviceIpType="Default"
         
         payload = {
                     "name":self.name,
@@ -159,7 +156,8 @@ class CephRgw(PccBase):
                     "certificateID": self.certificateID,
                     "address":self.certificateUrl,
                     "S3Accounts":self.S3Accounts,
-                    "serviceIpType":serviceIpType
+                    "zonegroup":self.zone_group,
+                    "zone":self.zone
                   }
         print("Payload:-"+str(payload))
         return pcc.add_ceph_rgw(conn, payload)
@@ -209,11 +207,6 @@ class CephRgw(PccBase):
                 tmp_daemons_map[str(node_id)] = num_daemons
         self.num_daemons_map = tmp_daemons_map
 
-        if self.service_ip.lower()=="yes":
-            serviceIpType="NodeIp"
-        else:
-            serviceIpType="Default"
-
         payload = {
                     "ID":self.ID,
                     "name":self.name,
@@ -223,7 +216,8 @@ class CephRgw(PccBase):
                     "certificateID": self.certificateID,
                     "address": self.certificateUrl,
                     "S3Accounts":self.S3Accounts,
-                    "serviceIpType":serviceIpType
+                    "zonegroup": self.zone_group,
+                    "zone": self.zone
                 }
 
         print("Payload:-"+str(payload))
