@@ -63,7 +63,7 @@ class Nodes(PccBase):
         self.user= "pcc"
         self.password= "cals0ft"
         self.scopeId = None
-        
+        self.maintenance = False
         self.interface_name = []
         self.interface_id = []
         self.interface_mac = []
@@ -856,3 +856,39 @@ class Nodes(PccBase):
             return None
         except Exception as e:
             raise e
+
+
+
+    ###########################################################################
+    @keyword(name="PCC.Set Maintenance Mode")
+    ###########################################################################
+    def set_maintenance_mode(self, *args, **kwargs):
+        banner("PCC.Set Maintenance Mode")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        payload = {
+            "enter": self.maintenance
+        }
+
+        return pcc.set_node_maintenance(conn,str(self.Id),payload)
+
+
+    ###########################################################################
+    @keyword(name="PCC.Check Maintenance Mode Status")
+    ###########################################################################
+    def check_maintenance_mode_status(self, *args, **kwargs):
+        banner("PCC.Check Maintenance Mode Status")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        node = easy.get_node_by_name(conn, self.Name)
+        if node["maintenance"] == self.maintenance:
+            return "OK"
+        return "Error"

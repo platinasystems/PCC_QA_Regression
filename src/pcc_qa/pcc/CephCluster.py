@@ -50,6 +50,7 @@ class CephCluster(PccBase):
         self.operation_to_perform = None
         self.storage_types= None
         self.node_location = None
+        self.server = None
         super().__init__()
 
     ###########################################################################
@@ -1083,6 +1084,29 @@ class CephCluster(PccBase):
             # break
         print(drive_names)
         return drive_names
+
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Verify Osds State By Hostname")
+    ###############################################################################################################
+    def ceph_verify_osds_state_by_hostname(self, server_name=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Verify Osds State By Hostname")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        osds = pcc.get_osds_by_cluster_id(conn, str(cluster_id))['Result']['Data']
+        for osd in osds:
+            if osd["server"] == self.server:
+                print("osd id {} has state: {}".format(osd["osd"],osd["state"]))
+                if self.state_status not in osd["state"]:
+                    return "Error"
+        return "OK"
+
 
     ###############################################################################################################
     @keyword(name="PCC.Ceph get OSD Drives by Hostname")
