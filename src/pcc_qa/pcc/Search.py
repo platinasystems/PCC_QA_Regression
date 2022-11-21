@@ -47,6 +47,7 @@ class Search(PccBase):
 
         for data in search_data:
             key_data = str(data[self.key])
+            print(key_data)
             if re.search(self.value,key_data):
                 return "OK"
         return "Error"

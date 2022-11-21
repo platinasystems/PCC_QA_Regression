@@ -157,3 +157,94 @@ Search Storage
                                       ...  value=sdc
 
                                            Should Be Equal As Strings      ${response}   OK
+
+###################################################################################################################################
+Search Subnets
+###################################################################################################################################
+
+        [Documentation]    *Search Subnets*
+
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=SubNets
+                                      ...  value=control-pvt
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=SubNets
+                                      ...  value=data-pvt
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+###################################################################################################################################
+Search Network clusters
+###################################################################################################################################
+
+        [Documentation]    *Search Network clusters*
+
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=NetworkClusters
+                                      ...  value=network-pvt
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+
+###################################################################################################################################
+Search Ceph clusters
+###################################################################################################################################
+
+        [Documentation]    *Search Ceph clusters*
+
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=CephClusters
+                                      ...  value=ceph-pvt
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+###################################################################################################################################
+Search K8s clusters
+###################################################################################################################################
+
+        [Documentation]    *Search K8s clusters*
+
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=K8sClusters
+                                      ...  value=k8s-pvt
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+###################################################################################################################################
+Search Scopes
+###################################################################################################################################
+
+        [Documentation]    *Search Scopes*
+
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=Scopes
+                                      ...  value=Default region
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=Scopes
+                                      ...  value=Default zone
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=Scopes
+                                      ...  value=Default site
+
+                                           Should Be Equal As Strings      ${response}   OK
+
+
+        ${response}                        PCC.Find In Search Data
+                                      ...  key=Scopes
+                                      ...  value=Default rack
+
+                                           Should Be Equal As Strings      ${response}   OK
