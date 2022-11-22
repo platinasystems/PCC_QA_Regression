@@ -589,10 +589,10 @@ System Package Updates cleanup
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 
-		${status}     PCC.Delete All Policies
-
-                      Log To Console    ${status}
-                      Should Be Equal As Strings    ${status}    OK
+#		${status}     PCC.Delete All Policies
+#
+#                      Log To Console    ${status}
+#                      Should Be Equal As Strings    ${status}    OK
 
 ###############################################################################################################################################
 Ethtool Backend Validation
