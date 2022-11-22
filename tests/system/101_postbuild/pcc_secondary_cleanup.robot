@@ -45,6 +45,13 @@ Ceph Cluster Delete
         ${ceph_cluster_deletion_status}    PCC.Ceph Delete All Cluster
                                            Should be equal as strings    ${ceph_cluster_deletion_status}    OK
 
+                                           sleep  1m
+
+        ${status}                          PCC.Wait Until All Nodes Are Ready
+
+                                           Log To Console    ${status}
+                                           Should Be Equal As Strings      ${status}  OK
+
 ###################################################################################################################################
 BE Ceph Cleanup
 ###################################################################################################################################
