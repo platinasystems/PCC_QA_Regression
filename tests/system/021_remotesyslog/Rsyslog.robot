@@ -375,17 +375,17 @@ Check if user is able to define one or more Remote Syslog Client policies(withou
                               Log To Console    ${status}
                               Should Be Equal As Strings    ${status}    OK
 
-###################################################################################################################################
-Delete Policies
-###################################################################################################################################
-
-        [Documentation]    *Delete Policies*
-                           ...  keywords:
-	
-	${status}     PCC.Delete All Policies
-
-                      Log To Console    ${status}
-                      Should Be Equal As Strings    ${status}    OK
+####################################################################################################################################
+#Delete Policies
+####################################################################################################################################
+#
+#        [Documentation]    *Delete Policies*
+#                           ...  keywords:
+#
+#	${status}     PCC.Delete All Policies
+#
+#                      Log To Console    ${status}
+#                      Should Be Equal As Strings    ${status}    OK
 
 
 
