@@ -315,6 +315,10 @@ Network Manager Delete
 
                                     sleep  2m
 
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
 Delete Multiple Subnet
