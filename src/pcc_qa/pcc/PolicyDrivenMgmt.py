@@ -57,6 +57,8 @@ class PolicyDrivenMgmt(PccBase):
         self.dns_server_ip = None
         self.time_zone = None
         self.scope_from_user = None
+        self.iptables_chain = None
+        self.iptables_port = None
         super().__init__()
 
     ###########################################################################
@@ -950,3 +952,20 @@ class PolicyDrivenMgmt(PccBase):
         else:
             return "Error: validation unsuccessful, time zone {} not found".format(self.time_zone)   
 
+
+    ###########################################################################
+    @keyword(name="PCC.Validate iptables From Backend")
+    ###########################################################################
+    def validate_iptables_backend(self,**kwargs):
+        banner("PCC.Validate iptables From Backend")
+        self._load_kwargs(kwargs)
+
+        search1 = "Chain {}".format(self.iptables_chain)
+        search2= "tcp dpt:{}".format(self.iptables_port)
+        cmd="sudo iptables -L"
+        cmd_op=cli_run(self.host_ip,self.user,self.password,cmd)
+        print("cmd op: {}".format(cmd_op))
+        trace("cmd op: {}".format(cmd_op))
+        if re.search(search1,str(cmd_op)) is None or re.search(search2,str(cmd_op)) is None or re.search("pcc-installed-policy",str(cmd_op)) is None:
+            return "Error"
+        return "OK"
