@@ -212,7 +212,7 @@ class Kubernetes(PccBase):
             status_code = get_status_code(response)
             if status_code == 202:
                 code = get_response_data(response)["code"]
-                del_response = pcc.delete_kubernetes_by_id(conn, str(self.id), payload, "?code=" + code)
+                del_response = pcc.delete_kubernetes_by_id(conn, str(self.cluster_id), payload, "?code=" + code)
                 if del_response['Result']['status'] == 200:
                     del_check = self.k8s_wait_until_cluster_deleted()
                     if del_check == "OK":
