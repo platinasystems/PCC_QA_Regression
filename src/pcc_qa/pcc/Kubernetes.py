@@ -10,7 +10,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -47,6 +47,7 @@ class Kubernetes(PccBase):
         self.password = "cals0ft"
         self.hostip = None
         self.storageClassIds = None
+        self.forceRemove = False
 
         super().__init__()
 
@@ -127,11 +128,19 @@ class Kubernetes(PccBase):
         banner("PCC.K8s Delete Cluster")
         self._load_kwargs(kwargs)
 
-        if self.cluster_id == None:
-            raise Exception("[PCC.Delete Cluster]: cluster id is not specified.")
-        else:
+        payload = {"forceRemove": self.forceRemove}
+
+        try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            return pcc.delete_kubernetes_by_id(conn, str(self.cluster_id))
+        except Exception as e:
+            raise e
+        print("Payoad:"+str(payload))
+        response = pcc.delete_kubernetes_by_id(conn, str(self.id), payload, "")
+        status_code = get_status_code(response)
+        if status_code == 202:
+            code = get_response_data(response)["code"]
+            return pcc.delete_kubernetes_by_id(conn, str(self.id), payload, "?code=" + code)
+        return response
 
     ###########################################################################
     @keyword(name="PCC.K8s Get Storage Class Ids")
@@ -191,27 +200,33 @@ class Kubernetes(PccBase):
         except Exception as e:
             raise e
 
+        payload={"forceRemove":self.forceRemove}
+
         response = pcc.get_kubernetes(conn)
         for data in get_response_data(response):
             print("Response To Look :-" + str(data))
             print("K8s {} and id {} is deleting....".format(data['name'], data['ID']))
             trace("K8s {} and id {} is deleting....".format(data['name'], data['ID']))
             self.cluster_id = data['ID']
-            del_response = pcc.delete_kubernetes_by_id(conn, str(self.cluster_id))
-            if del_response['Result']['status'] == 200:
-                del_check = self.k8s_wait_until_cluster_deleted()
-                print("del_check:" + str(del_check))
-                if del_check == "OK":
-                    print("k8s {} is deleted successfully".format(data['name']))
-                    return "OK"
+            response = pcc.delete_kubernetes_by_id(conn, str(self.cluster_id), payload, "")
+            status_code = get_status_code(response)
+            if status_code == 202:
+                code = get_response_data(response)["code"]
+                del_response = pcc.delete_kubernetes_by_id(conn, str(self.id), payload, "?code=" + code)
+                if del_response['Result']['status'] == 200:
+                    del_check = self.k8s_wait_until_cluster_deleted()
+                    if del_check == "OK":
+                        print("k8s Cluster {} is deleted sucessfully".format(data['name']))
+                        return "OK"
+                    else:
+                        print("k8s Cluster {} unable to delete".format(data['name']))
+                        return "Error"
                 else:
-                    print("k8s {} unable to delete".format(data['name']))
+                    print("Delete Response:" + str(del_response))
+                    print("Issue: Not getting 200 response back")
                     return "Error"
             else:
-                print("Delete Response:" + str(del_response))
-                print("Issue: Not getting 200 response back")
                 return "Error"
-
         return "OK"
 
         ###########################################################################
