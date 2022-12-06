@@ -55,7 +55,7 @@ Ceph Delete Unused Pools
                                     sleep  1m
 
 ############################################################################################################################################################
-Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Also covers 4-2, 8-3 and 8-4 chunk ratio profiles
+Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Also covers 4-2, 8-3 and 8-4 chunk ratio profiles and Stripe 8K
 ############################################################################################################################################################
 
         [Documentation]    *Get Erasure Code Profile Id* test
@@ -83,6 +83,7 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                ...  quota_unit=GiB
                                ...  Datachunks=2
                                ...  Codingchunks=1
+                               ...  StripeUnit=8192
 
 
 
@@ -118,6 +119,7 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                ...  quota_unit=MiB
                                ...  Datachunks=4
                                ...  Codingchunks=2
+                               ...  StripeUnit=8192
 
 
 
@@ -153,6 +155,7 @@ Create erasure coded pools with quota size is in MiB, GiB, TiB, PiB and EiB - Al
                                ...  quota_unit=TiB
                                ...  Datachunks=4
                                ...  Codingchunks=2
+                               ...  StripeUnit=8192
 
         ${status_code}          Get Response Status Code        ${response}
                                 Should Be Equal As Strings      ${status_code}  200
