@@ -39,6 +39,7 @@ class ErasureCodedPool(PccBase):
         self.Codingchunks = None
         self.resilienceScheme = None
         self.pg_num = 8
+        self.StripeUnit = 4096
         super().__init__()
 
     ###########################################################################
@@ -191,7 +192,7 @@ class ErasureCodedPool(PccBase):
                       "resilienceScheme":self.resilienceScheme,
                       "quota_unit":self.quota_unit,
                       "ceph_cluster_id":self.ceph_cluster_id,
-                      "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)},
+                      "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks), "stripeUnit":int(self.StripeUnit)},
                        "pgNum": int(self.pg_num)
                       }
                       
@@ -274,7 +275,7 @@ class ErasureCodedPool(PccBase):
                           "quota_unit":self.quota_unit,
                           "resilienceScheme":self.resilienceScheme,
                           "ceph_cluster_id":self.ceph_cluster_id,
-                          "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks)},
+                          "erasureCodeProfile":{"dataChunks":int(self.Datachunks), "codingChunks":int(self.Codingchunks), "stripeUnit":int(self.StripeUnit)},
                           "pgNum": int(self.pg_num)
                           }
             
