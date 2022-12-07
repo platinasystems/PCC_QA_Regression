@@ -456,11 +456,11 @@ class SystemPackageUpdates(PccBase):
             serialised_output = self._serialize_response(time.time(), cmd_op)
 
             output = str(serialised_output['Result']['stdout']).replace('\n', '').strip()
-            list_for_Ubuntu = ['kernel.hung_task_panic = 1','kernel.panic = 1','kernel.panic_on_io_nmi = 1','kernel.panic_on_oops = 1','kernel.panic_on_rcu_stall = 1','kernel.panic_on_unrecovered_nmi = 1','kernel.panic_on_warn = 1','kernel.softlockup_panic = 1','kernel.unknown_nmi_panic = 1','vm.panic_on_oom = 1']
+            list_for_Ubuntu = ['kernel.hung_task_panic = 1','kernel.panic = 1','kernel.panic_on_io_nmi = 1','kernel.panic_on_oops = 1','kernel.panic_on_rcu_stall = 1','kernel.panic_on_unrecovered_nmi = 1','kernel.panic_on_warn = 0','kernel.softlockup_panic = 1','kernel.unknown_nmi_panic = 1','vm.panic_on_oom = 1']
             
             list_for_Debian = ['kernel.panic = 1','kernel.panic_on_io_nmi = 1','kernel.panic_on_oops = 1','kernel.panic_on_rcu_stall = 1','kernel.panic_on_unrecovered_nmi = 1','kernel.panic_on_warn = 0','kernel.unknown_nmi_panic = 1','vm.panic_on_oom = 1']
             
-            list_for_Centos_Redhat = ['kernel.hardlockup_panic = 1','kernel.hung_task_panic = 1','kernel.panic = 1','kernel.panic_on_io_nmi = 1','kernel.panic_on_oops = 1','kernel.panic_on_unrecovered_nmi = 1','kernel.panic_on_warn = 1','kernel.softlockup_panic = 1','kernel.unknown_nmi_panic = 1','vm.panic_on_oom = 1']
+            list_for_Centos_Redhat = ['kernel.hardlockup_panic = 1','kernel.hung_task_panic = 1','kernel.panic = 1','kernel.panic_on_io_nmi = 1','kernel.panic_on_oops = 1','kernel.panic_on_unrecovered_nmi = 1','kernel.panic_on_warn = 0','kernel.softlockup_panic = 1','kernel.unknown_nmi_panic = 1','vm.panic_on_oom = 1']
             
             if re.search("Debian",str(OS_type)):
                 for i in list_for_Debian:
