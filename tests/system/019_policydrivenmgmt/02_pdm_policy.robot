@@ -261,61 +261,6 @@ Get All Policies:TCP-1413
                        Log to Console    ${message}
                        Should Be Equal As Strings    ${status}    200
 
-###################################################################################################################################
-Get current policy deploy status by scopes:TCP-1436
-###################################################################################################################################
-
-        [Documentation]    *Get current policy deploy status by scopes* test
-                           ...  keywords:
-                           ...  PCC.Get Policy Deploy Status by Scopes
-        [Tags]    Only
-
-        ${parent1_id}    PCC.Get Scope Id
-                         ...  scope_name=region-1
-
-        ${scope1_id}     PCC.Get Scope Id
-                         ...  scope_name=zone-updated
-                         ...  parentID=${parent1_id}
-
-        ${parent2_id}    PCC.Get Scope Id
-                         ...  scope_name=zone-2
-                         ...  parentID=${parent1_id}
-
-        ${scope2_id}     PCC.Get Scope Id
-                         ...  scope_name=site-1
-                         ...  parentID=${parent2_id}
-
-        ${response}    PCC.Get Policy Deploy Status by Scopes
-                       ...  scope_name=site-1
-                       ...  parentID=${parent2_id}
-
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
-
-###################################################################################################################################
-Get current policy deploy status by policies:TCP-1437
-###################################################################################################################################
-
-        [Documentation]    *Get current policy deploy status by policies* test
-                           ...  keywords:
-                           ...  PCC.Get Policy Deploy Status by Policies
-
-        [Tags]    Only
-        ${response}    PCC.Get Policy Deploy Status by Policies
-                       ...  Name=dns
-                       ...  description=dns-policy-description
-
-                       Log To Console    ${response}
-                       ${result}    Get Result    ${response}
-                       ${status}    Get From Dictionary    ${result}    status
-                       ${message}    Get From Dictionary    ${result}    message
-                       Log to Console    ${message}
-                       Should Be Equal As Strings    ${status}    200
-
 
 ####################################################################################################################################
 #Create policy with invalid/non existing appID (Negative):TCP-1417
