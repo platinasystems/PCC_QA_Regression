@@ -322,7 +322,7 @@ Add Tag Before Node Role
 
                                     Should Be Equal As Strings    ${result}    OK
 
-                                    sleep  1m
+ #                                   sleep  1m
 
 
         ${response}                 PCC.Add and Verify Roles On Nodes
