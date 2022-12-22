@@ -38,6 +38,8 @@ class NetworkManager(PccBase):
         self.password="cals0ft"
         self.forceRemove=None
         self.bgp_neighbors=[]
+        self.type=1
+        self.auto_asn_range=[64000,64010]
         super().__init__()
 
     ###########################################################################
@@ -98,7 +100,9 @@ class NetworkManager(PccBase):
             "nodes": self.nodes,
             "controlCIDRId":self.controlCIDRId,
             "dataCIDRId":self.dataCIDRId,
-            "igwPolicy":self.igwPolicy
+            "igwPolicy":self.igwPolicy,
+            "type":int(self.type),
+            "AutoASNRange": self.auto_asn_range
         }
 
         print("Payload:-"+str(payload))
@@ -406,7 +410,6 @@ class NetworkManager(PccBase):
 
         while True:
             self.id=easy.get_network_clusters_id_by_name(conn,self.name)
-            time.sleep(30)
             print("Network Manager ID: "+str(self.id))
             response = get_response_data(pcc.health_check_network_cluster(conn,str(self.id)))
             print("Response:"+str(response))

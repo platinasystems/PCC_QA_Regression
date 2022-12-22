@@ -221,6 +221,25 @@ Create IPAM DataCIDR Subnet : TCP-1774
                                ...  name=${IPAM_DATA_SUBNET_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Create IPAM Lab Data Subnet
+###################################################################################################################################
+
+        ${response}                 PCC.Ipam Subnet Create
+                               ...  name=lab-pvt
+                               ...  subnet=172.17.2.0/23
+                               ...  pubAccess=False
+                               ...  routed=False
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Ipam Subnet Ready
+                               ...  name=lab-pvt
+
+                                    Should Be Equal As Strings      ${status}    OK
 ###################################################################################################################################
 Fetching IPAM subnet ID before backup
 ###################################################################################################################################                                      
