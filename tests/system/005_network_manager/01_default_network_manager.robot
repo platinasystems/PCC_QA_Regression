@@ -87,33 +87,32 @@ Ceph Cluster Creation without Network Manager (Negative)
 #                                 ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}","${CLUSTERHEAD_2_NAME}"]
 #                                 ...  controlCIDR=${NETWORK_MANAGER_DATACIDR}
 #                                 ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
-#                                 ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-
+#                                 ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}#
 #          ${status_code}              Get Response Status Code        ${response}
 #                                      Should Be Equal As Strings      ${status_code}  200
-
+#
 #          ${status}                   PCC.Wait Until Network Manager Ready
 #                                 ...  name=${NETWORK_MANAGER_NAME}
 #                                      Should Be Equal As Strings      ${status}    OK
-
+#
 #          ${status}                   PCC.Network Manager Verify BE
 #                                 ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                                 ...  controlCIDR=${IPAM_DATA_SUBNET_IP}
 #                                 ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
 #                                      Should Be Equal As Strings      ${status}  OK
-
+#
 #          ${status}                   PCC.Health Check Network Manager
 #                                 ...  name=${NETWORK_MANAGER_NAME}
 #                                      Should Be Equal As Strings      ${status}    OK
-
+#
 #          ${status}                   PCC.Network Manager verify From Event log
 #                                 ...  name=${NETWORK_MANAGER_NAME}
 #                                      Should Be Equal As Strings      ${status}    OK
-
+#
 #                                      PCC.FRR status on nodes
 #                                 ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-
-
+#
+#
 # ###################################################################################################################################
 #  Network Manager Delete and Verify PCC (Network Manager with same ControlCIDR and DataCIDR) : TCP-1751
 # # ###################################################################################################################################
@@ -123,14 +122,14 @@ Ceph Cluster Creation without Network Manager (Negative)
 #                                 ...  PCC.Wait Until Network Manager Ready
 #          ${response}                 PCC.Network Manager Delete
 #                                 ...  name=${NETWORK_MANAGER_NAME}
-
+#
 #          ${status_code}              Get Response Status Code        ${response}
 #                                      Should Be Equal As Strings      ${status_code}  200
-
+#
 #          ${status}                   PCC.Wait Until Network Manager Deleted
 #                                 ...  name=${NETWORK_MANAGER_NAME}
 #                                      Should Be Equal As Strings      ${status}    OK
-
+#
 #          ${status}                   PCC.Network Manager Verify BE
 #                                 ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
 #                                 ...  controlCIDR=${IPAM_DATA_SUBNET_IP}
@@ -138,189 +137,188 @@ Ceph Cluster Creation without Network Manager (Negative)
 #                                      Should Not Be Equal As Strings      ${status}  OK
 
 
-####################################################################################################################################
-#Network Manager Creation: L2Static
-####################################################################################################################################
-#    [Documentation]                 *Network Manager Creation: L2Static*
-#
-#
-#        ${response}                 PCC.Network Manager Create
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                               ...  nodes=${NETWORK_MANAGER_NODES}
-#                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
-#                               ...  dataCIDR=lab-pvt
-#                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-#                               ...  type=4
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Wait Until Network Manager Ready
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    sleep  2m
-#
-#
-#        ${status}                   PCC.Wait Until All Nodes Are Ready
-#
-#                                    Log To Console    ${status}
-#                                    Should Be Equal As Strings      ${status}  OK
-#
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Network Manager verify From Event log
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    PCC.FRR status on nodes
-#                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-#
-####################################################################################################################################
-#Network Manager Delete: L2Static
-####################################################################################################################################
-#    [Documentation]                 *Network Manager Delete: L2Static*
-#
-#        ${response}                 PCC.Network Manager Delete
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Wait Until Network Manager Deleted
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    sleep  2m
-#
-#        ${status}                   PCC.Wait Until All Nodes Are Ready
-#
-#                                    Log To Console    ${status}
-#                                    Should Be Equal As Strings      ${status}  OK
-#
-####################################################################################################################################
-#Network Manager Creation: L2BGP
-####################################################################################################################################
-#    [Documentation]                 *Network Manager Creation: L2BGP*
-#
-#
-#        ${response}                 PCC.Network Manager Create
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                               ...  nodes=${NETWORK_MANAGER_NODES}
-#                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
-#                               ...  dataCIDR=lab-pvt
-#                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-#                               ...  type=7
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Wait Until Network Manager Ready
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    sleep  2m
-#
-#        ${status}                   PCC.Wait Until All Nodes Are Ready
-#
-#                                    Log To Console    ${status}
-#                                    Should Be Equal As Strings      ${status}  OK
-#
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Network Manager verify From Event log
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    PCC.FRR status on nodes
-#                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-#
-####################################################################################################################################
-#Network Manager Delete: L2BGP
-####################################################################################################################################
-#    [Documentation]                 *Network Manager Delete: L2BGP*
-#
-#        ${response}                 PCC.Network Manager Delete
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Wait Until Network Manager Deleted
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    sleep  2m
-#
-#        ${status}                   PCC.Wait Until All Nodes Are Ready
-#
-#                                    Log To Console    ${status}
-#                                    Should Be Equal As Strings      ${status}  OK
-#
-####################################################################################################################################
-#Network Manager Creation: Unmanaged
-####################################################################################################################################
-#    [Documentation]                 *Network Manager Creation: Unmanaged*
-#
-#
-#        ${response}                 PCC.Network Manager Create
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                               ...  nodes=${NETWORK_MANAGER_NODES}
-#                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
-#                               ...  dataCIDR=lab-pvt
-#                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-#                               ...  type=3
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Wait Until Network Manager Ready
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    sleep  2m
-#
-#        ${status}                   PCC.Wait Until All Nodes Are Ready
-#
-#                                    Log To Console    ${status}
-#                                    Should Be Equal As Strings      ${status}  OK
-#
-#        ${status}                   PCC.Health Check Network Manager
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#        ${status}                   PCC.Network Manager verify From Event log
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    PCC.FRR status on nodes
-#                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
-#
-####################################################################################################################################
-#Network Manager Delete: Unmanaged
-####################################################################################################################################
-#    [Documentation]                 *Network Manager Delete: Unmanaged*
-#
-#        ${response}                 PCC.Network Manager Delete
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#                                    Should Be Equal As Strings      ${status_code}  200
-#
-#        ${status}                   PCC.Wait Until Network Manager Deleted
-#                               ...  name=${NETWORK_MANAGER_NAME}
-#                                    Should Be Equal As Strings      ${status}    OK
-#
-#                                    sleep  2m
-#
-#        ${status}                   PCC.Wait Until All Nodes Are Ready
-#
-#                                    Log To Console    ${status}
-#                                    Should Be Equal As Strings      ${status}  OK
+###################################################################################################################################
+Network Manager Creation: L2Static
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation: L2Static*
+
+
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=lab-pvt
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+                               ...  type=4
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager verify From Event log
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    PCC.FRR status on nodes
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+
+###################################################################################################################################
+Network Manager Delete: L2Static
+###################################################################################################################################
+    [Documentation]                 *Network Manager Delete: L2Static*
+
+        ${response}                 PCC.Network Manager Delete
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Deleted
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Network Manager Creation: L2BGP
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation: L2BGP*
+
+
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=lab-pvt
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+                               ...  type=7
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager verify From Event log
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    PCC.FRR status on nodes
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+
+###################################################################################################################################
+Network Manager Delete: L2BGP
+###################################################################################################################################
+    [Documentation]                 *Network Manager Delete: L2BGP*
+
+        ${response}                 PCC.Network Manager Delete
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Deleted
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Network Manager Creation: Unmanaged
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation: Unmanaged*
+
+
+        ${response}                 PCC.Network Manager Create
+                               ...  name=${NETWORK_MANAGER_NAME}
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
+                               ...  dataCIDR=lab-pvt
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+                               ...  type=3
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager verify From Event log
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    PCC.FRR status on nodes
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+
+###################################################################################################################################
+Network Manager Delete: Unmanaged
+###################################################################################################################################
+    [Documentation]                 *Network Manager Delete: Unmanaged*
+
+        ${response}                 PCC.Network Manager Delete
+                               ...  name=${NETWORK_MANAGER_NAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Deleted
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
 Set Interfaces For Server Falling in DataCIDR
@@ -498,17 +496,17 @@ Network Manager Creation (Interfaces For Server Falling in DataCIDR) : TCP-1353
                                     PCC.FRR status on nodes
                                ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${CLUSTERHEAD_1_NAME}"]
 
-########################################################################################################################################
-#Check if PCC assign the Network Resource node role to the nodes on successful deployment of Network Routing on a set of nodes (TCP-1590)
-########################################################################################################################################
-#
-#        ${status}    PCC.Verify Node Role On Nodes
-#                     ...    Name=Network Resource
-#                     ...    nodes=["${SERVER_1_NAME}","${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}"]
-#
-#                     Log To Console    ${status}
-#                     Should Be Equal As Strings    ${status}    OK
-#
+#######################################################################################################################################
+Check if PCC assign the Network Resource node role to the nodes on successful deployment of Network Routing on a set of nodes (TCP-1590)
+#######################################################################################################################################
+
+        ${status}    PCC.Verify Node Role On Nodes
+                     ...    Name=FRR Resource
+                     ...    nodes=["${SERVER_1_NAME}","${SERVER_2_NAME}","${CLUSTERHEAD_1_NAME}"]
+
+                     Log To Console    ${status}
+                     Should Be Equal As Strings    ${status}    OK
+
 ###################################################################################################################################
 Interface Verification For Server Falling In DataCIDR
 ###################################################################################################################################
