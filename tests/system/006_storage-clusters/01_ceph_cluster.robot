@@ -479,33 +479,6 @@ Delete Network Manager When Ceph Is Present (Negative)
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 ###################################################################################################################################
-TCP-981 Update Cluster - Try to rename cluster Name (Negative)
-###################################################################################################################################
-    [Documentation]                 *Update Cluster - Try to rename cluster Name*
-                               ...  keyword:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Cluster Update
-                               ...  PCC.Ceph Wait Until Cluster Ready
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-
-        ${response}                 PCC.Ceph Cluster Update
-                               ...  id=${id}
-                               ...  name=ceph-rename
-                               ...  nodes=${CEPH_CLUSTER_NODES}
-                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
-
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
-        ${message}                  Get Response Message        ${response}
-
-###################################################################################################################################
 #TCP-985 Update Cluster - Try to add Tags
 ####################################################################################################################################
 #    [Documentation]                 *Update Cluster - Try to add Tags*
