@@ -434,8 +434,8 @@ class Dashboard(PccBase):
                                 
                                 ceph_cluster_description = ceph_health_response["summary"].split(";")
                                 trace("Ceph health description:{}".format(ceph_cluster_description))
-                                if ceph_cluster_description == []:
-                                    ceph_cluster_dict["Health"]="Everythingisgood"
+                                if ceph_health_response["summary"] == "":
+                                    ceph_cluster_dict["Health"]=set(["Everythingisgood"])
                                 else:
                                     ceph_cluster_dict["Health"] = set(["".join(e for e in c if e.isalnum()) for c in ceph_cluster_description]) 
                                 cmd1 = 'sudo ceph --version'
