@@ -2,6 +2,8 @@ import time
 import os
 import re
 from platina_sdk import pcc_api as pcc
+from pcc_qa.common.Cli import cli_run
+from pcc_qa.common.Utils import trace
 
 ## Node
 def get_node_id_by_name(conn:dict, Name:str)->int:
@@ -728,4 +730,16 @@ def get_policy_id(conn:dict, Desc:str, AppID:int)->int:
                     return policy['id']
         return None
     except Exception as e:
-        return {"Error": str(e)} 
+        return {"Error": str(e)}
+
+def get_ceph_inet_ip(hostip:str, user:str, password:str)->str:
+
+    try:
+        cmd = "sudo ip addr | grep control0"
+        out = cli_run(cmd=cmd, host_ip=hostip, linux_user=user, linux_password=password)
+        cmd_output = str(out.stdout).replace('\n', '').strip()
+        re_match = re.findall("inet (.*) scope", cmd_output)
+        inet_ip = str(re_match).split("/")[0]
+        return inet_ip.replace("['", "")
+    except Exception as e:
+        return {"Error": str(e)}

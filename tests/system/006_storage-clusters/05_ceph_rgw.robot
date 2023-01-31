@@ -1611,6 +1611,173 @@ Removing Ceph Load balancer Policy
                                     Should Be Equal As Strings      ${status_code}  200
                                     Sleep    10s
 
+        ${node_wait_status}         PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                                   Log To Console    ${node_wait_status}
+                                   Should Be Equal As Strings    ${node_wait_status}    OK
+
+###################################################################################################################################
+Ceph Multiple RGW Load Balancer
+###################################################################################################################################
+
+        [Documentation]    *Ceph Multiple RGW Load Balancer *
+
+
+        ${response}             PCC.Create Tag
+                                ...  Name=multiple-lb
+                                ...  Description=multiple-lb
+
+                                ${result}    Get Result    ${response}
+                                ${status}    Get From Dictionary    ${result}    status
+                                ${message}    Get From Dictionary    ${result}    message
+                                Should Be Equal As Strings    ${status}    200
+
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id}              PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                               Set Suite Variable   ${rgw_id}
+
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb-1
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb1"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id}"}]
+
+                                ${result}    Get Result    ${response}
+                                ${status}    Get From Dictionary    ${result}    status
+                                ${data}      Get From Dictionary    ${result}    Data
+                                ${policy_tag_1_id}      Get From Dictionary    ${data}     id
+                                Set Suite Variable  ${policy_tag_1_id}
+                                Should Be Equal As Strings    ${status}    200
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb-2
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb2"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "control_ip:4444"},{"name": "lb_backends","value": "${rgw_id}"}]
+
+                                ${result}    Get Result    ${response}
+                                ${status}    Get From Dictionary    ${result}    status
+                                ${data}      Get From Dictionary    ${result}    Data
+                                ${policy_tag_2_id}      Get From Dictionary    ${data}     id
+                                Set Suite Variable  ${policy_tag_2_id}
+                                Should Be Equal As Strings    ${status}    200
+
+        ${tag_1}                PCC.Get Tag By Name
+                                ...    Name=multiple-lb
+        ${tag_1_id}             Get From Dictionary    ${tag_1}    id
+
+
+        ${response}             PCC.Edit Tag
+                                ...  Id=${tag_1_id}
+                                ...  Name=multiple-lb
+                                ...  PolicyIDs=[${policy_tag_1_id},${policy_tag_2_id}]
+
+                                ${result}    Get Result    ${response}
+                                ${status}    Get From Dictionary    ${result}    status
+                                Should Be Equal As Strings    ${status}    200
+
+        ${result}               PCC.Add and Verify Tags On Nodes
+                                ...  nodes=["${SERVER_1_NAME}"]
+                                ...  tags=["multiple-lb"]
+
+                                Should Be Equal As Strings    ${result}    OK
+
+                                Sleep  5s
+
+    ${node_wait_status}         PCC.Wait Until Node Ready
+                                ...  Name=${SERVER_1_NAME}
+
+                                Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+    ${status}                   PCC.Verify HAProxy BE
+ 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                ...  name=${SERVER_1_NAME}
+                                ...  policy_id=${policy_tag_1_id}
+
+                                Should Be Equal As Strings    ${status}    OK
+
+    ${status}                   PCC.Verify HAProxy BE
+ 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                ...  name=${SERVER_1_NAME}
+                                ...  policy_id=${policy_tag_2_id}
+
+                                Should Be Equal As Strings    ${status}    OK
+
+######################################################################################################################################
+Delete Multiple RGW Load Balancer
+######################################################################################################################################
+       [Documentation]                 *Delete Multiple RGW Load Balancer*
+
+    ${result}                PCC.Add and Verify Tags On Nodes
+                        ...  nodes=["${SERVER_1_NAME}"]
+                        ...  tags=[]
+
+                             Should Be Equal As Strings    ${result}    OK
+
+    ${node_wait_status}      PCC.Wait Until Node Ready
+                        ...  Name=${SERVER_1_NAME}
+
+                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+    ${tag_1}                     PCC.Get Tag By Name
+                            ...  Name=multiple-lb
+    ${tag_1_id}                  Get From Dictionary    ${tag_1}    id
+
+
+    ${response}                  PCC.Edit Tag
+                            ...  Id=${tag_1_id}
+                            ...  Name=multiple-lb
+
+                                ${result}    Get Result    ${response}
+                                ${status}    Get From Dictionary    ${result}    status
+                                Should Be Equal As Strings    ${status}    200
+
+                                sleep  5s
+
+    ${node_wait_status}         PCC.Wait Until Node Ready
+                           ...  Name=${SERVER_1_NAME}
+
+                               Log To Console    ${node_wait_status}
+                               Should Be Equal As Strings    ${node_wait_status}    OK
+
+    ${response}                 PCC.Delete Policy
+                           ...  Name=loadbalancer-ceph
+                           ...  description=test-ceph-lb-1
+
+    ${status_code}              Get Response Status Code        ${response}
+    ${message}                  Get Response Message        ${response}
+                                Should Be Equal As Strings      ${status_code}  200
+
+    ${response}                 PCC.Delete Policy
+                           ...  Name=loadbalancer-ceph
+                           ...  description=test-ceph-lb-2
+
+    ${status_code}              Get Response Status Code        ${response}
+    ${message}                  Get Response Message        ${response}
+                                Should Be Equal As Strings      ${status_code}  200
+
+
+    ${response}                 PCC.Delete and Verify Roles On Nodes
+                           ...  nodes=["${SERVER_1_NAME}"]
+                           ...  roles=["Ceph Load Balancer"]
+
+                                Should Be Equal As Strings      ${response}  OK
+
+
+    ${node_wait_status}         PCC.Wait Until Node Ready
+                           ...  Name=${SERVER_1_NAME}
+
+                                Log To Console    ${node_wait_status}
+                                Should Be Equal As Strings    ${node_wait_status}    OK
+
 #####################################################################################################################################
 Ceph Rados Remove S3Account
 #####################################################################################################################################
