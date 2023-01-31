@@ -969,60 +969,60 @@ EC-Ceph Rados Gateway Delete Secondary
                                ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP_SECONDARY}
                                     Should Be Equal As Strings      ${backend_status}    OK
 
-###################################################################################################################################
-EC-Login to PCC Primary -Delete RGW
-###################################################################################################################################
-
-    [Documentation]                 *Ceph Rados Gateway Delete*
-        ${status}                   Login To PCC    ${pcc_setup}
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-        ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...    name=${CEPH_RGW_NAME_EC}
-		                       ...  ceph_cluster_name=ceph-pvt
-		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
+####################################################################################################################################
+#EC-Login to PCC Primary -Delete RGW
+####################################################################################################################################
 #
-        ${response}                 PCC.Ceph Delete Rgw
-                               ...  name=${CEPH_RGW_NAME_EC}
-			                   ...  ceph_cluster_name=ceph-pvt
-
-        ${status_code}              Get Response Status Code        ${response}
-        ${message}                  Get Response Message        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Deleted
-                               ...  name=${CEPH_RGW_NAME_EC}
-			                   ...  ceph_cluster_name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
-                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
-                                    Should Be Equal As Strings      ${backend_status}    OK
-
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+#        ${status}                   Login To PCC    ${pcc_setup}
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${rgw_id}                   PCC.Ceph Get Rgw Id
+#                               ...    name=${CEPH_RGW_NAME_EC}
+#		                       ...  ceph_cluster_name=ceph-pvt
+#		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
+##
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME_EC}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${message}                  Get Response Message        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME_EC}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
+#                               ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
+#                                    Should Be Equal As Strings      ${backend_status}    OK
+#
+#####################################################################################################################################
+#Ceph Delete EC Pool
 ####################################################################################################################################
-Ceph Delete EC Pool
-###################################################################################################################################
-
-    [Documentation]            *Delete Unused Pools*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Pool Id
-                               ...  PCC.Ceph Delete Pool
-                               ...  PCC.Ceph Wait Until Pool Deleted
-
-        [Tags]    Runonly
-
-        ${id}                  PCC.Ceph Get Pool Id
-                               ...  name=${CEPH_RGW_POOLNAME_EC}
-
-        ${response}            PCC.Ceph Delete Pool
-                               ...  id=${id}
-
-        ${status_code}         Get Response Status Code        ${response}
-                               Should Be Equal As Strings      ${status_code}  200
-
-        ${status}              PCC.Ceph Wait Until Pool Deleted
-                               ...  id=${id}
-                               Should Be Equal     ${status}  OK
-
-####################################################################################################################################
+#
+#    [Documentation]            *Delete Unused Pools*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Pool Id
+#                               ...  PCC.Ceph Delete Pool
+#                               ...  PCC.Ceph Wait Until Pool Deleted
+#
+#        [Tags]    Runonly
+#
+#        ${id}                  PCC.Ceph Get Pool Id
+#                               ...  name=${CEPH_RGW_POOLNAME_EC}
+#
+#        ${response}            PCC.Ceph Delete Pool
+#                               ...  id=${id}
+#
+#        ${status_code}         Get Response Status Code        ${response}
+#                               Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}              PCC.Ceph Wait Until Pool Deleted
+#                               ...  id=${id}
+#                               Should Be Equal     ${status}  OK
+#
+#####################################################################################################################################

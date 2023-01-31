@@ -31,33 +31,33 @@ Test Ceph Health Metric
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Test Featch Admin Carrier Metrics
+Test Fetch Admin Carrier Metrics
 ###################################################################################################################################
-    [Documentation]                 *Test Featch Admin Carrier Metrics*
+    [Documentation]                 *Test Fetch Admin Carrier Metrics*
 
         ${status}                   PCC.Prometheus Admin Carrier Metrics
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Test Featch Interface Carrier Metrics
+Test Fetch Interface Carrier Metrics
 ###################################################################################################################################
-    [Documentation]                 *Test Featch Interface Carrier Metrics*
+    [Documentation]                 *Test Fetch Interface Carrier Metrics*
 
         ${status}                   PCC.Prometheus Interface Carrier Metrics
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Test Featch Admin Status Metrics
+Test Fetch Admin Status Metrics
 ###################################################################################################################################
-    [Documentation]                 *Test Featch Admin Status Metrics*
+    [Documentation]                 *Test Fetch Admin Status Metrics*
 
         ${status}                   PCC.Prometheus Admin Status Metrics
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
-Test Featch Connection Status Metrics
+Test Fetch Connection Status Metrics
 ###################################################################################################################################
-    [Documentation]                 *Test Featch Connection Status Metrics*
+    [Documentation]                 *Test Fetch Connection Status Metrics*
 
         ${status}                   PCC.Prometheus Connection Status Metrics
                                     Should Be Equal As Strings      ${status}    OK
