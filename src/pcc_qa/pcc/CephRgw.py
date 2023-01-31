@@ -53,6 +53,8 @@ class CephRgw(PccBase):
         self.num_daemons_map = None
         self.zone_group = ""
         self.zone = ""
+        self.policy_id = None
+        self.node_name = ""
 
     ###########################################################################
     @keyword(name="PCC.Ceph Get Rgw Id")
@@ -86,6 +88,26 @@ class CephRgw(PccBase):
         trace(list_of_ceph_rgws)
         for ceph_rgw in list_of_ceph_rgws:
             if ceph_rgw['name'] == self.name:
+                return ceph_rgw
+        return []
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Get RGW By Id")
+    ###########################################################################
+    def get_ceph_rgw_by_id(self,*args,**kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get RGW By Name")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        ceph_cluster_id = str(get_ceph_cluster_id_by_name(conn, Name=self.ceph_cluster_name))
+        list_of_ceph_rgws = pcc.get_ceph_rgws(conn, ceph_cluster_id)['Result']['Data']
+        trace(list_of_ceph_rgws)
+        for ceph_rgw in list_of_ceph_rgws:
+            if ceph_rgw['ID'] == self.ID:
                 return ceph_rgw
         return []
 
@@ -729,7 +751,7 @@ class CephRgw(PccBase):
                         trace("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
                         trace("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
                         trace("=========== intf_check output is: {} \n==============".format(str(intf_check)))
-                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)) and str(intf_check):
+                        if re.search("rgw",str(ceph_check)) and re.search("running",str(rgw_check)) and str(intf_check.stdout):
                             continue
                         else:
                             failed_chk_map[host_name] += 1
@@ -823,3 +845,63 @@ class CephRgw(PccBase):
                 return "OK"
 
         return "Please provide service_ip keyword with yes/no"
+
+
+    ###############################################################################################################
+    @keyword(name="PCC.Verify HAProxy BE")
+    ###############################################################################################################
+    def verify_haproxy_be(self, *args, **kwargs):
+        banner("PCC.Verify HAProxy BE")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        node = easy.get_node_by_name(conn,self.name)
+        policy = get_response_data(pcc.get_policy(conn,str(self.policy_id)))
+
+        for i in policy["inputs"]:
+            if i["name"] == "lb_name":
+                lb_name = i["value"]
+            if i["name"] == "lb_balance_method":
+                lb_balance_method = "balance {}".format(i["value"])
+            elif i["name"] == "lb_backends":
+                lb_backends = int(i["value"])
+            elif i["name"] == "lb_frontend":
+                lb_frontend = "bind {}".format(i["value"])
+                frontend_ip = i["value"]
+            elif i["name"] == "lb_mode":
+                lb_mode = i["value"]
+
+        self.ID = lb_backends
+        rgw = self.get_ceph_rgw_by_id()
+        interfaces = rgw["interfaces"][str(node["Id"])]
+
+        lb_backends = []
+        for i in range(len(interfaces)):
+            lb_backends.append("server {}-{} {}:{}".format(node["Name"], i, interfaces[i], rgw["port"]))
+
+        if "control_ip" in lb_frontend:
+            control_ip = easy.get_ceph_inet_ip(node["Host"],self.user,self.password)
+            trace(control_ip)
+            lb_frontend = lb_frontend.replace("control_ip",control_ip)
+            frontend_ip = frontend_ip.replace("control_ip",control_ip)
+
+        intf_cmd = "sudo netstat -ntlp | grep haproxy | grep {}".format(frontend_ip)
+        intf_check = cli_run(node["Host"], self.user, self.password, intf_cmd)
+        trace("interface check: {}".format(intf_check))
+        if not str(intf_check.stdout):
+            return "Error"
+
+        cmd = "sudo cat /etc/haproxy/haproxy.cfg"
+        cmd_out = cli_run(node["Host"], self.user, self.password, cmd)
+        output = self._serialize_response(time.time(), cmd_out)['Result']['stdout']
+        output = output.split("####")
+        for out in output:
+            frontend= "frontend {}".format(lb_name)
+            if frontend in out:
+                if re.search(lb_balance_method,out) and re.search(lb_frontend,out):
+                    for lb_backend in lb_backends:
+                        if not re.search(lb_backend,out):
+                            return "Error"
+                    return "OK"
+                return "Error"
+        return "Error"
