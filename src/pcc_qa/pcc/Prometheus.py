@@ -18,7 +18,7 @@ from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*10
-START_TIME = (datetime.now() - timedelta(hours = 1)).isoformat()[:-3]+'Z'   #Start time -> Current time - 1 Hr
+START_TIME = (datetime.utcnow() - timedelta(hours = 1)).isoformat()[:-3]+'Z'   #Start time -> Current time - 1 Hr
 END_TIME = datetime.utcnow().isoformat()[:-3]+'Z'   #End time -> Current time
 STEP = 60   #Step refers to interval in seconds
 
@@ -60,7 +60,9 @@ class Prometheus(PccBase):
                 payload = {
                         "query": f"healthLevel{{job='{each_job}'}}&start={START_TIME}&end={END_TIME}&step={STEP}"
                     }
+                trace(payload)
                 data=get_response_data(pcc.query_range_metric(conn, payload))
+                trace(data)
                 if each_job in data[0]['metric'].values():
                     logger.console(f"Successfully retrieved ceph-metrics for cluster:{data[0]['metric']['job']}, {pformat(data[0])}")                   
                 else:
