@@ -51,6 +51,24 @@ class CephCluster(PccBase):
         self.storage_types= None
         self.node_location = None
         self.server = None
+        self.osdScrubBeginHourDesired = 18
+        self.osdScrubEndHourDesired = 6
+        self.osdRecoverySleepHddDesired = 0.5
+        self.osdRecoverySleepSsdDesired = 0
+        self.osdRecoverySleepHybridDesired = 0.1
+        self.osdRecoveryPriorityDesired = 3
+        self.osdRecoveryOpPriorityDesired = 1
+        self.osdMaxBackfillsDesired = 1
+        self.osdScrubSleepDesired = 0.1
+        self.osdScrubPriorityDesired = 2
+        self.osdDeepScrubStrideDesired = 1048576
+        self.osdDeleteSleepHybridDesired = 3
+        self.osdSnapTrimPriorityDesired = 1
+        self.osdRecoveryMaxActiveHddDesired = 1
+        self.osdRecoveryMaxActiveSsdDesired = 5
+        self.osdMemoryTargetFlashDesired = 17179869184
+        self.osdMemoryTargetRotationalDesired = 8589934592
+        self.osdMemoryTargetFullRotationalDesired = 4294967296
         super().__init__()
 
     ###########################################################################
@@ -274,16 +292,54 @@ class CephCluster(PccBase):
     ###########################################################################
     def verify_ceph_be(self, *args, **kwargs):
         ceph_be_cmd="sudo ceph -s"
+        ceph_conf ="sudo cat /etc/ceph/ceph.conf"
         banner("PCC.Ceph Verify BE")
         self._load_kwargs(kwargs)
+        osd_deep_scrub_stride = "osd_deep_scrub_stride = {}".format(self.osdDeepScrubStrideDesired)
+        osd_delete_sleep_hybrid = "osd_delete_sleep_hybrid = {}".format(self.osdDeleteSleepHybridDesired)
+        osd_max_backfills = "osd_max_backfills = {}".format(self.osdMaxBackfillsDesired)
+        osd_recovery_max_active_hdd = "osd_recovery_max_active_hdd = {}".format(self.osdRecoveryMaxActiveHddDesired)
+        osd_recovery_max_active_ssd = "osd_recovery_max_active_ssd = {}".format(self.osdRecoveryMaxActiveSsdDesired)
+        osd_recovery_op_priority = "osd_recovery_op_priority = {}".format(self.osdRecoveryOpPriorityDesired)
+        osd_recovery_priority = "osd_recovery_priority = {}".format(self.osdRecoveryPriorityDesired)
+        osd_recovery_sleep_hdd = "osd_recovery_sleep_hdd = {}".format(self.osdRecoverySleepHddDesired)
+        osd_recovery_sleep_hybrid = "osd_recovery_sleep_hybrid = {}".format(self.osdRecoverySleepHybridDesired)
+        osd_scrub_begin_hour = "osd_scrub_begin_hour = {}".format(self.osdScrubBeginHourDesired)
+        osd_scrub_end_hour = "osd_scrub_end_hour = {}".format(self.osdScrubEndHourDesired)
+        osd_scrub_priority = "osd_scrub_priority = {}".format(self.osdScrubPriorityDesired)
+        osd_scrub_sleep = "osd_scrub_sleep = {}".format(self.osdScrubSleepDesired)
+        osd_snap_trim_priority = "osd_snap_trim_priority = {}".format(self.osdSnapTrimPriorityDesired)
+
 
         for ip in eval(str(self.nodes_ip)):
             output=cli_run(ip,self.user,self.password,ceph_be_cmd)
             print("Output:"+str(output))
             if re.search("HEALTH_OK",str(output)) or re.search("HEALTH_WARN",str(output)):
-                continue
+                osd_memory_target = "osd_memory_target = {}".format(self.osdMemoryTargetRotationalDesired)
+                has_ssd = cli_run(ip, self.user, self.password,"lsblk -d -o name,rota | grep 'sdb\|sdc' | grep 0" ).stdout != ""
+                if has_ssd:
+                    osd_memory_target = "osd_memory_target = {}".format(self.osdMemoryTargetFlashDesired)
+                output = cli_run(ip, self.user, self.password, ceph_conf).stdout
+                if (re.search(osd_deep_scrub_stride, output)
+                    and re.search(osd_delete_sleep_hybrid, output)
+                    and re.search(osd_max_backfills, output)
+                    and re.search(osd_recovery_max_active_hdd, output)
+                    and re.search(osd_recovery_max_active_ssd, output)
+                    and re.search(osd_recovery_op_priority, output)
+                    and re.search(osd_recovery_priority, output)
+                    and re.search(osd_recovery_sleep_hdd, output)
+                    and re.search(osd_recovery_sleep_hybrid, output)
+                    and re.search(osd_scrub_begin_hour, output)
+                    and re.search(osd_scrub_end_hour, output)
+                    and re.search(osd_scrub_priority, output)
+                    and re.search(osd_scrub_sleep, output)
+                    and re.search(osd_memory_target, output)
+                    and re.search(osd_snap_trim_priority, output)):
+                    continue
+                else:
+                    return "Error"
             else:
-                return None
+                return "Error"
         return "OK"
 
     ###########################################################################
