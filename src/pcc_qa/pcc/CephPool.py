@@ -46,6 +46,10 @@ class CephPool(PccBase):
         self.used_by_type = ""
         self.used_by_name = ""
         self.pg_num = 8
+        self.no_deep_scrub = False
+        self.no_scrub = False
+        self.recovery_priority = 10
+        self.recovery_op_priority = 5
 
         super().__init__()
 
@@ -261,7 +265,11 @@ class CephPool(PccBase):
             "resilienceScheme":self.resilienceScheme,
             "quota":self.quota,
             "quota_unit":self.quota_unit,
-            "pgNum":self.pg_num
+            "pgNum":self.pg_num,
+            "noDeepScrubDesired": self.no_deep_scrub,
+            "noScrubDesired": self.no_scrub,
+            "recoveryPriorityDesired": self.recovery_priority,
+            "recoveryOpPriorityDesired": self.recovery_op_priority
         }
 
         print(payload)
@@ -303,7 +311,11 @@ class CephPool(PccBase):
                 "resilienceScheme":self.resilienceScheme,
                 "quota":self.quota,
                 "quota_unit":self.quota_unit,
-                "pgNum": self.pg_num
+                "pgNum": self.pg_num,
+                "noDeepScrubDesired": self.no_deep_scrub,
+                "noScrubDesired": self.no_scrub,
+                "recoveryPriorityDesired": self.recovery_priority,
+                "recoveryOpPriorityDesired": self.recovery_op_priority
                 }
             print(payload)
             response = pcc.add_ceph_pool(conn, payload)
@@ -415,16 +427,34 @@ class CephPool(PccBase):
     ###########################################################################
     def verify_ceph_pool_be(self, *args, **kwargs):
         ceph_be_cmd="sudo ceph osd lspools"
+        pool_params="sudo ceph osd pool get {pool} pg_num;".format(pool=self.name) \
+                    + "sudo ceph osd pool get {pool} noscrub;".format(pool=self.name) \
+                    + "sudo ceph osd pool get {pool} nodeep-scrub;".format(pool=self.name) \
+                    + "sudo ceph osd pool get {pool} recovery_priority;".format(pool=self.name) \
+                    + "sudo ceph osd pool get {pool} recovery_op_priority;".format(pool=self.name)
+
         banner("PCC.Ceph Pool Verify BE")
         self._load_kwargs(kwargs)
+        pg_num= "pg_num: {}".format(self.pg_num)
+        no_scrub= "noscrub: {}".format(self.no_scrub).lower()
+        nodeep_scrub= "nodeep-scrub: {}".format(self.no_deep_scrub).lower()
+        recovery_priority = "recovery_priority: {}".format(self.recovery_priority)
+        recovery_op_priority = "recovery_op_priority: {}".format(self.recovery_op_priority)
 
-        for ip in self.nodes_ip:
-            output=cli_run(ip,self.user,self.password,ceph_be_cmd)
-            if re.search(self.name,str(output)):
-                continue
+
+        output = cli_run(self.hostip, self.user, self.password, ceph_be_cmd).stdout
+        if re.search(self.name, output):
+            output = cli_run(self.hostip, self.user, self.password, pool_params).stdout
+            if (re.search(pg_num, output) and
+                re.search(no_scrub, output) and
+                re.search(nodeep_scrub, output) and
+                re.search(recovery_priority, output) and
+                re.search(recovery_op_priority, output)):
+                return "OK"
             else:
-                return None
-        return "OK"
+                return "Error"
+        else:
+            return "Error"
 
     ###########################################################################
     @keyword(name="PCC.Ceph Pool Update")
@@ -453,7 +483,11 @@ class CephPool(PccBase):
             "quota":self.quota,
             "quota_unit":self.quota_unit,
             "managed":True,
-            "pgNum": self.pg_num
+            "pgNum": self.pg_num,
+            "noDeepScrubDesired": self.no_deep_scrub,
+            "noScrubDesired": self.no_scrub,
+            "recoveryPriorityDesired": self.recovery_priority,
+            "recoveryOpPriorityDesired": self.recovery_op_priority
              }
 
             conn = BuiltIn().get_variable_value("${PCC_CONN}")

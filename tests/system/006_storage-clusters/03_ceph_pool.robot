@@ -310,11 +310,11 @@ Ceph Pool Creation and Verification with quota unit MiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
- 
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
- 
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -328,11 +328,16 @@ Ceph Pool Creation and Verification with quota unit MiB
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Pool Verify BE
+                               ...  name=${CEPH_POOL_NAME}
+                               ...  hostip=${SERVER_1_HOST_IP}
                                     Should Be Equal As Strings      ${status}    OK
                             
                               
@@ -345,11 +350,11 @@ Ceph Pool Creation and Verification with quota unit GiB
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
- 
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
- 
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -363,14 +368,14 @@ Ceph Pool Creation and Verification with quota unit GiB
                                ...  quota=1
                                ...  quota_unit=GiB
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=pool1                             
+                               ...  name=pool1
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Creation and Verification with quota unit TiB
 ###################################################################################################################################
@@ -384,7 +389,7 @@ Ceph Pool Creation and Verification with quota unit TiB
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
-                               
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -398,14 +403,14 @@ Ceph Pool Creation and Verification with quota unit TiB
                                ...  quota=1
                                ...  quota_unit=TiB
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=pool2                             
+                               ...  name=pool2
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ####################################################################################################################################
 #Ceph Pool Creation and Verification with quota unit PiB
 ####################################################################################################################################
@@ -475,7 +480,7 @@ Ceph Pool Creation and Verification with quota unit TiB
 #                               ...  name=pool4
 #
 #                                    Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Creation and Verification with No. of Copies 1
 ###################################################################################################################################
@@ -485,11 +490,11 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
-  
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
-  
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -503,13 +508,13 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool5
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool6
                                ...  ceph_cluster_id=${cluster_id}
@@ -520,9 +525,9 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool6
                                     Should Be Equal As Strings      ${status}    OK
@@ -537,9 +542,9 @@ Ceph Pool Creation and Verification with No. of Copies 1
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
+
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool7
                                     Should Be Equal As Strings      ${status}    OK
@@ -553,11 +558,11 @@ Ceph Pool Creation for Fs
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
- 
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
- 
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -571,13 +576,13 @@ Ceph Pool Creation for Fs
                                ...  quota=1
                                ...  quota_unit=TiB
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=pool9                            
 
-                                    Should Be Equal As Strings      ${status}    OK   
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=pool9
+
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool10
@@ -589,13 +594,13 @@ Ceph Pool Creation for Fs
                                ...  quota=1
                                ...  quota_unit=TiB
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=pool10                            
 
-                                    Should Be Equal As Strings      ${status}    OK      
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=pool10
+
+                                    Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Ceph Create Pool
                                ...  name=pool11
@@ -607,14 +612,14 @@ Ceph Pool Creation for Fs
                                ...  quota=1
                                ...  quota_unit=TiB
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    
-        ${status}                   PCC.Ceph Wait Until Pool Ready
-                               ...  name=pool11                           
 
-                                    Should Be Equal As Strings      ${status}    OK                                      
-                                    
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=pool11
+
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Ceph Pool Update Pool Name with existing Pool Name (Negative)
 ###################################################################################################################################
@@ -623,11 +628,11 @@ Ceph Pool Update Pool Name with existing Pool Name (Negative)
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Create Pool
                                ...  PCC.Ceph Wait Until Pool Ready
- 
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
- 
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -644,12 +649,12 @@ Ceph Pool Update Pool Name with existing Pool Name (Negative)
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               
 
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
 
-                                    
+
 ###################################################################################################################################
 Ceph Pool Edit Name
 ###################################################################################################################################
@@ -657,7 +662,7 @@ Ceph Pool Edit Name
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Pool Update
-                               ...  PCC.Ceph Wait Until Pool Ready        
+                               ...  PCC.Ceph Wait Until Pool Ready
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
@@ -679,16 +684,16 @@ Ceph Pool Edit Name
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               
 
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=pool13
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Ugrade Quota Unit
 ###################################################################################################################################
@@ -702,7 +707,7 @@ Ceph Pool Ugrade Quota Unit
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
-                               
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -719,15 +724,15 @@ Ceph Pool Ugrade Quota Unit
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=MiB
-                               
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Downgrade Quota Unit
 ###################################################################################################################################
@@ -758,30 +763,30 @@ Ceph Pool Downgrade Quota Unit
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=GiB
-                               
 
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Ugrade Quota Size
 ###################################################################################################################################
-    [Documentation]                 *Ceph Pool Ugrade Quota Size*   
+    [Documentation]                 *Ceph Pool Ugrade Quota Size*
                                ...  keywords:
                                ...  PCC.Ceph Get Cluster Id
                                ...  PCC.Ceph Get Pool Id
                                ...  PCC.Ceph Pool Update
                                ...  PCC.Ceph Wait Until Pool Ready
- 
+
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
- 
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -798,16 +803,16 @@ Ceph Pool Ugrade Quota Size
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=4
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               
 
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Update Pool No of Copies
 ###################################################################################################################################
@@ -838,9 +843,9 @@ Ceph Pool Update Pool No of Copies
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
-                               
 
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
@@ -877,16 +882,16 @@ Ceph Pool Update Quota Size and Quota Unit together
                                ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
                                ...  quota=1
                                ...  quota_unit=GiB
-                               
 
-        ${status_code}              Get Response Status Code        ${response}     
+
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
         ${status}                   PCC.Ceph Wait Until Pool Ready
                                ...  name=${CEPH_POOL_NAME}
 
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
 ###################################################################################################################################
 Ceph Pool Creation with pool size contain alphabets/ special characters (Negative)
 ###################################################################################################################################
@@ -899,8 +904,8 @@ Ceph Pool Creation with pool size contain alphabets/ special characters (Negativ
 
         ${status}                   PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK 
- 
+                                    Should Be Equal As Strings      ${status}    OK
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -914,10 +919,10 @@ Ceph Pool Creation with pool size contain alphabets/ special characters (Negativ
                                ...  quota=${CEPH_POOL_QUOTA}
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-                                    
-                                    
+
+
 ###################################################################################################################################
 Ceph Pool Creation Duplicate (Negative)
 ###################################################################################################################################
@@ -931,7 +936,7 @@ Ceph Pool Creation Duplicate (Negative)
          ${status}                  PCC.Ceph Get Pcc Status
                                ...  name=ceph-pvt
                                     Should Be Equal As Strings      ${status}    OK
-                                    
+
         ${cluster_id}               PCC.Ceph Get Cluster Id
                                ...  name=${CEPH_Cluster_NAME}
 
@@ -945,14 +950,14 @@ Ceph Pool Creation Duplicate (Negative)
                                ...  quota=1
                                ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
 
-        ${status_code}              Get Response Status Code        ${response}     
+        ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
-                                    
+
 ###################################################################################################################################
 #Ceph Create 20 Pools
 ####################################################################################################################################
-#    [Documentation]                 *Ceph Create 20 Pools*  
-#                               ...  keywords:    
+#    [Documentation]                 *Ceph Create 20 Pools*
+#                               ...  keywords:
 #                               ...  PCC.Ceph Get Cluster Id
 #                               ...  PCC.Ceph Create Pool Multiple
 #                               ...  PCC.Ceph Wait Until Pool Ready
@@ -983,9 +988,9 @@ Ceph Pool Creation Duplicate (Negative)
 
 ###################################################################################################################################
 Fetching Pool ID before backup
-###################################################################################################################################   
+###################################################################################################################################
 
          ${pool_id_before_backup}    PCC.Ceph Get Pool Id
-                                     ...  name=${CEPH_POOL_NAME}                            
+                                     ...  name=${CEPH_POOL_NAME}
                                      Log To Console    ${pool_id_before_backup}
                                      Set Global Variable    ${pool_id_before_backup}
