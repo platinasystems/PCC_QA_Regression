@@ -69,6 +69,7 @@ class CephCluster(PccBase):
         self.osdMemoryTargetFlashDesired = 17179869184
         self.osdMemoryTargetRotationalDesired = 8589934592
         self.osdMemoryTargetFullRotationalDesired = 4294967296
+        self.osd_ids = None
         super().__init__()
 
     ###########################################################################
@@ -85,6 +86,42 @@ class CephCluster(PccBase):
 
         cluster_id = easy.get_ceph_cluster_id_by_name(conn,self.name)
         return cluster_id
+
+    ###########################################################################
+    @keyword(name="PCC.Verify Ceph Cluster OSDs Params")
+    ###########################################################################
+    def verify_ceph_osd_params(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("Verify Ceph Cluster OSDs Params")
+
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        cluster = easy.get_ceph_cluster_by_name(conn, self.name)
+        print(cluster)
+        if ((self.osdScrubBeginHourDesired == cluster["osdScrubBeginHourDesired"]) and
+            (self.osdScrubEndHourDesired == cluster["osdScrubEndHourDesired"]) and
+            (self.osdRecoverySleepHddDesired == cluster["osdRecoverySleepHddDesired"]) and
+            (self.osdRecoverySleepSsdDesired == cluster["osdRecoverySleepSsdDesired"]) and
+            (self.osdRecoverySleepHybridDesired == cluster["osdRecoverySleepHybridDesired"]) and
+            (self.osdRecoveryPriorityDesired == cluster["osdRecoveryPriorityDesired"]) and
+            (self.osdRecoveryOpPriorityDesired == cluster["osdRecoveryOpPriorityDesired"]) and
+            (self.osdMaxBackfillsDesired == cluster["osdMaxBackfillsDesired"]) and
+            (self.osdScrubSleepDesired == cluster["osdScrubSleepDesired"]) and
+            (self.osdScrubPriorityDesired == cluster["osdScrubPriorityDesired"]) and
+            (self.osdDeepScrubStrideDesired ==  cluster["osdDeepScrubStrideDesired"]) and
+            (self.osdDeleteSleepHybridDesired == cluster["osdDeleteSleepHybridDesired"]) and
+            (self.osdSnapTrimPriorityDesired == cluster["osdSnapTrimPriorityDesired"]) and
+            (self.osdRecoveryMaxActiveHddDesired == cluster["osdRecoveryMaxActiveHddDesired"]) and
+            (self.osdRecoveryMaxActiveSsdDesired == cluster["osdRecoveryMaxActiveSsdDesired"]) and
+            (self.osdMemoryTargetFlashDesired == cluster["osdMemoryTargetFlashDesired"]) and
+            (self.osdMemoryTargetRotationalDesired == cluster["osdMemoryTargetRotationalDesired"]) and
+            (self.osdMemoryTargetFullRotationalDesired == cluster["osdMemoryTargetFullRotationalDesired"])):
+            return "OK"
+        self.show_desired_parameters()
+        return "Error"
 
     ###########################################################################
     @keyword(name="PCC.Ceph Compare Data")
@@ -121,7 +158,26 @@ class CephCluster(PccBase):
             "name": self.name,
             "nodes": self.nodes,
             "tags": self.tags,
-            "networkClusterId": self.networkClusterId
+            "networkClusterId": self.networkClusterId,
+            "networkClusterId": self.networkClusterId,
+            "osdScrubBeginHourDesired": self.osdScrubBeginHourDesired,
+            "osdScrubEndHourDesired": self.osdScrubEndHourDesired,
+            "osdRecoverySleepHddDesired": self.osdRecoverySleepHddDesired,
+            "osdRecoverySleepSsdDesired": self.osdRecoverySleepSsdDesired,
+            "osdRecoverySleepHybridDesired": self.osdRecoverySleepHybridDesired,
+            "osdRecoveryPriorityDesired": self.osdRecoveryPriorityDesired,
+            "osdRecoveryOpPriorityDesired": self.osdRecoveryOpPriorityDesired,
+            "osdMaxBackfillsDesired": self.osdMaxBackfillsDesired,
+            "osdScrubSleepDesired": self.osdScrubSleepDesired,
+            "osdScrubPriorityDesired": self.osdScrubPriorityDesired,
+            "osdDeepScrubStrideDesired": self.osdDeepScrubStrideDesired,
+            "osdDeleteSleepHybridDesired": self.osdDeleteSleepHybridDesired,
+            "osdSnapTrimPriorityDesired": self.osdSnapTrimPriorityDesired,
+            "osdRecoveryMaxActiveHddDesired": self.osdRecoveryMaxActiveHddDesired,
+            "osdRecoveryMaxActiveSsdDesired": self.osdRecoveryMaxActiveSsdDesired,
+            "osdMemoryTargetFlashDesired": self.osdMemoryTargetFlashDesired,
+            "osdMemoryTargetRotationalDesired": self.osdMemoryTargetRotationalDesired,
+            "osdMemoryTargetFullRotationalDesired": self.osdMemoryTargetFullRotationalDesired
         }
 
         print("Payload:-"+str(payload))
@@ -134,8 +190,7 @@ class CephCluster(PccBase):
         self._load_kwargs(kwargs)
         print("Kwargs:"+str(kwargs))
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
- 
-        time.sleep(60)
+
         tmp_node=[]
         payload_nodes=[]
 
@@ -176,7 +231,25 @@ class CephCluster(PccBase):
             "name": self.name,
             "nodes": self.nodes,
             "tags": self.tags,
-            "networkClusterId": self.networkClusterId
+            "networkClusterId": self.networkClusterId,
+            "osdScrubBeginHourDesired": self.osdScrubBeginHourDesired,
+            "osdScrubEndHourDesired": self.osdScrubEndHourDesired,
+            "osdRecoverySleepHddDesired": self.osdRecoverySleepHddDesired,
+            "osdRecoverySleepSsdDesired": self.osdRecoverySleepSsdDesired,
+            "osdRecoverySleepHybridDesired": self.osdRecoverySleepHybridDesired,
+            "osdRecoveryPriorityDesired": self.osdRecoveryPriorityDesired,
+            "osdRecoveryOpPriorityDesired": self.osdRecoveryOpPriorityDesired,
+            "osdMaxBackfillsDesired": self.osdMaxBackfillsDesired,
+            "osdScrubSleepDesired": self.osdScrubSleepDesired,
+            "osdScrubPriorityDesired": self.osdScrubPriorityDesired,
+            "osdDeepScrubStrideDesired": self.osdDeepScrubStrideDesired,
+            "osdDeleteSleepHybridDesired": self.osdDeleteSleepHybridDesired,
+            "osdSnapTrimPriorityDesired": self.osdSnapTrimPriorityDesired,
+            "osdRecoveryMaxActiveHddDesired": self.osdRecoveryMaxActiveHddDesired,
+            "osdRecoveryMaxActiveSsdDesired": self.osdRecoveryMaxActiveSsdDesired,
+            "osdMemoryTargetFlashDesired": self.osdMemoryTargetFlashDesired,
+            "osdMemoryTargetRotationalDesired": self.osdMemoryTargetRotationalDesired,
+            "osdMemoryTargetFullRotationalDesired": self.osdMemoryTargetFullRotationalDesired
              }
 
             print("Payload:-"+str(payload))
@@ -288,6 +361,28 @@ class CephCluster(PccBase):
         return "OK"
 
     ###########################################################################
+    @keyword(name="PCC.Ceph Show Desired Parameters")
+    ###########################################################################
+    def show_desired_parameters(self, *args, **kwargs):
+        banner("PCC.Ceph Show Desired Parameters")
+        self._load_kwargs(kwargs)
+        print("osd_deep_scrub_stride = {}".format(self.osdDeepScrubStrideDesired))
+        print("osd_delete_sleep_hybrid = {}".format(self.osdDeleteSleepHybridDesired))
+        print("osd_max_backfills = {}".format(self.osdMaxBackfillsDesired))
+        print("osd_recovery_max_active_hdd = {}".format(self.osdRecoveryMaxActiveHddDesired))
+        print("osd_recovery_max_active_ssd = {}".format(self.osdRecoveryMaxActiveSsdDesired))
+        print("osd_recovery_op_priority = {}".format(self.osdRecoveryOpPriorityDesired))
+        print("osd_recovery_priority = {}".format(self.osdRecoveryPriorityDesired))
+        print("osd_recovery_sleep_hdd = {}".format(self.osdRecoverySleepHddDesired))
+        print("osd_recovery_sleep_ssd = {}".format(self.osdRecoverySleepSsdDesired))
+        print("osd_recovery_sleep_hybrid = {}".format(self.osdRecoverySleepHybridDesired))
+        print("osd_scrub_begin_hour = {}".format(self.osdScrubBeginHourDesired))
+        print("osd_scrub_end_hour = {}".format(self.osdScrubEndHourDesired))
+        print("osd_scrub_priority = {}".format(self.osdScrubPriorityDesired))
+        print("osd_scrub_sleep = {}".format(self.osdScrubSleepDesired))
+        print("osd_snap_trim_priority = {}".format(self.osdSnapTrimPriorityDesired))
+
+    ###########################################################################
     @keyword(name="PCC.Ceph Verify BE")
     ###########################################################################
     def verify_ceph_be(self, *args, **kwargs):
@@ -303,6 +398,7 @@ class CephCluster(PccBase):
         osd_recovery_op_priority = "osd_recovery_op_priority = {}".format(self.osdRecoveryOpPriorityDesired)
         osd_recovery_priority = "osd_recovery_priority = {}".format(self.osdRecoveryPriorityDesired)
         osd_recovery_sleep_hdd = "osd_recovery_sleep_hdd = {}".format(self.osdRecoverySleepHddDesired)
+        osd_recovery_sleep_ssd = "osd_recovery_sleep_ssd = {}".format(self.osdRecoverySleepSsdDesired)
         osd_recovery_sleep_hybrid = "osd_recovery_sleep_hybrid = {}".format(self.osdRecoverySleepHybridDesired)
         osd_scrub_begin_hour = "osd_scrub_begin_hour = {}".format(self.osdScrubBeginHourDesired)
         osd_scrub_end_hour = "osd_scrub_end_hour = {}".format(self.osdScrubEndHourDesired)
@@ -320,6 +416,7 @@ class CephCluster(PccBase):
                 if has_ssd:
                     osd_memory_target = "osd_memory_target = {}".format(self.osdMemoryTargetFlashDesired)
                 output = cli_run(ip, self.user, self.password, ceph_conf).stdout
+                print("ceph.conf: {}".format(output))
                 if (re.search(osd_deep_scrub_stride, output)
                     and re.search(osd_delete_sleep_hybrid, output)
                     and re.search(osd_max_backfills, output)
@@ -328,6 +425,7 @@ class CephCluster(PccBase):
                     and re.search(osd_recovery_op_priority, output)
                     and re.search(osd_recovery_priority, output)
                     and re.search(osd_recovery_sleep_hdd, output)
+                    and re.search(osd_recovery_sleep_ssd, output)
                     and re.search(osd_recovery_sleep_hybrid, output)
                     and re.search(osd_scrub_begin_hour, output)
                     and re.search(osd_scrub_end_hour, output)
@@ -337,6 +435,7 @@ class CephCluster(PccBase):
                     and re.search(osd_snap_trim_priority, output)):
                     continue
                 else:
+                    self.show_desired_parameters()
                     return "Error"
             else:
                 return "Error"
@@ -1190,6 +1289,53 @@ class CephCluster(PccBase):
 
         print("temp_osd_ids:{}".format(temp_osd_ids))
         return temp_osd_ids
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get OSD IDs By Cluster Name")
+    ###############################################################################################################
+    def get_osd_ids(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get OSD IDs By Cluster Name : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+        response_data = pcc.get_osds_by_cluster_id(conn, str(cluster_id))['Result'][
+            'Data']
+        trace(response_data)
+        temp_osd_ids = []
+
+        for data in response_data:
+            temp_osd_ids.append(data['osd'])
+            trace(temp_osd_ids)
+
+        print("temp_osd_ids:{}".format(temp_osd_ids))
+        return temp_osd_ids
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Reconcile OSDs")
+    ###############################################################################################################
+    def reconcile_osds(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Reconcile OSDs, cluster : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+
+        payload = {
+            "ids": self.osd_ids
+        }
+        response = pcc.reconcile_osds(conn, str(cluster_id), payload)
+        status_code = get_status_code(response)
+        if status_code == 200:
+            return "OK"
+        return "Error"
 
     ###############################################################################################################
     @keyword(name="PCC.Ceph get OSD drive names by osd id")

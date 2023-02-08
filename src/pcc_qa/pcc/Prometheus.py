@@ -18,9 +18,6 @@ from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
 PCCSERVER_TIMEOUT = 60*10
-START_TIME = (datetime.utcnow() - timedelta(hours = 1)).isoformat()[:-3]+'Z'   #Start time -> Current time - 1 Hr
-END_TIME = datetime.utcnow().isoformat()[:-3]+'Z'   #End time -> Current time
-STEP = 60   #Step refers to interval in seconds
 
 class Prometheus(PccBase):
 
@@ -52,6 +49,9 @@ class Prometheus(PccBase):
             print("conn is {}".format(conn))
         except Exception as e:
             raise e
+        START_TIME = (datetime.utcnow() - timedelta(hours=1)).isoformat()[:-3] + 'Z'  # Start time -> Current time - 1 Hr
+        END_TIME = datetime.utcnow().isoformat()[:-3] + 'Z'  # End time -> Current time
+        STEP = 60  # Step refers to interval in seconds
 
         flag = 'OK'
         try:                      
@@ -83,6 +83,9 @@ class Prometheus(PccBase):
             print("conn is {}".format(conn))
         except Exception as e:
             raise e
+        START_TIME = (datetime.utcnow() - timedelta(hours=1)).isoformat()[:-3] + 'Z'  # Start time -> Current time - 1 Hr
+        END_TIME = datetime.utcnow().isoformat()[:-3] + 'Z'  # End time -> Current time
+        STEP = 60  # Step refers to interval in seconds
         flag = 'OK'
         try:    
             payload = {
@@ -110,6 +113,9 @@ class Prometheus(PccBase):
             print("conn is {}".format(conn))
         except Exception as e:
             raise e
+        START_TIME = (datetime.utcnow() - timedelta(hours=1)).isoformat()[:-3] + 'Z'  # Start time -> Current time - 1 Hr
+        END_TIME = datetime.utcnow().isoformat()[:-3] + 'Z'  # End time -> Current time
+        STEP = 60  # Step refers to interval in seconds
         flag = 'OK'
         try:    
             payload = {
@@ -137,6 +143,9 @@ class Prometheus(PccBase):
         except Exception as e:
             raise e
         flag = 'OK'
+        START_TIME = (datetime.utcnow() - timedelta(hours=1)).isoformat()[:-3] + 'Z'  # Start time -> Current time - 1 Hr
+        END_TIME = datetime.utcnow().isoformat()[:-3] + 'Z'  # End time -> Current time
+        STEP = 60  # Step refers to interval in seconds
         try:    
             payload = {
                         "query": f"admin_status_desired&start={START_TIME}&end={END_TIME}&step={STEP}"
@@ -164,6 +173,9 @@ class Prometheus(PccBase):
         except Exception as e:
             raise e
         flag = 'OK'
+        START_TIME = (datetime.utcnow() - timedelta(hours=1)).isoformat()[:-3] + 'Z'  # Start time -> Current time - 1 Hr
+        END_TIME = datetime.utcnow().isoformat()[:-3] + 'Z'  # End time -> Current time
+        STEP = 60  # Step refers to interval in seconds
         try:    
             payload = {
                         "query": f"connectionStatus&start={START_TIME}&end={END_TIME}&step={STEP}"

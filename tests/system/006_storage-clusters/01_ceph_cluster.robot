@@ -197,6 +197,72 @@ Ceph Cluster Create
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
                                     Should Be Equal As Strings      ${status}    OK
 
+###################################################################################################################################
+Ceph Cluster Update OSD Configurations
+###################################################################################################################################
+    [Documentation]                 *Ceph Cluster Update OSD Configurations*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}                 PCC.Ceph Cluster Update
+                               ...  id=${id}
+                               ...  nodes=${CEPH_CLUSTER_NODES}
+                               ...  networkClusterName=${CEPH_CLUSTER_NETWORK}
+                               ...  osdScrubBeginHourDesired=${19}
+                               ...  osdScrubEndHourDesired=${7}
+                               ...  osdRecoverySleepHddDesired=${0.6}
+                               ...  osdRecoverySleepSsdDesired=${0.1}
+                               ...  osdRecoverySleepHybridDesired=${0.2}
+                               ...  osdRecoveryPriorityDesired=${4}
+                               ...  osdRecoveryOpPriorityDesired=${2}
+                               ...  osdMaxBackfillsDesired=${2}
+                               ...  osdScrubSleepDesired=${0.2}
+                               ...  osdScrubPriorityDesired=${3}
+                               ...  osdDeepScrubStrideDesired=${1048577}
+                               ...  osdDeleteSleepHybridDesired=${4}
+                               ...  osdSnapTrimPriorityDesired=${2}
+                               ...  osdRecoveryMaxActiveHddDesired=${2}
+                               ...  osdRecoveryMaxActiveSsdDesired=${6}
+                               ...  osdMemoryTargetFlashDesired=${17179869186}
+                               ...  osdMemoryTargetRotationalDesired=${8589934594}
+                               ...  osdMemoryTargetFullRotationalDesired=${4294967298}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+        ${message}                  Get Response Message        ${response}
+
+        ${status}                   PCC.Ceph Wait Until Cluster Ready
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Verify Ceph Cluster OSDs Params
+                               ...  name=${CEPH_CLUSTER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+         ${osd_ids}                 PCC.Ceph Get OSD IDs By Cluster Name
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+         ${response}                PCC.Ceph Reconcile OSDs
+                               ...  name=${CEPH_CLUSTER_NAME}
+                               ...  osd_ids=${osd_ids}
+
+                                    Should Be Equal As Strings      ${response}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Ceph Verify BE
+                               ...  user=${PCC_LINUX_USER}
+                               ...  password=${PCC_LINUX_PASSWORD}
+                               ...  nodes_ip=${CEPH_CLUSTER_NODES_IP}
+                                    Should Be Equal As Strings      ${status}    OK
+
 
 ###################################################################################################################################
 Ceph Cluster Creation With Nodes Which Are Part of Existing Cluster (Negative)

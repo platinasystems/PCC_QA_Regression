@@ -301,7 +301,46 @@ Ceph Pool Creation with quota size greater than 16 EiB (Negative)
         ${status_code}              Get Response Status Code        ${response}     
                                     Should Not Be Equal As Strings      ${status_code}  200
                                     
-                                    
+
+###################################################################################################################################
+Ceph Pool Creation With Custom Advaced Parameters
+###################################################################################################################################
+    [Documentation]                 *Ceph Pool Creation With Custom Advaced Parameters*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=ceph-pvt
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${cluster_id}               PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_Cluster_NAME}
+
+        ${response}                 PCC.Ceph Create Pool
+                               ...  name=pool-custom-params
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  size=${CEPH_POOL_SIZE}
+                               ...  tags=${CEPH_POOL_TAGS}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                               ...  quota=1
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+                               ...  pg_num=${4}
+                               ...  no_deep_scrub=${True}
+                               ...  no_scrub=${True}
+                               ...  recovery_priority=${5}
+                               ...  recovery_op_priority=${5}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Pool Ready
+                               ...  name=pool-custom-params
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Ceph Pool Verify BE
+                               ...  name=pool-custom-params
+                               ...  hostip=${SERVER_1_HOST_IP}
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Ceph Pool Creation and Verification with quota unit MiB
 ###################################################################################################################################
@@ -339,8 +378,8 @@ Ceph Pool Creation and Verification with quota unit MiB
                                ...  name=${CEPH_POOL_NAME}
                                ...  hostip=${SERVER_1_HOST_IP}
                                     Should Be Equal As Strings      ${status}    OK
-                            
-                              
+
+
 ###################################################################################################################################
 Ceph Pool Creation and Verification with quota unit GiB
 ###################################################################################################################################

@@ -445,6 +445,7 @@ class CephPool(PccBase):
         output = cli_run(self.hostip, self.user, self.password, ceph_be_cmd).stdout
         if re.search(self.name, output):
             output = cli_run(self.hostip, self.user, self.password, pool_params).stdout
+            trace(output)
             if (re.search(pg_num, output) and
                 re.search(no_scrub, output) and
                 re.search(nodeep_scrub, output) and
