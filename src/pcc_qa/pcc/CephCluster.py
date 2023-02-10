@@ -211,7 +211,7 @@ class CephCluster(PccBase):
                     self.networkClusterId=data['networkClusterId']
                 else:
                     self.networkClusterId=easy.get_network_clusters_id_by_name(conn,self.networkClusterName)
-
+        trace(tmp_node)
         for id in tmp_node:
             count=0
             for data in payload_nodes:
@@ -252,14 +252,19 @@ class CephCluster(PccBase):
             "osdMemoryTargetFullRotationalDesired": self.osdMemoryTargetFullRotationalDesired
              }
 
-            print("Payload:-"+str(payload))
+            trace("Payload:-"+str(payload))
 
         except Exception as e:
             trace("[update_cluster] EXCEPTION: %s" % str(e))
             raise Exception(e)
 
-        return pcc.modify_ceph_clusters(conn, payload)
-    
+        response = pcc.modify_ceph_clusters(conn, payload, "")
+        status_code = get_status_code(response)
+        if status_code == 202:
+            code = get_response_data(response)["code"]
+            return pcc.modify_ceph_clusters(conn, payload, "?code=" + code)
+        return response
+
     ###########################################################################
     @keyword(name="PCC.Ceph Delete Cluster")
     ###########################################################################
@@ -349,9 +354,8 @@ class CephCluster(PccBase):
                 if str(data['id']) == str(self.id):
                     print("Response:-"+str(data))
                     Id_found_in_list_of_clusters = True
-                elif re.search("failed",str(data['deploy_status'])):
-                    print("Response:-"+str(data))
-                    return "Error"            
+                    if data['deploy_status'] == 'failed':
+                        return "Error"
             if time.time() > timeout:
                 raise Exception("[PCC.Ceph Wait Until Cluster Deleted] Timeout")
             if Id_found_in_list_of_clusters:             
@@ -451,6 +455,9 @@ class CephCluster(PccBase):
         for ip in self.nodes_ip:
             trace("======== cmd: {} is getting executed ========".format(cmd1))
             print("======== cmd: {} is getting executed ========".format(cmd1))
+            trace(ip)
+            trace(self.user)
+            trace(self.password)
             drives_op = cli_run(ip,self.user,self.password,cmd1)
 
             trace("Drives_op: {}".format(str(drives_op)))

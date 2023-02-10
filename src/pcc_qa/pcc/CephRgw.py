@@ -329,7 +329,9 @@ class CephRgw(PccBase):
             if response!=None:
                 for data in response:
                     if str(data['name']) == str(self.name):
-                        Id_found_in_list_of_rgws = True         
+                        Id_found_in_list_of_rgws = True
+                        if data['deploy_status'] == 'failed':
+                            return "Error"
                     if time.time() > timeout:
                         raise Exception("[PCC.Wait Until Rados Gateway Deleted] Timeout")
                     if Id_found_in_list_of_rgws:
