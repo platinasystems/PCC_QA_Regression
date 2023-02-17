@@ -474,6 +474,25 @@ Down And Up The Interface And Check For Ceph
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=["${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                               ...  osdScrubBeginHourDesired=${19}
+                               ...  osdScrubEndHourDesired=${7}
+                               ...  osdRecoverySleepHddDesired=${0.6}
+                               ...  osdRecoverySleepSsdDesired=${0.1}
+                               ...  osdRecoverySleepHybridDesired=${0.2}
+                               ...  osdRecoveryPriorityDesired=${4}
+                               ...  osdRecoveryOpPriorityDesired=${2}
+                               ...  osdMaxBackfillsDesired=${2}
+                               ...  osdScrubSleepDesired=${0.2}
+                               ...  osdScrubPriorityDesired=${3}
+                               ...  osdDeepScrubStrideDesired=${1048577}
+                               ...  osdDeleteSleepHybridDesired=${4}
+                               ...  osdSnapTrimPriorityDesired=${2}
+                               ...  osdRecoveryMaxActiveHddDesired=${2}
+                               ...  osdRecoveryMaxActiveSsdDesired=${6}
+                               ...  osdMemoryTargetFlashDesired=${17179869186}
+                               ...  osdMemoryTargetRotationalDesired=${8589934594}
+                               ...  osdMemoryTargetFullRotationalDesired=${4294967298}
+
 
                                     Should Be Equal As Strings      ${status}    OK
 
