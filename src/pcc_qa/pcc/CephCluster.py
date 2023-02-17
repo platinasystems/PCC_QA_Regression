@@ -1373,7 +1373,7 @@ class CephCluster(PccBase):
     ###############################################################################################################
     @keyword(name="PCC.Ceph Delete OSD drives")
     ###############################################################################################################
-    def delete_osd_drive(self, osd_id=None, wipe=True, *args, **kwargs):
+    def delete_osd_drive(self, osd_id=[], wipe=True, *args, **kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Ceph Delete OSD drives : {}".format(self.name))
         print("Kwargs:" + str(kwargs))
@@ -1383,16 +1383,15 @@ class CephCluster(PccBase):
             raise e
         cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
         print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
-        trace("osd_id:{}".format(osd_id))
         try:
 
             payload = {
-                "ids": [osd_id],
+                "ids": osd_id,
                 "wipe": wipe
             }
             print("payload {}".format(payload))
             response = pcc.delete_osd_from_cluster(conn, str(cluster_id), "", payload)
-            trace("response: {}".format(response))
+            print("response: {}".format(response))
             code = get_response_data(response)["code"]
             print("code: {}".format(code))
             return pcc.delete_osd_from_cluster(conn, str(cluster_id), "?code=" + code, payload)
@@ -1415,6 +1414,32 @@ class CephCluster(PccBase):
         trace("osd_id:{}".format(osd_id))
         payload = {
             "driveIDs": [osd_id]
+        }
+        try:
+            print("payload: {}".format(payload))
+            response = pcc.add_osd_to_cluster(conn, str(cluster_id), payload)
+            print("response: {}".format(response))
+            return response
+        except Exception as e:
+            return {"...Error in add_osd_drive test": str(e)}
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Add All OSD drives By NodeID")
+    ###############################################################################################################
+    def add_all_osd_drives_by_node_id(self, node_id=None, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Add All OSD drives By NodeID..... : {}".format(self.name))
+        print("Kwargs:" + str(kwargs))
+        trace(node_id)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        print("Cluster Name: {} Id: {}".format(self.name, cluster_id))
+
+        payload = {
+            "nodeIDs": [node_id]
         }
         try:
             print("payload: {}".format(payload))
