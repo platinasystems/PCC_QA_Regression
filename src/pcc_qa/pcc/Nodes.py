@@ -10,7 +10,7 @@ from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 
 from pcc_qa.common.Utils import banner, trace, pretty_print
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_response_data, get_status_code
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Cli import cli_run
 
@@ -70,6 +70,7 @@ class Nodes(PccBase):
         self.interface_carrierStatus = []
         self.interface_managedByPcc = []
         self.interface_managedByPccDesired = []
+        self.force  = False
         super().__init__()
 
     ###########################################################################
@@ -871,10 +872,17 @@ class Nodes(PccBase):
             raise e
 
         payload = {
-            "enter": self.maintenance
+            "enter": self.maintenance,
+            "force" : self.force
         }
 
-        return pcc.set_node_maintenance(conn,str(self.Id),payload)
+        response = pcc.set_node_maintenance(conn,str(self.Id),payload, "")
+        trace(response)
+        status_code = get_status_code(response)
+        if status_code == 202:
+            code = get_response_data(response)["code"]
+            return pcc.set_node_maintenance(conn,str(self.Id),payload, "?code=" + code)
+        return response
 
 
     ###########################################################################
