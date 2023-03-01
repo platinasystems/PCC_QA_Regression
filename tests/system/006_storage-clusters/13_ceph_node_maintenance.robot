@@ -30,8 +30,10 @@ Enter Maintenance Mode
     ${response}                    PCC.Set Maintenance Mode
                               ...  Id=${server2_id}
                               ...  maintenance=${true}
+                              ...  force=${true}
 
                                    ${result}    Get Result    ${response}
+                                   ${message}   Get Response Message        ${response}
                                    ${status}    Get From Dictionary    ${result}    status
                                    Should Be Equal As Strings    ${status}    200
 
@@ -81,6 +83,24 @@ Verify Enter Maintenance Mode
 
                                     Log To Console       ${status}
                                     Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Enter Maintenance Mode: 2 Mon Required (Negative)
+###################################################################################################################################
+    [Documentation]                 *Enter in Maintenance Mode: 2 Mon Required (Negative)*
+
+    ${server3_id}                  PCC.Get Node Id    Name=${SERVER_3_NAME}
+
+
+    ${response}                    PCC.Set Maintenance Mode
+                              ...  Id=${server3_id}
+                              ...  maintenance=${true}
+
+                                   ${result}    Get Result    ${response}
+                                   ${message}   Get Response Message        ${response}
+                                   ${status}    Get From Dictionary    ${result}    status
+                                   Should Not Be Equal As Strings    ${status}    200
 
 
 ###################################################################################################################################
