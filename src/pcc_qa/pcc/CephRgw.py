@@ -743,7 +743,7 @@ class CephRgw(PccBase):
                     for j in range(daemons["num_daemon"]):
                         intf = daemons["interfaces"][j]
                         intf_cmd = "sudo netstat -ntlp | grep radosgw | grep {}:{}".format(intf,rgw["port"])
-                        cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name,j)
+                        cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name.split(".")[0],j)
                         ceph_check=cli_run(host_ip,self.user,self.password,ceph_be_cmd)
                         rgw_check=cli_run(host_ip,self.user,self.password,cmd_rgw)
                         intf_check=cli_run(host_ip,self.user,self.password,intf_cmd)
@@ -794,7 +794,7 @@ class CephRgw(PccBase):
                     host_ip = easy.get_hostip_by_name(conn, host_name)
                     failed_chk_map[host_name] = 0
                     for j in range(num_daemons):
-                        cmd_rgw = "sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name, j)
+                        cmd_rgw = "sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name.split(".")[0], j)
                         ceph_check = cli_run(host_ip, self.user, self.password, ceph_be_cmd)
                         rgw_check = cli_run(host_ip, self.user, self.password, cmd_rgw)
                         print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))

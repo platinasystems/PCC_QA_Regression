@@ -13,7 +13,14 @@ Login to PCC
 
         [Documentation]    *Login to PCC* test
 
-        ${status}        Login To PCC    ${pcc_setup}
+                        Load Clusterhead 1 Test Data        ${pcc_setup}
+                        Load Clusterhead 2 Test Data        ${pcc_setup}
+
+                        Load Server 1 Test Data        ${pcc_setup}
+                        Load Server 2 Test Data        ${pcc_setup}
+                        Load Server 3 Test Data        ${pcc_setup}
+
+        ${status}       Login To PCC    ${pcc_setup}
 
 
 ###################################################################################################################################
@@ -83,32 +90,32 @@ Search Nodes
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Nodes
-                                      ...  value=cluster-head-69
+                                      ...  value=${CLUSTERHEAD_1_NAME}
 
                                            Should Be Equal As Strings      ${response}   OK
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Nodes
-                                      ...  value=cluster-head-68
+                                      ...  value=${CLUSTERHEAD_2_NAME}
 
                                            Should Be Equal As Strings      ${response}   OK
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Nodes
-                                      ...  value=consul-01
+                                      ...  value=${SERVER_1_NAME}
 
                                            Should Be Equal As Strings      ${response}   OK
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Nodes
-                                      ...  value=consul-02
+                                      ...  value=${SERVER_2_NAME}
 
                                            Should Be Equal As Strings      ${response}   OK
 
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Nodes
-                                      ...  value=servernode-130
+                                      ...  value=${SERVER_3_NAME}
 
                                            Should Be Equal As Strings      ${response}   OK
 
