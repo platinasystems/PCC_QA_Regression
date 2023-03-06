@@ -1339,6 +1339,8 @@ Ceph Local Load Balancer create on Rgw
 
                                Should Be Equal As Strings      ${response}  OK
 
+                               sleep  5s
+
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_1_NAME}
 
@@ -1574,6 +1576,8 @@ Ceph Local Load Balancer with Control_IP on Rgw
                                     ...  roles=["Ceph Load Balancer"]
                                     Log To Console    ${response}
                                     Should Be Equal As Strings      ${response}  OK
+
+                                    sleep  5s
 
         ${node_wait_status}         PCC.Wait Until Node Ready
                                     ...  Name=${SERVER_1_NAME}
