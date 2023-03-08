@@ -196,7 +196,7 @@ class Interfaces(PccBase):
                 print("Response Before Time Out: "+str(timeout_response))
                 raise Exception("[PCC.Wait Until Interface Ready] Timeout")
             trace("  Waiting until Interface : is Ready .....")
-            time.sleep(20)
+            time.sleep(10)
         return "OK"
 
     ###########################################################################

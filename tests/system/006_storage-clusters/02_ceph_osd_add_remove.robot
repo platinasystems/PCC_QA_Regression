@@ -250,7 +250,9 @@ Ceph Cluster Add ALL OSD Drives BY NODEID
                               ...  keywords:
                               ...  PCC.Ceph Get Unused drives
                               ...  PCC.Ceph Add All OSD drives By NodeID
-                                    Sleep   1m
+
+                                    #wait crushmap updated
+                                    Sleep   5m
 
         @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
@@ -261,7 +263,7 @@ Ceph Cluster Add ALL OSD Drives BY NODEID
         ${node_id}                  PCC.Get Node Id
                               ...   Name=${SERVER_5_NAME_SECONDARY}
                                      Log To Console      ${node_id}
-#
+
         ${response}                 PCC.Ceph Add All OSD drives By NodeID
                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
                               ...   node_id=${node_id}
