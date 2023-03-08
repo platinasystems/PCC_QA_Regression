@@ -1330,6 +1330,9 @@ Ceph Local Load Balancer create on Rgw
                                ${result}    Get Result    ${response}
                                ${status}    Get From Dictionary    ${result}    status
                                ${message}    Get From Dictionary    ${result}    message
+                               ${data}      Get From Dictionary    ${result}    Data
+                               ${policy_tag_1_id}      Get From Dictionary    ${data}     id
+                               Set Suite Variable  ${policy_tag_1_id}
                                Log to Console    ${message}
                                Should Be Equal As Strings    ${status}    200
 
@@ -1344,6 +1347,14 @@ Ceph Local Load Balancer create on Rgw
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}               PCC.Verify HAProxy BE
+ 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                ...  name=${SERVER_1_NAME}
+                                ...  policy_id=${policy_tag_1_id}
+
+                                Should Be Equal As Strings    ${status}    OK
+
 
 
 ###################################################################################################################################
@@ -1494,7 +1505,6 @@ Removing Ceph Load balancer
 
                                     Should Be Equal As Strings      ${response}  OK
 
-
         ${node_wait_status}    PCC.Wait Until Node Ready
                                ...  Name=${SERVER_1_NAME}
 
@@ -1566,6 +1576,9 @@ Ceph Local Load Balancer with Control_IP on Rgw
                                     ${result}    Get Result    ${response}
                                     ${status}    Get From Dictionary    ${result}    status
                                     ${message}    Get From Dictionary    ${result}    message
+                                    ${data}      Get From Dictionary    ${result}    Data
+                                    ${policy_tag_1_id}      Get From Dictionary    ${data}     id
+                                    Set Suite Variable  ${policy_tag_1_id}
                                     Log to Console    ${message}
                                     Should Be Equal As Strings    ${status}    200
 
@@ -1584,6 +1597,13 @@ Ceph Local Load Balancer with Control_IP on Rgw
                                     ...  hostip=${SERVER_1_HOST_IP}
                                     Log To Console    ${response}
                                     Should Be Equal As Strings      ${response}  OK
+
+        ${status}                   PCC.Verify HAProxy BE
+ 			                        ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                    ...  name=${SERVER_1_NAME}
+                                    ...  policy_id=${policy_tag_1_id}
+
+                                    Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
 Removing Ceph Load balancer Policy
@@ -1612,7 +1632,6 @@ Removing Ceph Load balancer Policy
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-                                    Sleep    10s
 
         ${node_wait_status}         PCC.Wait Until Node Ready
                                ...  Name=${SERVER_1_NAME}
@@ -1691,8 +1710,6 @@ Ceph Multiple RGW Load Balancer
 
                                 Should Be Equal As Strings    ${result}    OK
 
-                                Sleep  5s
-
     ${node_wait_status}         PCC.Wait Until Node Ready
                                 ...  Name=${SERVER_1_NAME}
 
@@ -1743,8 +1760,6 @@ Delete Multiple RGW Load Balancer
                                 ${status}    Get From Dictionary    ${result}    status
                                 Should Be Equal As Strings    ${status}    200
 
-                                sleep  5s
-
     ${node_wait_status}         PCC.Wait Until Node Ready
                            ...  Name=${SERVER_1_NAME}
 
@@ -1773,7 +1788,6 @@ Delete Multiple RGW Load Balancer
                            ...  roles=["Ceph Load Balancer"]
 
                                 Should Be Equal As Strings      ${response}  OK
-
 
     ${node_wait_status}         PCC.Wait Until Node Ready
                            ...  Name=${SERVER_1_NAME}

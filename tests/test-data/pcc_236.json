@@ -59,7 +59,7 @@
 
     "server-1":
         {
-            "server_name":"consul-01",
+            "server_name":"consul-01.platinasystems.com",
             "pcc_url": "https://172.17.2.106:9999",
             "pcc_host_ip": "172.17.2.106",
             "pcc_linux_password": "cals0ft",
@@ -77,7 +77,7 @@
 
     "server-2":
         {
-          "server_name":"consul-02",
+          "server_name":"consul-02.platinasystems.com",
           "pcc_url": "https://172.17.2.107:9999",
           "pcc_host_ip": "172.17.2.107",
           "pcc_linux_password": "cals0ft",
@@ -94,7 +94,7 @@
 
     "server-3":
         {
-          "server_name":"servernode-130",
+          "server_name":"servernode-130.platinasystems.com",
           "pcc_url": "https://172.17.2.130:9999",
           "pcc_host_ip": "172.17.2.130",
           "pcc_linux_password": "cals0ft",
@@ -197,7 +197,7 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["cluster-head-68","cluster-head-69","consul-01","consul-02","servernode-130"],
+            "nodes":["cluster-head-68","cluster-head-69","consul-01.platinasystems.com","consul-02.platinasystems.com","servernode-130.platinasystems.com"],
             "nodes_ip":["172.17.2.68","172.17.2.69","172.17.2.106","172.17.2.107","172.17.2.130"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
@@ -208,7 +208,7 @@
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["servernode-130","consul-01","consul-02"],
+            "nodes":["servernode-130.platinasystems.com","consul-01.platinasystems.com","consul-02.platinasystems.com"],
             "nodes_ip":["172.17.2.130","172.17.2.106","172.17.2.107"],
             "tags":["All"],
             "networkClusterName":"network-pvt"
@@ -246,7 +246,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "numDaemonsMap": {"consul-01": 1},
+            "numDaemonsMap": {"consul-01.platinasystems.com": 1},
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl":"rgw.platinasystems.com",
@@ -382,7 +382,7 @@
             "k8sVersion":"v1.23.1",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["consul-01","consul-02","servernode-130"],
+            "nodes":["consul-01.platinasystems.com","consul-02.platinasystems.com","servernode-130.platinasystems.com"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",

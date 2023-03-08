@@ -257,10 +257,10 @@ class Nodes(PccBase):
         banner("PCC.Wait Until Node Ready")
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         ready = False
-        time.sleep(10)
         time_waited = 0
         PCC_TIMEOUT = 60*10 #10 minutes
         timeout = time.time() + PCC_TIMEOUT
+        time.sleep(5)
         while not ready:
             ready = False
             node_list = pcc.get_nodes(conn)['Result']['Data']

@@ -709,7 +709,7 @@ class CephCluster(PccBase):
             print("cmd:"+str(cmd))
             print("cmd output:"+str(cmd_exec))    
             time.sleep(10)            
-            cmd_verify="sudo systemctl status ceph-mon@{} |grep running |wc -l".format(data['server'])
+            cmd_verify="sudo systemctl status ceph-mon@{} |grep running |wc -l".format(data['server'].split(".")[0])
             cmd_verify_exec= cli_run(host_ip,self.user,self.password, cmd_verify)
             serialise_output=self._serialize_response(time.time(), cmd_verify_exec )['Result']['stdout']
             print("cmd:"+str(cmd_verify))
@@ -940,7 +940,7 @@ class CephCluster(PccBase):
         cmd = "ping {} -c 4".format(node_ip)
         restart_up_status = cli_run(node_ip,self.user,self.password, cmd)
         if re.search("0% packet loss", str(restart_up_status)):
-            cmd="sudo systemctl status ceph-mgr@{}".format(node_name)
+            cmd="sudo systemctl status ceph-mgr@{}".format(node_name.split(".")[0])
             cmd_output=cli_run(node_ip,self.user,self.password,cmd)
             if re.search("active", str(cmd_output)):
                 return "OK"

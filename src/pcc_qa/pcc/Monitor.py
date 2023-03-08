@@ -309,25 +309,14 @@ class Monitor(PccBase):
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
-            raise e                 
-        payload = {
-            "unit":"HOUR",
-            "value":1
-        }
+            raise e
         if not self.nodes:
             print("Node names can not be empty!!")
-            return "Error"            
-        tmp_node=[]        
+            return "Error"
         failed_chk=[]
         for node_name in eval(str(self.nodes)):
-            print("Getting Node Id for -"+str(node_name))
-            node_id=easy.get_node_id_by_name(conn,node_name)
-            print(" Node Id retrieved -"+str(node_id))
-            tmp_node.append(node_id)
-        self.nodes=tmp_node
-        for nodeId in self.nodes:
             print("***********************************")
-            print("NodeID:"+str(nodeId))
+            print("Node:"+str(node_name))
             for topic in eval(str(self.category)):
                 for ip in eval(str(self.nodes_ip)):
                     if topic.lower()=='network':
@@ -338,7 +327,7 @@ class Monitor(PccBase):
                         print("Host:"+str(ip))
                         network_check=self._serialize_response(time.time(),cli_run(ip,self.user,self.password,cmd))['Result']['stdout']
                         payload = {
-                            "query": "{{job='network',nodeId='{}',__name__=~'interfaces:.*:bytesSent'}}".format(nodeId)
+                            "query": "{{job='network',nodeName='{}',__name__=~'interfaces:.*:bytesSent'}}".format(node_name)
                         }
                         data = get_response_data(pcc.query_metric(conn, payload))
                         trace("Interface Count API:"+str(len(data)))
@@ -347,12 +336,12 @@ class Monitor(PccBase):
                         if len(data)==int(network_check):
                             continue
                         else:
-                          failed_chk.append(nodeId) 
+                          failed_chk.append(node_name)
                     else:
                         print("Invalid Category:"+str(topic))   
                         return "Error"                    
         if failed_chk:
-            print("Could not verify the topics for Node ids: "+str())
+            print("Could not verify the topics for Nodes: " + str(failed_chk))
             return "Error"
         else:
             return "OK"

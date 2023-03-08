@@ -42,7 +42,7 @@ Ceph Rbd Creation with decimal RBD size (Negative)
                                ...  name=${CEPH_POOL_NAME}
                                
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -73,7 +73,7 @@ Ceph Rbd Creation with negative RBD size (Negative)
                                ...  name=${CEPH_POOL_NAME}
                                
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -104,7 +104,7 @@ Ceph Rbd Creation with zero RBD size (Negative)
                                ...  name=${CEPH_POOL_NAME}
                                
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -135,7 +135,7 @@ Ceph Rbd Creation with alphabet or special charaters RBD size (Negative)
                                ...  name=${CEPH_POOL_NAME}
                                
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -166,7 +166,7 @@ Ceph Rbd Creation without image size (Negative)
                                ...  name=${CEPH_POOL_NAME}
                                
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=${CEPH_RBD_NAME}
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -198,7 +198,7 @@ Ceph 2 RBDs with same name (Negative)
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=abc
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -264,7 +264,7 @@ Ceph Rbd Creation without rdb name (Negative)
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -578,7 +578,7 @@ Ceph 2 RBDs using same pool
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd5
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -597,7 +597,7 @@ Ceph 2 RBDs using same pool
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd6
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -704,7 +704,7 @@ Ceph 2 RBDs with same pool, size, size unit and tags
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd9
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -723,7 +723,7 @@ Ceph 2 RBDs with same pool, size, size unit and tags
                                     Should Be Equal As Strings      ${status}    OK
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd10
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -763,7 +763,7 @@ Ceph Rbd Multiple Creation
 
 #####################
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd30
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -783,7 +783,7 @@ Ceph Rbd Multiple Creation
 
 #####################
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd31
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -803,7 +803,7 @@ Ceph Rbd Multiple Creation
 
 #####################
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd32
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -823,7 +823,7 @@ Ceph Rbd Multiple Creation
 
 #####################
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd33
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -843,7 +843,7 @@ Ceph Rbd Multiple Creation
 
 #####################
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd34
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -883,7 +883,7 @@ Ceph Rbd Update - Edit name - Remove name (Negative)
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd-invalid1
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -906,7 +906,7 @@ Ceph Rbd Update - Edit name - Remove name (Negative)
                                ...  name=rbd-invalid1
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=
                                ...  ceph_cluster_id=${cluster_id}
@@ -944,7 +944,7 @@ Ceph Rbd Update - Remove pool (Negative)
                                ...  name=rbd-invalid1
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=rbd-invalid1
                                ...  ceph_cluster_id=${cluster_id}
@@ -980,7 +980,7 @@ Ceph Rbd Update Name - Rename
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd-up
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -1003,7 +1003,7 @@ Ceph Rbd Update Name - Rename
                                ...  name=rbd-up
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=rbd-rename
                                ...  ceph_cluster_id=${cluster_id}
@@ -1180,7 +1180,7 @@ Ceph Rbd Resize_decrease
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd-3
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -1202,7 +1202,7 @@ Ceph Rbd Resize_decrease
                                ...  name=rbd-3
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=rbd-3
                                ...  ceph_cluster_id=${cluster_id}
@@ -1258,7 +1258,7 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                ...  name=pool-rbd2
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd-invalid
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -1280,7 +1280,7 @@ Ceph Rbd Update - Resize_increase - greater than pool quota
                                ...  name=rbd-invalid
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=rbd-invalid
                                ...  ceph_cluster_id=${cluster_id}
@@ -1334,7 +1334,7 @@ Ceph Rbd Resize_increase - equal to pool quota
                                ...  name=pool-rbd0
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd-4
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -1356,7 +1356,7 @@ Ceph Rbd Resize_increase - equal to pool quota
                                ...  name=rbd-4
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=rbd-4
                                ...  ceph_cluster_id=${cluster_id}
@@ -1397,7 +1397,7 @@ Ceph Rbd Resize_increase
                                ...  name=${CEPH_POOL_NAME}
 
         ${response}                 PCC.Ceph Create Rbd
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  name=rbd-5
                                ...  ceph_cluster_id=${cluster_id}
                                ...  ceph_pool_id=${pool_id}
@@ -1419,7 +1419,7 @@ Ceph Rbd Resize_increase
                                ...  name=rbd-5
 
         ${response}                 PCC.Ceph Rbd Update
-				 ...  pool_type=replicated
+				               ...  pool_type=replicated
                                ...  id=${id}
                                ...  name=rbd-5
                                ...  ceph_cluster_id=${cluster_id}
