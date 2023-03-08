@@ -92,19 +92,11 @@ PCC Dashboard - Verify Object Health/Kernel/OS Information:TCP-1653,TCP-1652,TCP
         [Documentation]    *PCC Dashboard - Verify Object Health/Kernel/OS Information* test
                                    ...  keywords:
                                    ...  PCC.Dashboard Verify Object Health/Kernel/OS Information
-                                   ...  PCC.Ceph Active Manager And Verify
-
-        [Tags]             kc
-
-        ${node_ip}     PCC.Ceph Active Manager And Verify
-                       ...  hostip=${SERVER_1_HOST_IP}
-                       Log To Console    ${node_ip}
-                       Set Global Variable    ${node_ip}
 
 
         ${status}      PCC.Dashboard Verify Object Health/Kernel/OS Information
                        ...  objects=["Node","K8sCluster","CephCluster","NetworkCluster"] 
-                       ...  nodeip=${node_ip}
+                       ...  nodeip=${SERVER_1_HOST_IP}
 
                        Should Be Equal As Strings      ${status}    OK
 
