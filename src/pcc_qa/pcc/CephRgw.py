@@ -96,7 +96,7 @@ class CephRgw(PccBase):
     ###########################################################################
     def get_ceph_rgw_by_id(self,*args,**kwargs):
         self._load_kwargs(kwargs)
-        banner("PCC.Ceph Get RGW By Name")
+        banner("PCC.Ceph Get RGW By Id")
 
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
