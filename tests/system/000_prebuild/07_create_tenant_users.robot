@@ -176,7 +176,7 @@ PCC-Admin User Creation
                         ${status}    Get From Dictionary    ${response}    StatusCode
                         Should Be Equal As Strings    ${status}    200
 
-                        Sleep  10s
+                        Sleep  1m
 
 
 
