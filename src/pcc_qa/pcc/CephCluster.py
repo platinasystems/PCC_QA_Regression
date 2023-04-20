@@ -1088,43 +1088,44 @@ class CephCluster(PccBase):
             return node_ip
 
     ###############################################################################################################
-    @keyword(name="PCC.Get Ceph Version")
+    @keyword(name="PCC.Ceph Get Nodes State")
     ###############################################################################################################
-
-    def get_ceph_version(self, *args, **kwargs):
-        banner("Get Ceph Version")
+    def get_nodes_state(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Nodes State")
         try:
-            print("Kwargs are: {}".format(kwargs))
-            # Get Ceph Version
-            #cmd = "ceph -v"
-            #status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
-            #print("cmd: {} executed successfully and status is: {}".format(cmd, status))
-            #return status
-
-            banner("PCC.Get Ceph Version [Name=%s]" % self.name)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            print("conn is {}".format(conn))
-            ceph_ID = easy.get_ceph_cluster_id_by_name(conn,self.name)
-            print("ceph_ID is {}".format(ceph_ID))
-
-            ceph_node_list = pcc.get_ceph_version_list(conn,str(ceph_ID))
-            print("ceph_node_list is {}".format(ceph_node_list))
-
-            '''
-            "ceph_version":"ceph version 14.2.20 (36274af6eb7f2a5055f2d53ad448f2694e9046a0) nautilus (stable)",
-            "hostname":"qa-clusterhead-10"
-            '''
-
-            ceph_ver_list ={}
-            for node_data in ceph_node_list["Result"]["Data"]:
-                print("ceph_version of hostname {} is {} ".format(node_data["hostname"],node_data["ceph_version"]))
-                ceph_ver_list[node_data["hostname"]] = node_data["ceph_version"]
-            print("ceph_ver_list is {}".format(ceph_ver_list))
-            return ceph_ver_list
-
         except Exception as e:
-            trace("Error in getting ceph version: {}".format(e))
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        resp = pcc.get_ceph_state_nodes(conn, str(cluster_id))
+        status = get_status_code(resp)
+        state_nodes = get_response_data(resp)
+        if status != 200:
+            return "Error"
+        nodes = get_response_data(pcc.get_ceph_cluster_by_id(conn, str(cluster_id)))["nodes"]
+        trace(nodes)
+        for node in nodes:
+            name = node["name"]
+            roles = node["roles"]
+            node_found = False
+            for state_node in state_nodes:
+                if name == state_node["hostname"]:
+                    trace("{} found".format(name))
+                    node_found = True
+                    for role in roles:
+                        service_found = False
+                        for service in state_node["services"]:
+                            if role[:-1] in service["type"]:
+                                trace("Service {} found on host {}".format(role,name))
+                                service_found = True
+                        if not service_found:
+                            trace("Service {} not found on host {}".format(role, name))
+                            return "Error"
+            if not node_found:
+                trace("{} not found".format(name))
+                return "Error"
+        return "OK"
     
     ###############################################################################################################
     @keyword(name="PCC.Ceph Get Used Drives")
