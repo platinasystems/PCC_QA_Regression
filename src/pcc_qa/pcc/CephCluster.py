@@ -1117,7 +1117,7 @@ class CephCluster(PccBase):
                         service_found = False
                         for service in state_node["services"]:
                             if role[:-1] in service["type"]:
-                                trace("Service {} found on host {}".format(role,name))
+                                trace("Service {} found on host {}".format(role, name))
                                 service_found = True
                         if not service_found:
                             trace("Service {} not found on host {}".format(role, name))
@@ -1125,6 +1125,67 @@ class CephCluster(PccBase):
             if not node_found:
                 trace("{} not found".format(name))
                 return "Error"
+        return "OK"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get Mons State")
+    ###############################################################################################################
+    def get_mons_state(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Mons State")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        resp = pcc.get_ceph_state_mons(conn, str(cluster_id))
+        status = get_status_code(resp)
+        state_mons = get_response_data(resp)
+        if status != 200:
+            return "Error"
+        nodes = get_response_data(pcc.get_ceph_cluster_by_id(conn, str(cluster_id)))["nodes"]
+        for node in nodes:
+            if "mons" in node["roles"]:
+                found = False
+                for state_mon in state_mons:
+                    if node["name"] == state_mon["server"] and node["name"].split(".")[0] == state_mon["name"]:
+                        trace("Mon {} found on host {}".format(node["name"].split(".")[0], node["name"]))
+                        found = True
+                if not found:
+                    trace("Mon {} not found on host {}".format(node["name"].split(".")[0], node["name"]))
+                    return "Error"
+        return "OK"
+
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get MDS State")
+    ###############################################################################################################
+    def get_mds_state(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get MDS State")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        resp = pcc.get_ceph_state_mds(conn, str(cluster_id))
+        status = get_status_code(resp)
+        state_mdss = get_response_data(resp)["nodes"]
+        trace(state_mdss)
+        if status != 200:
+            return "Error"
+        nodes = get_response_data(pcc.get_ceph_cluster_by_id(conn, str(cluster_id)))["nodes"]
+        for node in nodes:
+            if "mdss" in node["roles"]:
+                trace("checking {}".format(node["name"]))
+                found = False
+                for state_mds in state_mdss:
+                    if node["name"].split(".")[0] == state_mds["name"]:
+                        trace("Mds {} found on host {}".format(node["name"].split(".")[0], node["name"]))
+                        found = True
+                if not found:
+                    trace("Mds {} not found on host {}".format(node["name"].split(".")[0], node["name"]))
+                    return "Error"
         return "OK"
     
     ###############################################################################################################
