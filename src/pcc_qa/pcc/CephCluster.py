@@ -2,7 +2,7 @@ import re
 import time
 import json
 import ast
-
+from time import sleep
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -70,6 +70,7 @@ class CephCluster(PccBase):
         self.osdMemoryTargetRotationalDesired = 8589934592
         self.osdMemoryTargetFullRotationalDesired = 4294967296
         self.osd_ids = None
+        self.services = None
         super().__init__()
 
     ###########################################################################
@@ -444,6 +445,59 @@ class CephCluster(PccBase):
             else:
                 return "Error"
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Cleanup BE 2")
+    ###########################################################################
+    def ceph_cleanup_be_2(self,**kwargs):
+        self._load_kwargs(kwargs)
+
+        trace(self.nodes_ip)
+        for ip in eval(self.nodes_ip):
+            trace(ip)
+            trace("Cleaning disks on host: " + ip)
+            # list vgs and remove them
+            trace("List ceph vgs and remove them")
+            cmd = 'sudo vgs'
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            vgs = [s for s in out.stdout.split(" ") if "ceph_data_" in s]
+            for v in vgs:
+                cmd = 'sudo vgremove ' + v + ' -y'
+                out = cli_run(ip, self.user, self.password, cmd)
+                trace(out)
+            sleep(3)
+
+            # list pvs and remove them
+            trace("List pvs and remove them")
+            cmd = "sudo pvs"
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            pvs = [s for s in out.stdout.split(" ") if "/dev/" in s and "sda" not in s]
+            for p in pvs:
+                cmd = 'sudo pvremove ' + p + ' -y'
+                out = cli_run(ip, self.user, self.password, cmd)
+                trace(out)
+            sleep(3)
+
+            # list disks and wipe
+            trace("List disks and wipe them")
+            cmd = 'sudo lsblk -nd'
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            disks = [s.strip("\n") for s in out.stdout.split(" ") if "sd" in s and "sda" not in s]
+            for d in disks:
+                cmd = 'sudo wipefs -a /dev/' + d
+                out = cli_run(ip, self.user, self.password, cmd)
+                trace(out)
+            sleep(3)
+
+            cmd = 'sudo lsblk'
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            trace("-----------------------------------")
+        return "OK"
+
 
     ###########################################################################
     @keyword(name="PCC.Ceph Cleanup BE")
@@ -1591,7 +1645,32 @@ class CephCluster(PccBase):
         except Exception as e:
             trace("Error in get_ceph_rgw_haproxy_ip: {}".format(e))
 
-    ###############################################################################################################
+    ###########################################################################
+    @keyword(name="PCC.Verify Node Dismiss")
+    ###########################################################################
+    def verify_node_dismiss(self, *args, **kwargs):
+        banner("PCC.Verify Node Dismiss")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cmd = 'sudo ceph mgr metadata -f json'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_mgrs = json.loads(out.stdout)
+        cmd = 'sudo ceph -s -f json'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_status = json.loads(out.stdout)
+        ceph_mons = ceph_status["quorum_names"]
+        cmd = 'sudo ceph mds metadata'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_mds = json.loads(out.stdout)
+        trace(ceph_mgrs)
+        trace(ceph_mons)
+        trace(ceph_mds)
+
+
+
 
 
 

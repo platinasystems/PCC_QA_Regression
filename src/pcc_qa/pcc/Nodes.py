@@ -900,3 +900,29 @@ class Nodes(PccBase):
         if node["maintenance"] == self.maintenance:
             return "OK"
         return "Error"
+
+    ###########################################################################
+    @keyword(name="PCC.Node Dismiss")
+    ###########################################################################
+    def node_dismiss(self, *args, **kwargs):
+        banner("PCC.Node Dismiss")
+        self._load_kwargs(kwargs)
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+
+        payload = {
+            "force": self.force
+        }
+
+        response = pcc.node_dismiss(conn, str(self.Id), payload, "")
+        trace(response)
+        status_code = get_status_code(response)
+        if status_code == 202:
+            code = get_response_data(response)["code"]
+            result = pcc.node_dismiss(conn, str(self.Id), payload, "?code=" + code)
+            status_code = get_status_code(result)
+        response["Result"]["status"] = status_code
+        return response
+
