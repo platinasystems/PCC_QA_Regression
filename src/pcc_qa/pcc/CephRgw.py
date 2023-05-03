@@ -263,6 +263,7 @@ class CephRgw(PccBase):
         self.ID = easy.get_ceph_rgw_id_by_name(conn,Name= self.name,Ceph_cluster_name=self.ceph_cluster_name)
 
         response = pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "")
+        trace(response)
         status_code = get_status_code(response)
         if status_code == 202:
             code = get_response_data(response)["code"]
@@ -366,9 +367,10 @@ class CephRgw(PccBase):
             self.ID=data['ID']
             self.name=data['name']
             del_response = pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "")
+            trace(del_response)
             status_code = get_status_code(del_response)
-            code = get_response_data(del_response)["code"]
             if status_code == 202:
+                code = get_response_data(del_response)["code"]
                 del_response = pcc.delete_ceph_rgw_by_id(conn, str(self.ID), "?code=" + code)
                 if del_response['Result']['status'] == 200:
                     del_check=self.wait_until_rados_deleted()
