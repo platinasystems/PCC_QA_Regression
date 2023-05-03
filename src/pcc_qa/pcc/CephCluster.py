@@ -286,6 +286,7 @@ class CephCluster(PccBase):
             raise e
         print("Payoad:"+str(payload))
         response = pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
+        trace(response)
         status_code = get_status_code(response)
         if status_code == 202:
             code = get_response_data(response)["code"]
@@ -510,6 +511,7 @@ class CephCluster(PccBase):
             print("Ceph Cluster {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
             response=pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
+            trace(response)
             status_code = get_status_code(response)
             if status_code == 202:
                 code = get_response_data(response)["code"]

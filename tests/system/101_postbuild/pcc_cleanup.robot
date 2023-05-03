@@ -229,6 +229,7 @@ Ceph Rbd Delete Multiple
         ${status}                   PCC.Ceph Delete All Rbds
                                     Should be equal as strings    ${status}    OK
 
+                                    sleep  1m
 
 ###################################################################################################################################
 Ceph Pool Multiple Delete

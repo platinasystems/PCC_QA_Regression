@@ -130,9 +130,10 @@ class CephPool(PccBase):
         for data in get_response_data(response):
             if data['managed']:
                 response=pcc.delete_ceph_pool_by_id(conn,str(data['id']),"")
+                trace(response)
                 status_code = get_status_code(response)
-                code = get_response_data(response)["code"]
                 if status_code == 202:
+                    code = get_response_data(response)["code"]
                     response = pcc.delete_ceph_pool_by_id(conn, str(data['id']), "?code="+code)
                     if response['Result']['status'] == 200:
                         status=self.wait_until_pool_deleted(id=data['id'])
@@ -162,9 +163,10 @@ class CephPool(PccBase):
             for data in get_response_data(response):
                 if data.get('managed') and not data.get('cephFS') and not data.get('cephRBD') and not data.get('cephRgw'):
                     response=pcc.delete_ceph_pool_by_id(conn,str(data['id']),"")
+                    trace(response)
                     status_code = get_status_code(response)
-                    code = get_response_data(response)["code"]
                     if status_code == 202:
+                        code = get_response_data(response)["code"]
                         response = pcc.delete_ceph_pool_by_id(conn, str(data['id']), "?code="+code)
                         if response['Result']['status'] == 200:
                             status=self.wait_until_pool_deleted(id=data['id'])
