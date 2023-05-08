@@ -97,7 +97,7 @@ class CephRbd(PccBase):
                         print("{} deletion failed".format(data['name']))
                         return "Error"
                 else:
-                    "Error"
+                    return "Error"
         return "OK"
 
     ###########################################################################
