@@ -1682,13 +1682,19 @@ class CephCluster(PccBase):
         cmd = 'sudo ceph -s -f json'
         out = cli_run(self.hostip, self.user, self.password, cmd)
         ceph_status = json.loads(out.stdout)
-        ceph_mons = ceph_status["quorum_names"]
         cmd = 'sudo ceph mds metadata'
         out = cli_run(self.hostip, self.user, self.password, cmd)
         ceph_mds_out = json.loads(out.stdout)
+        cmd = 'sudo ceph osd tree'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_osd_tree = out.stdout
+
+        ceph_mons = ceph_status["quorum_names"]
+
         ceph_mgrs = []
         for mgr in ceph_mgrs_out:
             ceph_mgrs.append(mgr["name"])
+
         ceph_mds = []
         for mds in ceph_mds_out:
             ceph_mds.append(mds["name"])
@@ -1714,6 +1720,12 @@ class CephCluster(PccBase):
             if re.search(daemon, str(ceph_status)):
                 trace("Error: found rgw {} service".format(server_name))
 
+        if "osd" in services.keys():
+            if re.search(server_name, ceph_osd_tree):
+                trace("Error: found host {} in ceph osd tree".format(server_name))
+            for osd in services["osd"]:
+                if re.search(osd, ceph_osd_tree):
+                    trace("Error: found {} service".format(osd))
 
 
 
