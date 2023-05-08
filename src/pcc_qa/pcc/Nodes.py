@@ -70,7 +70,7 @@ class Nodes(PccBase):
         self.interface_carrierStatus = []
         self.interface_managedByPcc = []
         self.interface_managedByPccDesired = []
-        self.force  = False
+        self.force = False
         super().__init__()
 
     ###########################################################################

@@ -1655,21 +1655,64 @@ class CephCluster(PccBase):
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
         except Exception as e:
             raise e
+
+        services = {
+            "mds": [
+                "sv44"
+            ],
+            "mgr": [
+                "sv44"
+            ],
+            "mon": [
+                "sv44"
+            ],
+            "osd": [
+                "osd.2",
+                "osd.7"
+            ],
+            "rgw": [
+                "rados-pvt-secondary"
+            ]
+        }
+        server_name = services["mon"][0]
+
         cmd = 'sudo ceph mgr metadata -f json'
         out = cli_run(self.hostip, self.user, self.password, cmd)
-        ceph_mgrs = json.loads(out.stdout)
+        ceph_mgrs_out = json.loads(out.stdout)
         cmd = 'sudo ceph -s -f json'
         out = cli_run(self.hostip, self.user, self.password, cmd)
         ceph_status = json.loads(out.stdout)
         ceph_mons = ceph_status["quorum_names"]
         cmd = 'sudo ceph mds metadata'
         out = cli_run(self.hostip, self.user, self.password, cmd)
-        ceph_mds = json.loads(out.stdout)
+        ceph_mds_out = json.loads(out.stdout)
+        ceph_mgrs = []
+        for mgr in ceph_mgrs_out:
+            ceph_mgrs.append(mgr["name"])
+        ceph_mds = []
+        for mds in ceph_mds_out:
+            ceph_mds.append(mds["name"])
+
         trace(ceph_mgrs)
         trace(ceph_mons)
         trace(ceph_mds)
 
+        if "mds" in services.keys():
+            if server_name in ceph_mds:
+                trace("Error: found mds {} service".format(server_name))
 
+        if "mgr" in services.keys():
+            if server_name in ceph_mgrs:
+                trace("Error: found mgr {} service".format(server_name))
+
+        if "mon" in services.keys():
+            if server_name in ceph_mons:
+                trace("Error: found mon {} service".format(server_name))
+
+        if "rgw" in services.keys():
+            daemon = "{}.rgw0".format(server_name)
+            if re.search(daemon, str(ceph_status)):
+                trace("Error: found rgw {} service".format(server_name))
 
 
 
