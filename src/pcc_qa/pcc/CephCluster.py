@@ -1656,25 +1656,25 @@ class CephCluster(PccBase):
         except Exception as e:
             raise e
 
-        services = {
-            "mds": [
-                "sv44"
-            ],
-            "mgr": [
-                "sv44"
-            ],
-            "mon": [
-                "sv44"
-            ],
-            "osd": [
-                "osd.2",
-                "osd.7"
-            ],
-            "rgw": [
-                "rados-pvt-secondary"
-            ]
-        }
-        server_name = services["mon"][0]
+        # services = {
+        #     "mds": [
+        #         "sv44"
+        #     ],
+        #     "mgr": [
+        #         "sv44"
+        #     ],
+        #     "mon": [
+        #         "sv44"
+        #     ],
+        #     "osd": [
+        #         "osd.2",
+        #         "osd.7"
+        #     ],
+        #     "rgw": [
+        #         "rados-pvt-secondary"
+        #     ]
+        # }
+        server_name = self.services["mon"][0]
 
         cmd = 'sudo ceph mgr metadata -f json'
         out = cli_run(self.hostip, self.user, self.password, cmd)
@@ -1703,29 +1703,38 @@ class CephCluster(PccBase):
         trace(ceph_mons)
         trace(ceph_mds)
 
-        if "mds" in services.keys():
+        error = False
+        if "mds" in self.services.keys():
             if server_name in ceph_mds:
                 trace("Error: found mds {} service".format(server_name))
+                error = True
 
-        if "mgr" in services.keys():
+        if "mgr" in self.services.keys():
             if server_name in ceph_mgrs:
                 trace("Error: found mgr {} service".format(server_name))
+                error = True
 
-        if "mon" in services.keys():
+        if "mon" in self.services.keys():
             if server_name in ceph_mons:
                 trace("Error: found mon {} service".format(server_name))
+                error = True
 
-        if "rgw" in services.keys():
+        if "rgw" in self.services.keys():
             daemon = "{}.rgw0".format(server_name)
             if re.search(daemon, str(ceph_status)):
                 trace("Error: found rgw {} service".format(server_name))
+                error = True
 
-        if "osd" in services.keys():
+        if "osd" in self.services.keys():
             if re.search(server_name, ceph_osd_tree):
                 trace("Error: found host {} in ceph osd tree".format(server_name))
-            for osd in services["osd"]:
+                error = True
+            for osd in self.services["osd"]:
                 if re.search(osd, ceph_osd_tree):
                     trace("Error: found {} service".format(osd))
+                    error = True
 
-
+        if error:
+            return "Error"
+        return "OK"
 

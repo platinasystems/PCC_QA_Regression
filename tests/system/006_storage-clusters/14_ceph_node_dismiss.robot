@@ -193,46 +193,50 @@ Load Test Variable
 #                                    Should Be Equal As Strings      ${status}    OK
 
 
-###################################################################################################################################
-Dismiss Node With RGW Daemon (Negative)
-###################################################################################################################################
-    [Documentation]                 *Dismiss Node With RGW Daemon (Negative)*
-
-    ${server_id}                  PCC.Get Node Id    Name=${SERVER_4_NAME_SECONDARY}
-
-
-    ${response}                    PCC.Node Dismiss
-                              ...  Id=${server_id}
-
-                                   ${result}    Get Result    ${response}
-                                   ${message}   Get Response Message        ${response}
-                                   ${status}    Get From Dictionary    ${result}    status
-                                   Should Not Be Equal As Strings    ${status}    200
-
 ####################################################################################################################################
-#Node Dismiss
+#Dismiss Node With RGW Daemon (Negative)
 ####################################################################################################################################
-#    [Documentation]                 *Node Dismiss*
+#    [Documentation]                 *Dismiss Node With RGW Daemon (Negative)*
 #
 #    ${server_id}                  PCC.Get Node Id    Name=${SERVER_4_NAME_SECONDARY}
 #
 #
 #    ${response}                    PCC.Node Dismiss
 #                              ...  Id=${server_id}
-#                              ...  force=${true}
 #
 #                                   ${result}    Get Result    ${response}
 #                                   ${message}   Get Response Message        ${response}
 #                                   ${status}    Get From Dictionary    ${result}    status
-#                                   ${data}    Get From Dictionary    ${result}    Data
-#                                   ${services}    Get From Dictionary    ${data}    details
-#                                   Should Be Equal As Strings    ${status}    200
-#
-#                                   Log To Console    ${services}
+#                                   Should Not Be Equal As Strings    ${status}    200
 
-                                   PCC.Verify Node Dismiss
+###################################################################################################################################
+Node Dismiss
+###################################################################################################################################
+    [Documentation]                 *Node Dismiss*
+
+    ${server_id}                  PCC.Get Node Id    Name=${SERVER_4_NAME_SECONDARY}
+
+
+    ${response}                    PCC.Node Dismiss
+                              ...  Id=${server_id}
+                              ...  force=${True}
+
+                                   ${result}    Get Result    ${response}
+                                   ${message}   Get Response Message        ${response}
+                                   ${status}    Get From Dictionary    ${result}    status
+                                   ${data}    Get From Dictionary    ${result}    Data
+                                   ${services}    Get From Dictionary    ${data}    details
+                                   Should Be Equal As Strings    ${status}    200
+
+                                   Log To Console    ${services}
+
+                                   sleep   8m
+
+    ${status}                      PCC.Verify Node Dismiss
                               ...  hostip=${SERVER_5_HOST_IP_SECONDARY}
-#                              ...  services=${services}
+                              ...  services=${services}
+
+                                    Should be equal as strings    ${status}    OK
 #
 #        ${status}                   PCC.Ceph Cleanup BE 2
 #                               ...  nodes_ip=['${SERVER_4_HOST_IP_SECONDARY}']
