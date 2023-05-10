@@ -323,7 +323,7 @@ class SystemPackageUpdates(PccBase):
                     validation_checks.append("OK")
                 if re.search(r"deb-src http://archive.debian.org/debian-security stretch/updates", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://archive.debian.org/debian-security stretch-updates main", str(check_repo_list_output)):
+                if re.search(r"deb http://archive.debian.org/debian-security stretch/updates main", str(check_repo_list_output)):
                     validation_checks.append("OK")
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==3):
                     return "OK"
