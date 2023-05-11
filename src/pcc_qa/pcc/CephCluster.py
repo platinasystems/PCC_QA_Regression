@@ -443,6 +443,7 @@ class CephCluster(PccBase):
                     self.show_desired_parameters()
                     return "Error"
             else:
+                trace("Ceph Health Status: HEALTH_ERR")
                 return "Error"
         return "OK"
 
@@ -1651,11 +1652,6 @@ class CephCluster(PccBase):
     def verify_node_dismiss(self, *args, **kwargs):
         banner("PCC.Verify Node Dismiss")
         self._load_kwargs(kwargs)
-        try:
-            conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        except Exception as e:
-            raise e
-
         # services = {
         #     "mds": [
         #         "sv44"
