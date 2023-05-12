@@ -1159,7 +1159,7 @@ Ceph Rbd Update Name - Rename
 #                                    Should Be Equal As Strings      ${status}    OK
 #
 ###################################################################################################################################
-Ceph Rbd Resize_decrease
+Ceph Rbd Resize_decrease (Negative)
 ###################################################################################################################################
     [Documentation]                 *Ceph Rbd Resize_decrease*
                                ...  keywords:
@@ -1213,12 +1213,7 @@ Ceph Rbd Resize_decrease
                                ...  size_units=${CEPH_RBD_SIZE_UNIT}
 
         ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rbd Ready
-                               ...  name=rbd-3
-
-                                    Should Be Equal As Strings      ${status}    OK
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Ceph Rbd Update - Resize_increase - greater than pool quota
