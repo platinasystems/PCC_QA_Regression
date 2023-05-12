@@ -1652,24 +1652,6 @@ class CephCluster(PccBase):
     def verify_node_dismiss(self, *args, **kwargs):
         banner("PCC.Verify Node Dismiss")
         self._load_kwargs(kwargs)
-        # services = {
-        #     "mds": [
-        #         "sv44"
-        #     ],
-        #     "mgr": [
-        #         "sv44"
-        #     ],
-        #     "mon": [
-        #         "sv44"
-        #     ],
-        #     "osd": [
-        #         "osd.2",
-        #         "osd.7"
-        #     ],
-        #     "rgw": [
-        #         "rados-pvt-secondary"
-        #     ]
-        # }
         server_name = self.services["mon"][0]
 
         cmd = 'sudo ceph mgr metadata -f json'
