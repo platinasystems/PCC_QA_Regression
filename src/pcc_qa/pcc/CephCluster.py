@@ -1668,6 +1668,7 @@ class CephCluster(PccBase):
         cmd = 'sudo ceph osd tree'
         out = cli_run(self.hostip, self.user, self.password, cmd)
         ceph_osd_tree = out.stdout
+        trace(ceph_osd_tree)
 
         ceph_mons = ceph_status["quorum_names"]
 
@@ -1710,6 +1711,7 @@ class CephCluster(PccBase):
                 trace("Error: found host {} in ceph osd tree".format(server_name))
                 error = True
             for osd in self.services["osd"]:
+                osd = "{} ".format(osd)
                 if re.search(osd, ceph_osd_tree):
                     trace("Error: found {} service".format(osd))
                     error = True

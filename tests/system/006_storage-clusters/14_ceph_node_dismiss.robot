@@ -139,6 +139,24 @@ Ceph Ceph Certificate For Rgws Secondary
         ${status}                    Get From Dictionary    ${result}    statusCodeValue
                                      Should Be Equal As Strings    ${status}    200
 
+###################################################################################################################################
+Create Application credential profile without application For Rados
+###################################################################################################################################
+
+        [Documentation]               *Create Metadata Profile* test
+                                      ...  keywords:
+                                      ...  PCC.Add Metadata Profile
+
+        ${response}                   PCC.Add Metadata Profile
+                                      ...    Name=app-cred-dismiss
+                                      ...    Type=ceph
+
+                                      Log To Console    ${response}
+                                      ${result}    Get Result    ${response}
+                                      ${status}    Get From Dictionary    ${result}    status
+                                      ${message}    Get From Dictionary    ${result}    message
+                                      Log to Console    ${message}
+                                      Should Be Equal As Strings    ${status}    200
 
 ###################################################################################################################################
 Ceph Rados Gateway Secondary Creation
@@ -182,6 +200,7 @@ Ceph Rados Gateway Secondary Creation
                                ...  port=${CEPH_RGW_PORT_SECONDARY}
                                ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
                                ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
+                               ...  S3Accounts=["app-cred-dismiss"]
 
         ${status_code}              Get Response Status Code        ${response}
         ${message}                  Get Response Message        ${response}
@@ -192,6 +211,82 @@ Ceph Rados Gateway Secondary Creation
 			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
                                     Should Be Equal As Strings      ${status}    OK
 
+###################################################################################################################################
+Create Rgw Configuration File
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File*
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME_SECONDARY}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME_SECONDARY}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${server_id}                       PCC.Get Node Id    Name=${SERVER_4_NAME_SECONDARY}
+                                           Log To Console    ${server_id}
+
+        ${server_id_str}                   Convert To String    ${server_id}
+
+        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
+                                      ...  name=${CEPH_RGW_NAME_SECONDARY}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+		${rgw_server_interfaces}		   Get From Dictionary  ${interfaces}  ${server_id_str}
+
+		${rgw_server_interface0}		   Get From List  ${rgw_server_interfaces}  0
+
+
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+                                      ...  targetNodeIp=${rgw_server_interface0}
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Create Rgw Bucket
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Bucket*
+
+        ${status}                          PCC.Ceph Rgw Make Bucket
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+List Rgw Bucket
+###################################################################################################################################
+    [Documentation]                        *List Rgw Bucket*
+
+        ${status}                          PCC.Ceph Rgw List Buckets
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Upload File To Bucket
+###################################################################################################################################
+    [Documentation]                        *Upload File To Bucket*
+
+        ${status}                          PCC.Ceph Rgw Upload File To Bucket
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Get A File From Rgw Bucket
+###################################################################################################################################
+    [Documentation]                        *Get a file from Rgw Bucket*
+
+
+        ${status}                          PCC.Ceph Rgw Get File From Bucket
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+
+                                           Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Dismiss Node With RGW Daemon (Negative)
@@ -253,6 +348,7 @@ Ceph Cleanup Disk
                                     Should be equal as strings    ${status}    OK
 
                                     sleep  1m
+
 ###################################################################################################################################
 Ceph Cluster Update - Add Server
 ####################################################################################################################################
@@ -285,3 +381,105 @@ Ceph Cluster Update - Add Server
                                ...  password=${PCC_LINUX_PASSWORD}
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP_SECONDARY}
                                     Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  8m
+
+#####################################################################################################################################
+Add Back RGW Target Node
+#####################################################################################################################################
+     [Documentation]                *Ceph Rados Gateway Update*
+
+        ${status}                   PCC.Ceph Get Pcc Status
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${rgw_id}                   PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+			                        Set Suite Variable   ${rgw_id}
+
+        ${num_daemons_map}          Create Dictionary       ${SERVER_4_NAME_SECONDARY}=${1}
+
+        ${response}                 PCC.Ceph Update Rgw
+                               ...  ID=${rgw_id}
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                               ...  poolName=${CEPH_RGW_POOLNAME_SECONDARY}
+                               ...  num_daemons_map=${num_daemons_map}
+                               ...  port=${CEPH_RGW_PORT_SECONDARY}
+                               ...  certificateName=${CEPH_RGW_CERT_NAME_SECONDARY}
+                               ...  certificateUrl=${CEPH_RGW_CERT_URL_SECONDARY}
+                               ...  S3Accounts=["app-cred-dismiss"]
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${message}                  Get Response Message        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Ceph Wait Until Rgw Ready
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+			                   ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                               ...  name=${CEPH_RGW_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${backend_status}    OK
+
+        ${status}                   PCC.Ceph Verify RGW Node role
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
+
+
+###################################################################################################################################
+Create Rgw Configuration File
+###################################################################################################################################
+    [Documentation]                        *Create Rgw Configuration File*
+
+        ${accessKey}                       PCC.Ceph Get Rgw Access Key
+                                      ...  name=${CEPH_RGW_NAME_SECONDARY}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${secretKey}                       PCC.Ceph Get Rgw Secret Key
+                                      ...  name=${CEPH_RGW_NAME_SECONDARY}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${server_id}                       PCC.Get Node Id    Name=${SERVER_4_NAME_SECONDARY}
+                                           Log To Console    ${server_id}
+
+        ${server_id_str}                   Convert To String    ${server_id}
+
+        ${interfaces}                      PCC.Ceph Get RGW Interfaces Map
+                                      ...  name=${CEPH_RGW_NAME_SECONDARY}
+				                      ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+		${rgw_server_interfaces}		   Get From Dictionary  ${interfaces}  ${server_id_str}
+
+		${rgw_server_interface0}		   Get From List  ${rgw_server_interfaces}  0
+
+
+
+        ${status}                          PCC.Ceph Rgw Configure
+                                      ...  accessKey=${accessKey}
+                                      ...  secretKey=${secretKey}
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+                                      ...  targetNodeIp=${rgw_server_interface0}
+                                      ...  port=${CEPH_RGW_PORT}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Verify RGW Data Durability
+###################################################################################################################################
+    [Documentation]                        *Verify Data Durability*
+
+
+        ${status}                          PCC.Ceph Rgw List Buckets
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
+
+        ${status}                          PCC.Ceph Rgw Get File From Bucket
+                                      ...  pcc=${SERVER_4_HOST_IP_SECONDARY}
+
+                                           Should Be Equal As Strings      ${status}    OK
+
