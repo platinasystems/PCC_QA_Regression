@@ -416,7 +416,7 @@ Ceph Local Load Balancer create on Rgw (secondary)
                                Should Be Equal As Strings    ${node_wait_status}    OK
 
         ${status}               PCC.Verify HAProxy BE
- 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}}
+ 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}
                                 ...  name=${SERVER_1_NAME_SECONDARY}
                                 ...  policy_id=${policy_tag_1_id}
 
