@@ -70,6 +70,7 @@ class CephCluster(PccBase):
         self.osdMemoryTargetRotationalDesired = 8589934592
         self.osdMemoryTargetFullRotationalDesired = 4294967296
         self.osd_ids = None
+        self.osd_ids_deleted = None
         self.services = None
         super().__init__()
 
@@ -1623,6 +1624,38 @@ class CephCluster(PccBase):
         if re.search(pattern, str(cmd_exec)):
             return "OK"
         return "Error"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Verify Crush Map")
+    ###############################################################################################################
+    def verify_crush_map(self, *args, **kwargs):
+        banner("PCC.Verify Crush Map")
+        self._load_kwargs(kwargs)
+
+        cmd = "sudo ceph osd tree"
+        cmd_exec = cli_run(self.hostip, self.user, self.password, cmd)
+        cmd_out = cmd_exec.stdout
+        host = self.server.split(".")[0]
+
+#       host,osds present
+        if self.osd_ids:
+            if host and (not re.search(host, cmd_out)):
+                return "Error"
+            for osd_id in self.osd_ids:
+                osd = "osd.{} ".format(osd_id)
+                if not re.search(osd, cmd_out):
+                    return "Error"
+
+#       host,osds not present
+        if self.osd_ids_deleted:
+            if host and re.search(host, cmd_out):
+                return "Error"
+            for osd_id in self.osd_ids:
+                osd = "osd.{} ".format(osd_id)
+                if re.search(osd, cmd_out):
+                    return "Error"
+        return "OK"
+
     ###############################################################################################################
     @keyword(name="PCC.Get CEPH RGW HAPROXY IP")
     ###############################################################################################################

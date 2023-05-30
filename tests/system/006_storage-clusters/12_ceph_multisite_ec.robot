@@ -343,11 +343,11 @@ Ceph Local Load Balancer create on Rgw (primary)
                                ...  scopeIds=[${scope1_id}]
                                ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id}"}]
 
-                               Log To Console    ${response}
                                ${result}    Get Result    ${response}
                                ${status}    Get From Dictionary    ${result}    status
                                ${message}    Get From Dictionary    ${result}    message
-                               Log to Console    ${message}
+                               ${data}      Get From Dictionary    ${result}    Data
+                               ${policy_tag_1_id}      Get From Dictionary    ${data}     id
                                Should Be Equal As Strings    ${status}    200
 
         ${response}            PCC.Add and Verify Roles On Nodes
@@ -361,6 +361,13 @@ Ceph Local Load Balancer create on Rgw (primary)
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}               PCC.Verify HAProxy BE
+ 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                ...  name=${SERVER_1_NAME}
+                                ...  policy_id=${policy_tag_1_id}
+
+                                Should Be Equal As Strings    ${status}    OK
 
 
 #####################################################################################################################################
@@ -389,11 +396,11 @@ Ceph Local Load Balancer create on Rgw (secondary)
                                ...  scopeIds=[${scope1_id}]
                                ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id_secondary}"}]
 
-                               Log To Console    ${response}
                                ${result}    Get Result    ${response}
                                ${status}    Get From Dictionary    ${result}    status
                                ${message}    Get From Dictionary    ${result}    message
-                               Log to Console    ${message}
+                               ${data}      Get From Dictionary    ${result}    Data
+                               ${policy_tag_1_id}      Get From Dictionary    ${data}     id
                                Should Be Equal As Strings    ${status}    200
 
         ${response}            PCC.Add and Verify Roles On Nodes
@@ -407,6 +414,13 @@ Ceph Local Load Balancer create on Rgw (secondary)
 
                                Log To Console    ${node_wait_status}
                                Should Be Equal As Strings    ${node_wait_status}    OK
+
+        ${status}               PCC.Verify HAProxy BE
+ 			                    ...  ceph_cluster_name=${CEPH_CLUSTER_NAME_SECONDARY}}
+                                ...  name=${SERVER_1_NAME_SECONDARY}
+                                ...  policy_id=${policy_tag_1_id}
+
+                                Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
 EC-Login to PCC Primary and Create Trust
