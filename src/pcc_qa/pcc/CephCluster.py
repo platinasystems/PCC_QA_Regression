@@ -1635,7 +1635,10 @@ class CephCluster(PccBase):
         cmd = "sudo ceph osd tree"
         cmd_exec = cli_run(self.hostip, self.user, self.password, cmd)
         cmd_out = cmd_exec.stdout
-        host = self.server.split(".")[0]
+        if self.server:
+            host = self.server.split(".")[0]
+        else:
+            host = None
 
 #       host,osds present
         if self.osd_ids:
@@ -1650,7 +1653,7 @@ class CephCluster(PccBase):
         if self.osd_ids_deleted:
             if host and re.search(host, cmd_out):
                 return "Error"
-            for osd_id in self.osd_ids:
+            for osd_id in self.osd_ids_deleted:
                 osd = "osd.{} ".format(osd_id)
                 if re.search(osd, cmd_out):
                     return "Error"

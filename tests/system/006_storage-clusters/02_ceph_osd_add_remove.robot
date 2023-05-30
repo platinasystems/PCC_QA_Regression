@@ -135,7 +135,8 @@ Ceph Cluster Delete OSD Drives
                                     Should Be Equal As Strings      ${status}    OK
 
 
-        ${osd_deleted}              Create List  ${osd_ids}[0]
+        ${osd_deleted}              Create List     ${osd_ids}[0]
+
         ${status}                   PCC.Verify Crush Map
                               ...   osd_ids_deleted=${osd_deleted}
 
