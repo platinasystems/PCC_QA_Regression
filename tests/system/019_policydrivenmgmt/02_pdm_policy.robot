@@ -627,3 +627,98 @@ Create a policy Iptables policy
 
                        Log To Console    ${status}
                        Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Create And Apply Frr Policy To Node
+###################################################################################################################################
+
+        [Documentation]    *Create And Apply Frr Policy To Node*
+
+
+        ${response}      PCC.Create Tag
+                    ...  Name=frr-tag
+                    ...  Description=frr-tag desc
+
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${result}    status
+                        ${message}    Get From Dictionary    ${result}    message
+                        Should Be Equal As Strings    ${status}    200
+
+        ${conf}          PCC.Create Frr Conf
+                    ...  host_ip=${SERVER_1_HOST_IP}
+
+        ${frr_conf}      PCC.Modify Frr Conf
+                    ...  frr_conf=${conf}
+
+        ${app_id}        PCC.Get App Id from Policies
+                    ...  Name=frrouting-community-repository
+                         Log To Console    ${app_id}
+
+        ${response}      PCC.Create Policy
+                    ...  appId=${app_id}
+                    ...  description=frr-policy
+                    ...  inputs=[{"name":"flush-existing","value":"false"},{"name":"frr-conf","value":"${frr_conf}"}]
+
+                        ${result}    Get Result    ${response}
+                        ${status}    Get From Dictionary    ${result}    status
+                        ${data}      Get From Dictionary    ${result}    Data
+                        ${policy_tag_id}      Get From Dictionary    ${data}     id
+                        Should Be Equal As Strings    ${status}    200
+
+        ${tag_1}         PCC.Get Tag By Name
+                  ...    Name=frr-tag
+        ${tag_1_id}      Get From Dictionary    ${tag_1}    id
+
+
+        ${response}      PCC.Edit Tag
+                    ...  Id=${tag_1_id}
+                    ...  Name=frr-tag
+                    ...  PolicyIDs=[${policy_tag_id}]
+
+            ${result}    Get Result    ${response}
+            ${status}    Get From Dictionary    ${result}    status
+                         Should Be Equal As Strings    ${status}    200
+
+    ${result}           PCC.Add and Verify Tags On Nodes
+                   ...  nodes=["${SERVER_1_NAME}"]
+                   ...  tags=["frr-tag"]
+
+                        Should Be Equal As Strings    ${result}    OK
+
+    ${node_wait_status}      PCC.Wait Until Node Ready
+                        ...  Name=${SERVER_1_NAME}
+
+                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+    ${result}           PCC.Verify Frr Conf
+                   ...  host_ip=${SERVER_1_HOST_IP}
+                   ...  search_str=cost 200
+
+                        Should Be Equal As Strings    ${result}    OK
+
+    ${result}                PCC.Add and Verify Tags On Nodes
+                        ...  nodes=["${SERVER_1_NAME}"]
+                        ...  tags=[]
+
+                             Should Be Equal As Strings    ${result}    OK
+
+    ${node_wait_status}      PCC.Wait Until Node Ready
+                        ...  Name=${SERVER_1_NAME}
+
+                             Should Be Equal As Strings    ${node_wait_status}    OK
+
+    ${result}                PCC.Verify Frr Conf
+                        ...  host_ip=${SERVER_1_HOST_IP}
+                        ...  search_str=cost 100
+
+                             Should Be Equal As Strings    ${result}    OK
+
+    ${response}               PCC.Edit Tag
+                        ...  Id=${tag_1_id}
+                        ...  Name=frr-tag
+                        ...  PolicyIDs=[]
+
+                            ${result}    Get Result    ${response}
+                            ${status}    Get From Dictionary    ${result}    status
+                            Should Be Equal As Strings    ${status}    200
+
