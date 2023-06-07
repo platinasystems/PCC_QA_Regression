@@ -348,7 +348,7 @@ class PolicyDrivenMgmt(PccBase):
             "inputs":self.inputs,
             "owner":self.owner
             }
-        
+        trace("Payload is :{}".format(payload))
         print("Payload is :{}".format(payload))
        
         logger.console("payload:-"+str(payload)) 
