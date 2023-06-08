@@ -238,6 +238,118 @@ Network Manager Creation: L2BGP
                                ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
 
 ###################################################################################################################################
+Network Manager Creation: L2Addon
+###################################################################################################################################
+    [Documentation]                 *Network Manager Creation: L2Addon*
+
+        ${response}                 PCC.Network Manager Create
+                               ...  name=network-addon
+                               ...  nodes=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+                               ...  dataCIDR=lab-pvt
+                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
+                               ...  type=8
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=network-addon
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Health Check Network Manager
+                               ...  name=network-addon
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Network Manager verify From Event log
+                               ...  name=network-addon
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    PCC.FRR status on nodes
+                               ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}"]
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Ceph Cluster Creation with L2Addon (Negative)
+###################################################################################################################################
+
+        ${response}                 PCC.Ceph Create Cluster
+                               ...  name=${CEPH_CLUSTER_NAME}
+                               ...  nodes=${CEPH_CLUSTER_NODES}
+                               ...  tags=${CEPH_CLUSTER_TAGS}
+                               ...  networkClusterName=network-addon
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
+K8s Cluster Creation with L2Addon (Negative)
+###################################################################################################################################
+
+        ${response}                 PCC.K8s Create Cluster
+                               ...  id=${K8S_ID}
+                               ...  k8sVersion=${K8S_VERSION}
+                               ...  name=${K8S_NAME}
+                               ...  cniPlugin=${K8S_CNIPLUGIN}
+                               ...  nodes=${K8S_NODES}
+                               ...  pools=${K8S_POOL}
+                               ...  networkClusterName=network-addon
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+
+
+###################################################################################################################################
+Network Manager Delete: L2Addon
+###################################################################################################################################
+    [Documentation]                 *Network Manager Delete: L2BGP*
+
+        ${response}                 PCC.Network Manager Delete
+                               ...  name=network-addon
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   PCC.Wait Until Network Manager Deleted
+                               ...  name=network-addon
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+        ${status}                   PCC.Wait Until Network Manager Ready
+                               ...  name=${NETWORK_MANAGER_NAME}
+                                    Should Be Equal As Strings      ${status}    OK
+
+                                    sleep  1m
+
+        ${status}                   PCC.Wait Until All Nodes Are Ready
+
+                                    Log To Console    ${status}
+                                    Should Be Equal As Strings      ${status}  OK
+
+
+###################################################################################################################################
 Network Manager Delete: L2BGP
 ###################################################################################################################################
     [Documentation]                 *Network Manager Delete: L2BGP*
