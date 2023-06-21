@@ -483,3 +483,25 @@ Verify RGW Data Durability
 
                                            Should Be Equal As Strings      ${status}    OK
 
+#####################################################################################################################################
+Add Mon
+#####################################################################################################################################
+     [Documentation]                *Add Mon*
+
+        ${id}                       PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+
+        ${response}                 PCC.Ceph Add Mon
+                               ...  id=${id}
+                               ...  server=${SERVER_4_NAME_SECONDARY}
+
+                                    ${result}    Get Result    ${response}
+                                    ${status}    Get From Dictionary    ${result}    status
+                                    Should Be Equal As Strings    ${status}    200
+
+                                    sleep  1m
+
+        ${status}                   PCC.Verify Mon Addition
+                               ...  id=${id}
+                               ...  server=${SERVER_4_NAME_SECONDARY}
+                                    Should Be Equal As Strings      ${status}    OK
