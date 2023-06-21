@@ -1756,3 +1756,38 @@ class CephCluster(PccBase):
             return "Error"
         return "OK"
 
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Add Mon")
+    ###############################################################################################################
+    def add_mon(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Add Mon")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        payload = {}
+        #add mon on specific server, else it is autoselected
+        if self.server:
+            node_id = easy.get_node_id_by_name(conn, self.server)
+            payload["id"] = node_id
+        return pcc.add_mon(conn, str(self.id), payload)
+
+
+    ###############################################################################################################
+    @keyword(name="PCC.Verify Mon Addition")
+    ###############################################################################################################
+    def verify_mon_addition(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Verify Mon Addition")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        response = pcc.get_ceph_clusters_state(conn, str(self.id), "mons")
+        mons = get_response_data(response)
+        for mon in mons:
+            if self.server == mon["server"]:
+                return "OK"
+        return "Error"
+
