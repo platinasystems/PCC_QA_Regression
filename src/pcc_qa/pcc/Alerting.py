@@ -46,6 +46,7 @@ class Alerting(PccBase):
         self.info=[],
         self.disabled = False
         self.subject=""
+        self.send_resolved = True
 
         super().__init__()
 
@@ -314,6 +315,7 @@ class Alerting(PccBase):
             raise e
 
         payload = {
+                   "sendResolved": self.send_resolved,
                    "notifications": [
                       {
                          "service": "email",
@@ -352,7 +354,8 @@ class Alerting(PccBase):
             raise e
 
         payload = {
-            "disabled": self.disabled
+            "disabled": self.disabled,
+            "sendResolved": self.send_resolved
         }
         print("Payload:-" + str(payload))
         return pcc.modify_alert_rule(conn, payload, self.id)

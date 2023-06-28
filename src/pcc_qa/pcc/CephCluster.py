@@ -2,7 +2,7 @@ import re
 import time
 import json
 import ast
-
+from time import sleep
 from robot.api.deco import keyword
 from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -70,6 +70,8 @@ class CephCluster(PccBase):
         self.osdMemoryTargetRotationalDesired = 8589934592
         self.osdMemoryTargetFullRotationalDesired = 4294967296
         self.osd_ids = None
+        self.osd_ids_deleted = None
+        self.services = None
         super().__init__()
 
     ###########################################################################
@@ -286,6 +288,7 @@ class CephCluster(PccBase):
             raise e
         print("Payoad:"+str(payload))
         response = pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
+        trace(response)
         status_code = get_status_code(response)
         if status_code == 202:
             code = get_response_data(response)["code"]
@@ -442,8 +445,62 @@ class CephCluster(PccBase):
                     self.show_desired_parameters()
                     return "Error"
             else:
+                trace("Ceph Health Status: HEALTH_ERR")
                 return "Error"
         return "OK"
+
+    ###########################################################################
+    @keyword(name="PCC.Ceph Cleanup BE 2")
+    ###########################################################################
+    def ceph_cleanup_be_2(self,**kwargs):
+        self._load_kwargs(kwargs)
+
+        trace(self.nodes_ip)
+        for ip in eval(self.nodes_ip):
+            trace(ip)
+            trace("Cleaning disks on host: " + ip)
+            # list vgs and remove them
+            trace("List ceph vgs and remove them")
+            cmd = 'sudo vgs'
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            vgs = [s for s in out.stdout.split(" ") if "ceph_data_" in s]
+            for v in vgs:
+                cmd = 'sudo vgremove ' + v + ' -y'
+                out = cli_run(ip, self.user, self.password, cmd)
+                trace(out)
+            sleep(3)
+
+            # list pvs and remove them
+            trace("List pvs and remove them")
+            cmd = "sudo pvs"
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            pvs = [s for s in out.stdout.split(" ") if "/dev/" in s and "sda" not in s]
+            for p in pvs:
+                cmd = 'sudo pvremove ' + p + ' -y'
+                out = cli_run(ip, self.user, self.password, cmd)
+                trace(out)
+            sleep(3)
+
+            # list disks and wipe
+            trace("List disks and wipe them")
+            cmd = 'sudo lsblk -nd'
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            disks = [s.strip("\n") for s in out.stdout.split(" ") if "sd" in s and "sda" not in s]
+            for d in disks:
+                cmd = 'sudo wipefs -a /dev/' + d
+                out = cli_run(ip, self.user, self.password, cmd)
+                trace(out)
+            sleep(3)
+
+            cmd = 'sudo lsblk'
+            out = cli_run(ip, self.user, self.password, cmd)
+            trace(out)
+            trace("-----------------------------------")
+        return "OK"
+
 
     ###########################################################################
     @keyword(name="PCC.Ceph Cleanup BE")
@@ -510,6 +567,7 @@ class CephCluster(PccBase):
             print("Ceph Cluster {} and id {} is deleting....".format(data['name'],data['id']))
             self.id=data['id']
             response=pcc.delete_ceph_cluster_by_id(conn, str(self.id), payload, "")
+            trace(response)
             status_code = get_status_code(response)
             if status_code == 202:
                 code = get_response_data(response)["code"]
@@ -1088,43 +1146,105 @@ class CephCluster(PccBase):
             return node_ip
 
     ###############################################################################################################
-    @keyword(name="PCC.Get Ceph Version")
+    @keyword(name="PCC.Ceph Get Nodes State")
     ###############################################################################################################
-
-    def get_ceph_version(self, *args, **kwargs):
-        banner("Get Ceph Version")
+    def get_nodes_state(self, *args, **kwargs):
         self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Nodes State")
         try:
-            print("Kwargs are: {}".format(kwargs))
-            # Get Ceph Version
-            #cmd = "ceph -v"
-            #status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
-            #print("cmd: {} executed successfully and status is: {}".format(cmd, status))
-            #return status
-
-            banner("PCC.Get Ceph Version [Name=%s]" % self.name)
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
-            print("conn is {}".format(conn))
-            ceph_ID = easy.get_ceph_cluster_id_by_name(conn,self.name)
-            print("ceph_ID is {}".format(ceph_ID))
-
-            ceph_node_list = pcc.get_ceph_version_list(conn,str(ceph_ID))
-            print("ceph_node_list is {}".format(ceph_node_list))
-
-            '''
-            "ceph_version":"ceph version 14.2.20 (36274af6eb7f2a5055f2d53ad448f2694e9046a0) nautilus (stable)",
-            "hostname":"qa-clusterhead-10"
-            '''
-
-            ceph_ver_list ={}
-            for node_data in ceph_node_list["Result"]["Data"]:
-                print("ceph_version of hostname {} is {} ".format(node_data["hostname"],node_data["ceph_version"]))
-                ceph_ver_list[node_data["hostname"]] = node_data["ceph_version"]
-            print("ceph_ver_list is {}".format(ceph_ver_list))
-            return ceph_ver_list
-
         except Exception as e:
-            trace("Error in getting ceph version: {}".format(e))
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        resp = pcc.get_ceph_state_nodes(conn, str(cluster_id))
+        status = get_status_code(resp)
+        state_nodes = get_response_data(resp)
+        if status != 200:
+            return "Error"
+        nodes = get_response_data(pcc.get_ceph_cluster_by_id(conn, str(cluster_id)))["nodes"]
+        trace(nodes)
+        for node in nodes:
+            name = node["name"]
+            roles = node["roles"]
+            node_found = False
+            for state_node in state_nodes:
+                if name == state_node["hostname"]:
+                    trace("{} found".format(name))
+                    node_found = True
+                    for role in roles:
+                        service_found = False
+                        for service in state_node["services"]:
+                            if role[:-1] in service["type"]:
+                                trace("Service {} found on host {}".format(role, name))
+                                service_found = True
+                        if not service_found:
+                            trace("Service {} not found on host {}".format(role, name))
+                            return "Error"
+            if not node_found:
+                trace("{} not found".format(name))
+                return "Error"
+        return "OK"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get Mons State")
+    ###############################################################################################################
+    def get_mons_state(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get Mons State")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        resp = pcc.get_ceph_state_mons(conn, str(cluster_id))
+        status = get_status_code(resp)
+        state_mons = get_response_data(resp)
+        if status != 200:
+            return "Error"
+        nodes = get_response_data(pcc.get_ceph_cluster_by_id(conn, str(cluster_id)))["nodes"]
+        for node in nodes:
+            if "mons" in node["roles"]:
+                found = False
+                for state_mon in state_mons:
+                    if node["name"] == state_mon["server"] and node["name"].split(".")[0] == state_mon["name"]:
+                        trace("Mon {} found on host {}".format(node["name"].split(".")[0], node["name"]))
+                        found = True
+                if not found:
+                    trace("Mon {} not found on host {}".format(node["name"].split(".")[0], node["name"]))
+                    return "Error"
+        return "OK"
+
+
+    ###############################################################################################################
+    @keyword(name="PCC.Ceph Get MDS State")
+    ###############################################################################################################
+    def get_mds_state(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Get MDS State")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        cluster_id = easy.get_ceph_cluster_id_by_name(conn, self.name)
+        resp = pcc.get_ceph_state_mds(conn, str(cluster_id))
+        status = get_status_code(resp)
+        state_mdss = get_response_data(resp)["nodes"]
+        trace(state_mdss)
+        if status != 200:
+            return "Error"
+        nodes = get_response_data(pcc.get_ceph_cluster_by_id(conn, str(cluster_id)))["nodes"]
+        for node in nodes:
+            if "mdss" in node["roles"]:
+                trace("checking {}".format(node["name"]))
+                found = False
+                for state_mds in state_mdss:
+                    if node["name"].split(".")[0] == state_mds["name"]:
+                        trace("Mds {} found on host {}".format(node["name"].split(".")[0], node["name"]))
+                        found = True
+                if not found:
+                    trace("Mds {} not found on host {}".format(node["name"].split(".")[0], node["name"]))
+                    return "Error"
+        return "OK"
     
     ###############################################################################################################
     @keyword(name="PCC.Ceph Get Used Drives")
@@ -1504,6 +1624,41 @@ class CephCluster(PccBase):
         if re.search(pattern, str(cmd_exec)):
             return "OK"
         return "Error"
+
+    ###############################################################################################################
+    @keyword(name="PCC.Verify Crush Map")
+    ###############################################################################################################
+    def verify_crush_map(self, *args, **kwargs):
+        banner("PCC.Verify Crush Map")
+        self._load_kwargs(kwargs)
+
+        cmd = "sudo ceph osd tree"
+        cmd_exec = cli_run(self.hostip, self.user, self.password, cmd)
+        cmd_out = cmd_exec.stdout
+        if self.server:
+            host = self.server.split(".")[0]
+        else:
+            host = None
+
+#       host,osds present
+        if self.osd_ids:
+            if host and (not re.search(host, cmd_out)):
+                return "Error"
+            for osd_id in self.osd_ids:
+                osd = "osd.{} ".format(osd_id)
+                if not re.search(osd, cmd_out):
+                    return "Error"
+
+#       host,osds not present
+        if self.osd_ids_deleted:
+            if host and re.search(host, cmd_out):
+                return "Error"
+            for osd_id in self.osd_ids_deleted:
+                osd = "osd.{} ".format(osd_id)
+                if re.search(osd, cmd_out):
+                    return "Error"
+        return "OK"
+
     ###############################################################################################################
     @keyword(name="PCC.Get CEPH RGW HAPROXY IP")
     ###############################################################################################################
@@ -1529,7 +1684,110 @@ class CephCluster(PccBase):
         except Exception as e:
             trace("Error in get_ceph_rgw_haproxy_ip: {}".format(e))
 
+    ###########################################################################
+    @keyword(name="PCC.Verify Node Dismiss")
+    ###########################################################################
+    def verify_node_dismiss(self, *args, **kwargs):
+        banner("PCC.Verify Node Dismiss")
+        self._load_kwargs(kwargs)
+        server_name = self.services["mon"][0]
+
+        cmd = 'sudo ceph mgr metadata -f json'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_mgrs_out = json.loads(out.stdout)
+        cmd = 'sudo ceph -s -f json'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_status = json.loads(out.stdout)
+        cmd = 'sudo ceph mds metadata'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_mds_out = json.loads(out.stdout)
+        cmd = 'sudo ceph osd tree'
+        out = cli_run(self.hostip, self.user, self.password, cmd)
+        ceph_osd_tree = out.stdout
+        trace(ceph_osd_tree)
+
+        ceph_mons = ceph_status["quorum_names"]
+
+        ceph_mgrs = []
+        for mgr in ceph_mgrs_out:
+            ceph_mgrs.append(mgr["name"])
+
+        ceph_mds = []
+        for mds in ceph_mds_out:
+            ceph_mds.append(mds["name"])
+
+        trace(ceph_mgrs)
+        trace(ceph_mons)
+        trace(ceph_mds)
+
+        error = False
+        if "mds" in self.services.keys():
+            if server_name in ceph_mds:
+                trace("Error: found mds {} service".format(server_name))
+                error = True
+
+        if "mgr" in self.services.keys():
+            if server_name in ceph_mgrs:
+                trace("Error: found mgr {} service".format(server_name))
+                error = True
+
+        if "mon" in self.services.keys():
+            if server_name in ceph_mons:
+                trace("Error: found mon {} service".format(server_name))
+                error = True
+
+        if "rgw" in self.services.keys():
+            daemon = "{}.rgw0".format(server_name)
+            if re.search(daemon, str(ceph_status)):
+                trace("Error: found rgw {} service".format(server_name))
+                error = True
+
+        if "osd" in self.services.keys():
+            if re.search(server_name, ceph_osd_tree):
+                trace("Error: found host {} in ceph osd tree".format(server_name))
+                error = True
+            for osd in self.services["osd"]:
+                osd = "{} ".format(osd)
+                if re.search(osd, ceph_osd_tree):
+                    trace("Error: found {} service".format(osd))
+                    error = True
+
+        if error:
+            return "Error"
+        return "OK"
+
     ###############################################################################################################
+    @keyword(name="PCC.Ceph Add Mon")
+    ###############################################################################################################
+    def add_mon(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Ceph Add Mon")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        payload = {}
+        #add mon on specific server, else it is autoselected
+        if self.server:
+            node_id = easy.get_node_id_by_name(conn, self.server)
+            payload["id"] = node_id
+        return pcc.add_mon(conn, str(self.id), payload)
 
 
+    ###############################################################################################################
+    @keyword(name="PCC.Verify Mon Addition")
+    ###############################################################################################################
+    def verify_mon_addition(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Verify Mon Addition")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+        except Exception as e:
+            raise e
+        response = pcc.get_ceph_clusters_state(conn, str(self.id), "mons")
+        mons = get_response_data(response)
+        for mon in mons:
+            if self.server == mon["server"]:
+                return "OK"
+        return "Error"
 

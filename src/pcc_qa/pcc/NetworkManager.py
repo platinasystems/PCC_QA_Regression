@@ -25,21 +25,24 @@ class NetworkManager(PccBase):
     def __init__(self):
 
         # Robot arguments definitions
-        self.id=None
-        self.name=None
-        self.nodes=[]
-        self.nodes_ip=[]
-        self.controlCIDR=None
-        self.controlCIDRId=None
-        self.dataCIDR=None
-        self.dataCIDRId=None
-        self.igwPolicy=None
-        self.user="pcc"
-        self.password="cals0ft"
-        self.forceRemove=None
-        self.bgp_neighbors=[]
-        self.type=1
-        self.auto_asn_range=[64000,64010]
+        self.id = None
+        self.name = None
+        self.nodes = []
+        self.nodes_ip = []
+        self.controlCIDR = None
+        self.controlCIDRId = None
+        self.dataCIDR = None
+        self.dataCIDRId = None
+        self.igwPolicy = None
+        self.user = "pcc"
+        self.password = "cals0ft"
+        self.forceRemove = None
+        self.bgp_neighbors = []
+        self.type = 1
+        self.auto_asn_range = [64000,64010]
+        self.host_ip = None
+        self.frr_conf = None
+        self.search_str = None
         super().__init__()
 
     ###########################################################################
@@ -489,3 +492,39 @@ class NetworkManager(PccBase):
 
         except Exception as e:
             raise e
+
+    ###########################################################################
+    @keyword(name="PCC.Create Frr Conf")
+    ###########################################################################
+    def create_frr_conf(self, *args, **kwargs):
+        banner("PCC.Create Frr Conf")
+        self._load_kwargs(kwargs)
+
+        cmd = "sudo cat /etc/frr/frr.conf"
+        out = cli_run(self.host_ip, self.user, self.password, cmd).stdout
+        return out
+
+    ###########################################################################
+    @keyword(name="PCC.Modify Frr Conf")
+    ###########################################################################
+    def modify_frr_conf(self, *args, **kwargs):
+        banner("PCC.Modify Frr Conf")
+        self._load_kwargs(kwargs)
+
+        trace(self.frr_conf)
+        self.frr_conf = self.frr_conf.replace("\n", "\\n")
+        new_conf = self.frr_conf.replace("cost 100", "cost 200")
+        return new_conf
+
+    ###########################################################################
+    @keyword(name="PCC.Verify Frr Conf")
+    ###########################################################################
+    def verify_frr_conf(self, *args, **kwargs):
+        banner("PCC.Verify Frr Conf")
+        self._load_kwargs(kwargs)
+
+        cmd = 'sudo vtysh -c "show running-config"'
+        out = cli_run(self.host_ip, self.user, self.password, cmd).stdout
+        if re.search(self.search_str, out):
+            return "OK"
+        return "Error"

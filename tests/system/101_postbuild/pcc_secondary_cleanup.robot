@@ -26,6 +26,25 @@ Ceph Rgw Delete Multiple
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
+Ceph Fs Delete
+###################################################################################################################################
+    [Documentation]                 *Delete Fs if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Fs
+        ${status}                   PCC.Ceph Delete All Fs
+                                    Should be equal as strings    ${status}    OK
+
+###################################################################################################################################
+Ceph Rbd Delete Multiple
+###################################################################################################################################
+    [Documentation]                 *Ceph Rbd Delete Multiple*
+                               ...  keywords:
+                               ...  PCC.Ceph Delete All Rbds
+
+        ${status}                   PCC.Ceph Delete All Rbds
+                                    Should be equal as strings    ${status}    OK
+
+###################################################################################################################################
 Ceph Pool Multiple Delete
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
@@ -53,6 +72,41 @@ Ceph Cluster Delete
                                            Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
+Ceph Cluster Force Delete (if cluster not deleted)
+###################################################################################################################################
+    [Documentation]                 *Delete cluster if it exist*
+                               ...  keywords:
+                               ...  PCC.Ceph Force Delete All Cluster
+
+        ${ceph_cluster_id}           PCC.Ceph Get Cluster Id
+                              ...    name=${CEPH_CLUSTER_NAME_SECONDARY}
+                                     Log To Console    ${ceph_cluster_id}
+                                     Pass Execution If    ${ceph_cluster_id} is ${None}    ${ceph_cluster_id} ceph cluster already present
+
+        ${response}                  PCC.Ceph Delete Cluster
+                              ...    forceRemove=True
+                              ...    id=${ceph_cluster_id}
+                                     Log To Console    ${response}
+                                     ${result}    Get Result    ${response}
+                                     ${status}    Get From Dictionary    ${result}    status
+                                     ${message}    Get From Dictionary    ${result}    message
+                                     Log to Console    ${message}
+                                     Should Be Equal As Strings    ${status}    200
+
+        ${cluster_deletion_wait_status}    PCC.Ceph Wait Until Cluster Deleted
+                                           ...    id=${ceph_cluster_id}
+                                           Log To Console    ${cluster_deletion_wait_status}
+                                           Should be equal as strings    ${cluster_deletion_wait_status}    OK
+
+                                           sleep  1m
+
+        ${status}                      PCC.Wait Until All Nodes Are Ready
+
+                                       Log To Console    ${status}
+                                       Should Be Equal As Strings      ${status}  OK
+
+
+###################################################################################################################################
 BE Ceph Cleanup
 ###################################################################################################################################
     [Documentation]                 *BE Ceph Cleanup*
@@ -60,6 +114,19 @@ BE Ceph Cleanup
                                ...  nodes_ip=${CEPH_CLUSTER_NODES_IP_SECONDARY}
 
                                     Should be equal as strings    ${status}    OK
+
+###################################################################################################################################
+Delete All Profiles
+###################################################################################################################################
+
+        [Documentation]    *PCC.Delete All Profiles* test
+                           ...  keywords:
+                           ...  PCC.Delete All Profiles
+
+
+        ${response}    PCC.Delete All Profiles
+
+                       Log To Console    ${response}
 
 ###################################################################################################################################
 Network Manager Delete

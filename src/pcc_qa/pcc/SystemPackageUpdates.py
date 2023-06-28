@@ -319,11 +319,11 @@ class SystemPackageUpdates(PccBase):
 
             if re.search("Debian",str(OS_type)):
                 print(" ===============  Searching in repo list:deb http://deb.debian.org/debian stretch main =========== ")
-                if re.search(r"deb http://deb.debian.org/debian stretch main", str(check_repo_list_output)):
+                if re.search(r"deb http://archive.debian.org/debian stretch main", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb-src http://deb.debian.org/debian-security stretch/updates", str(check_repo_list_output)):
+                if re.search(r"deb-src http://archive.debian.org/debian-security stretch/updates", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://deb.debian.org/debian stretch-updates main", str(check_repo_list_output)):
+                if re.search(r"deb http://archive.debian.org/debian-security stretch/updates main", str(check_repo_list_output)):
                     validation_checks.append("OK")
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==3):
                     return "OK"
@@ -332,13 +332,13 @@ class SystemPackageUpdates(PccBase):
 
             if re.search("Ubuntu",str(OS_type)):
                 print(" ===============  Searching in repo list:deb http://us.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse =========== ")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu focal main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-updates main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-backports main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
-                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu bionic-security main restricted universe multiverse", str(check_repo_list_output)):
+                if re.search(r"deb http://us.archive.ubuntu.com/ubuntu focal-security main restricted universe multiverse", str(check_repo_list_output)):
                     validation_checks.append("OK")
 
                 if all(x==validation_checks[0] for x in validation_checks) and (len(validation_checks)==4):

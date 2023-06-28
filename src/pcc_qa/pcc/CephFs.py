@@ -152,6 +152,7 @@ class CephFs(PccBase):
         except Exception as e:
             raise e
         response = pcc.delete_ceph_fs_by_id(conn, str(self.id), "")
+        trace(response)
         status_code = get_status_code(response)
         if status_code == 202:
             code = get_response_data(response)["code"]
@@ -266,6 +267,7 @@ class CephFs(PccBase):
                 print("Ceph Fs {} and id {} is deleting....".format(data['name'],data['id']))
                 self.id = data['id']
                 response = pcc.delete_ceph_fs_by_id(conn, str(self.id), "")
+                trace(response)
                 status_code = get_status_code(response)
                 if status_code == 202:
                     code = get_response_data(response)["code"]

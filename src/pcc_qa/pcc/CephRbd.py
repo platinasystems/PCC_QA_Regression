@@ -97,7 +97,7 @@ class CephRbd(PccBase):
                         print("{} deletion failed".format(data['name']))
                         return "Error"
                 else:
-                    "Error"
+                    return "Error"
         return "OK"
 
     ###########################################################################
@@ -207,6 +207,7 @@ class CephRbd(PccBase):
         except Exception as e:
             raise e
         response = pcc.delete_ceph_rbd_by_id(conn, str(self.id), "")
+        trace(response)
         status_code = get_status_code(response)
         if status_code == 202:
             code = get_response_data(response)["code"]
