@@ -1,0 +1,60 @@
+import time
+import re
+import os
+from robot.api.deco import keyword
+from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import RobotNotRunningError
+from platina_sdk.s3 import s3_api as s3
+from pcc_qa.common import PccUtility as easy
+from pcc_qa.common.Utils import banner, trace, pretty_print
+from pcc_qa.common.Result import get_response_data, get_result
+from pcc_qa.common.S3ManagerBase import S3ManagerBase
+
+
+class PccInstances(S3ManagerBase):
+    """
+    PccInstances
+    """
+
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.username = None
+        self.pwd = None
+        self.address = None
+        self.port = None
+        super().__init__()
+
+    ###########################################################################
+    @keyword(name="S3.Get PCC Instances")
+    ###########################################################################
+    def get_pcc_instances(self):
+        banner("S3.Get PCC Instances")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        return s3.get_pccs(conn)
+
+    ###########################################################################
+    @keyword(name="S3.Create PCC Instance")
+    ###########################################################################
+    def create_pcc_instance(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Create PCC Instance")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        payload = {
+            "name": self.name,
+            "username": self.username,
+            "pwd": self.pwd,
+            "address": self.address,
+            "port": self.port
+        }
+        return s3.create_pcc(conn, payload)
+
+    ###########################################################################
+    @keyword(name="S3.Delete PCC Instance")
+    ###########################################################################
+    def delete_pcc_instance(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Delete PCC Instance")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        return s3.delete_pcc(conn, str(self.id))
+

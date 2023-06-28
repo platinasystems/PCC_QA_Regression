@@ -36,23 +36,24 @@ with open(join(CURRENT_DIR, SOURCE_DIR, '__init__.py')) as init_py:
 DOWNLOAD_URL = PROJECT_GIT_URL + "/archive/master.zip"
 
 setup(
-    name = PROJECT_NAME,
+    name=PROJECT_NAME,
     package_dir={'': 'src'},
-    packages= find_packages(where="src"),
+    packages=find_packages(where="src"),
     scripts=[ 
         join(SOURCE_DIR, 'scripts', 'run-pcc_qa.sh')
         ],
-    version = VERSION,
-    license = LICENSE,
-    author = AUTHOR_NAME,
-    author_email = AUTHOR_EMAIL,
-    description = DESCRIPTION,
-    url = PROJECT_GIT_URL,
-    download_url = DOWNLOAD_URL,
-    keywords = KEYWORDS,
-    install_requires = REQUIREMENTS,
-    classifiers = CLASSIFIERS,
+    version=VERSION,
+    license=LICENSE,
+    author=AUTHOR_NAME,
+    author_email=AUTHOR_EMAIL,
+    description=DESCRIPTION,
+    url=PROJECT_GIT_URL,
+    download_url=DOWNLOAD_URL,
+    keywords=KEYWORDS,
+    install_requires=REQUIREMENTS,
+    classifiers=CLASSIFIERS,
     data_files=[
-        ('robot', ['src/' + SOURCE_PATH + "/robot/pcc_resources.robot"])
+        ('robot', ['src/' + SOURCE_PATH + "/robot/pcc_resources.robot"]),
+        ('robot', ['src/' + SOURCE_PATH + "/robot/s3_resources.robot"])
     ]
 )

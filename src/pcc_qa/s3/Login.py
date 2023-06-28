@@ -10,6 +10,7 @@ from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.S3ManagerBase import S3ManagerBase
 from pcc_qa.common.Login import login
 
+
 class Login(S3ManagerBase):
     """
     Login
