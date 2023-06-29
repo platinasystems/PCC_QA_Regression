@@ -11,7 +11,7 @@ from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.S3ManagerBase import S3ManagerBase
 
 
-class PccInstances(S3ManagerBase):
+class PccInstance(S3ManagerBase):
     """
     PccInstances
     """
@@ -34,6 +34,19 @@ class PccInstances(S3ManagerBase):
         return s3.get_pccs(conn)
 
     ###########################################################################
+    @keyword(name="S3.Get PCC Instance Id By Name")
+    ###########################################################################
+    def get_pcc_instance_id_by_name(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Get PCC Instance Id By Name")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        pccs = get_response_data(s3.get_pccs(conn))
+        for pcc in pccs:
+            if pcc["name"] == self.name:
+                return pcc["id"]
+        return None
+
+    ###########################################################################
     @keyword(name="S3.Create PCC Instance")
     ###########################################################################
     def create_pcc_instance(self, **kwargs):
@@ -48,6 +61,23 @@ class PccInstances(S3ManagerBase):
             "port": self.port
         }
         return s3.create_pcc(conn, payload)
+
+    ###########################################################################
+    @keyword(name="S3.Update PCC Instance")
+    ###########################################################################
+    def update_pcc_instance(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Update PCC Instance")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        payload = {
+            "id": self.id,
+            "name": self.name,
+            "username": self.username,
+            "pwd": self.pwd,
+            "address": self.address,
+            "port": self.port
+        }
+        return s3.update_pcc(conn, str(self.id), payload)
 
     ###########################################################################
     @keyword(name="S3.Delete PCC Instance")

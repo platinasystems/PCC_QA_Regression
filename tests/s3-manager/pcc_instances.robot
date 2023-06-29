@@ -28,3 +28,25 @@ Login
         ${data}                     Get Response Data        ${response}
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=pcc221
+
+        ${response}                 S3.Update PCC Instance
+                                    ...  id=${pcc_id}
+                                    ...  name=pcc221-rename
+                                    ...  username=admin
+                                    ...  pwd=admin
+                                    ...  address=172.17.2.221
+                                    ...  port=${9999}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${response}                 S3.Delete PCC Instance
+                                    ...  id=${pcc_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200

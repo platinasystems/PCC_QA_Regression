@@ -5,7 +5,9 @@ Library                         pcc_qa.common.TestData
 Library                         pcc_qa.common.LinuxUtils
 Library                         pcc_qa.common.DockerUtils
 Library                         pcc_qa.s3.Login
-Library                         pcc_qa.s3.PccInstances
+Library                         pcc_qa.s3.PccInstance
+Library                         pcc_qa.s3.Organization
+Library                         pcc_qa.s3.User
 Library                         Collections
 
 *** Keywords ***
