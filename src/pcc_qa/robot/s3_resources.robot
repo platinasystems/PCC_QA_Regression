@@ -8,6 +8,7 @@ Library                         pcc_qa.s3.Login
 Library                         pcc_qa.s3.PccInstance
 Library                         pcc_qa.s3.Organization
 Library                         pcc_qa.s3.User
+Library                         pcc_qa.s3.Endpoint
 Library                         Collections
 
 *** Keywords ***
