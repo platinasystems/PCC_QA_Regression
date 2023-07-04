@@ -11,6 +11,8 @@ Library                         pcc_qa.s3.User
 Library                         pcc_qa.s3.Endpoint
 Library                         pcc_qa.s3.S3Credential
 Library                         pcc_qa.s3.Ticket
+Library                         pcc_qa.s3.Dashboard
+Library                         pcc_qa.s3.Billing
 Library                         Collections
 
 *** Keywords ***
