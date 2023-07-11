@@ -6,7 +6,7 @@ Resource    s3_resources.robot
 Login
 ###################################################################################################################################
 
-        ${status}                   Login To S3-Manager
+        ${status}                   Login To S3-Manager     testdata_key=${s3_setup}
                                     Should Be Equal     ${status}  OK
 
 
@@ -21,7 +21,7 @@ Login
                                     ...  name=pcc221
                                     ...  username=admin
                                     ...  pwd=admin
-                                    ...  address=172.17.2.221
+                                    ...  address=172.17.3.215
                                     ...  port=${9999}
 
         ${status_code}              Get Response Status Code        ${response}

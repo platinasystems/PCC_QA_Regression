@@ -1,0 +1,128 @@
+{
+  "s3-manager": {
+    "url": "https://172.17.3.215:59999",
+    "username": "admin",
+    "password": "admin"
+  },
+  "pcc_instance": {
+        "pcc_server":
+        {
+            "pcc_url":"https://172.17.3.215:9999",
+            "pcc_linux_user":"pcc",
+            "pcc_linux_password":"plat1na",
+            "pcc_host_ip":"172.17.3.215",
+            "pcc_username":"admin",
+            "pcc_password":"admin"
+        },
+        "clusterhead-1":
+            {
+            "invader_name":"invader71",
+            "pcc_host_ip": "172.17.2.71",
+            "pcc_username": "pcc",
+            "pcc_password": "cals0ft"
+            },
+
+        "clusterhead-2":
+            {
+                "invader_name":"invader72",
+                "pcc_host_ip": "172.17.2.72",
+                "pcc_username": "pcc",
+                "pcc_password": "cals0ft"
+
+            },
+
+        "server-1":
+            {
+                "server_name":"sv46",
+                "pcc_host_ip": "172.17.2.246",
+                "pcc_username": "pcc",
+                "pcc_password": "cals0ft"
+            },
+
+        "server-2":
+            {
+              "server_name":"sv50",
+              "pcc_host_ip": "172.17.2.138",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+            },
+
+        "server-3":
+            {
+              "server_name":"sv51",
+              "pcc_host_ip": "172.17.2.139",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
+        "server-4":
+            {
+              "server_name":"sv44",
+              "pcc_host_ip": "172.17.2.244",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
+        "server-5":
+            {
+              "server_name":"sv45",
+              "pcc_host_ip": "172.17.2.245",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
+        "server-6":
+            {
+              "server_name":"sv49",
+              "pcc_host_ip": "172.17.2.137",
+              "pcc_username": "pcc",
+              "pcc_password": "cals0ft"
+           },
+        "ipam":
+        {
+            "controlName":"control-pvt",
+            "dataName":"data-pvt",
+            "controlSubnet":"10.2.6.192/26",
+            "dataSubnet":"10.1.6.192/26"
+        },
+        "network_manager":
+        {
+            "name":"network-pvt",
+            "nodes":["invader71","invader72","sv44","sv45","sv46","sv49","sv50","sv51"],
+            "nodes_ip":["172.17.2.71","172.17.2.72","172.17.2.244","172.17.2.245","172.17.2.246","172.17.2.137","172.17.2.138","172.17.2.139"],
+            "dataCIDR":"data-pvt",
+            "controlCIDR":"control-pvt",
+            "igwPolicy":"default",
+            "bgp_neighbors":{"invader71":{"local_as":64537,"bgp_neighbors":[{"neighbor_ip":"10.0.1.30","remote_as":64524}]},"invader72":{"local_as":64538,"bgp_neighbors":[{"neighbor_ip":"10.0.1.32","remote_as":64524}]}}
+        },
+        "ceph_cluster":
+        {
+            "name":"ceph-pvt",
+            "nodes":["sv44","sv45","sv46","sv49","sv50","sv51"],
+            "nodes_ip":["172.17.2.244","172.17.2.245","172.17.2.246","172.17.2.137","172.17.2.138","172.17.2.139"],
+            "tags":["All"],
+            "networkClusterName":"network-pvt"
+        },
+        "ceph_pool":
+        {
+            "name":"pool-pvt",
+            "size":2,
+            "tags":[],
+            "pool_type":"data",
+	        "resilienceScheme":"replicated",
+            "quota":"1",
+            "quota_unit":"GiB"
+        },
+        "ceph_rgw":
+        {
+            "name":"rados-pvt-secondary",
+            "poolName":"rgw-pool",
+            "numDaemonsMap": {"sv46": 1},
+            "port":443,
+            "certificateName":"rgw-crt",
+            "certificateUrl": "rgw.platinasystems.com",
+            "S3Accounts":"rgw-app",
+            "name-ec":"rados-pvt-secondary-ec",
+            "poolName-ec":"rgw-pool-ec",
+            "certificateNameLB": "lb-rgw-crt",
+            "certificateUrlLB":"rgw-test1.com"
+        }
+    }
+}
