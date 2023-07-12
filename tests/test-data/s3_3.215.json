@@ -4,15 +4,27 @@
     "username": "admin",
     "password": "admin"
   },
+  "organization": {
+    "name": "test-org",
+    "description": "test org description",
+    "email": "test-org@test.com",
+    "username": "test-org@test.com",
+    "password": "test",
+    "firstname": "test-name",
+    "lastname": "test-lastname"
+  },
   "pcc_instance": {
         "pcc_server":
         {
-            "pcc_url":"https://172.17.3.215:9999",
-            "pcc_linux_user":"pcc",
-            "pcc_linux_password":"plat1na",
-            "pcc_host_ip":"172.17.3.215",
-            "pcc_username":"admin",
-            "pcc_password":"admin"
+            "pcc_name": "pcc-3.215",
+            "pcc_url": "https://172.17.3.215:9999",
+            "pcc_linux_user": "pcc",
+            "pcc_linux_password": "plat1na",
+            "pcc_host_ip": "172.17.3.215",
+            "pcc_username": "admin",
+            "pcc_password": "admin",
+            "pcc_port": 9999,
+            "pcc_address": "172.17.3.215"
         },
         "clusterhead-1":
             {
@@ -103,24 +115,21 @@
         "ceph_pool":
         {
             "name":"pool-pvt",
-            "size":2,
             "tags":[],
             "pool_type":"data",
-	        "resilienceScheme":"replicated",
-            "quota":"1",
+	        "resilienceScheme":"erasure",
+            "quota":"100",
             "quota_unit":"GiB"
         },
         "ceph_rgw":
         {
             "name":"rados-pvt-secondary",
-            "poolName":"rgw-pool",
+            "poolName":"pool-pvt",
             "numDaemonsMap": {"sv46": 1},
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl": "rgw.platinasystems.com",
             "S3Accounts":"rgw-app",
-            "name-ec":"rados-pvt-secondary-ec",
-            "poolName-ec":"rgw-pool-ec",
             "certificateNameLB": "lb-rgw-crt",
             "certificateUrlLB":"rgw-test1.com"
         }

@@ -126,6 +126,37 @@ Load S3 Test Data
                                 Set Suite Variable      ${S3_PASSWORD}
 
 ###################################################################################################################################
+Load Organization Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_key}
+
+        [Documentation]             *Load Organization Data*
+
+        ${organization_dict}    TESTDATA.Get            ${testdata_key}.json        organization
+
+
+        ${ORG_NAME}             Evaluate                $organization_dict.get("name", None)
+                                Set Suite Variable      ${ORG_NAME}
+
+        ${ORG_DESC}             Evaluate                $organization_dict.get("description", None)
+                                Set Suite Variable      ${ORG_DESC}
+
+        ${ORG_EMAIL}            Evaluate                $organization_dict.get("email", None)
+                                Set Suite Variable      ${ORG_EMAIL}
+
+        ${ORG_USERNAME}         Evaluate                $organization_dict.get("username", None)
+                                Set Suite Variable      ${ORG_USERNAME}
+
+        ${ORG_PASSWORD}          Evaluate                $organization_dict.get("password", None)
+                                Set Suite Variable      ${ORG_PASSWORD}
+
+        ${ORG_FIRSTNAME}        Evaluate                $organization_dict.get("firstname", None)
+                                Set Suite Variable      ${ORG_FIRSTNAME}
+
+        ${ORG_LASTNAME}         Evaluate                $organization_dict.get("lastname", None)
+                                Set Suite Variable      ${ORG_LASTNAME}
+
+###################################################################################################################################
 Load PCC Test Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_key}
@@ -157,6 +188,14 @@ Load PCC Test Data
         ${PCC_LINUX_PASSWORD}   Evaluate                $PCC_SERVER.get("pcc_linux_password", None)
                                 Set Suite Variable      ${PCC_LINUX_PASSWORD}
 
+        ${PCC_NAME}             Evaluate                $PCC_SERVER.get("pcc_name", None)
+                                Set Suite Variable      ${PCC_NAME}
+
+        ${PCC_PORT}             Evaluate                $PCC_SERVER.get("pcc_port", None)
+                                Set Suite Variable      ${PCC_PORT}
+
+        ${PCC_ADDRESS}          Evaluate                $PCC_SERVER.get("pcc_address", None)
+                                Set Suite Variable      ${PCC_ADDRESS}
 ###################################################################################################################################
 Load Clusterhead 1 Test Data
 ###################################################################################################################################
@@ -472,9 +511,6 @@ Load Ceph Pool Data
         ${CEPH_POOL_NAME}      Evaluate    $CEPH_POOL.get("name", None)
                                Set Suite Variable    ${CEPH_POOL_NAME}
 
-        ${CEPH_POOL_SIZE}      Evaluate    $CEPH_POOL.get("size", None)
-                               Set Suite Variable    ${CEPH_POOL_SIZE}
-
         ${CEPH_POOL_TYPE}       Evaluate    $CEPH_POOL.get("pool_type", None)
                                 Set Suite Variable    ${CEPH_POOL_TYPE}
 
@@ -500,8 +536,8 @@ Load Ceph Rgw Data
 
         ${pcc_instance_dict}            TESTDATA.Get            ${testdata_key}.json        pcc_instance
 
-        ${CEPH_RGW}           Evaluate    $pcc_instance_dict.get("ceph_rgw", None)
-                              Set Suite Variable      ${CEPH_RGW}
+        ${CEPH_RGW}                  Evaluate    $pcc_instance_dict.get("ceph_rgw", None)
+                                     Set Suite Variable      ${CEPH_RGW}
 
         ${CEPH_RGW_NAME}             Evaluate    $CEPH_RGW.get("name", None)
                                      Set Suite Variable    ${CEPH_RGW_NAME}
@@ -529,9 +565,3 @@ Load Ceph Rgw Data
 
         ${CEPH_RGW_S3ACCOUNTS}       Evaluate    $CEPH_RGW.get("S3Accounts", None)
                                      Set Suite Variable    ${CEPH_RGW_S3ACCOUNTS}
-
-        ${CEPH_RGW_NAME_EC}          Evaluate    $CEPH_RGW.get("name-ec", None)
-                                     Set Suite Variable    ${CEPH_RGW_NAME_EC}
-
-        ${CEPH_RGW_POOLNAME_EC}         Evaluate    $CEPH_RGW.get("poolName-ec", None)
-                                        Set Suite Variable    ${CEPH_RGW_POOLNAME_EC}

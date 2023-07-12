@@ -15,9 +15,11 @@ Login To PCC
                                     Load Server 4 Test Data        ${s3_setup}
                                     Load Server 5 Test Data        ${s3_setup}
                                     Load Server 6 Test Data        ${s3_setup}
-                                    Load Ipam Data    ${s3_setup}
-                                    Load Network Manager Data    ${s3_setup}
-                                    Load Ceph Cluster Data    ${s3_setup}
+                                    Load Ipam Data      ${s3_setup}
+                                    Load Network Manager Data       ${s3_setup}
+                                    Load Ceph Cluster Data      ${s3_setup}
+                                    Load Ceph Pool Data     ${s3_setup}
+                                    Load Ceph Rgw Data      ${s3_setup}
 
         ${status}                   Login To PCC        testdata_key=${s3_setup}
                                     Should Be Equal     ${status}  OK
@@ -47,7 +49,7 @@ Nodes Verification Back End (Services should be running and active)
                                     Log To Console    ${status}
                                     Run Keyword If  "${status}" != "OK"  Fatal Error
 				                    Should Be Equal As Strings      ${status}    OK
-				                    
+
 ###################################################################################################################################
 Create IPAM ControlCIDR Subnet
 ###################################################################################################################################
@@ -75,7 +77,7 @@ Create IPAM DataCIDR Subnet
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
-		                  
+
 ###################################################################################################################################
 Network Manager Creation
 ###################################################################################################################################
@@ -94,8 +96,8 @@ Network Manager Creation
 
         ${status}                   PCC.Wait Until Network Manager Ready
                                ...  name=${NETWORK_MANAGER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK		                    
-	
+                                    Should Be Equal As Strings      ${status}    OK
+
 ###################################################################################################################################
 Ceph Cluster Create
 ###################################################################################################################################
@@ -122,4 +124,139 @@ Ceph Cluster Create
         ${status}                   PCC.Ceph Wait Until Cluster Ready
                                ...  name=${CEPH_CLUSTER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
-		                    
+
+###################################################################################################################################
+Create Ceph Pool
+###################################################################################################################################
+    [Documentation]                 *Create Ceph Pool*
+
+        ${cluster_id}          PCC.Ceph Get Cluster Id
+                               ...  name=${CEPH_CLUSTER_NAME}
+
+        ${response}            PCC.Ceph Create Erasure Pool
+                               ...  name=${CEPH_POOL_NAME}
+                               ...  ceph_cluster_id=${cluster_id}
+                               ...  pool_type=${CEPH_POOL_TYPE}
+                               ...  resilienceScheme=${POOL_RESILIENCE_SCHEME}
+                               ...  quota=${CEPH_POOL_QUOTA}
+                               ...  quota_unit=${CEPH_POOL_QUOTA_UNIT}
+                               ...  Datachunks=2
+                               ...  Codingchunks=1
+                               ...  pg_num=32
+
+
+
+        ${status_code}          Get Response Status Code        ${response}
+                                Should Be Equal As Strings      ${status_code}  200
+
+
+        ${status}              PCC.Ceph Wait Until Erasure Pool Ready
+                               ...  name=${CEPH_POOL_NAME}
+
+                               Should Be Equal As Strings      ${status}    OK
+
+##################################################################################################################################
+Ceph Certificate For Rgws
+###################################################################################################################################
+
+        [Documentation]              *Ceph Certificate For Rgws*
+
+        ${response}                  PCC.Add Certificate
+                                ...  Alias=${CEPH_RGW_CERT_NAME}
+                                ...  Description=certificate-for-rgw
+                                ...  Private_key=domain.key
+                                ...  Certificate_upload=domain.crt
+
+                                     Log To Console    ${response}
+        ${result}                    Get Result    ${response}
+        ${status}                    Get From Dictionary    ${result}    statusCodeValue
+                                     Should Be Equal As Strings    ${status}    200
+
+        ${response}                  PCC.Ceph Create Rgw
+                                ...  name=${CEPH_RGW_NAME}
+                                ...  poolName=${CEPH_RGW_POOLNAME}
+					            ...  num_daemons_map=${CEPH_RGW_NUMDAEMONSMAP}
+                                ...  port=${CEPH_RGW_PORT}
+                                ...  certificateName=${CEPH_RGW_CERT_NAME}
+                                ...  certificateUrl=${CEPH_RGW_CERT_URL}
+
+        ${status_code}               Get Response Status Code        ${response}
+                                     Should Be Equal As Strings      ${status_code}  200
+
+	${status}                        PCC.Ceph Wait Until Rgw Ready
+                                ...  name=${CEPH_RGW_NAME}
+                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+                                     Should Be Equal As Strings      ${status}    OK
+
+#####################################################################################################################################
+Ceph Local Load Balancer create on Rgw
+#####################################################################################################################################
+     [Documentation]                *Ceph Local Load Balancer create on Rgw*
+
+        ${app_id}              PCC.Get App Id from Policies
+                               ...  Name=loadbalancer-ceph
+                               Log To Console    ${app_id}
+
+        ${rgw_id}              PCC.Ceph Get Rgw Id
+                               ...  name=${CEPH_RGW_NAME}
+                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+
+        ${response}            PCC.Create Tag
+                               ...  Name=lb-attach
+                               ...  Description=lb-attach
+
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               Should Be Equal As Strings    ${status}    200
+
+        ${tag_1}                    PCC.Get Tag By Name
+                              ...   Name=lb-attach
+        ${tag_1_id}                 Get From Dictionary    ${tag_1}    id
+
+
+        ${response}            PCC.Create Policy
+                               ...  appId=${app_id}
+                               ...  description=test-ceph-lb
+                               ...  inputs=[{"name": "lb_name","value": "testcephlb"},{"name": "lb_balance_method","value": "roundrobin"},{"name": "lb_mode","value": "local"},{"name": "lb_frontend","value": "0.0.0.0:9898"},{"name": "lb_backends","value": "${rgw_id}"}]
+
+                               ${result}    Get Result    ${response}
+                               ${status}    Get From Dictionary    ${result}    status
+                               ${message}    Get From Dictionary    ${result}    message
+                               ${data}      Get From Dictionary    ${result}    Data
+                               ${policy_tag_1_id}      Get From Dictionary    ${data}     id
+                               Should Be Equal As Strings    ${status}    200
+
+
+        ${response}             PCC.Edit Tag
+                                ...  Id=${tag_1_id}
+                                ...  Name=lb-attach
+                                ...  PolicyIDs=[${policy_tag_1_id}]
+
+                                ${result}    Get Result    ${response}
+                                ${status}    Get From Dictionary    ${result}    status
+                                Should Be Equal As Strings    ${status}    200
+
+        ${result}               PCC.Add and Verify Tags On Nodes
+                                ...  nodes=["${SERVER_1_NAME}"]
+                                ...  tags=["lb-attach"]
+
+                                Should Be Equal As Strings    ${result}    OK
+
+    ${node_wait_status}         PCC.Wait Until Node Ready
+                                ...  Name=${SERVER_1_NAME}
+
+                                Should Be Equal As Strings    ${node_wait_status}    OK
+
+
+        ${response}             PCC.Add and Verify Roles On Nodes
+                                ...  nodes=["${SERVER_1_NAME}"]
+                                ...  roles=["Ceph Load Balancer"]
+
+                                Should Be Equal As Strings      ${response}  OK
+
+        ${node_wait_status}     PCC.Wait Until Node Ready
+                                ...  Name=${SERVER_1_NAME}
+
+                                Log To Console    ${node_wait_status}
+                                Should Be Equal As Strings    ${node_wait_status}    OK
+
