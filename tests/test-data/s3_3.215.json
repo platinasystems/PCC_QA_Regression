@@ -6,12 +6,18 @@
   },
   "organization": {
     "name": "test-org",
-    "description": "test org description",
-    "email": "test-org@test.com",
-    "username": "test-org@test.com",
+    "description": "test org description"
+  },
+  "user": {
+    "email": "test-usr@test.com",
+    "username": "test-usr@test.com",
     "password": "test",
     "firstname": "test-name",
     "lastname": "test-lastname"
+  },
+  "endpoint": {
+    "name": "test-endpoint",
+    "name_attached": "endpoint-attached"
   },
   "pcc_instance": {
         "pcc_server":
@@ -123,7 +129,7 @@
         },
         "ceph_rgw":
         {
-            "name":"rados-pvt-secondary",
+            "name":"rados-pvt-attach",
             "poolName":"pool-pvt",
             "numDaemonsMap": {"sv46": 1},
             "port":443,

@@ -7,6 +7,7 @@ Login To S3-Manager
 ###################################################################################################################################
 
                                     Load Organization Data      ${s3_setup}
+                                    Load User Data      ${s3_setup}
 
         ${status}                   Login To S3-Manager     testdata_key=${s3_setup}
                                     Should Be Equal     ${status}  OK
@@ -18,11 +19,11 @@ Create Organization
         ${response}                 S3.Create Organization
                                     ...  name=${ORG_NAME}
                                     ...  description=${ORG_DESC}
-                                    ...  username=${ORG_USERNAME}
-                                    ...  email=${ORG_EMAIL}
-                                    ...  password=${ORG_PASSWORD}
-                                    ...  firstName=${ORG_FIRSTNAME}
-                                    ...  lastName=${ORG_LASTNAME}
+                                    ...  username=${USER_USERNAME}
+                                    ...  email=${USER_EMAIL}
+                                    ...  password=${USER_PASSWORD}
+                                    ...  firstName=${USER_FIRSTNAME}
+                                    ...  lastName=${USER_LASTNAME}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
@@ -57,11 +58,11 @@ Update Organization
                                     ...  id=${org_id}
                                     ...  name=test-org-rename
                                     ...  description=test org update
-                                    ...  username=${ORG_USERNAME}
-                                    ...  email=${ORG_EMAIL}
-                                    ...  password=${ORG_PASSWORD}
-                                    ...  firstName=${ORG_FIRSTNAME}
-                                    ...  lastName=${ORG_LASTNAME}
+                                    ...  username=${USER_USERNAME}
+                                    ...  email=${USER_EMAIL}
+                                    ...  password=${USER_PASSWORD}
+                                    ...  firstName=${USER_FIRSTNAME}
+                                    ...  lastName=${USER_LASTNAME}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
@@ -84,7 +85,7 @@ Delete Organization
 ###################################################################################################################################
 
         ${response}                 S3.Delete User By Username
-                                    ...  username=${ORG_USERNAME}
+                                    ...  username=${USER_USERNAME}
 
                                     Log To Console    ${response}
                                     ${result}    Get Result    ${response}

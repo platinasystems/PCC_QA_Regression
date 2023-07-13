@@ -30,6 +30,7 @@ class Endpoint(S3ManagerBase):
         self.poolStripeUnit = 4096
         self.nodeID = None
         self.clusterID = None
+        self.clusterName = None
         self.certificateID = None
         self.numDaemonsMap = {}
 
@@ -95,6 +96,19 @@ class Endpoint(S3ManagerBase):
         banner("S3.Get PCC Clusters")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         return s3.get_ceph_clusters_by_pcc(conn, str(self.pccId))
+
+    ###########################################################################
+    @keyword(name="S3.Get PCC Ceph Cluster Id By Name")
+    ###########################################################################
+    def get_pcc_ceph_cluster_id_by_name(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Get PCC Ceph Cluster Id By Name")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        clusters = get_response_data(s3.get_ceph_clusters_by_pcc(conn, str(self.pccId)))
+        for cluster in clusters:
+            if cluster["name"] == self.clusterName:
+                return cluster["id"]
+        return None
 
     ###########################################################################
     @keyword(name="S3.Get PCC CephLB Nodes")

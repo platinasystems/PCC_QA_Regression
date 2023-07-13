@@ -141,20 +141,47 @@ Load Organization Data
         ${ORG_DESC}             Evaluate                $organization_dict.get("description", None)
                                 Set Suite Variable      ${ORG_DESC}
 
-        ${ORG_EMAIL}            Evaluate                $organization_dict.get("email", None)
-                                Set Suite Variable      ${ORG_EMAIL}
+###################################################################################################################################
+Load User Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_key}
 
-        ${ORG_USERNAME}         Evaluate                $organization_dict.get("username", None)
-                                Set Suite Variable      ${ORG_USERNAME}
+        [Documentation]             *Load User Data*
 
-        ${ORG_PASSWORD}          Evaluate                $organization_dict.get("password", None)
-                                Set Suite Variable      ${ORG_PASSWORD}
+        ${user_dict}    TESTDATA.Get            ${testdata_key}.json        user
 
-        ${ORG_FIRSTNAME}        Evaluate                $organization_dict.get("firstname", None)
-                                Set Suite Variable      ${ORG_FIRSTNAME}
+        ${USER_EMAIL}            Evaluate                $user_dict.get("email", None)
+                                 Set Suite Variable      ${USER_EMAIL}
 
-        ${ORG_LASTNAME}         Evaluate                $organization_dict.get("lastname", None)
-                                Set Suite Variable      ${ORG_LASTNAME}
+        ${USER_USERNAME}         Evaluate                $user_dict.get("username", None)
+                                 Set Suite Variable      ${USER_USERNAME}
+
+        ${USER_PASSWORD}          Evaluate                $user_dict.get("password", None)
+                                  Set Suite Variable      ${USER_PASSWORD}
+
+        ${USER_FIRSTNAME}        Evaluate                $user_dict.get("firstname", None)
+                                 Set Suite Variable      ${USER_FIRSTNAME}
+
+        ${USER_LASTNAME}         Evaluate                $user_dict.get("lastname", None)
+                                 Set Suite Variable      ${USER_LASTNAME}
+
+###################################################################################################################################
+Load Endpoint Test Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_key}
+
+        [Documentation]             *Load Endpoint Test Data*
+                                    Log To Console          **** Load Endpoint Test Data ****
+
+        ${endpoint_dict}               TESTDATA.Get            ${testdata_key}.json        endpoint
+
+
+        ${ENDPOINT_NAME}               Evaluate                $endpoint_dict.get("name", None)
+                                       Set Suite Variable      ${ENDPOINT_NAME}
+
+
+        ${ATTACHED_ENDPOINT_NAME}      Evaluate                $endpoint_dict.get("name_attached", None)
+                                       Set Suite Variable      ${ATTACHED_ENDPOINT_NAME}
 
 ###################################################################################################################################
 Load PCC Test Data
