@@ -19,6 +19,9 @@
     "name": "test-endpoint",
     "name_attached": "endpoint-attached"
   },
+  "s3_credential": {
+    "name": "test-app-cred"
+  },
   "pcc_instance": {
         "pcc_server":
         {
@@ -124,8 +127,8 @@
             "tags":[],
             "pool_type":"data",
 	        "resilienceScheme":"erasure",
-            "quota":"100",
-            "quota_unit":"GiB"
+            "quota":"1",
+            "quota_unit":"TiB"
         },
         "ceph_rgw":
         {

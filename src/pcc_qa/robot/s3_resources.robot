@@ -184,6 +184,20 @@ Load Endpoint Test Data
                                        Set Suite Variable      ${ATTACHED_ENDPOINT_NAME}
 
 ###################################################################################################################################
+Load S3 Credential Test Data
+###################################################################################################################################
+    [Arguments]                     ${testdata_key}
+
+        [Documentation]             *Load Endpoint Test Data*
+                                    Log To Console          **** Load Endpoint Test Data ****
+
+        ${credential_dict}             TESTDATA.Get            ${testdata_key}.json        s3_credential
+
+
+        ${CREDENTIAL_NAME}             Evaluate                $credential_dict.get("name", None)
+                                       Set Suite Variable      ${CREDENTIAL_NAME}
+
+###################################################################################################################################
 Load PCC Test Data
 ###################################################################################################################################
     [Arguments]                     ${testdata_key}
