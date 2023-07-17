@@ -110,6 +110,29 @@ class Tags(PccBase):
         return pcc.edit_tag(conn, str(self.Id), payload)
 
     ###########################################################################
+    @keyword(name="PCC.Unassign All Tags From Policy")
+    ###########################################################################
+    def unassign_all_tag_from_policy(self, *args, **kwargs):
+        banner("PCC.Unassign All Tags From Policy")
+        self._load_kwargs(kwargs)
+        conn = BuiltIn().get_variable_value("${PCC_CONN}")
+
+        tags = get_response_data(pcc.get_tags(conn))
+
+        for tag in tags:
+            payload = {
+                "id": tag["id"],
+                "name": tag["name"],
+                "description": tag["description"],
+                "policyIDs": []
+            }
+            response = pcc.edit_tag(conn, str(tag["id"]), payload)
+            status_code = get_status_code(response)
+            if status_code != 200:
+                return "Error"
+        return "OK"
+
+    ###########################################################################
     @keyword(name="PCC.Delete Tag")
     ###########################################################################
     def delete_tag(self, *args, **kwargs):

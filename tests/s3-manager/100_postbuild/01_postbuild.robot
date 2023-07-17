@@ -142,3 +142,81 @@ Ipam Subnet Delete All
 
         ${status}                   PCC.Ipam Subnet Delete All
                                     Should Be Equal As Strings      ${status}    OK
+
+###################################################################################################################################
+Cleanup features associated to Node
+###################################################################################################################################
+    [Documentation]                 *Cleanup features associated to Node*
+
+        ${parent1_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default region
+                        Log To Console    ${parent1_Id}
+
+        ${parent2_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default zone
+                        ...  parentID=${parent1_Id}
+                        Log To Console    ${parent2_Id}
+
+        ${parent3_Id}    PCC.Get Scope Id
+                        ...  scope_name=Default site
+                        ...  parentID=${parent2_Id}
+
+                        Log To Console    ${parent3_Id}
+
+        ${scope_id}    PCC.Get Scope Id
+                       ...  scope_name=Default rack
+                       ...  parentID=${parent3_Id}
+
+                       Log To Console    ${scope_id}
+
+        ${status}       PCC.Cleanup features associated to Node
+                        ...    scopeId=${scope_id}
+                        Log To Console    ${status}
+                        Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Unassign All Tags From Policy
+###################################################################################################################################
+    [Documentation]                 *Unassign All Tags From Policy*
+
+        ${status}        PCC.Unassign All Tags From Policy
+
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Delete All Tags
+###################################################################################################################################
+
+        [Documentation]    *Delete All Tags*
+
+        ${response}     PCC.Delete All Tag
+
+                        Should Be Equal As Strings    ${response}    OK
+
+###################################################################################################################################
+Policy driven management cleanup
+###################################################################################################################################
+
+                [Documentation]    *Policy driven management cleanup* test
+
+
+                ${status}    PCC.Unassign Locations Assigned from All Policies
+
+                             Log to Console    ${status}
+                             Should Be Equal As Strings    ${status}    OK
+
+                ${status}    PCC.Delete All Policies
+
+                             Log To Console    ${status}
+                             Should Be Equal As Strings    ${status}    OK
+
+####################################################################################################################################
+Cleanup all certificates from PCC
+####################################################################################################################################
+    [Documentation]                 *Cleanup all certificates*
+
+        ${status}                   PCC.Delete All Certificates
+
+                                    Log To Console    ${status}
+                                    Should be equal as strings    ${status}    OK
