@@ -176,6 +176,11 @@ Cleanup features associated to Node
                         Log To Console    ${status}
                         Should Be Equal As Strings      ${status}  OK
 
+        ${status}       PCC.Wait Until All Nodes Are Ready
+
+                        Log To Console    ${status}
+                        Should Be Equal As Strings      ${status}  OK
+
 ###################################################################################################################################
 Unassign All Tags From Policy
 ###################################################################################################################################
