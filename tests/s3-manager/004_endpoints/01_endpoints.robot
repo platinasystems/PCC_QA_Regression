@@ -123,3 +123,5 @@ Create Endpoint Without Advanced options
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
+                                    sleep       10m
+
