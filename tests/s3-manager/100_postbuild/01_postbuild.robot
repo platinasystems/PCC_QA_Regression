@@ -41,6 +41,8 @@ Deleting all Pools
 ###################################################################################################################################
     [Documentation]                 *Deleting all Pools*
 
+                                    sleep       1m
+
         ${status}                   PCC.Ceph Delete All Pools
                                     Should be equal as strings    ${status}    OK
 
