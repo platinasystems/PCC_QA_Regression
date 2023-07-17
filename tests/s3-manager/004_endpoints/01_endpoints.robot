@@ -87,6 +87,19 @@ Update Endpoint
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
+###################################################################################################################################
+Set Old Endpoint Name
+###################################################################################################################################
+
+        ${response}                 S3.Update Endpoint
+                                    ...  id=${endpoint_id}
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    ...  description=attached endpoint
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Create Endpoint Without Advanced options
