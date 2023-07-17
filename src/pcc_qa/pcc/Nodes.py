@@ -686,6 +686,7 @@ class Nodes(PccBase):
                     payload = { "Id":node['Id'],
                                 "ClusterId":0,
                                 "roles":[1],
+                                "tags": [],
                                 "scopeId":int(self.scopeId),
                                 "Host":node['Host'],
                                 "Name":node['Name']}
