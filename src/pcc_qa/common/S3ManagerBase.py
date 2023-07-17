@@ -6,9 +6,10 @@ from robot.libraries.BuiltIn import BuiltIn
 from robot.libraries.BuiltIn import RobotNotRunningError
 from pcc_qa.common.Utils import banner, trace, debug, pretty_print
 
-class PccBase:
-    """ 
-    PccBase
+
+class S3ManagerBase:
+    """
+    S3ManagerBase
     """
 
     def __init__(self):
@@ -46,9 +47,8 @@ class PccBase:
                 # return stdout
                 'Result': {'stdout': response.stdout, 'stderr': response.stderr},
                 'StatusCode': response.return_code,
-                'ExecutionTime': "%.3f" % round(self._execution_time, 3)
+                'ExecutionTime':"%.3f" % round(self._execution_time, 3)
                 }
         except Exception as e:
             trace("Exception: %s" % e)
             return {'Error': str(e)}
-
