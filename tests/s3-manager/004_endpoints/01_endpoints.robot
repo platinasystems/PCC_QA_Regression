@@ -52,8 +52,9 @@ Attach Endpoint
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
-                                    sleep  10s
-
+        ${status}                   S3.Wait Until Endpoint Ready
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    Should Be Equal As Strings      ${status}  OK
 ###################################################################################################################################
 Get All Endpoint
 ###################################################################################################################################
@@ -119,9 +120,8 @@ Create Endpoint Without Advanced options
                                     ...  clusterID=${cluster_id}
 
         ${status_code}              Get Response Status Code        ${response}
-        ${data}                     Get Response Data        ${response}
-                                    Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
-                                    sleep       10m
-
+        ${status}                   S3.Wait Until Endpoint Ready
+                                    ...  name=${ENDPOINT_NAME}
+                                    Should Be Equal As Strings      ${status}  OK
