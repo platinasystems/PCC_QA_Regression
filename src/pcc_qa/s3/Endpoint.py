@@ -10,6 +10,7 @@ from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.S3ManagerBase import S3ManagerBase
 
+TIMEOUT = 60 * 20
 
 class Endpoint(S3ManagerBase):
     """
@@ -197,3 +198,27 @@ class Endpoint(S3ManagerBase):
         banner("S3.Delete Endpoint")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         return s3.delete_endpoint(conn, str(self.id))
+
+    ###########################################################################
+    @keyword(name="S3.Wait Until Endpoint Ready")
+    ###########################################################################
+    def wait_until_endpoint_ready(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Wait Until Endpoint Ready")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+
+        timeout = time.time() + TIMEOUT
+        while True:
+            endpoints = get_response_data(s3.get_endpoints(conn))
+            for endpoint in endpoints:
+                if endpoint["name"] == self.name:
+                    trace("Waiting until %s is Ready, current status: %s" % (endpoint['name'], endpoint['deployStatus']))
+                    if endpoint['deployStatus'] == 'completed':
+                        return 'OK'
+                    elif endpoint['deployStatus'] == 'failed':
+                        return 'Error'
+                    break
+            if time.time() > timeout:
+                trace('Waiting until Endpoint Ready Timeout')
+                return 'Error'
+            time.sleep(25)

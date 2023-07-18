@@ -11,6 +11,8 @@ from pcc_qa.common.Result import get_response_data, get_result
 from pcc_qa.common.S3ManagerBase import S3ManagerBase
 
 
+TIMEOUT = 60 * 5
+
 class S3Credential(S3ManagerBase):
     """
     S3Credential
@@ -117,3 +119,53 @@ class S3Credential(S3ManagerBase):
         banner("S3.Delete S3 Credential")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         return s3.delete_s3credentials_by_endpoint(conn, str(self.endpointId), str(self.id))
+
+    ###########################################################################
+    @keyword(name="S3.Wait Until Credential Ready")
+    ###########################################################################
+    def wait_until_credential_ready(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Wait Until Credential Ready")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+
+        timeout = time.time() + TIMEOUT
+        while True:
+            credentials = get_response_data(s3.get_s3credentials_by_endpoint(conn, str(self.endpointId)))
+            for credential in credentials:
+                if credential["name"] == self.name:
+                    trace("Waiting until %s is Ready, current status: %s" % (credential['name'], credential['deployStatus']))
+                    if credential['deployStatus'] == 'completed':
+                        return 'OK'
+                    elif credential['deployStatus'] == 'failed':
+                        return 'Error'
+                    break
+            if time.time() > timeout:
+                trace('Waiting until Endpoint Ready Timeout')
+                return 'Error'
+            time.sleep(5)
+
+    ###########################################################################
+    @keyword(name="S3.Wait Until Credential Deleted")
+    ###########################################################################
+    def wait_until_credential_deleted(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Wait Until Credential Deleted")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+
+        timeout = time.time() + TIMEOUT
+
+        while True:
+            found = False
+            credentials = get_response_data(s3.get_s3credentials_by_endpoint(conn, str(self.endpointId)))
+            for credential in credentials:
+                if credential["name"] == self.name:
+                    trace("Waiting until %s is Deleted, current status: %s" % (credential['name'], credential['deployStatus']))
+                    found = True
+                    if credential['deployStatus'] == 'failed':
+                        return 'Error'
+            if not found:
+                return "OK"
+            if time.time() > timeout:
+                trace('Waiting until Endpoint Ready Timeout')
+                return 'Error'
+            time.sleep(5)

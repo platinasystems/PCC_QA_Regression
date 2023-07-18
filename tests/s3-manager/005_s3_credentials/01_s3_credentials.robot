@@ -31,6 +31,12 @@ Create S3 Credetial
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
+        ${status}                   S3.Wait Until Credential Ready
+                                    ...  endpointId=${endpoint_id}
+                                    ...  name=${CREDENTIAL_NAME}
+                                    Should Be Equal As Strings      ${status}  OK
+
+
 ###################################################################################################################################
 Get All S3 Credetials
 ###################################################################################################################################
@@ -53,8 +59,6 @@ Get S3 Credetial Id
 
                                     Set Suite Variable      ${credential_id}
 
-                                    sleep  1m
-
 ###################################################################################################################################
 Update S3 Credetial
 ###################################################################################################################################
@@ -70,6 +74,11 @@ Update S3 Credetial
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
+        ${status}                   S3.Wait Until Credential Ready
+                                    ...  endpointId=${endpoint_id}
+                                    ...  name=${CREDENTIAL_NAME}
+                                    Should Be Equal As Strings      ${status}  OK
+
 ###################################################################################################################################
 Delete S3 Credetial
 ###################################################################################################################################
@@ -80,3 +89,8 @@ Delete S3 Credetial
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   S3.Wait Until Credential Deleted
+                                    ...  endpointId=${endpoint_id}
+                                    ...  name=${CREDENTIAL_NAME}
+                                    Should Be Equal As Strings      ${status}  OK
