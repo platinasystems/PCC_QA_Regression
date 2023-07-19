@@ -13,6 +13,90 @@ Login To S3-Manager
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
+Create Organization Without Name (NEGATIVE)
+###################################################################################################################################
+
+        ${response}                 S3.Create Organization
+                                    ...  description=${ORG_DESC}
+                                    ...  username=${USER_USERNAME}
+                                    ...  email=${USER_EMAIL}
+                                    ...  password=${USER_PASSWORD}
+                                    ...  firstName=${USER_FIRSTNAME}
+                                    ...  lastName=${USER_LASTNAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+####################################################################################################################################
+#Create Organization Without Username (NEGATIVE)
+####################################################################################################################################
+#
+#        ${response}                 S3.Create Organization
+#                                    ...  name=${ORG_NAME}
+#                                    ...  description=${ORG_DESC}
+#                                    ...  email=${USER_EMAIL}
+#                                    ...  password=${USER_PASSWORD}
+#                                    ...  firstName=${USER_FIRSTNAME}
+#                                    ...  lastName=${USER_LASTNAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${data}                     Get Response Data        ${response}
+#                                    Log To Console      ${data}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+#
+####################################################################################################################################
+#Create Organization Without Email (NEGATIVE)
+####################################################################################################################################
+#
+#        ${response}                 S3.Create Organization
+#                                    ...  name=${ORG_NAME}
+#                                    ...  description=${ORG_DESC}
+#                                    ...  password=${USER_PASSWORD}
+#                                    ...  firstName=${USER_FIRSTNAME}
+#                                    ...  lastName=${USER_LASTNAME}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${data}                     Get Response Data        ${response}
+#                                    Log To Console      ${data}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+
+##################################################################################################################################
+Create Organization Without FirstName (NEGATIVE)
+###################################################################################################################################
+
+        ${response}                 S3.Create Organization
+                                    ...  name=${ORG_NAME}
+                                    ...  description=${ORG_DESC}
+                                    ...  username=${USER_USERNAME}
+                                    ...  email=${USER_EMAIL}
+                                    ...  password=${USER_PASSWORD}
+                                    ...  lastName=${USER_LASTNAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Organization Without LastName (NEGATIVE)
+###################################################################################################################################
+
+        ${response}                 S3.Create Organization
+                                    ...  name=${ORG_NAME}
+                                    ...  description=${ORG_DESC}
+                                    ...  username=${USER_USERNAME}
+                                    ...  email=${USER_EMAIL}
+                                    ...  password=${USER_PASSWORD}
+                                    ...  firstName=${USER_FIRSTNAME}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Create Organization
 ###################################################################################################################################
 

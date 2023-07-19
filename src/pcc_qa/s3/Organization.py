@@ -62,19 +62,27 @@ class Organization(S3ManagerBase):
         banner("S3.Create Organization")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
-            "name": self.name,
-            "description": self.description,
             "reservedCapacityTB": self.reservedCapacityTB,
             "priceUsageGB": self.priceUsageGB,
             "priceTrafficGB": self.priceTrafficGB,
             "priceOps": self.priceOps,
-            "username": self.username,
-            "password": self.password,
-            "firstName": self.firstName,
-            "lastName": self.lastName,
-            "email": self.email,
             "active": self.active
         }
+        if self.name:
+            payload["name"] = self.name
+        if self.description:
+            payload["description"] = self.description
+        if self.username:
+            payload["username"] = self.username
+        if self.email:
+            payload["email"] = self.email
+        if self.password:
+            payload["password"] = self.password
+        if self.firstName:
+            payload["firstName"] = self.firstName
+        if self.lastName:
+            payload["lastName"] = self.lastName
+        trace(payload)
         return s3.create_organization(conn, payload)
 
     ###########################################################################
