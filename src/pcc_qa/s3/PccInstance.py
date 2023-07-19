@@ -53,13 +53,18 @@ class PccInstance(S3ManagerBase):
         self._load_kwargs(kwargs)
         banner("S3.Create PCC Instance")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
-        payload = {
-            "name": self.name,
-            "username": self.username,
-            "pwd": self.pwd,
-            "address": self.address,
-            "port": self.port
-        }
+        payload = {}
+        if self.name:
+            payload["name"] = self.name
+        if self.username:
+            payload["username"] = self.username
+        if self.pwd:
+            payload["pwd"] = self.pwd
+        if self.address:
+            payload["address"] = self.address
+        if self.port:
+            payload["port"] = self.port
+        trace(payload)
         return s3.create_pcc(conn, payload)
 
     ###########################################################################
@@ -69,14 +74,18 @@ class PccInstance(S3ManagerBase):
         self._load_kwargs(kwargs)
         banner("S3.Update PCC Instance")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
-        payload = {
-            "id": self.id,
-            "name": self.name,
-            "username": self.username,
-            "pwd": self.pwd,
-            "address": self.address,
-            "port": self.port
-        }
+        payload = {}
+        if self.name:
+            payload["name"] = self.name
+        if self.username:
+            payload["username"] = self.username
+        if self.pwd:
+            payload["pwd"] = self.pwd
+        if self.address:
+            payload["address"] = self.address
+        if self.port:
+            payload["port"] = self.port
+        trace(payload)
         return s3.update_pcc(conn, str(self.id), payload)
 
     ###########################################################################
