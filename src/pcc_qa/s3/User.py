@@ -24,7 +24,7 @@ class User(S3ManagerBase):
         self.lastName = None
         self.email = None
         self.active = True
-        self.roleID = 1  #ADMIN ROLE
+        self.roleID = None
         self.tenant = 1  #ROOT ORGANIZATION
 
         super().__init__()
@@ -57,16 +57,21 @@ class User(S3ManagerBase):
         self._load_kwargs(kwargs)
         banner("S3.Create User")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
-        payload = {
-            "username": self.username,
-            "password": self.password,
-            "firstname": self.firstName,
-            "lastname": self.lastName,
-            "email": self.email,
-            "active": self.active,
-            "tenant": self.tenant,
-            "roleID": self.roleID
-        }
+        payload = {"active": self.active,
+                   "tenant": self.tenant}
+        if self.username:
+            payload["username"] = self.username
+        if self.password:
+            payload["password"] = self.password
+        if self.firstName:
+            payload["firstname"] = self.firstName
+        if self.lastName:
+            payload["lastname"] = self.lastName
+        if self.email:
+            payload["email"] = self.email
+        if self.roleID:
+            payload["roleID"] = self.roleID
+        trace(payload)
         return s3.create_user(conn, payload)
 
     ###########################################################################
@@ -78,15 +83,21 @@ class User(S3ManagerBase):
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
             "id": self.id,
-            "username": self.username,
-            "password": self.password,
-            "firstName": self.firstName,
-            "lastName": self.lastName,
-            "email": self.email,
             "active": self.active,
-            "tenant": self.tenant,
-            "roleID": self.roleID
-        }
+            "tenant": self.tenant}
+        if self.username:
+            payload["username"] = self.username
+        if self.password:
+            payload["password"] = self.password
+        if self.firstName:
+            payload["firstname"] = self.firstName
+        if self.lastName:
+            payload["lastname"] = self.lastName
+        if self.email:
+            payload["email"] = self.email
+        if self.roleID:
+            payload["roleID"] = self.roleID
+        trace(payload)
         return s3.update_user(conn, payload)
 
     ###########################################################################

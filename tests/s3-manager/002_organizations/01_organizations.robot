@@ -135,6 +135,19 @@ Get Organization
                                     Set Suite Variable      ${org_id}
 
 ###################################################################################################################################
+Update Organization Without Name (NEGATIVE)
+###################################################################################################################################
+
+        ${response}                 S3.Update Organization
+                                    ...  id=${org_id}
+                                    ...  description=test org update
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Update Organization
 ###################################################################################################################################
 
@@ -142,11 +155,6 @@ Update Organization
                                     ...  id=${org_id}
                                     ...  name=test-org-rename
                                     ...  description=test org update
-                                    ...  username=${USER_USERNAME}
-                                    ...  email=${USER_EMAIL}
-                                    ...  password=${USER_PASSWORD}
-                                    ...  firstName=${USER_FIRSTNAME}
-                                    ...  lastName=${USER_LASTNAME}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
