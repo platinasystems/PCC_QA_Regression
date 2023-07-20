@@ -172,15 +172,31 @@ Update PCC Instance Without Address (NEGATIVE)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
+Update PCC Instance With Wrong Port (NEGATIVE)
+###################################################################################################################################
+        ${response}                 S3.Update PCC Instance
+                                    ...  id=${pcc_id}
+                                    ...  name=${PCC_NAME}
+                                    ...  username=${PCC_USERNAME}
+                                    ...  pwd=${PCC_PASSWORD}
+                                    ...  address=${PCC_ADDRESS}
+                                    ...  port=${1111}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Update PCC Instance
 ###################################################################################################################################
         ${response}                 S3.Update PCC Instance
                                     ...  id=${pcc_id}
                                     ...  name=pcc-name-update
-                                    ...  username=admin
-                                    ...  pwd=admin
-                                    ...  address=172.17.2.221
-                                    ...  port=${9999}
+                                    ...  username=${PCC_USERNAME}
+                                    ...  pwd=${PCC_PASSWORD}
+                                    ...  address=${PCC_ADDRESS}
+                                    ...  port=${PCC_PORT}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}

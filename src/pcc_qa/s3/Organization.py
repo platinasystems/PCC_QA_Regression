@@ -94,19 +94,16 @@ class Organization(S3ManagerBase):
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
             "id": self.id,
-            "name": self.name,
-            "description": self.description,
             "reservedCapacityTB": self.reservedCapacityTB,
             "priceUsageGB": self.priceUsageGB,
             "priceTrafficGB": self.priceTrafficGB,
             "priceOps": self.priceOps,
-            "username": self.username,
-            "password": self.password,
-            "firstName": self.firstName,
-            "lastName": self.lastName,
-            "email": self.email,
-            "active": self.active
         }
+        if self.name:
+            payload["name"] = self.name
+        if self.description:
+            payload["description"] = self.description
+        trace(payload)
         return s3.update_organization(conn, str(self.id), payload)
 
     ###########################################################################
