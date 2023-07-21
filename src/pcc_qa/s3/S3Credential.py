@@ -20,7 +20,7 @@ class S3Credential(S3ManagerBase):
 
     def __init__(self):
         self.id = None
-        self.endpointId = None
+        self.endpointId = 0
         self.name = None
         self.description = None
         self.active = True
@@ -66,7 +66,6 @@ class S3Credential(S3ManagerBase):
         banner("S3.Create S3 Credential")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
-            "name": self.name,
             "description": self.description,
             "active": self.active,
             "profile": {
@@ -82,6 +81,8 @@ class S3Credential(S3ManagerBase):
                 "maxUserObjects": self.maxUserObjects
             }
         }
+        if self.name:
+            payload["name"] = self.name
         return s3.create_s3credentials_by_endpoint(conn, str(self.endpointId), payload)
 
     ###########################################################################
@@ -93,7 +94,6 @@ class S3Credential(S3ManagerBase):
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
             "id": self.id,
-            "name": self.name,
             "description": self.description,
             "active": self.active,
             "profile": {
@@ -109,6 +109,8 @@ class S3Credential(S3ManagerBase):
                 "maxUserObjects": self.maxUserObjects
             }
         }
+        if self.name:
+            payload["name"] = self.name
         return s3.update_s3credentials_by_endpoint(conn, str(self.endpointId), str(self.id), payload)
 
     ###########################################################################

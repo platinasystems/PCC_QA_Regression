@@ -18,10 +18,10 @@ class Ticket(S3ManagerBase):
 
     def __init__(self):
         self.id = None
-        self.status = "new"  #new,assigned,closed
+        self.status = None  #new,assigned,closed
         self.object = None
         self.message = None
-        self.priority = "low" #low,medium,high
+        self.priority = None #low,medium,high
         self.endpointId = None
         super().__init__()
 
@@ -53,12 +53,15 @@ class Ticket(S3ManagerBase):
         self._load_kwargs(kwargs)
         banner("S3.Create Ticket")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
-        payload = {
-            "endpointID": self.endpointId,
-            "object": self.object,
-            "message": self.message,
-            "priority": self.priority
-        }
+        payload = {}
+        if self.endpointId:
+            payload["endpointID"] = self.endpointId
+        if self.object:
+            payload["object"] = self.object
+        if self.message:
+            payload["message"] = self.message
+        if self.priority:
+            payload["priority"] = self.priority
         return s3.create_ticket(conn, payload)
 
     ###########################################################################
@@ -69,11 +72,16 @@ class Ticket(S3ManagerBase):
         banner("S3.Update Ticket")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
-            "id": self.id,
-            "endpointID": self.endpointId,
-            "object": self.object,
-            "message": self.message,
-            "priority": self.priority,
-            "status": self.status
+            "id": self.id
         }
+        if self.endpointId:
+            payload["endpointID"] = self.endpointId
+        if self.object:
+            payload["object"] = self.object
+        if self.message:
+            payload["message"] = self.message
+        if self.priority:
+            payload["priority"] = self.priority
+        if self.status:
+            payload["status"] = self.status
         return s3.update_ticket(conn, str(self.id), payload)
