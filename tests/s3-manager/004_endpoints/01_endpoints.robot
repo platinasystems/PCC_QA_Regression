@@ -30,8 +30,33 @@ Create PCC Instance
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
+
+####################################################################################################################################
+#Attach Endpoint Without Name (NEGATIVE)
+####################################################################################################################################
+#
+#        ${pcc_id}                   S3.Get PCC Instance Id By Name
+#                                    ...  name=${PCC_NAME}
+#
+#        ${rgw_id}                   S3.Get Attachable Endpoint Id By Name
+#                                    ...  pccId=${pcc_id}
+#                                    ...  name=${CEPH_RGW_NAME}
+#
+#        ${customers}                Create List     ${1}
+#
+#        ${response}                 S3.Attach Endpoint
+#                                    ...  pccId=${pcc_id}
+#                                    ...  description=attached endpoint
+#                                    ...  rgwID=${rgw_id}
+#                                    ...  customers=${customers}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${data}                     Get Response Data        ${response}
+#                                    Log To Console      ${data}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+
 ###################################################################################################################################
-Attach Endpoint
+Attach Endpoint Without Organizations (NEGATIVE)
 ###################################################################################################################################
 
         ${pcc_id}                   S3.Get PCC Instance Id By Name
@@ -46,6 +71,80 @@ Attach Endpoint
                                     ...  name=${ATTACHED_ENDPOINT_NAME}
                                     ...  description=attached endpoint
                                     ...  rgwID=${rgw_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Attach Endpoint Without PCC Instance (NEGATIVE)
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${rgw_id}                   S3.Get Attachable Endpoint Id By Name
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${CEPH_RGW_NAME}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Attach Endpoint
+                                    ...  pccId=${0}
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    ...  description=attached endpoint
+                                    ...  rgwID=${rgw_id}
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Attach Endpoint Without Endpoint Attachable (NEGATIVE)
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${rgw_id}                   S3.Get Attachable Endpoint Id By Name
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${CEPH_RGW_NAME}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Attach Endpoint
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    ...  description=attached endpoint
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Attach Endpoint
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${rgw_id}                   S3.Get Attachable Endpoint Id By Name
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${CEPH_RGW_NAME}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Attach Endpoint
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    ...  description=attached endpoint
+                                    ...  rgwID=${rgw_id}
+                                    ...  customers=${customers}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
@@ -77,11 +176,13 @@ Get Endpoint Id
 ###################################################################################################################################
 Update Endpoint
 ###################################################################################################################################
+        ${customers}                Create List     ${1}
 
         ${response}                 S3.Update Endpoint
                                     ...  id=${endpoint_id}
                                     ...  name=endpoint-attach-updt
                                     ...  description=attached endpoint
+                                    ...  customers=${customers}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
@@ -91,16 +192,108 @@ Update Endpoint
 ###################################################################################################################################
 Set Old Endpoint Name
 ###################################################################################################################################
+        ${customers}                Create List     ${1}
 
         ${response}                 S3.Update Endpoint
                                     ...  id=${endpoint_id}
                                     ...  name=${ATTACHED_ENDPOINT_NAME}
                                     ...  description=attached endpoint
+                                    ...  customers=${customers}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
+Create Endpoint Without Name (NEGATIVE)
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${cluster_id}               S3.Get PCC Ceph Cluster Id By Name
+                                    ...  clusterName=${CEPH_CLUSTER_NAME}
+                                    ...  pccId=${pcc_id}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Create Endpoint
+                                    ...  pccId=${pcc_id}
+                                    ...  description=test create endpoint
+                                    ...  clusterID=${cluster_id}
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Endpoint Without Organizations (NEGATIVE)
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${cluster_id}               S3.Get PCC Ceph Cluster Id By Name
+                                    ...  clusterName=${CEPH_CLUSTER_NAME}
+                                    ...  pccId=${pcc_id}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Create Endpoint
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${ENDPOINT_NAME}
+                                    ...  description=test create endpoint
+                                    ...  clusterID=${cluster_id}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Endpoint Without PCC Instance
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${cluster_id}               S3.Get PCC Ceph Cluster Id By Name
+                                    ...  clusterName=${CEPH_CLUSTER_NAME}
+                                    ...  pccId=${pcc_id}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Create Endpoint
+                                    ...  pccId=${0}
+                                    ...  name=${ENDPOINT_NAME}
+                                    ...  description=test create endpoint
+                                    ...  clusterID=${cluster_id}
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Endpoint Without Cluster (NEGATIVE)
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${cluster_id}               S3.Get PCC Ceph Cluster Id By Name
+                                    ...  clusterName=${CEPH_CLUSTER_NAME}
+                                    ...  pccId=${pcc_id}
+
+        ${customers}                Create List     ${1}
+
+        ${response}                 S3.Create Endpoint
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${ENDPOINT_NAME}
+                                    ...  description=test create endpoint
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Create Endpoint Without Advanced options
@@ -113,11 +306,14 @@ Create Endpoint Without Advanced options
                                     ...  clusterName=${CEPH_CLUSTER_NAME}
                                     ...  pccId=${pcc_id}
 
+        ${customers}                Create List     ${1}
+
         ${response}                 S3.Create Endpoint
                                     ...  pccId=${pcc_id}
                                     ...  name=${ENDPOINT_NAME}
                                     ...  description=test create endpoint
                                     ...  clusterID=${cluster_id}
+                                    ...  customers=${customers}
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200

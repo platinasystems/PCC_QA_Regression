@@ -12,6 +12,63 @@ Login To S3-Manager
 
 
 ###################################################################################################################################
+Create Ticket Without Endpoint (NEGATIVE)
+###################################################################################################################################
+
+        ${endpoint_id}              S3.Get Endpoint Id By Name
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+
+                                    Set Suite Variable      ${endpoint_id}
+
+        ${response}                 S3.Create Ticket
+                                    ...  object=bug-1
+                                    ...  message=test bug-1
+                                    ...  priority=low
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Ticket Without Subject (NEGATIVE)
+###################################################################################################################################
+
+        ${endpoint_id}              S3.Get Endpoint Id By Name
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+
+                                    Set Suite Variable      ${endpoint_id}
+
+        ${response}                 S3.Create Ticket
+                                    ...  endpointId=${endpoint_id}
+                                    ...  message=test bug-1
+                                    ...  priority=low
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Ticket Without Message (NEGATIVE)
+###################################################################################################################################
+
+        ${endpoint_id}              S3.Get Endpoint Id By Name
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+
+                                    Set Suite Variable      ${endpoint_id}
+
+        ${response}                 S3.Create Ticket
+                                    ...  endpointId=${endpoint_id}
+                                    ...  object=bug-1
+                                    ...  priority=low
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Create Ticket
 ###################################################################################################################################
 
@@ -24,6 +81,7 @@ Create Ticket
                                     ...  endpointId=${endpoint_id}
                                     ...  object=bug-1
                                     ...  message=test bug-1
+                                    ...  priority=low
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
@@ -52,6 +110,70 @@ Get Ticket Id
                                     Set Suite Variable      ${ticket_id}
 
 ###################################################################################################################################
+Update Ticket Without Subject (NEGATIVE)
+###################################################################################################################################
+
+        ${endpoint_id}              S3.Get Endpoint Id By Name
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+
+                                    Set Suite Variable      ${endpoint_id}
+
+        ${response}                 S3.Update Ticket
+                                    ...  id=${ticket_id}
+                                    ...  endpointId=${endpoint_id}
+                                    ...  message=test bug-1
+                                    ...  priority=low
+                                    ...  status=assigned
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Update Ticket Without Message (NEGATIVE)
+###################################################################################################################################
+
+        ${endpoint_id}              S3.Get Endpoint Id By Name
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+
+                                    Set Suite Variable      ${endpoint_id}
+
+        ${response}                 S3.Update Ticket
+                                    ...  id=${ticket_id}
+                                    ...  endpointId=${endpoint_id}
+                                    ...  object=bug-1
+                                    ...  priority=low
+                                    ...  status=assigned
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+####################################################################################################################################
+#Update Ticket Without Status (NEGATIVE)
+####################################################################################################################################
+#
+#        ${endpoint_id}              S3.Get Endpoint Id By Name
+#                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+#
+#                                    Set Suite Variable      ${endpoint_id}
+#
+#        ${response}                 S3.Update Ticket
+#                                    ...  id=${ticket_id}
+#                                    ...  endpointId=${endpoint_id}
+#                                    ...  object=bug-1
+#                                    ...  message=test bug-1
+#                                    ...  priority=low
+#
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${data}                     Get Response Data        ${response}
+#                                    Log To Console      ${data}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Update Ticket
 ###################################################################################################################################
         ${response}                 S3.Update Ticket
@@ -60,6 +182,7 @@ Update Ticket
                                     ...  object=bug-1
                                     ...  message=bug-1
                                     ...  status=closed
+                                    ...  priority=low
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}

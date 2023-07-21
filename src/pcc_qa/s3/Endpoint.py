@@ -19,18 +19,18 @@ class Endpoint(S3ManagerBase):
 
     def __init__(self):
         self.id = None
-        self.pccId = None
+        self.pccId = 0
         self.name = None
         self.description = None
         self.rgwID = None
-        self.customers = [1]  #ROOT ORG
+        self.customers = None
         self.poolQuota = "1"
         self.poolQuotaUnit = "TiB"
         self.poolDataChunks = 0
         self.poolCodingChunks = 0
         self.poolStripeUnit = 4096
         self.nodeID = None
-        self.clusterID = None
+        self.clusterID = 0
         self.clusterName = None
         self.certificateID = None
         self.numDaemonsMap = {}
@@ -137,9 +137,7 @@ class Endpoint(S3ManagerBase):
         banner("S3.Create Endpoint")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
-            "name": self.name,
             "description": self.description,
-            "customers": self.customers,
             "rgw": {
                 "certificateID": self.certificateID,
                 "numDaemonsMap": self.numDaemonsMap
@@ -155,6 +153,11 @@ class Endpoint(S3ManagerBase):
                 "nodeId": self.nodeID
             }
         }
+        if self.name:
+            payload["name"] = self.name
+        if self.customers:
+            payload["customers"] = self.customers
+
         return s3.create_endpoint(conn, str(self.pccId), str(self.clusterID), payload)
 
     ###########################################################################
@@ -165,11 +168,14 @@ class Endpoint(S3ManagerBase):
         banner("S3.Attach Endpoint")
         conn = BuiltIn().get_variable_value("${S3_CONN}")
         payload = {
-            "name": self.name,
-            "description": self.description,
-            "rgwID": self.rgwID,
-            "customers": self.customers
+            "description": self.description
         }
+        if self.name:
+            payload["name"] = self.name
+        if self.rgwID:
+            payload["rgwID"] = self.rgwID
+        if self.customers:
+            payload["customers"] = self.customers
         return s3.attach_endpoint(conn, str(self.pccId), payload)
 
     ###########################################################################
