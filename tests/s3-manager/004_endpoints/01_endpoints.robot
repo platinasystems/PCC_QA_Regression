@@ -9,6 +9,7 @@ Login To S3-Manager
                                     Load Ceph Rgw Data      ${s3_setup}
                                     Load Endpoint Test Data    ${s3_setup}
                                     Load Ceph Cluster Data      ${s3_setup}
+                                    Load Organization Data      ${s3_setup}
 
         ${status}                   Login To S3-Manager     testdata_key=${s3_setup}
                                     Should Be Equal     ${status}  OK
@@ -174,7 +175,7 @@ Get Endpoint Id
 
                                     Set Suite Variable      ${endpoint_id}
 ###################################################################################################################################
-Update Endpoint
+Update Endpoint fields (Name/Description)
 ###################################################################################################################################
         ${customers}                Create List     ${1}
 
@@ -205,6 +206,24 @@ Set Old Endpoint Name
                                     Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
 
+###################################################################################################################################
+Add Custom Organization
+###################################################################################################################################
+        ${org_id}                   S3.Get Organization Id By Name
+                                    ...  name=${ORG_NAME}
+
+        ${customers}                Create List     ${1}    ${org_id}
+
+        ${response}                 S3.Update Endpoint
+                                    ...  id=${endpoint_id}
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    ...  description=attached endpoint
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Create Endpoint Without Name (NEGATIVE)
@@ -251,7 +270,7 @@ Create Endpoint Without Organizations (NEGATIVE)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Create Endpoint Without PCC Instance
+Create Endpoint Without PCC Instance (NEGATIVE)
 ###################################################################################################################################
 
         ${pcc_id}                   S3.Get PCC Instance Id By Name
@@ -306,7 +325,10 @@ Create Endpoint Without Advanced options
                                     ...  clusterName=${CEPH_CLUSTER_NAME}
                                     ...  pccId=${pcc_id}
 
-        ${customers}                Create List     ${1}
+        ${org_id}                   S3.Get Organization Id By Name
+                                    ...  name=${ORG_NAME}
+
+        ${customers}                Create List     ${1}    ${org_id}
 
         ${response}                 S3.Create Endpoint
                                     ...  pccId=${pcc_id}

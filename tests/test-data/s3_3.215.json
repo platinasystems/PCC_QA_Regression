@@ -8,9 +8,23 @@
     "name": "test-org",
     "description": "test org description"
   },
-  "user": {
+  "user-admin": {
     "email": "test-usr@test.com",
     "username": "test-usr@test.com",
+    "password": "test",
+    "firstname": "test-name",
+    "lastname": "test-lastname"
+  },
+  "user-s3-manager": {
+    "email": "user-s3-manager@test.com",
+    "username": "user-s3-manager@test.com",
+    "password": "test",
+    "firstname": "test-name",
+    "lastname": "test-lastname"
+  },
+  "user-billing": {
+    "email": "user-billing@test.com",
+    "username": "user-billing@test.com",
     "password": "test",
     "firstname": "test-name",
     "lastname": "test-lastname"
