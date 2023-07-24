@@ -148,7 +148,7 @@ Load User Data
 
         [Documentation]             *Load User Data*
 
-        ${user_dict}    TESTDATA.Get            ${testdata_key}.json        user
+        ${user_dict}    TESTDATA.Get            ${testdata_key}.json        user-admin
 
         ${USER_EMAIL}            Evaluate                $user_dict.get("email", None)
                                  Set Suite Variable      ${USER_EMAIL}
@@ -164,6 +164,40 @@ Load User Data
 
         ${USER_LASTNAME}         Evaluate                $user_dict.get("lastname", None)
                                  Set Suite Variable      ${USER_LASTNAME}
+
+        ${user_dict}    TESTDATA.Get            ${testdata_key}.json        user-s3-manager
+
+        ${USER_S3_MANAGER_EMAIL}            Evaluate                $user_dict.get("email", None)
+                                 Set Suite Variable      ${USER_S3_MANAGER__EMAIL}
+
+        ${USER_S3_MANAGER_USERNAME}         Evaluate                $user_dict.get("username", None)
+                                 Set Suite Variable      ${USER_S3_MANAGER__USERNAME}
+
+        ${USER_S3_MANAGER_PASSWORD}          Evaluate                $user_dict.get("password", None)
+                                  Set Suite Variable      ${USER_S3_MANAGER__PASSWORD}
+
+        ${USER_S3_MANAGER_FIRSTNAME}        Evaluate                $user_dict.get("firstname", None)
+                                 Set Suite Variable      ${USER_S3_MANAGER__FIRSTNAME}
+
+        ${USER_S3_MANAGER_LASTNAME}         Evaluate                $user_dict.get("lastname", None)
+                                 Set Suite Variable      ${USER_S3_MANAGER__LASTNAME}
+
+        ${user_dict}    TESTDATA.Get            ${testdata_key}.json        user-billing
+
+        ${USER_BILLING_EMAIL}            Evaluate                $user_dict.get("email", None)
+                                 Set Suite Variable      ${USER_BILLING_EMAIL}
+
+        ${USER_BILLING_USERNAME}         Evaluate                $user_dict.get("username", None)
+                                 Set Suite Variable      ${USER_BILLING_USERNAME}
+
+        ${USER_BILLING_PASSWORD}          Evaluate                $user_dict.get("password", None)
+                                  Set Suite Variable      ${USER_BILLING_PASSWORD}
+
+        ${USER_BILLING_FIRSTNAME}        Evaluate                $user_dict.get("firstname", None)
+                                 Set Suite Variable      ${USER_BILLING_FIRSTNAME}
+
+        ${USER_BILLING_LASTNAME}         Evaluate                $user_dict.get("lastname", None)
+                                 Set Suite Variable      ${USER_BILLING_LASTNAME}
 
 ###################################################################################################################################
 Load Endpoint Test Data

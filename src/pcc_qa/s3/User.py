@@ -24,6 +24,7 @@ class User(S3ManagerBase):
         self.lastName = None
         self.email = None
         self.active = True
+        self.roleName = None
         self.roleID = None
         self.tenant = 1  #ROOT ORGANIZATION
 
@@ -48,6 +49,19 @@ class User(S3ManagerBase):
         for usr in users:
             if usr["username"] == self.username:
                 return usr["id"]
+        return None
+
+    ###########################################################################
+    @keyword(name="S3.Get User Role Id By Name")
+    ###########################################################################
+    def get_user_role_id_by_name(self, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("S3.Get User Role Id By Name")
+        conn = BuiltIn().get_variable_value("${S3_CONN}")
+        roles = s3.get_user_roles(conn)["Result"]
+        for role in roles:
+            if role["name"] == self.roleName:
+                return role["id"]
         return None
 
     ###########################################################################
