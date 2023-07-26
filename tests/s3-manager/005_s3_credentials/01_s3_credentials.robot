@@ -94,12 +94,12 @@ Get S3 Credetial Id
                                     Set Suite Variable      ${credential_id}
 
 ###################################################################################################################################
-Update S3 Credetial Without Name (NEGATIVE)
+Update S3 Credetial Without Endpoint (NEGATIVE)
 ###################################################################################################################################
 
         ${response}                 S3.Update S3 Credential
                                     ...  id=${credential_id}
-                                    ...  endpointId=${endpoint_id}
+                                    ...  name=${CREDENTIAL_NAME}
                                     ...  description=test-app-cred update
 
         ${status_code}              Get Response Status Code        ${response}
