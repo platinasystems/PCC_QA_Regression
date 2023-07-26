@@ -12,23 +12,23 @@ Login To S3-Manager
         ${status}                   Login To S3-Manager     testdata_key=${s3_setup}
                                     Should Be Equal     ${status}  OK
 
-####################################################################################################################################
-#Create S3 Credetial Without Name (NEGATIVE)
-####################################################################################################################################
-#
-#        ${endpoint_id}              S3.Get Endpoint Id By Name
-#                                    ...  name=${ATTACHED_ENDPOINT_NAME}
-#                                    Set Suite Variable      ${endpoint_id}
-#
-#        ${response}                 S3.Create S3 Credential
-#                                    ...  endpointId=${endpoint_id}
-#                                    ...  description=test-app-cred
-#
-#                                    log to console      ${response}
-#        ${status_code}              Get Response Status Code        ${response}
-#        ${data}                     Get Response Data        ${response}
-#                                    Log To Console      ${data}
-#                                    Should Not Be Equal As Strings      ${status_code}  200
+###################################################################################################################################
+Create S3 Credetial Without Name (NEGATIVE)
+###################################################################################################################################
+
+        ${endpoint_id}              S3.Get Endpoint Id By Name
+                                    ...  name=${ATTACHED_ENDPOINT_NAME}
+                                    Set Suite Variable      ${endpoint_id}
+
+        ${response}                 S3.Create S3 Credential
+                                    ...  endpointId=${endpoint_id}
+                                    ...  description=test-app-cred
+
+                                    log to console      ${response}
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Create S3 Credetial Without Endpoint (NEGATIVE)
@@ -93,27 +93,13 @@ Get S3 Credetial Id
 
                                     Set Suite Variable      ${credential_id}
 
-####################################################################################################################################
-#Update S3 Credetial Without Name (NEGATIVE)
-####################################################################################################################################
-#
-#        ${response}                 S3.Update S3 Credential
-#                                    ...  id=${credential_id}
-#                                    ...  endpointId=${endpoint_id}
-#                                    ...  description=test-app-cred update
-#
-#        ${status_code}              Get Response Status Code        ${response}
-#        ${data}                     Get Response Data        ${response}
-#                                    Log To Console      ${data}
-#                                    Should Not Be Equal As Strings      ${status_code}  200
-
 ###################################################################################################################################
-Update S3 Credetial Without Endpoint (NEGATIVE)
+Update S3 Credetial Without Name (NEGATIVE)
 ###################################################################################################################################
 
         ${response}                 S3.Update S3 Credential
                                     ...  id=${credential_id}
-                                    ...  name=test-app-cred-updt
+                                    ...  endpointId=${endpoint_id}
                                     ...  description=test-app-cred update
 
         ${status_code}              Get Response Status Code        ${response}
