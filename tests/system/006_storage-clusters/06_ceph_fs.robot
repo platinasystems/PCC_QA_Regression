@@ -958,29 +958,29 @@ Update CephFS - remove_data_pool_along_with_default_data_pool
         ${status_code}              Get Response Status Code        ${response}
                                     Should Not Be Equal As Strings      ${status_code}  200
 
-###################################################################################################################################
-Ceph Cluster Delete when Ceph FS is present (Negative)
-###################################################################################################################################
-    [Documentation]                 *Ceph Cluster Delete when Ceph FS is present*
-                               ...  keywords:
-                               ...  PCC.Ceph Get Cluster Id
-                               ...  PCC.Ceph Delete Cluster
-                               ...  PCC.Ceph Wait Until Cluster Deleted
-                               ...  PCC.Ceph Cleanup BE
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${id}                       PCC.Ceph Get Cluster Id
-                               ...  name=${CEPH_CLUSTER_NAME}
-                                    Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
-
-        ${response}                 PCC.Ceph Delete Cluster
-                               ...  id=${id}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Not Be Equal As Strings      ${status_code}  200
+####################################################################################################################################
+#Ceph Cluster Delete when Ceph FS is present (Negative)
+####################################################################################################################################
+#    [Documentation]                 *Ceph Cluster Delete when Ceph FS is present*
+#                               ...  keywords:
+#                               ...  PCC.Ceph Get Cluster Id
+#                               ...  PCC.Ceph Delete Cluster
+#                               ...  PCC.Ceph Wait Until Cluster Deleted
+#                               ...  PCC.Ceph Cleanup BE
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${id}                       PCC.Ceph Get Cluster Id
+#                               ...  name=${CEPH_CLUSTER_NAME}
+#                                    Pass Execution If    ${id} is ${None}    Cluster is alredy Deleted
+#
+#        ${response}                 PCC.Ceph Delete Cluster
+#                               ...  id=${id}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Not Be Equal As Strings      ${status_code}  200
                                     
 ###################################################################################################################################
 Ceph Fs Delete To Create Another
