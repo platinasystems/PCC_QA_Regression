@@ -89,7 +89,6 @@ Network Manager Creation
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-                               ...  bgp_neighbors=${NETWORK_MANAGER_BGP_NEIGHBORS}
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
