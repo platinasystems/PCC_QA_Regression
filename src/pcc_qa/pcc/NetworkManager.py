@@ -97,18 +97,21 @@ class NetworkManager(PccBase):
 
         if self.dataCIDR:
             self.dataCIDRId=easy.get_subnet_id_by_name(conn,self.dataCIDR)
-       
+
         payload = {
             "name": self.name,
             "nodes": self.nodes,
             "controlCIDRId":self.controlCIDRId,
             "dataCIDRId":self.dataCIDRId,
             "igwPolicy":self.igwPolicy,
-            "type":int(self.type),
-            "AutoASNRange": self.auto_asn_range
+            "type":int(self.type)
         }
 
         print("Payload:-"+str(payload))
+
+        if int(self.type) == 7:
+            payload["AutoASNRange"] = self.auto_asn_range
+
         return pcc.add_network_cluster(conn, payload)
 
     ###########################################################################
