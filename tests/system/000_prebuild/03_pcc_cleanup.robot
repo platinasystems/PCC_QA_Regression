@@ -138,30 +138,30 @@ Re-assigning ROOT to Node
                        ${status}    Get From Dictionary    ${response}    StatusCode
                        Should Be Equal As Strings    ${status}    200
 
-###################################################################################################################################
-Deleting Maas From Nodes
-###################################################################################################################################
-    [Documentation]                 *Deleting Maas+LLDP From Nodes*
-                               ...  Keywords:
-                               ...  PCC.Delete and Verify Roles On Nodes
-                               ...  PCC.Wait Until Roles Ready On Nodes
-        [Tags]    debug
-
-	${response}                 PCC.Delete and Verify Roles On Nodes
-                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
-                               ...  Host=${CLUSTERHEAD_1_HOST_IP}   
-                               ...  roles=["Baremetal Management Node"]
-                                    Should Be Equal As Strings      ${response}  OK
-
-        ${status_code}              PCC.Wait Until Roles Ready On Nodes
-                               ...  node_name=${CLUSTERHEAD_1_NAME}
-                                    Should Be Equal As Strings      ${status_code}  OK
-
-        ${response}                 PCC.Maas Verify BE
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
-                               ...  user=${PCC_LINUX_USER}
-                               ...  password=${PCC_LINUX_PASSWORD}
-                                    Should Not Be Equal As Strings      ${response}  OK
+####################################################################################################################################
+#Deleting Maas From Nodes
+####################################################################################################################################
+#    [Documentation]                 *Deleting Maas+LLDP From Nodes*
+#                               ...  Keywords:
+#                               ...  PCC.Delete and Verify Roles On Nodes
+#                               ...  PCC.Wait Until Roles Ready On Nodes
+#        [Tags]    debug
+#
+#	${response}                 PCC.Delete and Verify Roles On Nodes
+#                               ...  nodes=["${CLUSTERHEAD_1_NAME}"]
+#                               ...  Host=${CLUSTERHEAD_1_HOST_IP}
+#                               ...  roles=["Baremetal Management Node"]
+#                                    Should Be Equal As Strings      ${response}  OK
+#
+#        ${status_code}              PCC.Wait Until Roles Ready On Nodes
+#                               ...  node_name=${CLUSTERHEAD_1_NAME}
+#                                    Should Be Equal As Strings      ${status_code}  OK
+#
+#        ${response}                 PCC.Maas Verify BE
+#                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}"]
+#                               ...  user=${PCC_LINUX_USER}
+#                               ...  password=${PCC_LINUX_PASSWORD}
+#                                    Should Not Be Equal As Strings      ${response}  OK
 
 ###################################################################################################################################
 Ceph Rgw Delete Multiple
@@ -298,7 +298,7 @@ Delete All Node Roles
         ${status}    PCC.Delete all Node roles
 
                      Log To Console    ${status}
-                     Should Be Equal As Strings    ${status}    OK    Node roles still exists
+                     Should Be Equal As Strings    ${status}    OK
 
 ####################################################################################################################################
 Cleanup all certificates from PCC

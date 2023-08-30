@@ -192,7 +192,7 @@ PCC Node Role Creation Without Tenant
 
         ${owner}       PCC.Get Tenant Id       Name=${ROOT_TENANT}
         
-        ${template_id}    PCC.Get Template Id    Name=${APP_2}                     
+        ${template_id}    PCC.Get Template Id    Name=${APP_1}
         
         ${response}    PCC.Add Node Role
                        ...    Name=${NODE_ROLE_4}
@@ -226,7 +226,7 @@ PCC Node Role Creation With All Fields Empty (Negative)
 
         ${owner}       PCC.Get Tenant Id       Name=${ROOT_TENANT}
         
-        ${template_id}    PCC.Get Template Id    Name=${APP_2}                     
+        ${template_id}    PCC.Get Template Id    Name=${APP_1}
         
         ${response}    PCC.Add Node Role
                        ...    Name=''
