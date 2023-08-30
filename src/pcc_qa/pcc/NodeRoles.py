@@ -8,7 +8,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from platina_sdk import pcc_api as pcc
 from pcc_qa.common import PccUtility as easy
 from pcc_qa.common.Utils import banner, trace, pretty_print
-from pcc_qa.common.Result import get_response_data, get_result
+from pcc_qa.common.Result import get_response_data, get_result, get_status_code
 from pcc_qa.common.PccBase import PccBase
 
 class NodeRoles(PccBase):
@@ -314,53 +314,21 @@ class NodeRoles(PccBase):
             return "OK"
             
         return "Error: All Node Roles not deleted from PCC"
-        
-        
+
     ###########################################################################
     @keyword(name="PCC.Delete all Node roles")
     ###########################################################################
     def delete_all_node_roles(self, *args, **kwargs):
-        """
-        Delete all Node Roles
-        [Args]
-            (dict) conn: Connection dictionary obtained after logging in
-            
-    
-        [Returns]
-            "OK": If all node roles are deleted
-            else "Error"
-            
-        """
         banner("Delete All Node roles")
         self._load_kwargs(kwargs)
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
-        try:
-            response = self.get_node_roles()
-            list_node_roles = []
-            
-            for node_role in get_response_data(response):
-                if node_role['name']== "Default" or node_role['name']== "Baremetal Management Node" or node_role['name']== "Cluster Head" or node_role['name']== "Ceph Resource" or node_role['name']== "Kubernetes Resource" or node_role['name']== "FRR Resource" or node_role['name']== "Load Balancer" or node_role['name']== "Ceph Load Balancer":
-                    continue
-                list_node_roles.append(node_role['name'])
-            print("list of node roles: {}".format(list_node_roles))
-            response_status = []
-            
-            try:
-                if list_node_roles == []:
-                    return "OK"
-                else:
-                    for node in list_node_roles:
-                        print("Node is : " + node)
-                        Id = self.get_node_role_id(Name=node)
-                        response = pcc.delete_role_by_id(conn, str(Id))
-                        print("Response: {}".format(response))
-                        response_status.append(response["StatusCode"])
-                    response_result = len(response_status) > 0 and all(elem == 200 for elem in response_status)
-                    if response_result:
-                        return "OK"
-                    else:
-                        return response_status  
-            except Exception as e:
-                return {"Error":str(e)}     
-        except Exception as e:
-            logger.console("Error in delete_all_node_roles status: {}".format(e))
+        roles = get_response_data(pcc.get_roles(conn))
+        for role in roles:
+            if role["default"] or role["protect"]:
+                continue
+            status_code = get_status_code(pcc.delete_role_by_id(conn, str(role["id"])))
+            if status_code != 200:
+                print("Error deleting role {}".format(role["name"]))
+                return "Error"
+        return "OK"
+
