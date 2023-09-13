@@ -6,15 +6,25 @@ Resource    s3_resources.robot
 Login To S3-Manager
 ###################################################################################################################################
                                     Load Endpoint Test Data    ${s3_setup}
+                                    Load Organization Data      ${s3_setup}
 
         ${status}                   Login To S3-Manager     testdata_key=${s3_setup}
                                     Should Be Equal     ${status}  OK
 
 ###################################################################################################################################
+Get Organization
+###################################################################################################################################
+
+        ${org_id}                   S3.Get Organization Id By Name
+                                    ...  name=${ORG_NAME}
+
+                                    Set Suite Variable      ${org_id}
+
+###################################################################################################################################
 Get Organization Billings
 ###################################################################################################################################
         ${response}                 S3.Get Organization Billings
-                                    ...  organizationId=1
+                                    ...  organizationId=${org_id}
 
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
