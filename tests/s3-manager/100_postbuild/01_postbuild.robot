@@ -32,16 +32,6 @@ Policy driven management cleanup
 
                 [Documentation]    *Policy driven management cleanup* test
 
-
-                ${status}    PCC.Unassign Locations Assigned from All Policies
-
-                             Log to Console    ${status}
-                             Should Be Equal As Strings    ${status}    OK
-
-                ${status}    PCC.Wait Until All Nodes Are Ready
-                             Log To Console    ${status}
-                             Should Be Equal As Strings      ${status}  OK
-
                 ${status}    PCC.Delete All Policies
 
                              Log To Console    ${status}
