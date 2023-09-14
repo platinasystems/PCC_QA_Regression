@@ -12,6 +12,42 @@ Login
                                     Should be equal as strings    ${status}    OK
 
 ###################################################################################################################################
+Unassign All Tags From Policy
+###################################################################################################################################
+    [Documentation]                 *Unassign All Tags From Policy*
+
+        ${status}        PCC.Unassign All Tags From Policy
+
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
+
+
+        ${status}        PCC.Wait Until All Nodes Are Ready
+                         Log To Console    ${status}
+                         Should Be Equal As Strings      ${status}  OK
+
+###################################################################################################################################
+Policy driven management cleanup
+###################################################################################################################################
+
+                [Documentation]    *Policy driven management cleanup* test
+
+
+                ${status}    PCC.Unassign Locations Assigned from All Policies
+
+                             Log to Console    ${status}
+                             Should Be Equal As Strings    ${status}    OK
+
+                ${status}    PCC.Wait Until All Nodes Are Ready
+                             Log To Console    ${status}
+                             Should Be Equal As Strings      ${status}  OK
+
+                ${status}    PCC.Delete All Policies
+
+                             Log To Console    ${status}
+                             Should Be Equal As Strings    ${status}    OK
+
+###################################################################################################################################
 Ceph Delete All Rgw
 ###################################################################################################################################
     [Documentation]                 *Ceph Delete All Rgw*
@@ -182,16 +218,6 @@ Cleanup features associated to Node
                         Should Be Equal As Strings      ${status}  OK
 
 ###################################################################################################################################
-Unassign All Tags From Policy
-###################################################################################################################################
-    [Documentation]                 *Unassign All Tags From Policy*
-
-        ${status}        PCC.Unassign All Tags From Policy
-
-                         Log To Console    ${status}
-                         Should Be Equal As Strings      ${status}  OK
-
-###################################################################################################################################
 Delete All Tags
 ###################################################################################################################################
 
@@ -200,23 +226,6 @@ Delete All Tags
         ${response}     PCC.Delete All Tag
 
                         Should Be Equal As Strings    ${response}    OK
-
-###################################################################################################################################
-Policy driven management cleanup
-###################################################################################################################################
-
-                [Documentation]    *Policy driven management cleanup* test
-
-
-                ${status}    PCC.Unassign Locations Assigned from All Policies
-
-                             Log to Console    ${status}
-                             Should Be Equal As Strings    ${status}    OK
-
-                ${status}    PCC.Delete All Policies
-
-                             Log To Console    ${status}
-                             Should Be Equal As Strings    ${status}    OK
 
 ####################################################################################################################################
 Cleanup all certificates from PCC
