@@ -455,7 +455,7 @@ class PhoneHome(PccBase):
             
             trace("list_all_log_files: {}".format(str(list_all_log_files)))
             print("list_all_log_files: {}".format(str(list_all_log_files)))
-            validation_checks = ['mailer/logs/default.log','security/home/logs/default.log','platina-executor/logs/default.log','monitor/home/logs/default.log','user-management/home/logs/default.log','pccserver/logs/default.log','gateway/home/logs/default.log','key-manager/home/logs/default.log','maas/logs/default.log','platina-monitor/logs/default.log','registry/home/logs/default.log']
+            validation_checks = ['mailer/logs/default.log','security/home/logs/default.log','platina-executor/logs/default.log','monitor/home/logs/default.log','user-management/home/logs/default.log','pccserver/logs/default.log','gateway/home/logs/default.log','key-manager/home/logs/default.log','platina-monitor/logs/default.log','registry/home/logs/default.log']
             status=[]
             for validation in validation_checks:
                 if re.search(str(validation), str(list_all_log_files)):
