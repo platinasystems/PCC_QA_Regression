@@ -1531,6 +1531,12 @@ Removing Ceph Load balancer Policy Primary
 
                                     Should Be Equal As Strings      ${response}  OK
 
+        ${node_wait_status}         PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                                   Log To Console    ${node_wait_status}
+                                   Should Be Equal As Strings    ${node_wait_status}    OK
+
         ${response}                 PCC.Delete Policy
                                ...  Name=loadbalancer-ceph
                                ...  description=test-ceph-lb
@@ -1625,6 +1631,12 @@ Removing Ceph Load balancer Policy
 
                                     Should Be Equal As Strings      ${response}  OK
 
+        ${node_wait_status}         PCC.Wait Until Node Ready
+                               ...  Name=${SERVER_1_NAME}
+
+                                   Log To Console    ${node_wait_status}
+                                   Should Be Equal As Strings    ${node_wait_status}    OK
+
         ${response}                 PCC.Delete Policy
                                ...  Name=loadbalancer-ceph
                                ...  description=test-ceph-lb_ControlIP
@@ -1633,11 +1645,6 @@ Removing Ceph Load balancer Policy
         ${message}                  Get Response Message        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
 
-        ${node_wait_status}         PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
-
-                                   Log To Console    ${node_wait_status}
-                                   Should Be Equal As Strings    ${node_wait_status}    OK
 
 ###################################################################################################################################
 Ceph Multiple RGW Load Balancer
