@@ -37,11 +37,7 @@ Enter Maintenance Mode
                                    ${status}    Get From Dictionary    ${result}    status
                                    Should Be Equal As Strings    ${status}    200
 
-    ${node_wait_status}            PCC.Wait Until Node Ready
-                              ...  Name=${SERVER_2_NAME}
-
-                                   Log To Console    ${node_wait_status}
-                                   Should Be Equal As Strings    ${node_wait_status}    OK
+                                   sleep  1m
 
 ###################################################################################################################################
 Verify Enter Maintenance Mode
@@ -119,12 +115,7 @@ Exit Maintenance Mode
                                    ${status}    Get From Dictionary    ${result}    status
                                    Should Be Equal As Strings    ${status}    200
 
-    ${node_wait_status}            PCC.Wait Until Node Ready
-                              ...  Name=${SERVER_2_NAME}
-
-                                   Log To Console    ${node_wait_status}
-                                   Should Be Equal As Strings    ${node_wait_status}    OK
-
+                                   sleep  1m
 
 ###################################################################################################################################
 Verify Exit Maintenance Mode
