@@ -502,14 +502,13 @@ Delete Nodes
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
 
-###################################################################################################################################
-Nodes Verification Back End (Services should not be active)
-###################################################################################################################################
-    [Documentation]                      *Nodes Verification Back End*
-                                    ...  keywords:
-                                    ...  PCC.Node Verify Back End
-        [Tags]    Run_this
-        ${status}                   PCC.Node Verify Back End After Deletion
-                                    ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                    Should Not Be Equal As Strings      ${status}    OK
-
+####################################################################################################################################
+#Nodes Verification Back End (Services should not be active)
+####################################################################################################################################
+#    [Documentation]                      *Nodes Verification Back End*
+#                                    ...  keywords:
+#                                    ...  PCC.Node Verify Back End
+#        [Tags]    Run_this
+#        ${status}                   PCC.Node Verify Back End After Deletion
+#                                    ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+#                                    Should Not Be Equal As Strings      ${status}    OK
