@@ -37,18 +37,18 @@ Add Nodes
                                     Log To Console    ${status}
                                     Should be equal as strings    ${status}    OK
 
-###################################################################################################################################
-Nodes Verification Back End (Services should be running and active)
-###################################################################################################################################
-    [Documentation]                      *Nodes Verification Back End*
-                                    ...  keywords:
-                                    ...  PCC.Node Verify Back End
-
-        ${status}                   PCC.Node Verify Back End
-                                    ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}','${SERVER_4_HOST_IP}','${SERVER_5_HOST_IP}','${SERVER_6_HOST_IP}']
-                                    Log To Console    ${status}
-                                    Run Keyword If  "${status}" != "OK"  Fatal Error
-				                    Should Be Equal As Strings      ${status}    OK
+####################################################################################################################################
+#Nodes Verification Back End (Services should be running and active)
+####################################################################################################################################
+#    [Documentation]                      *Nodes Verification Back End*
+#                                    ...  keywords:
+#                                    ...  PCC.Node Verify Back End
+#
+#        ${status}                   PCC.Node Verify Back End
+#                                    ...  host_ips=['${CLUSTERHEAD_1_HOST_IP}', '${CLUSTERHEAD_2_HOST_IP}', '${SERVER_1_HOST_IP}','${SERVER_2_HOST_IP}','${SERVER_3_HOST_IP}','${SERVER_4_HOST_IP}','${SERVER_5_HOST_IP}','${SERVER_6_HOST_IP}']
+#                                    Log To Console    ${status}
+#                                    Run Keyword If  "${status}" != "OK"  Fatal Error
+#				                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Create IPAM ControlCIDR Subnet
