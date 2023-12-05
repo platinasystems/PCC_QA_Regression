@@ -16,7 +16,6 @@ Login to PCC
                          Should Be Equal    ${status}  OK
                          
                          Load Clusterhead 1 Test Data    ${pcc_setup}
-                         Load Clusterhead 2 Test Data    ${pcc_setup}
                          Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
                          
@@ -158,193 +157,7 @@ Check if Auth Profile is getting updated if Domain is invalid
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
                        Should Not Be Equal    "${status}"    "200"
-                       
-###################################################################################################################################
-#Check if Auth Profile is getting updated if Port is null
-####################################################################################################################################
-#
-#        [Documentation]    *Port validation on Auth Profile, if Port is null* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#
-#
-#
-#        ${response}    PCC.Update Auth Profile
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=None
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#
-#
-#
-####################################################################################################################################
-#Check if Auth Profile is getting updated if Port is invalid
-####################################################################################################################################
-#
-#        [Documentation]    *Port validation on Auth Profile, if Port is invalid* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#
-#
-#        ${response}    PCC.Update Auth Profile
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_INVALID_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#
-####################################################################################################################################
-#Check if Auth Profile is getting updated if BindDN is null
-####################################################################################################################################
-#
-#        [Documentation]    *BindDN validation on Auth Profile, if BindDN is null* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#
-#
-#        ${response}    PCC.Update Auth Profile
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=None
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#
-####################################################################################################################################
-#Check if Auth Profile is getting updated if BindDN is invalid
-####################################################################################################################################
-#
-#        [Documentation]    *BindDN validation on Auth Profile, if BindDN is invalid* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#
-#
-#        ${response}    PCC.Update Auth Profile
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_INVALID_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#
-#
-####################################################################################################################################
-#Check if Auth Profile is getting updated if Bind Password is null
-####################################################################################################################################
-#
-#        [Documentation]    *Bind Password validation on Auth Profile, if Bind Password is null* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#
-#
-#        ${response}    PCC.Update Auth Profile
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=None
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#
-#
-####################################################################################################################################
-#Check if Auth Profile is getting updated if Bind Password is invalid
-####################################################################################################################################
-#
-#        [Documentation]    *Bind Password validation on Auth Profile, if Bind Password is invalid* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#
-#
-#        ${response}    PCC.Update Auth Profile
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_INVALID_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-                       
-                       
+
 ###################################################################################################################################
 Check if Auth Profile is getting updated if User Base DN is null
 ###################################################################################################################################
@@ -374,93 +187,41 @@ Check if Auth Profile is getting updated if User Base DN is null
                        ${message}    Get From Dictionary    ${result}    message
                        Log to Console    ${message}
                        Should Not Be Equal    "${status}"    "200"
-                       
+
+####################################################################################################################################
+Cleanup Container Registry
+####################################################################################################################################
+
+        [Documentation]    *Cleanup all CR* test
+                           ...  keywords:
+                           ...  PCC.Clean all CR
+                           ...  PCC.Wait for deletion of CR
+
+        ${result}    PCC.Clean all CR
+
+                     Log to Console    ${result}
+                     Should Be Equal As Strings    ${result}    OK
+
+
+        ${result}    PCC.Wait for deletion of CR
+
+                     Log to Console    ${result}
+                     Should Be Equal As Strings    ${result}    OK
+
 ###################################################################################################################################
-#Check if Auth Profile is getting updated if User Base DN is invalid
-####################################################################################################################################
-#        
-#        [Documentation]    *User Base DN validation on Auth Profile, if User Base DN is invalid* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#                               
-#        
-#        ${response}    PCC.Update Auth Profile 
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_INVALID_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#                
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#                       
-####################################################################################################################################
-#Check if Auth Profile is getting updated if Group Base DN is null
-####################################################################################################################################
-#        
-#        [Documentation]    *Group Base DN validation on Auth Profile, if Group Base DN is null* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile 
-#        
-#        
-#        ${response}    PCC.Update Auth Profile 
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=None
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#                
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
-#                       
-####################################################################################################################################
-#Check if Auth Profile is getting updated if Group Base DN is invalid
-####################################################################################################################################
-#        
-#        [Documentation]    *Group Base DN validation on Auth Profile, if Group Base DN is invalid* test
-#                           ...  keywords:
-#                           ...  PCC.Update Auth Profile
-#                           
-#        
-#        ${response}    PCC.Update Auth Profile 
-#                       ...    Name=${AUTH_PROFILE_NAME}
-#                       ...    type_auth=${AUTH_PROFILE_TYPE}
-#                       ...    domain=${AUTH_PROFILE_DOMAIN}
-#                       ...    port=${AUTH_PROFILE_PORT}
-#                       ...    userIDAttribute=${AUTH_PROFILE_UID_ATTRIBUTE}
-#                       ...    userBaseDN=${AUTH_PROFILE_UBDN}
-#                       ...    groupBaseDN=${AUTH_PROFILE_INVALID_GBDN}
-#                       ...    anonymousBind=${AUTH_PROFILE_ANONYMOUSBIND}
-#                       ...    bindDN=${AUTH_PROFILE_BIND_DN}
-#                       ...    bindPassword=${AUTH_PROFILE_BIND_PWD}
-#                       ...    encryptionPolicy=${AUTH_PROFILE_ENCRYPTION}
-#                
-#
-#                       Log To Console    ${response}
-#                       ${result}    Get Result    ${response}
-#                       ${status}    Get From Dictionary    ${result}    status
-#                       ${message}    Get From Dictionary    ${result}    message
-#                       Log to Console    ${message}
-#                       Should Not Be Equal    "${status}"    "200"
+Cleanup Auth Profiles
+###################################################################################################################################
+
+        [Documentation]    *Clean-up Auth Profiles* test
+                           ...  keywords:
+                           ...  PCC.Delete All Auth Profile
+
+        [Tags]    Login
+        ########  Cleanup Auth Profile   ################################################################################
+
+        ${result}    PCC.Delete All Auth Profile
+
+                     Log to Console    ${result}
+                     Should Be Equal As Strings    ${result}    OK
+
+                     Sleep    1 minutes

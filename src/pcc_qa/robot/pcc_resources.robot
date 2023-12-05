@@ -198,57 +198,6 @@ Load Clusterhead 1 Test Data
     
             ${CLUSTERHEAD_1_SSHKEYS}        Evaluate    $pcc_server_dict.get("ssh_keys", None)
                                         Set Suite Variable    ${CLUSTERHEAD_1_SSHKEYS}
-                                        
-                                        
-###################################################################################################################################
-Load Clusterhead 2 Test Data
-###################################################################################################################################
-    [Arguments]                 ${testdata_key} 
-
-        [Documentation]         *Load Clusterhead 2 Test Data* 
-                                Log To Console          **** Load Clusterhead 2 Test Data ****
-
-            ${pcc_server_dict}    TESTDATA.Get            ${testdata_key}.json        clusterhead-2
-                                
-                                # Clusterhead Info
-                                
-            ${CLUSTERHEAD_2_NAME}            Evaluate    $pcc_server_dict.get("invader_name", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_NAME}
-        
-        
-            ${CLUSTERHEAD_2_URL}             Evaluate    $pcc_server_dict.get("pcc_url", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_URL}
-    
-            ${CLUSTERHEAD_2_HOST_IP}         Evaluate    $pcc_server_dict.get("pcc_host_ip", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_HOST_IP}
-    
-            ${CLUSTERHEAD_2_LINUX_PWD}       Evaluate    $pcc_server_dict.get("pcc_linux_password", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_LINUX_PWD}
-    
-            ${CLUSTERHEAD_2_UNAME}           Evaluate    $pcc_server_dict.get("pcc_username", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_UNAME}
-    
-            ${CLUSTERHEAD_2_PWD}             Evaluate    $pcc_server_dict.get("pcc_password", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_PWD}
-            
-            ${CLUSTERHEAD_2_BMC}             Evaluate    $pcc_server_dict.get("bmc", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_BMC}
-                                        
-            ${CLUSTERHEAD_2_BMCUSER}         Evaluate    $pcc_server_dict.get("bmc_user", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_BMCUSER}
-                                        
-            ${CLUSTERHEAD_2_BMCPWD}          Evaluate    $pcc_server_dict.get("bmc_pwd", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_BMCPWD}
-                                        
-            ${CLUSTERHEAD_2_CONSOLE}        Evaluate    $pcc_server_dict.get("console", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_CONSOLE}
-            
-            ${CLUSTERHEAD_2_MANAGED_BY_PCC}  Evaluate    $pcc_server_dict.get("managed_by_pcc", None)
-                                         Set Suite Variable    ${CLUSTERHEAD_2_MANAGED_BY_PCC}
-    
-            ${CLUSTERHEAD_2_SSHKEYS}        Evaluate    $pcc_server_dict.get("ssh_keys", None)
-                                        Set Suite Variable    ${CLUSTERHEAD_2_SSHKEYS}
-
 
 ###################################################################################################################################
 Load Server 1 Test Data

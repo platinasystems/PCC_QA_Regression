@@ -17,7 +17,6 @@ Login to PCC
         ${status}        Login To PCC    ${pcc_setup}
                          
                          Load Clusterhead 1 Test Data    ${pcc_setup}
-                         Load Clusterhead 2 Test Data    ${pcc_setup}
                          Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
                          
@@ -34,10 +33,6 @@ Login to PCC
         ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
-        
-        ${invader2_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
-                         Log To Console    ${invader2_id}
-                         Set Global Variable    ${invader2_id}
                          
 ####################################################################################################################################
 Cleanup Container Registry If Already Exists
@@ -68,7 +63,7 @@ Create a Container Registry(using Static mode) : TCP-825
                            ...  PCC.Create Container Registry
 
         ${response}    PCC.Create Container Registry
-                       ...    nodeID=${invader2_id}
+                       ...    nodeID=${invader1_id}
                        ...    Name=${STATIC_MODE_CR_NAME}
                        ...    fullyQualifiedDomainName=${STATIC_MODE_CR_FQDN}
                        ...    password=${STATIC_MODE_CR_PASSWORD}
@@ -103,7 +98,6 @@ Create a Container Registry(using Auto mode) : TCP-578
         
         
         ${response}    PCC.Create Container Registry
-
                        ...    Name=${CR_NAME}
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}

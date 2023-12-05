@@ -27,22 +27,6 @@
 
     "clusterhead-1":
         {
-            "invader_name":"cluster-head-68",
-            "pcc_url": "https://172.17.2.68:9999",
-            "pcc_host_ip": "172.17.2.68",
-            "pcc_linux_password": "cals0ft",
-            "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.28",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
-            "managed_by_pcc": "true",
-            "ssh_keys": "pcc"
-        },
-
-    "clusterhead-2":
-        {
             "invader_name":"cluster-head-69",
             "pcc_url": "https://172.17.2.69:9999",
             "pcc_host_ip": "172.17.2.69",
@@ -197,12 +181,12 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["cluster-head-68","cluster-head-69","consul-01.platinasystems.com","consul-02.platinasystems.com","servernode-130.platinasystems.com"],
-            "nodes_ip":["172.17.2.68","172.17.2.69","172.17.2.106","172.17.2.107","172.17.2.130"],
+            "nodes":["cluster-head-69","consul-01.platinasystems.com","consul-02.platinasystems.com","servernode-130.platinasystems.com"],
+            "nodes_ip":["172.17.2.69","172.17.2.106","172.17.2.107","172.17.2.130"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
             "igwPolicy":"default",
-	        "bgp_neighbors":{"cluster-head-68":{"local_as":64531,"bgp_neighbors":[{"neighbor_ip":"10.0.1.18","remote_as":64523}]},"cluster-head-69":{"local_as":64532,"bgp_neighbors":[{"neighbor_ip":"10.0.1.20","remote_as":64523}]}}
+	        "bgp_neighbors":{"cluster-head-69":{"local_as":64532,"bgp_neighbors":[{"neighbor_ip":"10.0.1.20","remote_as":64523}]}}
         },
 
     "ceph_cluster":
