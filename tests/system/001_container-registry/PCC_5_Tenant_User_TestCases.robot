@@ -519,7 +519,6 @@ Login to PCC using Admin User
                          
                          
                          Load Clusterhead 1 Test Data    ${pcc_setup}
-                         Load Clusterhead 2 Test Data    ${pcc_setup}
                          Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
                          
