@@ -18,7 +18,6 @@ Login to PCC
                          Should Be Equal    ${status}  OK
                         
                          Load Clusterhead 1 Test Data    ${pcc_setup}
-                         Load Clusterhead 2 Test Data    ${pcc_setup}
                          Load Server 1 Test Data    ${pcc_setup}
                          Load Server 2 Test Data    ${pcc_setup}
                          
@@ -35,10 +34,6 @@ Login to PCC
         ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
                          Log To Console    ${invader1_id}
                          Set Global Variable    ${invader1_id}
-        
-        ${invader2_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
-                         Log To Console    ${invader2_id}
-                         Set Global Variable    ${invader2_id}
         
         ${server_id}     PCC.Get CR_Server Id    Name=${CR_NAME}
                          Log To Console    ${server_id}
@@ -278,7 +273,7 @@ Creating two Container Registry on same server should be rejected
         
                        
         ${response}    PCC.Create Container Registry 
-                       ...    nodeID=${invader2_id}
+                       ...    nodeID=${invader1_id}
                        ...    Name=invalidCR_name
                        ...    fullyQualifiedDomainName=${CR_FQDN}
                        ...    password=${CR_PASSWORD}
