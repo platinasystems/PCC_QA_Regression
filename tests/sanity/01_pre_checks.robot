@@ -16,7 +16,6 @@ Login
                                     Load Ceph Rgw Data    ${pcc_setup}
                                     Load Ceph Cluster Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
-                                    Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup} 
                                     Load Network Manager Data    ${pcc_setup}

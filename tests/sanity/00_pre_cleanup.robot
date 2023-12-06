@@ -14,7 +14,6 @@ Login
                                     Load Ceph Cluster Data    ${pcc_setup}
                                     Load Ceph Fs Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
-                                    Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
                                     Load K8s Data    ${pcc_setup}
