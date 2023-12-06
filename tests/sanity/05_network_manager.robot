@@ -11,7 +11,6 @@ Login
                                     Load Ipam Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
                                     Load Clusterhead 1 Test Data    ${pcc_setup}
-                                    Load Clusterhead 2 Test Data    ${pcc_setup}
                                     Load Server 1 Test Data    ${pcc_setup}
                                     Load Server 2 Test Data    ${pcc_setup}
                                     Load Server 3 Test Data    ${pcc_setup}
@@ -113,7 +112,7 @@ Network Manager Create Verification Backend
                                ...  PCC.Network Manager Verify BE 
 
         ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK
@@ -149,7 +148,7 @@ Network Manager Re-deploy
                                     Should Be Equal As Strings      ${status}    OK 
 
         ${status}                   PCC.Network Manager Verify BE      
-                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
+                               ...  nodes_ip=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}","${SERVER_3_HOST_IP}"]
                                ...  controlCIDR=${IPAM_CONTROL_SUBNET_IP}
                                ...  dataCIDR=${IPAM_DATA_SUBNET_IP}
                                     Should Be Equal As Strings      ${status}  OK

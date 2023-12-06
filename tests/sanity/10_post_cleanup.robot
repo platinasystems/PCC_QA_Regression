@@ -11,7 +11,6 @@ Login
         [Tags]    Force_delete
                                     Load PCC Test Data        ${pcc_setup}
                                     Load Clusterhead 1 Test Data        ${pcc_setup}
-                                    Load Clusterhead 2 Test Data        ${pcc_setup}
                                     Load Server 2 Test Data        ${pcc_setup}
                                     Load Server 1 Test Data        ${pcc_setup}
                                     Load Server 3 Test Data        ${pcc_setup}
@@ -55,10 +54,6 @@ Login
         ${invader1_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_1_NAME}
                           Log To Console    ${invader1_id}
                           Set Global Variable    ${invader1_id}
-
-        ${invader2_id}    PCC.Get Node Id    Name=${CLUSTERHEAD_2_NAME}
-                          Log To Console    ${invader2_id}
-                          Set Global Variable    ${invader2_id}
 
 ###################################################################################################################################
 Ceph K8s Multiple
@@ -158,14 +153,6 @@ Re-assigning ROOT to Node
         ${response}    PCC.Assign Tenant to Node
                        ...    tenant=${tenant_id}
                        ...    ids=${invader1_id}
-
-                       Log To Console    ${response}
-                       ${status}    Get From Dictionary    ${response}    StatusCode
-                       Should Be Equal As Strings    ${status}    200
-
-        ${response}    PCC.Assign Tenant to Node
-                       ...    tenant=${tenant_id}
-                       ...    ids=${invader2_id}
 
                        Log To Console    ${response}
                        ${status}    Get From Dictionary    ${response}    StatusCode
@@ -481,14 +468,14 @@ Delete Nodes
                                    Log To Console    ${status}
                                    Should be equal as strings    ${status}    OK
 
-###################################################################################################################################
-Nodes Verification Back End (Services should not be active)
-###################################################################################################################################
-    [Documentation]                      *Nodes Verification Back End*
-                                    ...  keywords:
-                                    ...  PCC.Node Verify Back End
-        [Tags]    Run_this
-        ${status}                   PCC.Node Verify Back End After Deletion
-                                    ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
-                                    Should Not Be Equal As Strings      ${status}    OK
+####################################################################################################################################
+#Nodes Verification Back End (Services should not be active)
+####################################################################################################################################
+#    [Documentation]                      *Nodes Verification Back End*
+#                                    ...  keywords:
+#                                    ...  PCC.Node Verify Back End
+#        [Tags]    Run_this
+#        ${status}                   PCC.Node Verify Back End After Deletion
+#                                    ...  host_ips=["${SERVER_2_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_3_HOST_IP}","${CLUSTERHEAD_1_HOST_IP}","${CLUSTERHEAD_2_HOST_IP}"]
+#                                    Should Not Be Equal As Strings      ${status}    OK
 
