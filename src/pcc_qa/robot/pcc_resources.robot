@@ -48,6 +48,7 @@ Library                         pcc_qa.pcc.Notifications
 Library                         pcc_qa.pcc.Tags
 Library                         pcc_qa.pcc.Search
 Library                         pcc_qa.pcc.Prometheus
+Library                         pcc_qa.pcc.Baremetal
 Library                         Collections
 
 
