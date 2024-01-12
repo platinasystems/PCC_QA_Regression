@@ -4,6 +4,7 @@ import time
 import json
 import urllib3
 import requests
+from pcc_qa.common.Utils import banner, trace, pretty_print
 
 PCC_SECURITY_AUTH = "/security/auth"
 
@@ -45,7 +46,9 @@ def login(url:str, username:str, password:str, proxy:str=None, insecure:bool=Fal
         proxies['https'] = proxy
 
     response = session.post(url + PCC_SECURITY_AUTH, json=payload, headers=headers, proxies=proxies)
-    print("Response:"+str(response))
+    trace("Response:"+str(response.status_code))
+    if response.status_code != 200:
+        return {"status_code": response.status_code}
     result = json.loads(response.text)
     token = result['token']
     
@@ -53,4 +56,4 @@ def login(url:str, username:str, password:str, proxy:str=None, insecure:bool=Fal
     if use_session:
         user_session = session
 
-    return {'session': user_session, 'token': token, 'url': url, 'proxies': proxies, 'options': {'insecure': insecure, 'use_session': use_session}}
+    return {'session': user_session, 'token': token, 'url': url, 'proxies': proxies, 'options': {'insecure': insecure, 'use_session': use_session}, 'status_code':response.status_code}
