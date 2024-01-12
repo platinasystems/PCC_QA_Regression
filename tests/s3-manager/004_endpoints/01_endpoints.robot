@@ -369,8 +369,5 @@ Create Endpoint With The Same Name (NEGATIVE)
                                     ...  customers=${customers}
 
         ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
+                                    Should Not Be Equal As Strings      ${status_code}  200
 
-        ${status}                   S3.Wait Until Endpoint Ready
-                                    ...  name=${ENDPOINT_NAME}
-                                    Should Be Equal As Strings      ${status}  OK
