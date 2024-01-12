@@ -343,3 +343,34 @@ Create Endpoint Without Advanced options
         ${status}                   S3.Wait Until Endpoint Ready
                                     ...  name=${ENDPOINT_NAME}
                                     Should Be Equal As Strings      ${status}  OK
+
+
+###################################################################################################################################
+Create Endpoint With The Same Name (NEGATIVE)
+###################################################################################################################################
+
+        ${pcc_id}                   S3.Get PCC Instance Id By Name
+                                    ...  name=${PCC_NAME}
+
+        ${cluster_id}               S3.Get PCC Ceph Cluster Id By Name
+                                    ...  clusterName=${CEPH_CLUSTER_NAME}
+                                    ...  pccId=${pcc_id}
+
+        ${org_id}                   S3.Get Organization Id By Name
+                                    ...  name=${ORG_NAME}
+
+        ${customers}                Create List     ${1}    ${org_id}
+
+        ${response}                 S3.Create Endpoint
+                                    ...  pccId=${pcc_id}
+                                    ...  name=${ENDPOINT_NAME}
+                                    ...  description=test create endpoint
+                                    ...  clusterID=${cluster_id}
+                                    ...  customers=${customers}
+
+        ${status_code}              Get Response Status Code        ${response}
+                                    Should Be Equal As Strings      ${status_code}  200
+
+        ${status}                   S3.Wait Until Endpoint Ready
+                                    ...  name=${ENDPOINT_NAME}
+                                    Should Be Equal As Strings      ${status}  OK

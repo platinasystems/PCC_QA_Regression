@@ -88,6 +88,22 @@ Create PCC Instance
                                     Should Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
+Create PCC Instance With Same Name (NEGATIVE)
+###################################################################################################################################
+
+        ${response}                 S3.Create PCC Instance
+                                    ...  name=${PCC_NAME}
+                                    ...  username=${PCC_USERNAME}
+                                    ...  pwd=${PCC_PASSWORD}
+                                    ...  address=${PCC_ADDRESS}
+                                    ...  port=${PCC_PORT}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
 Get All PCC Instances
 ###################################################################################################################################
 

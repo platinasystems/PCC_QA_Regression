@@ -11,6 +11,7 @@ from pcc_qa.common.S3ManagerBase import S3ManagerBase
 from pcc_qa.common.Login import login
 
 
+
 class Login(S3ManagerBase):
     """
     Login
@@ -28,6 +29,8 @@ class Login(S3ManagerBase):
         self._load_kwargs(kwargs)
         print("Kwargs:-"+str(kwargs))
         banner("S3.Login")
+        trace(self.url)
         var = login(self.url, self.username, self.password)
-        print(var)
+        if var["status_code"] != 200:
+            return {"StatusCode": var["status_code"]}
         return var

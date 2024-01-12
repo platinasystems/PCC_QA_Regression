@@ -64,11 +64,11 @@ Create Organization Without LastName (NEGATIVE)
                                     Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
-Create Organization
+Create Organization With Space In The Name (NEGATIVE)
 ###################################################################################################################################
 
         ${response}                 S3.Create Organization
-                                    ...  name=${ORG_NAME}
+                                    ...  name=test org
                                     ...  description=${ORG_DESC}
                                     ...  username=${USER_USERNAME}
                                     ...  email=${USER_EMAIL}
@@ -79,7 +79,39 @@ Create Organization
         ${status_code}              Get Response Status Code        ${response}
         ${data}                     Get Response Data        ${response}
                                     Log To Console      ${data}
+                                    Should Not Be Equal As Strings      ${status_code}  200
+
+###################################################################################################################################
+Create Organization With Inactive User
+###################################################################################################################################
+
+        ${response}                 S3.Create Organization
+                                    ...  name=${ORG_NAME}
+                                    ...  description=${ORG_DESC}
+                                    ...  username=${USER_USERNAME}
+                                    ...  email=${USER_EMAIL}
+                                    ...  password=${USER_PASSWORD}
+                                    ...  firstName=${USER_FIRSTNAME}
+                                    ...  lastName=${USER_LASTNAME}
+                                    ...  active=${False}
+
+        ${status_code}              Get Response Status Code        ${response}
+        ${data}                     Get Response Data        ${response}
+                                    Log To Console      ${data}
                                     Should Be Equal As Strings      ${status_code}  200
+
+
+###################################################################################################################################
+Login With Inactive User (NEGATIVE)
+###################################################################################################################################
+
+       ${response}                 S3.Login
+                                   ...  url=${S3_URL}/security/auth
+                                   ...  username=${USER_USERNAME}
+                                   ...  password=${USER_PASSWORD}
+
+       ${status_code}              Get Response Status Code        ${response}
+                                   Should Not Be Equal As Strings      ${status_code}  200
 
 ###################################################################################################################################
 Get All Organizations
