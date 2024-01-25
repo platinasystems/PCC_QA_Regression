@@ -9,7 +9,7 @@ from pcc_qa.common.Utils import banner, trace, pretty_print
 PCC_SECURITY_AUTH = "/security/auth"
 
 ## Login
-def login(url:str, username:str, password:str, proxy:str=None, insecure:bool=False, use_session:bool=True)->dict:
+def login(url:str, username:str, password:str, otp:str=None, proxy:str=None, insecure:bool=False, use_session:bool=True)->dict:
     """
     [Args]
         url: URL of the PCC being tested
@@ -35,7 +35,10 @@ def login(url:str, username:str, password:str, proxy:str=None, insecure:bool=Fal
     if insecure:
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     headers = {'Content-Type': 'application/json'}
-    payload = {'username': username, 'password': password}
+    if otp:
+        payload = {'username': username, 'password': password, 'otp': otp}
+    else:
+        payload = {'username': username, 'password': password}
 
     proxies = {}
     if proxy:
@@ -56,4 +59,4 @@ def login(url:str, username:str, password:str, proxy:str=None, insecure:bool=Fal
     if use_session:
         user_session = session
 
-    return {'session': user_session, 'token': token, 'url': url, 'proxies': proxies, 'options': {'insecure': insecure, 'use_session': use_session}, 'status_code':response.status_code}
+    return {'session': user_session, 'token': token, 'url': url, 'proxies': proxies, 'options': {'insecure': insecure, 'use_session': use_session}, 'status_code': response.status_code}

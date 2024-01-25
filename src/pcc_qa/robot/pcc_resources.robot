@@ -122,6 +122,9 @@ Load PCC Test Data
         ${PCC_LINUX_PASSWORD}       Evaluate                $pcc_server_dict.get("pcc_linux_password", None)
                                     Set Suite Variable      ${PCC_LINUX_PASSWORD}
 
+        ${PCC_LINUX_KEY_PATH}       Evaluate                $pcc_server_dict.get("pcc_linux_key_path", None)
+                                    Set Suite Variable      ${PCC_LINUX_KEY_PATH}
+
         ${PCC_LINUX_USER}           Evaluate                $pcc_server_dict.get("pcc_linux_user", None)
                                     Set Suite Variable      ${PCC_LINUX_USER}
 
