@@ -27,8 +27,9 @@ class Pcc(PccBase):
 
         # Robot arguments definitions
 
-        self.user="pcc"
-        self.password="cals0ft"
+        self.user = "pcc"
+        self.password = ""
+        self.keypath = ""
         self.hostip = None
 
         super().__init__()
@@ -44,9 +45,10 @@ class Pcc(PccBase):
             print("Kwargs are: {}".format(kwargs))
             # Get Pcc Version
             cmd = "docker exec -t pccserver ./pccserver --version"
-            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password)
+            status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.user, linux_password=self.password, linux_key_path=self.keypath)
             print("cmd: {} executed successfully and status is: {}".format(cmd, status))
             return status
 
         except Exception as e:
             trace("Error in getting pcc version: {}".format(e))
+

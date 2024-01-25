@@ -6,7 +6,7 @@ from invoke import run
 from platina_sdk import pcc_api as pcc
 
 ## CLI
-def cli_run(host_ip:str, linux_user:str, linux_password:str, cmd:str)->dict:
+def cli_run(host_ip:str, cmd:str, linux_user:str, linux_password:str=None, linux_key_path:str=None)->dict:
     """
     CLI Run - Run a Linux command 
     [Args]
@@ -18,7 +18,10 @@ def cli_run(host_ip:str, linux_user:str, linux_password:str, cmd:str)->dict:
         (dict) CLI Run response
     """
     try:
-        c = Connection(linux_user + "@" + host_ip, connect_kwargs={'password':linux_password})
+        if linux_key_path:
+            c = Connection(linux_user + "@" + host_ip, connect_kwargs={'key_filename': linux_key_path})
+        else:
+            c = Connection(linux_user + "@" + host_ip, connect_kwargs={'password': linux_password})
         return c.run(cmd, warn=True)
     except Exception as e:
         return {"Error": str(e)}
