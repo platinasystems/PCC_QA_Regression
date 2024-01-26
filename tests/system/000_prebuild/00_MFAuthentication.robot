@@ -34,11 +34,11 @@ Enable MF Authentication
 ###################################################################################################################################
     [Documentation]             *Enable MF Authentication*
 
-    ${status}                   PCC.Enable MF Authentication
+    ${seed}                   PCC.Enable MF Authentication
 
-                                Should be equal as strings    ${status}    OK
-
-
+                              Set Suite Variable      ${seed}
+    ${status}                 Set Variable If  "${seed}" == "None"  ERROR  OK
+                              Should Be Equal As Strings    ${status}    OK
 
 ###################################################################################################################################
 Login Without MF Authentication (Negative)
@@ -61,6 +61,7 @@ Login With MF Authentication
     [Documentation]             *Login With MF Authentication*
 
     ${otp}                      PCC.Generate OTP
+                                ...  seed=${seed}
 
     ${PCC_CONN}                 PCC.Login
                                 ...  url=${PCC_URL}
@@ -80,6 +81,7 @@ Disable MF Authentication
     [Documentation]             *Disable MF Authentication*
 
      ${otp}                      PCC.Generate OTP
+                                 ...  seed=${seed}
 
 
      ${status}                   PCC.Disable MF Authentication
