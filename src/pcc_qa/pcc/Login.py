@@ -79,6 +79,39 @@ class Login(PccBase):
         except Exception as e:
             raise e
 
+    ###########################################################################
+    @keyword(name="PCC.Start Reset MF Authentication")
+    ###########################################################################
+    def start_disable_mfa(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.Start Reset MF Authentication")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            payload = {"username": self.username, "source": self.url + "/user-management/user/mfa/reset"}
+            resp = pcc.reset_mfa(conn, payload)
+            status_code = get_status_code(resp)
+            if status_code == 200:
+                return "OK"
+            return "Error"
+        except Exception as e:
+            raise e
+
+    ###########################################################################
+    @keyword(name="PCC.End Reset MF Authentication")
+    ###########################################################################
+    def end_disable_mfa(self, *args, **kwargs):
+        self._load_kwargs(kwargs)
+        banner("PCC.End Reset MF Authentication")
+        try:
+            conn = BuiltIn().get_variable_value("${PCC_CONN}")
+            payload = {"username": self.username, "otp": self.otp}
+            resp = pcc.reset_mfa(conn, payload)
+            status_code = get_status_code(resp)
+            if status_code == 200:
+                return "OK"
+            return "Error"
+        except Exception as e:
+            raise e
 
     ###########################################################################
     @keyword(name="PCC.Generate OTP")
