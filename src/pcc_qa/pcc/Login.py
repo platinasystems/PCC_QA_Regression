@@ -11,7 +11,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from pcc_qa.common.Utils import banner, trace, pretty_print
 from pcc_qa.common.PccBase import PccBase
 from pcc_qa.common.Login import login
-from pcc_qa.common.Result import get_response_data
+from pcc_qa.common.Result import get_result, get_status_code
 
 class Login(PccBase):
     """ 
@@ -46,16 +46,18 @@ class Login(PccBase):
         try:
             conn = BuiltIn().get_variable_value("${PCC_CONN}")
             resp = pcc.enable_mfa(conn, {})
-            data = get_response_data(resp)
+            data = get_result(resp)
             status_code = get_status_code(resp)
             if status_code == 200:
-                self.seed = data["seed"]
+                trace(data)
+                self.seed = data["secret"]
+                trace(self.seed)
                 totp = pyotp.TOTP(self.seed)
                 resp = pcc.enable_mfa(conn, {"otp": totp.now()})
                 status_code = get_status_code(resp)
                 if status_code == 200:
-                    return "OK"
-            return "Error"
+                    return self.seed
+            return None
         except Exception as e:
             raise e
 
@@ -63,7 +65,7 @@ class Login(PccBase):
     ###########################################################################
     @keyword(name="PCC.Disable MF Authentication")
     ###########################################################################
-    def enable_mfa(self, *args, **kwargs):
+    def disable_mfa(self, *args, **kwargs):
         self._load_kwargs(kwargs)
         banner("PCC.Disable MF Authentication")
 
@@ -85,6 +87,6 @@ class Login(PccBase):
         self._load_kwargs(kwargs)
         banner("PCC.Generate OTP")
         totp = pyotp.TOTP(self.seed)
-        return totp
+        return totp.now()
 
 

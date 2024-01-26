@@ -10,3 +10,4 @@ RUN pip3 install /motor/dist/PCC_QA_Regression-1.0.0.tar.gz
 RUN pip3 install python-imap
 RUN pip3 install PyJWT
 RUN pip3 install decorator
+RUN pip3 install pyotp
