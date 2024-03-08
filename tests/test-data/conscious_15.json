@@ -2,9 +2,9 @@
     "pcc_server":
         {
             "pcc_url":"https://192.168.21.11:9999",
-            "pcc_host_ip":"localhost",
+            "pcc_host_ip":"192.168.21.11",
             "pcc_linux_user":"pcc",
-            "pcc_linux_password":"cals0ft",
+            "pcc_linux_password":"plat1na",
             "pcc_linux_key_path": "/home/pcc/garena/proxy_pem.pem",
             "pcc_username":"admin",
             "pcc_password":"consciousp0cplatina",
