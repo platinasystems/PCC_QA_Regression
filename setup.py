@@ -22,7 +22,11 @@ REQUIREMENTS = [
     'distro',
     'datetime',
     'requests >= 2.21',
-    'urllib3 >= 1.24'
+    'urllib3 >= 1.24',
+    'pyotp',
+    'decorator',
+    'PyJWT',
+    'python-imap'
     ]
 
 CURRENT_DIR = dirname(abspath(__file__))
