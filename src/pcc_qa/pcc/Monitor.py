@@ -30,7 +30,7 @@ class Monitor(PccBase):
         self.nodes=[]
         self.nodes_ip=[]
         self.user="pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.check_disk=False
         self.check_health_level=False
         super().__init__()

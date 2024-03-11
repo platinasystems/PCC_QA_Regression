@@ -27,7 +27,7 @@ class RoleOperations(PccBase):
         self.Host=None
         self.node_name=None
         self.user="pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.nodes_ip=[]
         self.tags=[]
 

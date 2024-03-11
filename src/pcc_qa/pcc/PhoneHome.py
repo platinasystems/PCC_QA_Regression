@@ -25,7 +25,7 @@ class PhoneHome(PccBase):
         self.host_ip = None
         self.config_file = None
         self.user = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.setup_username = None
         self.tar_file_type = None
         self.get_file_name = None
@@ -485,7 +485,7 @@ class PhoneHome(PccBase):
         print("Kwargs:" + str(kwargs))
         trace("Kwargs:" + str(kwargs))
         try:
-            encrypted_values = ["plat1na","cals0ft","miniominio","aucta2018","BEGIN CERTIFICATE","BEGIN PRIVATE KEY","Bearer"]
+            encrypted_values = ["plat1na","plat1na","miniominio","aucta2018","BEGIN CERTIFICATE","BEGIN PRIVATE KEY","Bearer"]
             status = []
             for val in encrypted_values:
                 cmd1 = 'sudo grep -rnw "/home/pcc/platina-cli-ws/phone-home/" -e "{}"| wc -l'.format(val)

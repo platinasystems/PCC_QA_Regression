@@ -46,7 +46,7 @@ class PolicyDrivenMgmt(PccBase):
         self.targetNodeIp = []
         self.host_ip= None
         self.user="pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.roles_id = None
         self.snmp_version = None
         self.community_string = None

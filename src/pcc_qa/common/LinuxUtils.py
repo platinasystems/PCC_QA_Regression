@@ -28,7 +28,7 @@ class LinuxUtils(PccBase):
         self.hostip = None
         self.node_names = []
         self.username = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.process_name = None
         self.service_name = None
         self.port_number = None

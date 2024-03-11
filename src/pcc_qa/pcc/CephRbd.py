@@ -35,7 +35,7 @@ class CephRbd(PccBase):
         self.count=0
         self.pool_name = None
         self.username = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.hostip = None
         self.mount_folder_name = None
         self.inet_ip = None
