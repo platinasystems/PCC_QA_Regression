@@ -66,10 +66,12 @@ pipeline {
                 // sh 'robot -x output/robot.xml --outputdir output $REGRESSION_HOME/pipeline/containers/motor-test-base/motor-test-base.robot'
 
                 dir(REGRESSION_HOME){
-                    sh '''
-                        export PYTHONPATH=/usr/local/robot
-                        robot -x robot.xml --outputdir output ${TEST_NAME}
-                    '''
+                    catchError(buildResult: 'SUCCESS', stageResult:'FAILURE') {
+                        sh '''
+                            export PYTHONPATH=/usr/local/robot
+                            robot -x robot.xml --outputdir output ${TEST_NAME}
+                        '''
+                    }
                 }
             }
         }
