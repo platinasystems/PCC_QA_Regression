@@ -47,8 +47,7 @@ class LinuxUtils(PccBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "ps -aux|grep {}|grep -v grep|wc -l".format(self.process_name)
-            process_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                           linux_password=self.password)
+            process_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             
             serialised_process_up_status = self._serialize_response(time.time(), process_up_status)
             print("serialised_process_up_status is:{}".format(serialised_process_up_status))
@@ -73,8 +72,7 @@ class LinuxUtils(PccBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "sudo service {} status|grep -e 'Active:' -e 'running'|wc -l".format(self.service_name)
-            daemon_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                          linux_password=self.password)
+            daemon_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             
             serialised_daemon_up_status = self._serialize_response(time.time(), daemon_up_status)
             print("serialised_daemon_up_status is:{}".format(serialised_daemon_up_status))
@@ -100,8 +98,7 @@ class LinuxUtils(PccBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "ping {} -c 4".format(self.FQDN_name)
-            FQDN_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                     linux_password=self.password)
+            FQDN_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             
             serialised_FQDN_status = self._serialize_response(time.time(), FQDN_status)
             print("serialised_FQDN_status is:{}".format(serialised_FQDN_status))
@@ -126,9 +123,8 @@ class LinuxUtils(PccBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "sudo netstat -antlp|grep -w {}|wc -l".format(self.port_number)
-            port_used_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                          linux_password=self.password)
-            
+            port_used_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
+
             serialised_port_used_status = self._serialize_response(time.time(), port_used_status)
             print("serialised_port_used_status is:{}".format(serialised_port_used_status))
             
@@ -152,15 +148,13 @@ class LinuxUtils(PccBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "sudo reboot"
-            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                          linux_password=self.password)
+            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             banner("Sleeping")
             time.sleep(int(self.time_to_wait))
             banner("Done sleeping")
             cmd = "ping {} -c 4".format(self.hostip)
             
-            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                     linux_password=self.password)
+            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             
             serialised_restart_up_status = self._serialize_response(time.time(), restart_up_status)
             print("serialised_restart_up_status is:{}".format(serialised_restart_up_status))
@@ -185,15 +179,13 @@ class LinuxUtils(PccBase):
         self._load_kwargs(kwargs)
         try:
             cmd = "sudo reboot -f"
-            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                          linux_password=self.password)
+            restart_cmd = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             banner("Sleeping")
             time.sleep(int(self.time_to_wait))
             banner("Done sleeping")
             cmd = "ping {} -c 4".format(self.hostip)
             
-            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username,
-                                     linux_password=self.password)
+            restart_up_status = cli_run(cmd=cmd, host_ip=self.hostip, linux_user=self.username, linux_password=self.password)
             
             serialised_restart_up_status = self._serialize_response(time.time(), restart_up_status)
             print("serialised_restart_up_status is:{}".format(serialised_restart_up_status))
@@ -224,8 +216,7 @@ class LinuxUtils(PccBase):
             print("host_ips_list : {}".format(host_ips))
             for ip in host_ips:    
                 cmd = "sudo cat /etc/os-release|grep PRETTY_NAME"
-                cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
-                                              linux_password=self.password)
+                cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username, linux_password=self.password)
                 
                 serialised_status = self._serialize_response(time.time(), cmd_output)                    
                 serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()                              
@@ -233,8 +224,7 @@ class LinuxUtils(PccBase):
                 
                 if "Ubuntu" in serialised_cmd_output:
                     cmd = "sudo apt-get install net-tools"
-                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username,
-                                         linux_password=self.password)
+                    cmd_output = cli_run(cmd=cmd, host_ip=ip, linux_user=self.username, linux_password=self.password)
                     
                     serialised_status = self._serialize_response(time.time(), cmd_output)                    
                     serialised_cmd_output = str(serialised_status['Result']['stdout']).replace('\n', '').strip()

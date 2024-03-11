@@ -52,7 +52,7 @@ class Cli(PccBase):
         """
         self._load_kwargs(kwargs)
         banner("CLI.Run ip=%s [cmd=%s]" % (self.host_ip, self.cmd))
-        return cli_run(self.host_ip, self.linux_user, self.linux_password, self.cmd)
+        return cli_run(host_ip=self.host_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=self.cmd)
 
     ###########################################################################
     @keyword(name="CLI.Truncate PCC Logs")
@@ -119,7 +119,7 @@ class Cli(PccBase):
         print("Making PCC Down ...")
         trace("Making PCC Down ...")
         print("Command:"+str(cmd))
-        output=cli_run(self.host_ip, self.linux_user, self.linux_password, cmd)
+        output=cli_run(host_ip=self.host_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd)
         print("Output:"+str(output))
         trace("Output:"+str(output))
         if re.search("FAIL",str(output)):
@@ -440,7 +440,7 @@ class Cli(PccBase):
         conn = BuiltIn().get_variable_value("${PCC_CONN}")
         cmd="sudo cat /etc/os-release| grep PRETTY_NAME"
         trace("Command" + str(cmd) + "is getting executed")
-        cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
+        cmd_op=cli_run(host_ip=self.host_ip,linux_user=self.linux_user,linux_password=self.linux_password,cmd=cmd)
         trace("cmd_op in CLI.Get OS Version is :{}".format(cmd_op))
         #serialised_output = self._serialize_response(time.time(), cmd_op)
 
