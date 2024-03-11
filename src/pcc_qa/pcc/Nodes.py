@@ -61,7 +61,7 @@ class Nodes(PccBase):
         self.IP = None
         self.host_ips = []
         self.user= "pcc"
-        self.password= "cals0ft"
+        self.password= "plat1na"
         self.scopeId = None
         self.maintenance = False
         self.interface_name = []

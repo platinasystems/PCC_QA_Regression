@@ -375,7 +375,7 @@ class OS_Deployment(PccBase):
         banner("PCC.Set password on Server")
         self._load_kwargs(kwargs)             
         try:
-            cmd = """ssh -i id_rsa_khushboo admin@{} -t 'echo -e "cals0ft\ncals0ft" | sudo passwd pcc'""".format(self.set_password_server)
+            cmd = """ssh -i id_rsa_khushboo admin@{} -t 'echo -e "plat1na\nplat1na" | sudo passwd pcc'""".format(self.set_password_server)
             cmd_output = cli_run(cmd=cmd, host_ip=self.host_ip, linux_user=self.username,linux_password=self.password)
             trace("Set_password_on_i28: {}".format(str(cmd_output)))
 

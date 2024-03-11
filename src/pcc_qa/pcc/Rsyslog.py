@@ -26,7 +26,7 @@ class Rsyslog(PccBase):
     def __init__(self):
         self.host_ip= None
         self.linux_user= "pcc"
-        self.linux_password= "cals0ft"
+        self.linux_password= "plat1na"
         self.node_names=None
         self.host_ips= None
         self.rsys_tls = "no"
@@ -166,7 +166,7 @@ class Rsyslog(PccBase):
             trace("----------------Copying Rsyslog Config File For TLS----------------")
             changing_perm="sudo chmod 777 /etc"
             cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
-            cmd_config="sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/".format(path,server_ip)
+            cmd_config="sshpass -p 'plat1na' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/".format(path,server_ip)
             print("Command for transferriddng rsyslog config file for TLS: "+str(cmd_config))
             trace("Command for transferring rsyslog config file for TLS: "+str(cmd_config))
             cmd_out = os.system(cmd_config)
@@ -182,7 +182,7 @@ class Rsyslog(PccBase):
                 cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
                 print("-----------Copying server files-----------------")
                 trace("-----------Copying server files-----------------")
-                cmd_transfer = "sudo sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
+                cmd_transfer = "sudo sshpass -p 'plat1na' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
                 print("Command for transferring server files : "+str(cmd_transfer))
                 trace("Command for transferring server files : "+str(cmd_transfer))
                 cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd_transfer)
@@ -192,7 +192,7 @@ class Rsyslog(PccBase):
                 cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
                 print("-----------Copying server files-----------------")
                 trace("-----------Copying server files-----------------")
-                cmd_transfer = "sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
+                cmd_transfer = "sshpass -p 'plat1na' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
                 print("Command for transferring server files : "+str(cmd_transfer))
                 trace("Command for transferring server files : "+str(cmd_transfer))
                 cmd_out = os.system(cmd_transfer)
@@ -202,7 +202,7 @@ class Rsyslog(PccBase):
             cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
             print("-----------Copying Rsyslog Config File For Non TLS-----------------")
             trace("-----------Copying Rsyslog Config File For Non TLS-----------------")
-            cmd_config="sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/.".format(path,server_ip)
+            cmd_config="sshpass -p 'plat1na' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/.".format(path,server_ip)
             print("Command for transferring rsyslog config file for non TLS: " + str(cmd_config))
             trace("Command for transferring rsyslog config file for non TLS: " + str(cmd_config))
             cmd_out = os.system(cmd_config)

@@ -32,7 +32,7 @@ class CephFs(PccBase):
         self.ceph_cluster_id = None
         self.nodes_ip = []
         self.user="pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.mount_folder_name = None
         self.dummy_file_name = None
         self.hostip = None

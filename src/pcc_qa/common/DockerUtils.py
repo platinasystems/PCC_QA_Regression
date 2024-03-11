@@ -19,7 +19,7 @@ class DockerUtils(PccBase):
 
         self.hostip = None
         self.username = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.cmd_output = None
         self.container_name = None
         self.image_name = None

@@ -31,7 +31,7 @@ class CephPool(PccBase):
         self.quota = None
         self.quota_unit = ""
         self.user = "pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.nodes_ip = []
         self.count = 0
         self.pool_name = None

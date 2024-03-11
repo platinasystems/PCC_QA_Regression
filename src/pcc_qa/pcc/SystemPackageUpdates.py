@@ -26,7 +26,7 @@ class SystemPackageUpdates(PccBase):
         self.host_ips= None
         self.host_ip= None
         self.linux_user= "pcc"
-        self.linux_password= "cals0ft"
+        self.linux_password= "plat1na"
         super().__init__()
 
     ###########################################################################

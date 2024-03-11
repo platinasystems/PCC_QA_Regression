@@ -32,7 +32,7 @@ class ApplicationCredentialManager(PccBase):
         self.tenant_name = None
         self.setup_ip = None
         self.user = "pcc"
-        self.password = "Cals0ft" 
+        self.password = "plat1na" 
         self.Id = None  
         self.Type = None
         self.Name = None

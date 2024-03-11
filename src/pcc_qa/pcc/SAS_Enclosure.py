@@ -30,7 +30,7 @@ class SAS_Enclosure(PccBase):
         self.auth_data = None
         self.setup_ip = None
         self.user = "pcc"
-        self.password = "Cals0ft"   
+        self.password = "plat1na"   
         self.slot_name = None 
         self.led_status = None 
         super().__init__()
