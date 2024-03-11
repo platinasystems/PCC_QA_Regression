@@ -40,8 +40,7 @@ class Topology(PccBase):
             invader_interfaces = []
             for hostip in ast.literal_eval(self.invaders_hostip):
                 cmd= "sudo lldpcli show neighbors |grep xeth"
-                command_execution = cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username,
-                                              linux_password=self.password)
+                command_execution = cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username, linux_password=self.password)
                 
                 serialised_command_execution = self._serialize_response(time.time(), command_execution)
                 logger.console("Serialised: {}".format(serialised_command_execution))
@@ -71,8 +70,7 @@ class Topology(PccBase):
             server_interfaces = []
             for hostip in ast.literal_eval(self.servers_hostip):
                 cmd= "sudo lldpcli show neighbors |grep xeth"
-                command_execution = cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username,
-                                              linux_password=self.password)
+                command_execution = cli_run(cmd=cmd, host_ip=hostip, linux_user=self.username, linux_password=self.password)
                 
                 serialised_command_execution = self._serialize_response(time.time(), command_execution)
                 logger.console("Serialised: {}".format(serialised_command_execution))

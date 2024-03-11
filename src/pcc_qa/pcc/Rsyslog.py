@@ -55,7 +55,7 @@ class Rsyslog(PccBase):
             validation_status = []
             for node_name in ast.literal_eval(self.node_names):
                 print("Node name: {}".format(node_name))
-                date_cmd_op = self._serialize_response(time.time(), cli_run(self.host_ip,self.linux_user,self.linux_password,cmd="date +'%b %e'"))
+                date_cmd_op = self._serialize_response(time.time(), cli_run(host_ip=self.host_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd="date +'%b %e'"))
                 output = str(date_cmd_op['Result']['stdout']).replace('\n', '').strip()
                 #current_time = output[11:16]
                 print("Current_date: {}".format(output))
@@ -63,7 +63,7 @@ class Rsyslog(PccBase):
 
                 cmd = '''sudo cat /var/log/messages|grep "{}"|grep "{}"|wc -l'''.format(output,node_name)  
                 print("============== cmd is : {} ==========".format(cmd))
-                cmd_op=cli_run(self.host_ip,self.linux_user,self.linux_password,cmd)
+                cmd_op=cli_run(host_ip=self.host_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd)
                 serialised_output = self._serialize_response(time.time(), cmd_op)
                 output = str(serialised_output['Result']['stdout']).replace('\n', '').strip()
                 print("command output is :{}".format(output))
@@ -93,12 +93,12 @@ class Rsyslog(PccBase):
             cmd1 = "sudo systemctl restart rsyslog"
             cmd2 = "sudo systemctl status rsyslog"
             for hostip in ast.literal_eval(self.host_ips):
-                cmd1_op=cli_run(hostip,self.linux_user,self.linux_password,cmd1)
+                cmd1_op=cli_run(host_ip=hostip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd1)
                 print("cmd1: {}\n ====== Output is {} ========".format(cmd1, cmd1_op))
                 
                 time.sleep(10)
 
-                cmd2_op= cli_run(hostip,self.linux_user,self.linux_password,cmd2)
+                cmd2_op= cli_run(host_ip=hostip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd2)
                 print("cmd2: {}\n ====== Output is {} ========".format(cmd2, cmd2_op))
                 trace("cmd2: {}\n ====== Output is {} ========".format(cmd2, cmd2_op))
                 if re.search("active \(running\)", str(cmd2_op)):
@@ -127,7 +127,7 @@ class Rsyslog(PccBase):
             cmd = "sudo dd if=/dev/null of=/var/log/messages"
             
             for hostip in ast.literal_eval(self.host_ips):
-                cmd_op=cli_run(hostip,self.linux_user,self.linux_password,cmd)
+                cmd_op=cli_run(host_ip=hostip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd)
                 print("cmd: {}\n ====== Output is {} ========".format(cmd, cmd_op))
                 if re.search("0\+0 records out",str(cmd_op)):
                     cleanup_status.append("OK")
@@ -165,7 +165,7 @@ class Rsyslog(PccBase):
             print("----------------Copying Rsyslog Config File For TLS----------------")
             trace("----------------Copying Rsyslog Config File For TLS----------------")
             changing_perm="sudo chmod 777 /etc"
-            cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+            cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
             cmd_config="sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/".format(path,server_ip)
             print("Command for transferriddng rsyslog config file for TLS: "+str(cmd_config))
             trace("Command for transferring rsyslog config file for TLS: "+str(cmd_config))
@@ -173,23 +173,23 @@ class Rsyslog(PccBase):
             print("-----------Verifying if folder exist for server files-----------------")
             trace("-----------Verifying if folder exist for server files-----------------")
             cmd_dir="sudo test -d /etc/pki/tls/private && echo 'True' || echo 'False'"
-            cmd_out=cli_run(server_ip,self.linux_user,self.linux_password,cmd_dir)
+            cmd_out=cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd_dir)
             print("----------------------------------------------------------------------")
             if re.search("False", str(cmd_out)):
                 folder_cmd = "sudo mkdir -p /etc/pki/tls/private"
-                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, folder_cmd)
+                cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=folder_cmd)
                 changing_perm="sudo chmod 777 /etc/pki/tls/private"
-                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+                cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
                 print("-----------Copying server files-----------------")
                 trace("-----------Copying server files-----------------")
                 cmd_transfer = "sudo sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
                 print("Command for transferring server files : "+str(cmd_transfer))
                 trace("Command for transferring server files : "+str(cmd_transfer))
-                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, cmd_transfer)
+                cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=cmd_transfer)
                 print("------------------------------------------------")
             else:
                 changing_perm="sudo chmod 777 /etc/pki/tls/private"
-                cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+                cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
                 print("-----------Copying server files-----------------")
                 trace("-----------Copying server files-----------------")
                 cmd_transfer = "sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/*.pem pcc@{}:/etc/pki/tls/private/.".format(path,server_ip)
@@ -199,7 +199,7 @@ class Rsyslog(PccBase):
         else:
             path=os.getcwd()+"/tests/test-data/rsyslog/non_tls"
             changing_perm="sudo chmod 777 /etc"
-            cmd_out = cli_run(server_ip, self.linux_user, self.linux_password, changing_perm)
+            cmd_out = cli_run(host_ip=server_ip, linux_user=self.linux_user, linux_password=self.linux_password, cmd=changing_perm)
             print("-----------Copying Rsyslog Config File For Non TLS-----------------")
             trace("-----------Copying Rsyslog Config File For Non TLS-----------------")
             cmd_config="sshpass -p 'cals0ft' scp -o StrictHostKeyChecking=no {}/rsyslog.conf pcc@{}:/etc/.".format(path,server_ip)

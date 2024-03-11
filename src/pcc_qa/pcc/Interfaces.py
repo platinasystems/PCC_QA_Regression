@@ -207,10 +207,10 @@ class Interfaces(PccBase):
         self._load_kwargs(kwargs)
         
         cmd="sudo ip link set up {}".format(self.interface_name)
-        interface_up = cli_run(self.host_ip,self.user,self.password,cmd)
+        interface_up = cli_run(host_ip=self.host_ip, linux_user=self.user, linux_password=self.password,cmd=cmd)
         print("Interface Status:"+str(interface_up))
         check_cmd="sudo ip addr sh {}".format(self.interface_name)
-        interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
+        interface_status=cli_run(host_ip=self.host_ip, linux_user=self.user, linux_password=self.password,cmd=check_cmd)
         status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
         print("Interface Status Serialize:"+str(status))
         if re.search("UP",str(status)):    
@@ -228,10 +228,10 @@ class Interfaces(PccBase):
         self._load_kwargs(kwargs)
         
         cmd="sudo ip link set down {}".format(self.interface_name)
-        interface_down = cli_run(self.host_ip,self.user,self.password,cmd)
+        interface_down = cli_run(host_ip=self.host_ip, linux_user=self.user, linux_password=self.password, cmd=cmd)
         print("Interface Status:"+str(interface_down))
         check_cmd="sudo ip addr sh {}".format(self.interface_name)
-        interface_status=cli_run(self.host_ip,self.user,self.password,check_cmd)
+        interface_status= cli_run(host_ip=self.host_ip, linux_user=self.user, linux_password=self.password, cmd=check_cmd)
         status=str(self._serialize_response(time.time(),interface_status)['Result']['stdout']).strip()
         print("Interface Status Serialize:"+str(status))
         if re.search("DOWN",str(status)):
