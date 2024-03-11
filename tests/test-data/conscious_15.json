@@ -28,30 +28,30 @@
 
     "clusterhead-1":
         {
-            "invader_name":"cluster-head-69",
-            "pcc_url": "https://172.17.2.69:9999",
-            "pcc_host_ip": "172.17.2.69",
-            "pcc_linux_password": "cals0ft",
+            "invader_name":"clusterhead2.platinasystems.com",
+            "pcc_url": "https://192.168.21.10:9999",
+            "pcc_host_ip": "192.168.21.10",
+            "pcc_linux_password": "plat1na",
             "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.69",
-            "bmc_user": "ADMIN",
-            "bmc_pwd": "ADMIN",
-            "console": "ttyS1",
+            "pcc_password": "plat1na",
+            "bmc": "",
+            "bmc_user": "",
+            "bmc_pwd": "",
+            "console": "",
             "managed_by_pcc": "true",
             "ssh_keys": "pcc"
         },
 
     "server-1":
         {
-            "server_name":"consul-01.platinasystems.com",
-            "pcc_url": "https://172.17.2.106:9999",
-            "pcc_host_ip": "172.17.2.106",
-            "pcc_linux_password": "cals0ft",
+            "server_name":"pm2",
+            "pcc_url": "https://192.168.21.12:9999",
+            "pcc_host_ip": "192.168.21.12",
+            "pcc_linux_password": "plat1na",
             "pcc_username": "pcc",
-            "pcc_password": "cals0ft",
-            "bmc": "172.17.3.106",
-            "mgmt_ip": "172.17.2.106/23",
+            "pcc_password": "plat1na",
+            "bmc": "192.168.21.17",
+            "mgmt_ip": "192.168.21.12/23",
             "bmc_user": "ADMIN",
             "bmc_pwd": "ADMIN",
             "console": "ttyS1",
@@ -62,14 +62,14 @@
 
     "server-2":
         {
-          "server_name":"consul-02.platinasystems.com",
-          "pcc_url": "https://172.17.2.107:9999",
-          "pcc_host_ip": "172.17.2.107",
-          "pcc_linux_password": "cals0ft",
+          "server_name":"pm3",
+          "pcc_url": "https://192.168.21.13:9999",
+          "pcc_host_ip": "192.168.21.13",
+          "pcc_linux_password": "plat1na",
           "pcc_username": "pcc",
-          "pcc_password": "cals0ft",
-          "bmc": "172.17.3.107",
-          "mgmt_ip": "172.17.2.107/23",
+          "pcc_password": "plat1na",
+          "bmc": "192.168.21.16",
+          "mgmt_ip": "192.168.21.13/23",
           "bmc_user": "ADMIN",
           "bmc_pwd": "ADMIN",
           "console": "ttyS1",
@@ -79,14 +79,14 @@
 
     "server-3":
         {
-          "server_name":"servernode-130.platinasystems.com",
-          "pcc_url": "https://172.17.2.130:9999",
-          "pcc_host_ip": "172.17.2.130",
-          "pcc_linux_password": "cals0ft",
+          "server_name":"pm5",
+          "pcc_url": "https://192.168.21.51:9999",
+          "pcc_host_ip": "192.168.21.51",
+          "pcc_linux_password": "plat1na",
           "pcc_username": "pcc",
-          "pcc_password": "cals0ft",
-          "bmc": "172.17.3.130",
-          "mgmt_ip": "172.17.2.130/23",
+          "pcc_password": "plat1na",
+          "bmc": "192.168.21.19",
+          "mgmt_ip": "192.168.21.51/23",
           "bmc_user": "ADMIN",
           "bmc_pwd": "ADMIN",
           "console": "ttyS1",
@@ -182,19 +182,19 @@
     "network_manager":
         {
             "name":"network-pvt",
-            "nodes":["cluster-head-69","consul-01.platinasystems.com","consul-02.platinasystems.com","servernode-130.platinasystems.com"],
-            "nodes_ip":["172.17.2.69","172.17.2.106","172.17.2.107","172.17.2.130"],
+            "nodes":["clusterhead2.platinasystems.com","pm2","pm3","pm5"],
+            "nodes_ip":["192.168.21.10","192.168.21.12","192.168.21.13","192.168.21.51"],
             "controlCIDR":"control-pvt",
             "dataCIDR":"data-pvt",
             "igwPolicy":"default",
-	        "bgp_neighbors":{"cluster-head-69":{"local_as":64532,"bgp_neighbors":[{"neighbor_ip":"10.0.1.20","remote_as":64523}]}}
+	        //"bgp_neighbors":{"cluster-head-69":{"local_as":64532,"bgp_neighbors":[{"neighbor_ip":"10.0.1.20","remote_as":64523}]}}
         },
 
     "ceph_cluster":
         {
             "name":"ceph-pvt",
-            "nodes":["servernode-130.platinasystems.com","consul-01.platinasystems.com","consul-02.platinasystems.com"],
-            "nodes_ip":["172.17.2.130","172.17.2.106","172.17.2.107"],
+            "nodes":["pm2","pm3","pm5"],
+            "nodes_ip":["192.168.21.12","192.168.21.13","192.168.21.51"],
             "tags":["All"],
             "networkClusterName":"network-pvt"
         },
@@ -231,7 +231,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "numDaemonsMap": {"consul-01.platinasystems.com": 1},
+            "numDaemonsMap": {"pm5": 1},
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl":"rgw.platinasystems.com",
