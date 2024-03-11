@@ -76,7 +76,8 @@ class RoleOperations(PccBase):
                              "Host":self.Host,
                              "roles":role_ids,
                              "scopeId":self.scopeId,
-                             "tags":tags
+                             "tags":tags,
+                             "managed": True
                              }
                     print("Payload:-"+str(payload))
                     api_response=pcc.modify_node(conn, payload)
@@ -121,7 +122,8 @@ class RoleOperations(PccBase):
                              "Host":self.Host,
                              "tags": ast.literal_eval(str(self.tags)),
                              "roles": self.roles,
-                             "scopeId": self.scopeId
+                             "scopeId": self.scopeId,
+                             "managed": True
                              }
                     print("Payload:-"+str(payload))
                     api_response=pcc.modify_node(conn, payload)
@@ -225,7 +227,8 @@ class RoleOperations(PccBase):
                                  "Name":self.node_name,
                                  "roles":role_ids,
                                  "scopeId":self.scopeId,
-                                 "Host":self.Host
+                                 "Host":self.Host,
+                                 "managed": True
                                  }
                         print("Payload:-"+str(payload))
                         api_response=pcc.modify_node(conn, payload)

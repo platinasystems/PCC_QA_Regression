@@ -34,7 +34,7 @@ class ErasureCoded(PccBase):
         self.erasure_profile_list = None
         self.hostip = None
         self.username = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.erasure_pool_name = None
         self.rbd_name = None
         self.pool_name = None

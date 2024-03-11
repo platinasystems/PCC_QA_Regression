@@ -348,7 +348,8 @@ class NodeGroups(PccBase):
                         "Id" : int(self.node_id),
                         "Host" : self.Host,
                         "Name" : self.Hostname,
-                        "roles":roles
+                        "roles":roles,
+                        "managed": True
                        }
         print("payload : {}".format(node_payload))     
         response = pcc.modify_node(conn, data=node_payload)

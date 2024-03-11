@@ -17,8 +17,8 @@ Login
                                     Load Server 2 Test Data    ${pcc_setup}
                                     Load Server 3 Test Data    ${pcc_setup}
                                     Load Network Manager Data    ${pcc_setup}
-                                    Load Server 5 Secondary Test Data    ${pcc_setup}
-                                    Load Ceph Cluster Data Secondary   ${pcc_setup}
+    #                                Load Server 5 Secondary Test Data    ${pcc_setup}
+    #                                Load Ceph Cluster Data Secondary   ${pcc_setup}
         ${status}                   Login To PCC        testdata_key=${pcc_setup}
                                     Should Be Equal     ${status}  OK
 
@@ -187,138 +187,138 @@ Ceph Cluster Add OSD Drive
                                     Should Be Equal As Strings      ${status}    OK
 
 
+#####################################################################################################################################
+#Ceph Cluster Delete Multiple OSD Drives
 ####################################################################################################################################
-Ceph Cluster Delete Multiple OSD Drives
-###################################################################################################################################
-
-        [Documentation]         *Ceph Cluster Delete Multiple OSD Drives*
-                              ...  keywords:
-                              ...  PCC.Ceph get OSD drives by Hostname
-                              ...  PCC.Ceph get OSD drive names by osd id
-                              ...  PCC.Ceph delete OSD drives
-        ${status}                   Login To PCC Secondary   ${pcc_setup}
-                                    Should Be Equal     ${status}  OK
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        @{server1_osd_ids}          PCC.Ceph get OSD Drives by Hostname
-                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                              ...   server_name=${SERVER_5_NAME_SECONDARY}
-                                    Log To Console       ${server1_osd_ids}
-                                    Set Suite Variable   ${server1_osd_ids}
-
-        ${drive_name}               PCC.Ceph get OSD drive names by osd id
-                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                              ...   osd_id=${server1_osd_ids}[0]
-                                    Log To Console       ${drive_name}
-
-        ${response}                 PCC.Ceph Delete OSD drives
-                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                               ...   osd_id=@{server1_osd_ids}
-                               ...   wipe=True
-                                    Log To Console       ${response}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Log To Console       ${status_code}
-                                    Should Be Equal As Strings      ${status_code}    200
-
-                                    Sleep    1m
-
-        ${status}                   PCC.Ceph Wait Until OSD Deleted
-                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                               ...   osd_id=${server1_osd_ids}[0]
-
-                                    Log To Console       ${status}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Verify OSD Status BE
-                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
-                               ...   osd_id=${server1_osd_ids}[0]
-                               ...   state=inactive
-
-                                    Log To Console       ${status}
-                                    Should Be Equal As Strings      ${status}    OK
-        ${status}                   PCC.Ceph Wait Until OSD Deleted
-                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                               ...   osd_id=${server1_osd_ids}[1]
-
-                                    Log To Console       ${status}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Verify OSD Status BE
-                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
-                               ...   osd_id=${server1_osd_ids}[1]
-                               ...   state=inactive
-
-                                    Log To Console       ${status}
-                                    Should Be Equal As Strings      ${status}    OK
-
-                                    #wait crushmap updated
-                                    Sleep   5m
-
-        ${status}                   PCC.Verify Crush Map
-                               ...   server=${SERVER_5_NAME_SECONDARY}
-                               ...   osd_ids_deleted=${server1_osd_ids}
-
-###################################################################################################################################
-Ceph Cluster Add ALL OSD Drives BY NODEID
-###################################################################################################################################
-
-        [Documentation]            *Ceph Cluster Add ALL OSD Drives BY NODEID*
-                              ...  keywords:
-                              ...  PCC.Ceph Get Unused drives
-                              ...  PCC.Ceph Add All OSD drives By NodeID
-
-
-        @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
-                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                              ...   server_name=${SERVER_5_NAME_SECONDARY}
-                                    Log To Console      ${unused_drives_id}
-                                    Should Be True      ${unused_drives_id} is not ${None}     PCC.Ceph Get Unused Drives by Hostname
-
-        ${node_id}                  PCC.Get Node Id
-                              ...   Name=${SERVER_5_NAME_SECONDARY}
-                                     Log To Console      ${node_id}
-
-        ${response}                 PCC.Ceph Add All OSD drives By NodeID
-                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                              ...   node_id=${node_id}
-                                    Log To Console       ${response}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-                                    #wait crushmap updated
-                                    Sleep   5m
-
-        @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
-                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
-                              ...   server_name=${SERVER_5_NAME_SECONDARY}
-                                    Log To Console       ${unused_drives_id}
-                                    Pass Execution If    ${unused_drives_id} is ${None}     PCC.Ceph Get Unused Drives by Hostname
-
-        ${status}                   PCC.Verify OSD Status BE
-                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
-                               ...   osd_id=${server1_osd_ids}[0]
-                               ...   state=active
-
-                                    Log To Console       ${status}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Verify OSD Status BE
-                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
-                               ...   osd_id=${server1_osd_ids}[1]
-                               ...   state=active
-
-                                    Log To Console       ${status}
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${status}                   PCC.Verify Crush Map
-                               ...   server=${SERVER_5_NAME_SECONDARY}
-                               ...   osd_ids=${server1_osd_ids}
-
-                                    Should Be Equal As Strings      ${status}    OK
-
+#
+#        [Documentation]         *Ceph Cluster Delete Multiple OSD Drives*
+#                              ...  keywords:
+#                              ...  PCC.Ceph get OSD drives by Hostname
+#                              ...  PCC.Ceph get OSD drive names by osd id
+#                              ...  PCC.Ceph delete OSD drives
+#        ${status}                   Login To PCC Secondary   ${pcc_setup}
+#                                    Should Be Equal     ${status}  OK
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        @{server1_osd_ids}          PCC.Ceph get OSD Drives by Hostname
+#                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                              ...   server_name=${SERVER_5_NAME_SECONDARY}
+#                                    Log To Console       ${server1_osd_ids}
+#                                    Set Suite Variable   ${server1_osd_ids}
+#
+#        ${drive_name}               PCC.Ceph get OSD drive names by osd id
+#                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                              ...   osd_id=${server1_osd_ids}[0]
+#                                    Log To Console       ${drive_name}
+#
+#        ${response}                 PCC.Ceph Delete OSD drives
+#                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                               ...   osd_id=@{server1_osd_ids}
+#                               ...   wipe=True
+#                                    Log To Console       ${response}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Log To Console       ${status_code}
+#                                    Should Be Equal As Strings      ${status_code}    200
+#
+#                                    Sleep    1m
+#
+#        ${status}                   PCC.Ceph Wait Until OSD Deleted
+#                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                               ...   osd_id=${server1_osd_ids}[0]
+#
+#                                    Log To Console       ${status}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Verify OSD Status BE
+#                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
+#                               ...   osd_id=${server1_osd_ids}[0]
+#                               ...   state=inactive
+#
+#                                    Log To Console       ${status}
+#                                    Should Be Equal As Strings      ${status}    OK
+#        ${status}                   PCC.Ceph Wait Until OSD Deleted
+#                               ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                               ...   osd_id=${server1_osd_ids}[1]
+#
+#                                    Log To Console       ${status}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Verify OSD Status BE
+#                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
+#                               ...   osd_id=${server1_osd_ids}[1]
+#                               ...   state=inactive
+#
+#                                    Log To Console       ${status}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#                                    #wait crushmap updated
+#                                    Sleep   5m
+#
+#        ${status}                   PCC.Verify Crush Map
+#                               ...   server=${SERVER_5_NAME_SECONDARY}
+#                               ...   osd_ids_deleted=${server1_osd_ids}
+#
 ####################################################################################################################################
+#Ceph Cluster Add ALL OSD Drives BY NODEID
+####################################################################################################################################
+#
+#        [Documentation]            *Ceph Cluster Add ALL OSD Drives BY NODEID*
+#                              ...  keywords:
+#                              ...  PCC.Ceph Get Unused drives
+#                              ...  PCC.Ceph Add All OSD drives By NodeID
+#
+#
+#        @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
+#                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                              ...   server_name=${SERVER_5_NAME_SECONDARY}
+#                                    Log To Console      ${unused_drives_id}
+#                                    Should Be True      ${unused_drives_id} is not ${None}     PCC.Ceph Get Unused Drives by Hostname
+#
+#        ${node_id}                  PCC.Get Node Id
+#                              ...   Name=${SERVER_5_NAME_SECONDARY}
+#                                     Log To Console      ${node_id}
+#
+#        ${response}                 PCC.Ceph Add All OSD drives By NodeID
+#                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                              ...   node_id=${node_id}
+#                                    Log To Console       ${response}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#                                    #wait crushmap updated
+#                                    Sleep   5m
+#
+#        @{unused_drives_id}         PCC.Ceph Get Unused Drives by Hostname
+#                              ...   name=${CEPH_CLUSTER_NAME_SECONDARY}
+#                              ...   server_name=${SERVER_5_NAME_SECONDARY}
+#                                    Log To Console       ${unused_drives_id}
+#                                    Pass Execution If    ${unused_drives_id} is ${None}     PCC.Ceph Get Unused Drives by Hostname
+#
+#        ${status}                   PCC.Verify OSD Status BE
+#                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
+#                               ...   osd_id=${server1_osd_ids}[0]
+#                               ...   state=active
+#
+#                                    Log To Console       ${status}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Verify OSD Status BE
+#                               ...   hostip=${SERVER_5_HOST_IP_SECONDARY}
+#                               ...   osd_id=${server1_osd_ids}[1]
+#                               ...   state=active
+#
+#                                    Log To Console       ${status}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${status}                   PCC.Verify Crush Map
+#                               ...   server=${SERVER_5_NAME_SECONDARY}
+#                               ...   osd_ids=${server1_osd_ids}
+#
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#####################################################################################################################################

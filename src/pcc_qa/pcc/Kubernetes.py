@@ -44,7 +44,7 @@ class Kubernetes(PccBase):
         self.invader_id = None
         self.nodes_ip = None
         self.user = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.hostip = None
         self.storageClassIds = None
         self.forceRemove = False

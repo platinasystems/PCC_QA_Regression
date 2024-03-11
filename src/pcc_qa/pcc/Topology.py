@@ -26,7 +26,7 @@ class Topology(PccBase):
         self.invaders_hostip = None
         self.servers_hostip = None
         self.username = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         
         
     ###########################################################################

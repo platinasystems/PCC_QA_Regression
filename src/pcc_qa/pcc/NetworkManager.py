@@ -35,7 +35,7 @@ class NetworkManager(PccBase):
         self.dataCIDRId = None
         self.igwPolicy = None
         self.user = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.forceRemove = None
         self.bgp_neighbors = []
         self.type = 1
