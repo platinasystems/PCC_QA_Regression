@@ -35,7 +35,7 @@ class CephCluster(PccBase):
         self.networkClusterName=None
         self.nodes_ip=[]
         self.user="pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.data1=None
         self.data2=None
         self.state=None
@@ -515,7 +515,7 @@ class CephCluster(PccBase):
             trace(ip)
             trace(self.user)
             trace(self.password)
-            drives_op = cli_run(ip,self.user,self.password,cmd1)
+            drives_op = cli_run(host_ip=ip, linux_user=self.user, linux_password=self.password, cmd=cmd1)
 
             trace("Drives_op: {}".format(str(drives_op)))
             print("Drives_op: {}".format(str(drives_op)))
@@ -527,7 +527,7 @@ class CephCluster(PccBase):
                 cmd2="sudo wipefs -a /dev/{}".format(drive.strip())
                 trace("======== cmd: {} is getting executed ========".format(cmd2))
                 print("======== cmd: {} is getting executed ========".format(cmd2))
-                clean_drives_op = cli_run(ip,self.user,self.password,cmd2)
+                clean_drives_op = cli_run(host_ip=ip,linux_user=self.user,linux_password=self.password,cmd=cmd2)
                 trace("Clean drives output:{}".format(str(clean_drives_op)))
                 print("Clean drives output:{}".format(str(clean_drives_op)))
                 time.sleep(5)

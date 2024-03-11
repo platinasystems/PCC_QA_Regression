@@ -452,12 +452,12 @@ class CephRgw(PccBase):
         
         cmd='sudo printf "%s\n" "{}" "{}" "" "{}:{}" "{}:{}" "" "" "" "" "n" "y" | s3cmd --configure'.format(self.accessKey,self.secretKey,self.targetNodeIp,self.port,self.targetNodeIp,self.port)
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         
         if re.search("Configuration saved",str(data)):
             print("File is created Successfully, Changing check_ssl_certificate and check_ssl_hostname to False")
             cmd='sudo sed -i "s/check_ssl_certificate = True/check_ssl_certificate = False/g" /home/pcc/.s3cfg; sudo sed -i "s/check_ssl_hostname = True/check_ssl_hostname = False/g" /home/pcc/.s3cfg; sudo sed -i "s/signature_v2 = False/signature_v2 = True/g" /home/pcc/.s3cfg'
-            output=cli_run(self.pcc,self.user,self.password,cmd)
+            output=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
             return "OK"
         else:
             print("Configuration not set properly")
@@ -483,13 +483,13 @@ class CephRgw(PccBase):
             else:
                 main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:443/g" /home/pcc/.s3cfg'.format(self.targetNodeIp)
             print("Command=" + str(main_cmd))
-            output = cli_run(self.pcc, self.user, self.password, main_cmd)
+            output = cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=main_cmd)
             print(output)
             return "OK"
         else:
             if self.service_ip.lower()=="yes":
                 cmd='sudo ip addr show | grep control0 | tail -1 | tr -s " " |cut -d " " -f3|cut -d "/" -f1'
-                cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                cmd_out=self._serialize_response(time.time(),cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd))['Result']['stdout'].strip()
                 print("Host ip to update:"+str(cmd_out))
                 if self.port:
                     main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:{}/g" /home/pcc/.s3cfg'.format(str(cmd_out),
@@ -497,21 +497,21 @@ class CephRgw(PccBase):
                 else:
                     main_cmd += 'sudo sed -i "s/host_base =.*/host_base = {}:443/g" /home/pcc/.s3cfg'.format(str(cmd_out))
                 print("Command="+str(main_cmd))
-                output = cli_run(self.pcc, self.user, self.password, main_cmd)
+                output = cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=main_cmd)
                 print(output)
                 return "OK"
             else:
                 if not self.data_cidr:
                     return "Please provide Data CIDR"
                 cmd='sudo vtysh -c "show run" |grep {} |tail -1 |tr -s " "| cut -d " " -f6'.format(self.data_cidr[0:8])
-                cmd_out=self._serialize_response(time.time(),cli_run(self.pcc,self.user,self.password,cmd))['Result']['stdout'].strip()
+                cmd_out=self._serialize_response(time.time(),cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd))['Result']['stdout'].strip()
                 print("Host ip to update:"+str(cmd_out))
                 if self.port:
                     main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:{}/g' /home/pcc/.s3cfg".format(str(cmd_out),self.port)
                 else:
                     main_cmd += "sudo sed -i 's/host_base =.*/host_base = {}:443/g' /home/pcc/.s3cfg".format(str(cmd_out))
                 print("Command=" + str(main_cmd))
-                output = cli_run(self.pcc, self.user, self.password, main_cmd)
+                output = cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=main_cmd)
                 print(output)
                 return "OK"
         print("Configuration not updated sucessfully")
@@ -526,7 +526,7 @@ class CephRgw(PccBase):
         
         cmd='sudo s3cmd mb s3://{} -c /home/pcc/.s3cfg'.format(self.bucketName)
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search("created",str(data)):
             print("Bucket Is Created")
             return "OK"
@@ -542,15 +542,15 @@ class CephRgw(PccBase):
         banner("PCC.Ceph Rgw Upload File To Bucket ")
         self._load_kwargs(kwargs)       
         cmd='sudo dd if=/dev/zero of={} bs=10MiB count=1'.format(self.fileName)
-        file_create=cli_run(self.pcc,self.user,self.password,cmd)
+        file_create=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         cmd='sudo s3cmd put {} s3://{}/{} -c /home/pcc/.s3cfg'.format(self.fileName,self.bucketName,self.fileName)
         print("Command:"+str(cmd))
         trace("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search("upload",str(data)):
             print("File is uploaded to bucket")
             cmd='sudo rm {}'.format(self.fileName)
-            file_del=cli_run(self.pcc,self.user,self.password,cmd)
+            file_del=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
             return "OK"
         else:
             print("File is not uploaded")
@@ -565,11 +565,11 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)       
         cmd='sudo s3cmd get s3://testbucket/{} -c /home/pcc/.s3cfg --skip-existing'.format(self.fileName)
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search("download",str(data)):
             print("File is exracted from Bucket")
             cmd='sudo rm {}'.format(self.fileName)
-            data=cli_run(self.pcc,self.user,self.password,cmd)
+            data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
             return "OK"
         else:
             print("File is not extracted")
@@ -584,7 +584,7 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)       
         cmd='sudo s3cmd ls -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search("testbucket",str(data)):
             return "OK"
         else:
@@ -600,7 +600,7 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)
         cmd='sudo s3cmd ls s3://testbucket  -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search(self.fileName,str(data)):
             return "OK"
         else:
@@ -617,7 +617,7 @@ class CephRgw(PccBase):
         time.sleep(10)     
         cmd="sudo ceph df| grep '{} ' | tr -s ' '|sed 's/^ *//' |cut -d ' ' -f6".format(self.poolName)
         print("Command:"+str(cmd))
-        raw_data=cli_run(self.targetNodeIp,self.user,self.password,cmd)   
+        raw_data=cli_run(host_ip=self.targetNodeIp, linux_user=self.user, linux_password=self.password, cmd=cmd)
         data=self._serialize_response(time.time(),raw_data)['Result']['stdout']  
         print("Size used by pool {}:{}".format(self.poolName,data))
         if int(data.strip()) != 0:
@@ -633,7 +633,7 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)       
         cmd='sudo s3cmd del s3://testbucket/{} -c /home/pcc/.s3cfg'.format(self.fileName)
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search("delete",str(data)):
             print("File is deleted from Bucket")
             return "OK"
@@ -650,7 +650,7 @@ class CephRgw(PccBase):
         self._load_kwargs(kwargs)       
         cmd='sudo s3cmd rb s3://testbucket -c /home/pcc/.s3cfg'
         print("Command:"+str(cmd))
-        data=cli_run(self.pcc,self.user,self.password,cmd)      
+        data=cli_run(host_ip=self.pcc, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if re.search("removed",str(data)):
             print("Bucket is deleted successfully")
             return "OK"
@@ -734,7 +734,7 @@ class CephRgw(PccBase):
                 for host_name, daemons in self.num_daemons_map.items():
                     host_ip = easy.get_hostip_by_name(conn, host_name)
                     ceph_conf_cmd = "sudo cat /etc/ceph/ceph.conf"
-                    ceph_conf = cli_run(host_ip, self.user, self.password, ceph_conf_cmd)
+                    ceph_conf = cli_run(host_ip=host_ip, linux_user=self.user, linux_password=self.password, cmd=ceph_conf_cmd)
                     realm_conf = "rgw_realm = {}".format(rgw["realm"])
                     zone_conf = "rgw_zone = {}".format(rgw["zone"])
                     zonegroup_conf = "rgw_zonegroup = {}".format(rgw["zonegroup"])
@@ -746,9 +746,9 @@ class CephRgw(PccBase):
                         intf = daemons["interfaces"][j]
                         intf_cmd = "sudo netstat -ntlp | grep radosgw | grep {}:{}".format(intf,rgw["port"])
                         cmd_rgw="sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name.split(".")[0],j)
-                        ceph_check=cli_run(host_ip,self.user,self.password,ceph_be_cmd)
-                        rgw_check=cli_run(host_ip,self.user,self.password,cmd_rgw)
-                        intf_check=cli_run(host_ip,self.user,self.password,intf_cmd)
+                        ceph_check=cli_run(host_ip=host_ip,linux_user=self.user,linux_password=self.password,cmd=ceph_be_cmd)
+                        rgw_check=cli_run(host_ip=host_ip,linux_user=self.user,linux_password=self.password,cmd=cmd_rgw)
+                        intf_check=cli_run(host_ip=host_ip,linux_user=self.user,linux_password=self.password,cmd=intf_cmd)
                         print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
                         print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
                         print("=========== intf_check output is: {} \n==============".format(str(intf_check)))
@@ -797,8 +797,8 @@ class CephRgw(PccBase):
                     failed_chk_map[host_name] = 0
                     for j in range(num_daemons):
                         cmd_rgw = "sudo systemctl status ceph-radosgw@rgw.{}.rgw{}".format(host_name.split(".")[0], j)
-                        ceph_check = cli_run(host_ip, self.user, self.password, ceph_be_cmd)
-                        rgw_check = cli_run(host_ip, self.user, self.password, cmd_rgw)
+                        ceph_check = cli_run(host_ip=host_ip, linux_user=self.user, linux_password=self.password, cmd=ceph_be_cmd)
+                        rgw_check = cli_run(host_ip=host_ip, linux_user=self.user, linux_password=self.password, cmd=cmd_rgw)
                         print("=========== ceph_check output is: {} \n==============".format(str(ceph_check)))
                         print("=========== rgw_check output is: {} \n==============".format(str(rgw_check)))
                         if re.search("rgw", str(ceph_check)) and re.search("running", str(rgw_check)):
@@ -834,7 +834,7 @@ class CephRgw(PccBase):
             return "Target node is not provided"
 
         cmd="sudo netstat -ntlp |grep rados"
-        ntlp_check = cli_run(ip, self.user, self.password, cmd)
+        ntlp_check = cli_run(host_ip=ip, linux_user=self.user, linux_password=self.password, cmd=cmd)
         if self.service_ip.lower()=="yes":
             if re.search(self.control_cidr[0:8], str(ntlp_check)):
                 return "OK"
@@ -890,13 +890,13 @@ class CephRgw(PccBase):
             frontend_ip = frontend_ip.replace("control_ip",control_ip)
 
         intf_cmd = "sudo netstat -ntlp | grep haproxy | grep {}".format(frontend_ip)
-        intf_check = cli_run(node["Host"], self.user, self.password, intf_cmd)
+        intf_check = cli_run(host_ip=node["Host"], linux_user=self.user, linux_password=self.password, cmd=intf_cmd)
         trace("interface check: {}".format(intf_check))
         if not str(intf_check.stdout):
             return "Error"
 
         cmd = "sudo cat /etc/haproxy/haproxy.cfg"
-        cmd_out = cli_run(node["Host"], self.user, self.password, cmd)
+        cmd_out = cli_run(host_ip=node["Host"], linux_user=self.user, linux_password=self.password, cmd=cmd)
         output = self._serialize_response(time.time(), cmd_out)['Result']['stdout']
         output = output.split("####")
         for out in output:

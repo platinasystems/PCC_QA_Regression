@@ -440,9 +440,9 @@ class Dashboard(PccBase):
                                     ceph_cluster_dict["Health"] = set(["".join(e for e in c if e.isalnum()) for c in ceph_cluster_description]) 
                                 cmd1 = 'sudo ceph --version'
                                 cmd2 = 'sudo ceph -s | grep usage | cut -d "/" -f2 | cut -d "a" -f1'
-                                cmd_execution1 = cli_run(self.nodeip, self.user, self.password, cmd1)
+                                cmd_execution1 = cli_run(host_ip=self.nodeip, linux_user=self.user, linux_password=self.password, cmd=cmd1)
                                 trace("command execution:{}".format(cmd_execution1))
-                                cmd_execution_2 = cli_run(self.nodeip, self.user, self.password, cmd2)
+                                cmd_execution_2 = cli_run(host_ip=self.nodeip, linux_user=self.user, linux_password=self.password, cmd=cmd2)
                                 serialise_output_1 = self._serialize_response(time.time(), cmd_execution1)['Result']['stdout'].split()
                                 trace("serialise output:{}".format(serialise_output_1))
                                 ceph_cluster_dict["Version"] = serialise_output_1[2]+" "+serialise_output_1[4]
@@ -533,17 +533,17 @@ class Dashboard(PccBase):
         for data in get_response_data(node_summary_response):
             host_ip = data["Host"]
             trace(host_ip)
-            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
-            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
-            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
-            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
-            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
-            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
-            cmd_execution_7 = cli_run(str(host_ip), self.user, self.password, cmd_7)
-            cmd_execution_8 = cli_run(str(host_ip), self.user, self.password, cmd_8)
-            cmd_execution_9 = cli_run(str(host_ip), self.user, self.password, cmd_9)
-            cmd_execution_10 = cli_run(str(host_ip), self.user, self.password, cmd_10)
-            cmd_execution_11 = cli_run(str(host_ip), self.user, self.password, cmd_11)
+            cmd_execution = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd)
+            cmd_execution_2 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_2)
+            cmd_execution_3 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_3)
+            cmd_execution_4 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_4)
+            cmd_execution_5 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_5)
+            cmd_execution_6 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_6)
+            cmd_execution_7 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_7)
+            cmd_execution_8 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_8)
+            cmd_execution_9 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_9)
+            cmd_execution_10 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_10)
+            cmd_execution_11 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_11)
 
             serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
             serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
@@ -666,18 +666,18 @@ class Dashboard(PccBase):
         for data in get_response_data(node_summary_response):
             host_ip = data["Host"]
             trace(host_ip)
-            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
-            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
-            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
-            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
-            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
-            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
-            cmd_execution_7 = cli_run(str(host_ip), self.user, self.password, cmd_7)
-            cmd_execution_8 = cli_run(str(host_ip), self.user, self.password, cmd_8)
-            cmd_execution_9 = cli_run(str(host_ip), self.user, self.password, cmd_9)
-            cmd_execution_10 = cli_run(str(host_ip), self.user, self.password, cmd_10)
-            cmd_execution_11 = cli_run(str(host_ip), self.user, self.password, cmd_11)
-            cmd_execution_12 = cli_run(str(host_ip), self.user, self.password, cmd_12)
+            cmd_execution = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd)
+            cmd_execution_2 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_2)
+            cmd_execution_3 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_3)
+            cmd_execution_4 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_4)
+            cmd_execution_5 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_5)
+            cmd_execution_6 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_6)
+            cmd_execution_7 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_7)
+            cmd_execution_8 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_8)
+            cmd_execution_9 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_9)
+            cmd_execution_10 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_10)
+            cmd_execution_11 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_11)
+            cmd_execution_12 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password,cmd=cmd_12)
 
             serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
             serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
@@ -808,13 +808,13 @@ class Dashboard(PccBase):
         for data in get_response_data(node_summary_response):
             host_ip = data["Host"]
             trace(host_ip)
-            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
-            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
-            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
-            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
-            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
-            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
-            cmd_execution_7 = cli_run(str(host_ip), self.user, self.password, cmd_7)
+            cmd_execution = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd)
+            cmd_execution_2 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_2)
+            cmd_execution_3 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_3)
+            cmd_execution_4 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_4)
+            cmd_execution_5 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_5)
+            cmd_execution_6 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_6)
+            cmd_execution_7 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_7)
 
             serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
             serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
@@ -897,8 +897,8 @@ class Dashboard(PccBase):
         for data in get_response_data(node_summary_response):
             host_ip = data["Host"]
             trace(host_ip)
-            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
-            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
+            cmd_execution = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd)
+            cmd_execution_2 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_2)
 
             serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
             serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']
@@ -946,12 +946,12 @@ class Dashboard(PccBase):
         for data in get_response_data(node_summary_response):
             host_ip = data["Host"]
             trace(host_ip)
-            cmd_execution = cli_run(str(host_ip), self.user, self.password, cmd)
-            cmd_execution_2 = cli_run(str(host_ip), self.user, self.password, cmd_2)
-            cmd_execution_3 = cli_run(str(host_ip), self.user, self.password, cmd_3)
-            cmd_execution_4 = cli_run(str(host_ip), self.user, self.password, cmd_4)
-            cmd_execution_5 = cli_run(str(host_ip), self.user, self.password, cmd_5)
-            cmd_execution_6 = cli_run(str(host_ip), self.user, self.password, cmd_6)
+            cmd_execution = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd)
+            cmd_execution_2 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_2)
+            cmd_execution_3 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_3)
+            cmd_execution_4 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_4)
+            cmd_execution_5 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_5)
+            cmd_execution_6 = cli_run(host_ip=str(host_ip), linux_user=self.user, linux_password=self.password, cmd=cmd_6)
 
             serialise_output_1 = self._serialize_response(time.time(), cmd_execution)['Result']['stdout']
             serialise_output_2 = self._serialize_response(time.time(), cmd_execution_2)['Result']['stdout']

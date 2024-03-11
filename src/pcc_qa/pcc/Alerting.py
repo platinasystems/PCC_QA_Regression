@@ -113,7 +113,7 @@ class Alerting(PccBase):
         cmd=cmd_strct.format(self.filename,token)
         print("Command:-"+str(cmd))
         
-        output=cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(host_ip=self.setup_ip, linux_user=self.user, linux_password=self.password, cmd=cmd)
         serialise_output=PccBase()._serialize_response(time.time(),output)['Result']['stdout']
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
@@ -272,7 +272,7 @@ class Alerting(PccBase):
         cmd=cmd_strct.format(token,self.setup_ip)
         print("Command:-"+str(cmd))
         
-        output=cli_run(self.setup_ip,self.user,self.password,cmd)
+        output=cli_run(host_ip=self.setup_ip, linux_user=self.user, linux_password=self.password, cmd=cmd)
         serialise_output=json.loads(PccBase()._serialize_response(time.time(),output)['Result']['stdout'])
         print("Serialize Output:"+str(serialise_output))
         trace("Serialize Output:- %s " % (serialise_output))
