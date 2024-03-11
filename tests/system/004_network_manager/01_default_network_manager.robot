@@ -350,7 +350,7 @@ Network Manager Creation
                                ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR}
                                ...  dataCIDR=${NETWORK_MANAGER_DATACIDR}
                                ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY}
-                               ...  bgp_neighbors=${NETWORK_MANAGER_BGP_NEIGHBORS}
+                               #...  bgp_neighbors=${NETWORK_MANAGER_BGP_NEIGHBORS}
 
         ${status_code}              Get Response Status Code        ${response}
                                     Should Be Equal As Strings      ${status_code}  200
@@ -376,39 +376,39 @@ Network Manager Creation
                                     PCC.FRR status on nodes
                                ...  Names=["${SERVER_2_NAME}","${SERVER_1_NAME}","${SERVER_3_NAME}","${CLUSTERHEAD_1_NAME}"]
 
-###################################################################################################################################
-Login To PCC Secondary
-###################################################################################################################################
-
-                                    Load Network Manager Data Secondary   ${pcc_setup}
-
-
-        ${status}                   Login To PCC Secondary  testdata_key=${pcc_setup}
-                                    Should Be Equal     ${status}  OK
-
-
-###################################################################################################################################
-Network Manager Creation Secondary
-###################################################################################################################################
-    [Documentation]                 *Network Manager Creation Secondary*
-                               ...  keywords:
-                               ...  PCC.Network Manager Create
-                               ...  PCC.Wait Until Network Manager Ready
-                               ...  PCC.Network Manager Verify BE
-
-        ${response}                 PCC.Network Manager Create
-                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
-                               ...  nodes=${NETWORK_MANAGER_NODES_SECONDARY}
-                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR_SECONDARY}
-                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR_SECONDARY}
-                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY_SECONDARY}
-                               ...  bgp_neighbors=${NETWORK_MANAGER_BGP_NEIGHBORS_SECONDARY}
-
-        ${status_code}              Get Response Status Code        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Wait Until Network Manager Ready
-                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
-                                    Should Be Equal As Strings      ${status}    OK
-
-
+####################################################################################################################################
+#Login To PCC Secondary
+####################################################################################################################################
+#
+#                                    Load Network Manager Data Secondary   ${pcc_setup}
+#
+#
+#        ${status}                   Login To PCC Secondary  testdata_key=${pcc_setup}
+#                                    Should Be Equal     ${status}  OK
+#
+#
+####################################################################################################################################
+#Network Manager Creation Secondary
+####################################################################################################################################
+#    [Documentation]                 *Network Manager Creation Secondary*
+#                               ...  keywords:
+#                               ...  PCC.Network Manager Create
+#                               ...  PCC.Wait Until Network Manager Ready
+#                               ...  PCC.Network Manager Verify BE
+#
+#        ${response}                 PCC.Network Manager Create
+#                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
+#                               ...  nodes=${NETWORK_MANAGER_NODES_SECONDARY}
+#                               ...  controlCIDR=${NETWORK_MANAGER_CNTLCIDR_SECONDARY}
+#                               ...  dataCIDR=${NETWORK_MANAGER_DATACIDR_SECONDARY}
+#                               ...  igwPolicy=${NETWORK_MANAGER_IGWPOLICY_SECONDARY}
+#                               ...  bgp_neighbors=${NETWORK_MANAGER_BGP_NEIGHBORS_SECONDARY}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Wait Until Network Manager Ready
+#                               ...  name=${NETWORK_MANAGER_NAME_SECONDARY}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#

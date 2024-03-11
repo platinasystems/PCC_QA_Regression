@@ -689,7 +689,8 @@ class Nodes(PccBase):
                                 "tags": [],
                                 "scopeId":int(self.scopeId),
                                 "Host":node['Host'],
-                                "Name":node['Name']}
+                                "Name":node['Name'],
+                                "managed":True}
                     print("Payload:-"+str(payload))
                     trace("Payload:-"+str(payload))
                     update_resp = pcc.modify_node(conn, payload)

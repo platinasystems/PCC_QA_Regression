@@ -28,7 +28,7 @@ class Tunneling(PccBase):
         self.interface_ip = None
         self.path = "/home/pcc/platina-home/platina-system/config-repo/docker/pccserver.yml"
         self.username = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         self.node_hostip = None
         self.host_name = None
         self.managed = None

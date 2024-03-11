@@ -28,7 +28,7 @@ class Dashboard(PccBase):
         self.cephcluster_name = None
         self.nodeip = None
         self.user = "pcc"
-        self.password = "cals0ft"
+        self.password = "plat1na"
         super().__init__()
 
     ###########################################################################

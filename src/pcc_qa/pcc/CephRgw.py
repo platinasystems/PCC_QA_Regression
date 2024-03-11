@@ -44,7 +44,7 @@ class CephRgw(PccBase):
         self.accessKey=None
         self.user="pcc"
         self.service_ip="no"
-        self.password="cals0ft"
+        self.password="plat1na"
         self.fileName="rgwFile"
         self.bucketName="testbucket"
         self.control_cidr=None

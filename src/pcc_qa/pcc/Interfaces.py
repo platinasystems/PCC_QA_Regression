@@ -37,7 +37,7 @@ class Interfaces(PccBase):
         self.cleanUp=None
         self.host_ip=None
         self.user="pcc"
-        self.password="cals0ft"
+        self.password="plat1na"
         super().__init__()
 
     ###########################################################################
