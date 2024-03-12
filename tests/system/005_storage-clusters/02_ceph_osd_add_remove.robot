@@ -49,7 +49,7 @@ Ceph Cluster Get Used Drives
                                     Log To Console       ${used_drives_id}
 
         ${length}                   Get Length     ${used_drives_id}
-                                    Should Be Equal As Integers     ${length}        2
+                                    Should Be Equal As Integers     ${length}        3
 
 ###################################################################################################################################
 Ceph Cluster Get Unused Drives
