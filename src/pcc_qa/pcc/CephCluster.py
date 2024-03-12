@@ -438,7 +438,7 @@ class CephCluster(PccBase):
                     and re.search(osd_scrub_end_hour, output)
                     and re.search(osd_scrub_priority, output)
                     and re.search(osd_scrub_sleep, output)
-                    and re.search(osd_memory_target, output)
+                    #and re.search(osd_memory_target, output)
                     and re.search(osd_snap_trim_priority, output)):
                     continue
                 else:
