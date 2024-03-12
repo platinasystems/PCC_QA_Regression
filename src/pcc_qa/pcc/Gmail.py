@@ -118,8 +118,10 @@ class Gmail(PccBase):
         print(raw_email)
 
         for line in raw_email[::-1]:
+            #https://192.168.21.11:9999/user-management/user/mfa/reset/otp=859674&username=aucta.tenant@gmail.com
             if line.startswith('https:'):
                 print(line)
+                line = line.split('&')[0]
                 otp = line.split('otp=')[-1]
                 trace(otp)
                 return otp

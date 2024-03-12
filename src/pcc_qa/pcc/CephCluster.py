@@ -415,7 +415,7 @@ class CephCluster(PccBase):
 
 
         for ip in eval(str(self.nodes_ip)):
-            output=cli_run(ip,self.user,self.password,ceph_be_cmd)
+            output=cli_run(ip, self.user, self.password,ceph_be_cmd)
             print("Output:"+str(output))
             if re.search("HEALTH_OK",str(output)) or re.search("HEALTH_WARN",str(output)):
                 osd_memory_target = "osd_memory_target = {}".format(self.osdMemoryTargetRotationalDesired)

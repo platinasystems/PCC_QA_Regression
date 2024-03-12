@@ -231,7 +231,7 @@
         {
             "name":"rados-pvt",
             "poolName":"rgw-pool",
-            "numDaemonsMap": {"pm5": 1},
+            "numDaemonsMap": {"pm2": 1},
             "port":443,
             "certificateName":"rgw-crt",
             "certificateUrl":"rgw.platinasystems.com",
