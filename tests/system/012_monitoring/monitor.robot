@@ -163,8 +163,8 @@ Monitor Verify OS And Its Version Backend
                                ...  Name=Ubuntu
                                ...  host_ip=${SERVER_1_HOST_IP}
                                ...  version=20.04
-                               ...  username=pcc
-                               ...  password=cals0ft
+                               ...  username=${SERVER_1_UNAME}
+                               ...  password=${SERVER_1_PWD}
                                     Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################

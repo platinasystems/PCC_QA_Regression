@@ -38,6 +38,8 @@ Add Baremetal Provisioner To Node
                                     Log To Console    ${node_wait_status}
                                     Should Be Equal As Strings    ${node_wait_status}    OK
 
+                                    sleep  10s
+
 ###################################################################################################################################
 Verify Baremetal Provisioner
 ###################################################################################################################################
