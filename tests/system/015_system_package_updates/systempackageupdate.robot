@@ -93,15 +93,15 @@ Check if PCC assign the Default node role to the node when a node is added to PC
 	#### Check Node Self Healing ####
 	${status}    CLI.Validate Node Self Healing
 		     ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-		     ...    linux_user=pcc
-		     ...    linux_password=cals0ft
+		     ...    linux_user=${CLUSTERHEAD_1_UNAME}
+		     ...    linux_password=${CLUSTERHEAD_1_PWD}
 		     Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 
 	${status}    CLI.Validate Node Self Healing
                      ...    host_ip=${SERVER_1_HOST_IP}
-                     ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                     ...    linux_user=${SERVER_1_UNAME}
+                     ...    linux_password=${SERVER_1_PWD}
                      Log To Console    ${status}
                      Should be equal as strings    ${status}    OK
 
@@ -172,53 +172,53 @@ Backend Validations after node roles addition :TCP-1610
 
                 [Tags]    Only
                 ${status}    CLI.Validate Kubernetes Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                             ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                         Should Be Equal As Strings    ${status}    OK
+                             Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate CEPH Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                             ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                         Should Be Equal As Strings    ${status}    OK
+                             Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                             ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                         Should Be Equal As Strings    ${status}    OK
+                             Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.OS Package repository
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                             ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                         Should Be Equal As Strings    ${status}    OK
-
-                ${status}    CLI.Validate Node Self Healing
-                                         ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
-
-                                         Should Be Equal As Strings    ${status}    OK
+                             Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Node Self Healing
-                                         ...    host_ip=${SERVER_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                             ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                             ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                         Should Be Equal As Strings    ${status}    OK
+                             Should Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Node Self Healing
-                                         ...    host_ip=${SERVER_2_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${SERVER_1_HOST_IP}
+                             ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                             ...    linux_password=${SERVER_1_PWD}
 
-                                         Should Be Equal As Strings    ${status}    OK
+                             Should Be Equal As Strings    ${status}    OK
+
+                ${status}    CLI.Validate Node Self Healing
+                             ...    host_ip=${SERVER_2_HOST_IP}
+                             ...    linux_user=${SERVER_2_UNAME}
+                             ...    linux_password=${SERVER_2_PWD}
+
+                             Should Be Equal As Strings    ${status}    OK
 
 ###############################################################################################################################################
 Check if an user is able to define a policy to disable Automatic Daily Updates: TCP-1603,TCP-1604
@@ -278,11 +278,11 @@ Check if an user is able to define a policy to disable Automatic Daily Updates: 
                 ### Validation after setting automatic-upgrades to Yes ####
 
                 ${status}               CLI.Automatic Upgrades Validation
-                                                ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                                ...    linux_user=pcc
-                                                ...    linux_password=cals0ft
+                                        ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                                        ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                                        ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                                Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
+                                        Should Be Equal As Strings    ${status}    Automatic upgrades set to Yes from backend
 
 
 
@@ -322,11 +322,11 @@ Check if an user is able to define a policy to disable Automatic Daily Updates: 
                 ### Validation after setting automatic-upgrades to No ####
 
                 ${status}               CLI.Automatic Upgrades Validation
-                                                ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
-                                                ...    linux_user=pcc
-                                                ...    linux_password=cals0ft
+                                        ...    host_ip=${CLUSTERHEAD_1_HOST_IP}
+                                        ...    linux_user=${CLUSTERHEAD_1_UNAME}
+                                        ...    linux_password=${CLUSTERHEAD_1_PWD}
 
-                                                Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
+                                        Should Be Equal As Strings    ${status}    Automatic upgrades set to No from backend
 
 #################################################################################################################################################################
 Remove a node from PCC on which node roles are installed and check backend repo exists after deletion: TCP-1686
@@ -346,32 +346,32 @@ Remove a node from PCC on which node roles are installed and check backend repo 
                                    Should be equal as strings    ${status}    OK
 
                 ${status}    CLI.Validate Kubernetes Resource
-                                         ...    host_ip=${SERVER_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${SERVER_1_HOST_IP}
+                             ...    linux_user=${SERVER_1_UNAME}
+                             ...    linux_password=${SERVER_1_PWD}
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                             Should Not Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate CEPH Resource
-                                         ...    host_ip=${SERVER_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${SERVER_1_HOST_IP}
+                             ...    linux_user=${SERVER_1_UNAME}
+                             ...    linux_password=${SERVER_1_PWD}
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                             Should Not Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.Validate Network Resource
-                                         ...    host_ip=${SERVER_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${SERVER_1_HOST_IP}
+                             ...    linux_user=${SERVER_1_UNAME}
+                             ...    linux_password=${SERVER_1_PWD}
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                             Should Not Be Equal As Strings    ${status}    OK
 
                 ${status}    CLI.OS Package repository
-                                         ...    host_ip=${SERVER_1_HOST_IP}
-                                         ...    linux_user=pcc
-                     ...    linux_password=cals0ft
+                             ...    host_ip=${SERVER_1_HOST_IP}
+                             ...    linux_user=${SERVER_1_UNAME}
+                             ...    linux_password=${SERVER_1_PWD}
 
-                                         Should Not Be Equal As Strings    ${status}    OK
+                             Should Not Be Equal As Strings    ${status}    OK
 
 
 
@@ -451,8 +451,8 @@ Ethtool Backend Validation
 
         ${status}                   CLI.Validate Ethtool
                              ...    host_ips=["${CLUSTERHEAD_1_HOST_IP}","${SERVER_1_HOST_IP}","${SERVER_2_HOST_IP}"]
-                             ...    linux_user=pcc
-                             ...    linux_password=cals0ft
+                             ...    linux_user=${SERVER_1_UNAME}
+                             ...    linux_password=${SERVER_1_PWD}
 
                                     Should Be Equal As Strings    ${status}    OK
 

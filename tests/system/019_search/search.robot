@@ -63,13 +63,13 @@ Search Interfaces
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Interfaces
-                                      ...  value=enp1s0f0
+                                      ...  value=enp130s0f0
 
                                            Should Be Equal As Strings      ${response}   OK
 
         ${response}                        PCC.Find In Search Data
                                       ...  key=Interfaces
-                                      ...  value=enp1s0
+                                      ...  value=enp130s0f1
 
                                            Should Be Equal As Strings      ${response}   OK
 

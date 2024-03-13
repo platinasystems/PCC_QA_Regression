@@ -367,7 +367,7 @@
             "k8sVersion":"v1.23.1",
             "name":"k8s-pvt",
             "cniPlugin":"kube-router",
-            "nodes":["consul-01.platinasystems.com","consul-02.platinasystems.com","servernode-130.platinasystems.com"],
+            "nodes":["pm2","pm3","pm5"],
             "pools":[],
             "networkClusterName":"network-pvt",
             "appName":"nginxapp",
