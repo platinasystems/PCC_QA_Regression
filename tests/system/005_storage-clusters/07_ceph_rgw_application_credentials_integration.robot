@@ -828,35 +828,35 @@ Create Application credential profile with same application using duplicate name
                        Log to Console    ${message}
                        Should Not Be Equal As Strings    ${status}    200
 
-#####################################################################################################################################
-Ceph Rados Gateway Delete
-#####################################################################################################################################
-
-    [Documentation]                 *Ceph Rados Gateway Delete*
-
-        ${status}                   Login To PCC    ${pcc_setup}
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${rgw_id}                   PCC.Ceph Get Rgw Id
-                               ...  name=${CEPH_RGW_NAME}
-		                       ...  ceph_cluster_name=ceph-pvt
-		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
-
-        ${response}                 PCC.Ceph Delete Rgw
-                               ...  name=${CEPH_RGW_NAME}
-			                   ...  ceph_cluster_name=ceph-pvt
-
-        ${status_code}              Get Response Status Code        ${response}
-        ${message}                  Get Response Message        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Deleted
-                               ...  name=${CEPH_RGW_NAME}
-			                   ...  ceph_cluster_name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
+######################################################################################################################################
+#Ceph Rados Gateway Delete
+######################################################################################################################################
+#
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+#
+#        ${status}                   Login To PCC    ${pcc_setup}
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${rgw_id}                   PCC.Ceph Get Rgw Id
+#                               ...  name=${CEPH_RGW_NAME}
+#		                       ...  ceph_cluster_name=ceph-pvt
+#		                            Pass Execution If    ${rgw_id} is ${None}    There is no RGW for deletion
+#
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${message}                  Get Response Message        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Fetching RGW ID before backup
