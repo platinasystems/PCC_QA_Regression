@@ -74,7 +74,7 @@ Alert Create Raw Rule
                                ...  setup_ip=${PCC_HOST_IP}
                                ...  user=${PCC_LINUX_USER}
                                ...  password=${PCC_LINUX_PASSWORD}
-                               ...  filename=freeswap.yml
+                               ...  filename=cpu_very_high_temp.yml
 
                                     Should Be Equal As Strings      ${status}    OK
 
@@ -86,7 +86,7 @@ Alert Verify Raw Rule
                                ...  PCC.Alert Verify Rule
 
         ${status}                   PCC.Alert Verify Raw Rule
-                               ...  name=FreeSwap
+                               ...  name=cpu very high temp
                                ...  auth_data=${PCC_CONN}
                                ...  setup_ip=${PCC_HOST_IP}
                                ...  user=${PCC_LINUX_USER}
