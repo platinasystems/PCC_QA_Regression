@@ -27,13 +27,13 @@ Add Baremetal Provisioner To Node
     [Documentation]                 *Add Baremetal Provisioner To Node*
 
         ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_3_NAME}"]
                                ...  roles=["Baremetal Provisioner"]
 
                                     Should Be Equal As Strings      ${response}  OK
 
         ${node_wait_status}         PCC.Wait Until Node Ready
-                               ...  Name=${SERVER_1_NAME}
+                               ...  Name=${SERVER_3_NAME}
 
                                     Log To Console    ${node_wait_status}
                                     Should Be Equal As Strings    ${node_wait_status}    OK
@@ -46,7 +46,7 @@ Verify Baremetal Provisioner
     [Documentation]                 *Verify Baremetal Provisioner*
 
         ${response}                 PCC.Verify Baremetal Provisioner Role
-                               ...  Node=${SERVER_1_NAME}
+                               ...  Node=${SERVER_3_NAME}
 
                                     Should Be Equal As Strings      ${response}  OK
 
@@ -56,7 +56,7 @@ Add Bootstrap Services To Baremetal Provisioner Node (Negative)
     [Documentation]                 *Add Bootstrap Services To Baremetal Provisioner Node (Negative)*
 
         ${response}                 PCC.Add and Verify Roles On Nodes
-                               ...  nodes=["${SERVER_1_NAME}"]
+                               ...  nodes=["${SERVER_3_NAME}"]
                                ...  roles=["Bootstrap Services"]
 
         ${status_code}              Get Response Status Code        ${response}
