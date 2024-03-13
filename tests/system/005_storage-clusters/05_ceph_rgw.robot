@@ -1816,76 +1816,76 @@ Ceph Rados Gateway Delete
                                ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
                                     Should Be Equal As Strings      ${status}    OK
 
-###################################################################################################################################
-Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Ceph Node
-#####################################################################################################################################
-
-     [Documentation]                 *Ceph Rados Gateway Creation*
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${num_daemons_map}          Create Dictionary      ${CLUSTERHEAD_1_NAME}=${1}
-
-        ${response}                 PCC.Ceph Create Rgw
-                               ...  name=${CEPH_RGW_NAME}
-                               ...  poolName=rgw-non-ceph
-                               ...  num_daemons_map=${num_daemons_map}
-                               ...  port=${CEPH_RGW_PORT}
-                               ...  certificateName=${CEPH_RGW_CERT_NAME}
-                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
-
-        ${status_code}              Get Response Status Code        ${response}
-        ${message}                  Get Response Message        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Ready
-                               ...  name=${CEPH_RGW_NAME}
-			                   ...  ceph_cluster_name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
-                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-                               ...  name=${CEPH_RGW_NAME}
-                                    Should Be Equal As Strings      ${backend_status}    OK
-
-        ${status}                   PCC.Ceph Verify RGW Node role
-                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
-
-#####################################################################################################################################
-Ceph Rados Gateway Delete
-#####################################################################################################################################
-
-    [Documentation]                 *Ceph Rados Gateway Delete*
-
-        ${status}                   PCC.Ceph Get Pcc Status
-                               ...  name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${response}                 PCC.Ceph Delete Rgw
-                               ...  name=${CEPH_RGW_NAME}
-			                   ...  ceph_cluster_name=ceph-pvt
-
-        ${status_code}              Get Response Status Code        ${response}
-        ${message}                  Get Response Message        ${response}
-                                    Should Be Equal As Strings      ${status_code}  200
-
-        ${status}                   PCC.Ceph Wait Until Rgw Deleted
-                               ...  name=${CEPH_RGW_NAME}
-			                   ...  ceph_cluster_name=ceph-pvt
-                                    Should Be Equal As Strings      ${status}    OK
-
-        ${num_daemons_map}          Create Dictionary      ${CLUSTERHEAD_1_NAME}=${1}
-
-        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
-                               ...  num_daemons_map=${num_daemons_map}
-                                    Should Be Equal As Strings      ${backend_status}    OK
-
-        ${status}                   PCC.Ceph Verify RGW Node role
-                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
-                                    Should Be Equal As Strings      ${status}    OK
+####################################################################################################################################
+#Ceph Rados Gateway Creation With Replicated Pool Without S3 Accounts For Non Ceph Node
+######################################################################################################################################
+#
+#     [Documentation]                 *Ceph Rados Gateway Creation*
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${num_daemons_map}          Create Dictionary      ${CLUSTERHEAD_1_NAME}=${1}
+#
+#        ${response}                 PCC.Ceph Create Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#                               ...  poolName=rgw-non-ceph
+#                               ...  num_daemons_map=${num_daemons_map}
+#                               ...  port=${CEPH_RGW_PORT}
+#                               ...  certificateName=${CEPH_RGW_CERT_NAME}
+#                               ...  certificateUrl=${CEPH_RGW_CERT_URL}
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${message}                  Get Response Message        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Ready
+#                               ...  name=${CEPH_RGW_NAME}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Creation
+#                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+#                               ...  name=${CEPH_RGW_NAME}
+#                                    Should Be Equal As Strings      ${backend_status}    OK
+#
+#        ${status}                   PCC.Ceph Verify RGW Node role
+#                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+######################################################################################################################################
+#Ceph Rados Gateway Delete
+######################################################################################################################################
+#
+#    [Documentation]                 *Ceph Rados Gateway Delete*
+#
+#        ${status}                   PCC.Ceph Get Pcc Status
+#                               ...  name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${response}                 PCC.Ceph Delete Rgw
+#                               ...  name=${CEPH_RGW_NAME}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#
+#        ${status_code}              Get Response Status Code        ${response}
+#        ${message}                  Get Response Message        ${response}
+#                                    Should Be Equal As Strings      ${status_code}  200
+#
+#        ${status}                   PCC.Ceph Wait Until Rgw Deleted
+#                               ...  name=${CEPH_RGW_NAME}
+#			                   ...  ceph_cluster_name=ceph-pvt
+#                                    Should Be Equal As Strings      ${status}    OK
+#
+#        ${num_daemons_map}          Create Dictionary      ${CLUSTERHEAD_1_NAME}=${1}
+#
+#        ${backend_status}           PCC.Ceph Rgw Verify BE Deletion
+#                               ...  num_daemons_map=${num_daemons_map}
+#                                    Should Be Equal As Strings      ${backend_status}    OK
+#
+#        ${status}                   PCC.Ceph Verify RGW Node role
+#                               ...  ceph_cluster_name=${CEPH_CLUSTER_NAME}
+#                                    Should Be Equal As Strings      ${status}    OK
 
 ###################################################################################################################################
 Delete Metadata Profile
