@@ -7,7 +7,7 @@
             "pcc_linux_password":"plat1na",
             "pcc_linux_key_path": "/home/pcc/garena/proxy_pem.pem",
             "pcc_username":"admin",
-            "pcc_password":"consciousp0cplatina",
+            "pcc_password":"admin",
             "tenant_user_username":"aucta.tenant@gmail.com",
             "tenant_user_password":"calsoft@123",
             "read_only_username":"aucta.subtenant@gmail.com",
