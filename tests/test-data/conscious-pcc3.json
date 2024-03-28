@@ -1,0 +1,30 @@
+{
+    "pcc_server":
+    {
+        "pcc_url":"https://192.168.21.30:9999",
+        "pcc_host_ip":"192.168.21.30",
+        "pcc_linux_user":"pcc",
+        "pcc_linux_password":"plat1na",
+        "pcc_linux_key_path": "/home/pcc/garena/proxy_pem.pem",
+        "pcc_username":"admin",
+        "pcc_password":"admin",
+        "tenant_user_username":"aucta.tenant@gmail.com",
+        "tenant_user_password":"calsoft@123",
+        "read_only_username":"aucta.subtenant@gmail.com",
+        "read_only_password":"readonly@123",
+        "setup_password":"hc7giw4MHztsfYrT",
+        "setup_username":"Sylvester",
+        "setup_upgrade_cmd":"sudo /home/pcc/platina-cli-ws/platina-cli run -u Sylvester -p hc7giw4MHztsfYrT --url https://cust-dev.lab.platinasystems.com --insecure --registryUrl https://cust-dev.lab.platinasystems.com:5000 --ru Sylvester --rp hc7giw4MHztsfYrT --insecureRegistry --prtKey /home/pcc/i28-keys/i28-id_rsa --pblKey /home/pcc/i28-keys/i28-authorized_keys --release stable --configRepo master --pruneVolumes"
+    },
+    "server-1": {
+        "server_name":"pm8",
+        "pcc_username": "pcc",
+        "bmc": "192.168.21.21",
+        "mgmt_ip": "192.168.21.54/23",
+        "bmc_user": "ADMIN",
+        "bmc_pwd": "ADMIN",
+        "console": "ttyS1",
+        "managed_by_pcc": "true",
+        "ssh_keys": "pcc"
+    }
+}
